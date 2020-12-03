@@ -1,0 +1,25 @@
+name: eliud_pkg_feed
+description: Eliud package for feed, friends, etc
+version: 0.0.1
+author:
+homepage:
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+  flutter: ">=1.17.0 <2.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  eliud_core:
+    path: ../eliud_core
+
+  eliud_pkg_fundamentals:
+    path: ../eliud_pkg_fundamentals
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
