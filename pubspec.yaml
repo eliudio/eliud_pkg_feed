@@ -12,14 +12,17 @@ dependencies:
   flutter:
     sdk: flutter
 
+  bloc: ^5.0.1
+  flutter_bloc: ^5.0.1
+
   eliud_core:
     path: ../eliud_core
 
-  eliud_pkg_fundamentals:
-    path: ../eliud_pkg_fundamentals
-
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
+  build_runner: "1.10.2"
+
+  eliud_generator:
+    path: ../eliud_generator
 
 flutter:
+  uses-material-design: true
