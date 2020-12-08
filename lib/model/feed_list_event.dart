@@ -22,7 +22,17 @@ abstract class FeedListEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoadFeedList extends FeedListEvent {}
+class LoadFeedList extends FeedListEvent {
+  final String orderBy;
+  final bool descending;
+
+  LoadFeedList({this.orderBy, this.descending});
+
+  @override
+  List<Object> get props => [orderBy, descending];
+
+}
+
 class LoadFeedListWithDetails extends FeedListEvent {}
 
 class AddFeedList extends FeedListEvent {

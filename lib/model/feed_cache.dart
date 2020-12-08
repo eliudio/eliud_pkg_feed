@@ -96,8 +96,8 @@ class FeedCache implements FeedRepository {
   }
 
   @override
-  StreamSubscription<List<FeedModel>> listen(trigger) {
-    return reference.listen(trigger);
+  StreamSubscription<List<FeedModel>> listen(trigger, { String orderBy, bool descending }) {
+    return reference.listen(trigger, orderBy: orderBy, descending: descending);
   }
 
   @override

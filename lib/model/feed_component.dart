@@ -60,3 +60,5 @@ abstract class AbstractFeedComponent extends StatelessWidget {
   Widget alertWidget({ title: String, content: String});
   FeedRepository getFeedRepository(BuildContext context);
 }
+
+

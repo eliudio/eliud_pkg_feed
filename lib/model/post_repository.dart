@@ -25,8 +25,8 @@ abstract class PostRepository {
   Future<PostModel> update(PostModel value);
   Stream<List<PostModel>> values();
   Stream<List<PostModel>> valuesWithDetails();
-  StreamSubscription<List<PostModel>> listen(PostModelTrigger trigger);
-StreamSubscription<List<PostModel>> listenWithDetails(PostModelTrigger trigger);
+  StreamSubscription<List<PostModel>> listen(PostModelTrigger trigger, { String orderBy, bool descending });
+  StreamSubscription<List<PostModel>> listenWithDetails(PostModelTrigger trigger);
   void flush();
   Future<List<PostModel>> valuesList();
   Future<List<PostModel>> valuesListWithDetails();

@@ -25,8 +25,8 @@ abstract class FeedRepository {
   Future<FeedModel> update(FeedModel value);
   Stream<List<FeedModel>> values();
   Stream<List<FeedModel>> valuesWithDetails();
-  StreamSubscription<List<FeedModel>> listen(FeedModelTrigger trigger);
-StreamSubscription<List<FeedModel>> listenWithDetails(FeedModelTrigger trigger);
+  StreamSubscription<List<FeedModel>> listen(FeedModelTrigger trigger, { String orderBy, bool descending });
+  StreamSubscription<List<FeedModel>> listenWithDetails(FeedModelTrigger trigger);
   void flush();
   Future<List<FeedModel>> valuesList();
   Future<List<FeedModel>> valuesListWithDetails();

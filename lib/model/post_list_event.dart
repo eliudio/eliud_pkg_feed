@@ -22,7 +22,17 @@ abstract class PostListEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoadPostList extends PostListEvent {}
+class LoadPostList extends PostListEvent {
+  final String orderBy;
+  final bool descending;
+
+  LoadPostList({this.orderBy, this.descending});
+
+  @override
+  List<Object> get props => [orderBy, descending];
+
+}
+
 class LoadPostListWithDetails extends PostListEvent {}
 
 class AddPostList extends PostListEvent {

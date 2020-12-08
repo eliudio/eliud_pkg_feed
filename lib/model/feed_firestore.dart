@@ -59,8 +59,8 @@ class FeedFirestore implements FeedRepository {
     });
   }
 
-  StreamSubscription<List<FeedModel>> listen(FeedModelTrigger trigger) {
-    Stream<List<FeedModel>> stream = FeedCollection.snapshots()
+  StreamSubscription<List<FeedModel>> listen(FeedModelTrigger trigger, { String orderBy, bool descending }) {
+    var stream = (orderBy == null ?  FeedCollection : FeedCollection.orderBy(orderBy, descending: descending)).snapshots()
         .map((data) {
       Iterable<FeedModel> feeds  = data.documents.map((doc) {
         FeedModel value = _populateDoc(doc);

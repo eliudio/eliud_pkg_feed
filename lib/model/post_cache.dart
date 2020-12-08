@@ -96,8 +96,8 @@ class PostCache implements PostRepository {
   }
 
   @override
-  StreamSubscription<List<PostModel>> listen(trigger) {
-    return reference.listen(trigger);
+  StreamSubscription<List<PostModel>> listen(trigger, { String orderBy, bool descending }) {
+    return reference.listen(trigger, orderBy: orderBy, descending: descending);
   }
 
   @override

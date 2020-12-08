@@ -67,9 +67,9 @@ class FeedJsFirestore implements FeedRepository {
     });
   }
 
-  StreamSubscription<List<FeedModel>> listen(FeedModelTrigger trigger) {
-    // If we use feedCollection here, then the second subscription fails
-    Stream<List<FeedModel>> stream = getCollection().onSnapshot
+  @override
+  StreamSubscription<List<FeedModel>> listen(FeedModelTrigger trigger, {String orderBy, bool descending }) {
+    var stream = (orderBy == null ?  getCollection() : getCollection().orderBy(orderBy, descending ? 'desc': 'asc')).onSnapshot
         .map((data) {
       Iterable<FeedModel> feeds  = data.docs.map((doc) {
         FeedModel value = _populateDoc(doc);
