@@ -95,7 +95,7 @@ class PostJsFirestore implements PostRepository {
     });
   }
 
-  StreamSubscription<List<PostModel>> listenWithDetails(PostModelTrigger trigger) {
+  StreamSubscription<List<PostModel>> listenWithDetails(String currentMember, PostModelTrigger trigger) {
     // If we use postCollection here, then the second subscription fails
     Stream<List<PostModel>> stream = getCollection().onSnapshot
         .asyncMap((data) async {
@@ -107,18 +107,18 @@ class PostJsFirestore implements PostRepository {
     });
   }
 
-  Stream<List<PostModel>> values() {
+  Stream<List<PostModel>> values(String currentMember, ) {
     return postCollection.onSnapshot
         .map((data) => data.docs.map((doc) => _populateDoc(doc)).toList());
   }
 
-  Stream<List<PostModel>> valuesWithDetails() {
+  Stream<List<PostModel>> valuesWithDetails(String currentMember, ) {
     return postCollection.onSnapshot
         .asyncMap((data) => Future.wait(data.docs.map((doc) => _populateDocPlus(doc)).toList()));
   }
 
   @override
-  Future<List<PostModel>> valuesList() {
+  Future<List<PostModel>> valuesList(String currentMember, ) {
     return postCollection.get().then((value) {
       var list = value.docs;
       return list.map((doc) => _populateDoc(doc)).toList();
@@ -126,7 +126,7 @@ class PostJsFirestore implements PostRepository {
   }
 
   @override
-  Future<List<PostModel>> valuesListWithDetails() {
+  Future<List<PostModel>> valuesListWithDetails(String currentMember, ) {
     return postCollection.get().then((value) {
       var list = value.docs;
       return Future.wait(list.map((doc) =>  _populateDocPlus(doc)).toList());

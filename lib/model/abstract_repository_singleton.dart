@@ -19,13 +19,16 @@ import 'package:eliud_core/core/access/bloc/user_repository.dart';
 import 'package:eliud_core/tools/types.dart';
 
 FeedRepository feedRepository({ String appId }) => AbstractRepositorySingleton.singleton.feedRepository(appId);
+PostRepository postRepository({ String appId }) => AbstractRepositorySingleton.singleton.postRepository(appId);
 
 abstract class AbstractRepositorySingleton {
   static AbstractRepositorySingleton singleton;
 
   FeedRepository feedRepository(String appId);
+  PostRepository postRepository(String appId);
 
   void flush(String appId) {
     feedRepository(appId).flush();
+    postRepository(appId).flush();
   }
 }

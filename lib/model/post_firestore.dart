@@ -90,7 +90,7 @@ class PostFirestore implements PostRepository {
     });
   }
 
-  StreamSubscription<List<PostModel>> listenWithDetails(PostModelTrigger trigger) {
+  StreamSubscription<List<PostModel>> listenWithDetails(String currentMember, PostModelTrigger trigger) {
     Stream<List<PostModel>> stream = PostCollection.snapshots()
         .asyncMap((data) async {
       return await Future.wait(data.documents.map((doc) =>  _populateDocPlus(doc)).toList());
@@ -101,28 +101,28 @@ class PostFirestore implements PostRepository {
     });
   }
 
-  Stream<List<PostModel>> values() {
+  Stream<List<PostModel>> values(String currentMember, ) {
     return PostCollection.snapshots().map((snapshot) {
       return snapshot.documents
             .map((doc) => _populateDoc(doc)).toList();
     });
   }
 
-  Stream<List<PostModel>> valuesWithDetails() {
+  Stream<List<PostModel>> valuesWithDetails(String currentMember, ) {
     return PostCollection.snapshots().asyncMap((snapshot) {
       return Future.wait(snapshot.documents
           .map((doc) => _populateDocPlus(doc)).toList());
     });
   }
 
-  Future<List<PostModel>> valuesList() async {
+  Future<List<PostModel>> valuesList(String currentMember, ) async {
     return await PostCollection.getDocuments().then((value) {
       var list = value.documents;
       return list.map((doc) => _populateDoc(doc)).toList();
     });
   }
 
-  Future<List<PostModel>> valuesListWithDetails() async {
+  Future<List<PostModel>> valuesListWithDetails(String currentMember, ) async {
     return await PostCollection.getDocuments().then((value) {
       var list = value.documents;
       return Future.wait(list.map((doc) =>  _populateDocPlus(doc)).toList());
