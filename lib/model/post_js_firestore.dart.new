@@ -68,15 +68,27 @@ class PostJsFirestore implements PostRepository {
   }
 
   @override
-  StreamSubscription<List<PostModel>> listen(PostModelTrigger trigger, {String orderBy, bool descending }) {
-    var stream = (orderBy == null ?  getCollection() : getCollection().orderBy(orderBy, descending ? 'desc': 'asc')).onSnapshot
-        .map((data) {
-      Iterable<PostModel> posts  = data.docs.map((doc) {
-        PostModel value = _populateDoc(doc);
-        return value;
-      }).toList();
-      return posts;
-    });
+  StreamSubscription<List<PostModel>> listen(String currentMember, PostModelTrigger trigger, {String orderBy, bool descending }) {
+    var stream;
+    if (orderBy == null) {
+      stream = getCollection().where("readAccess", 'array-contains-any', [currentMember, 'PUBLIC']).onSnapshot
+          .map((data) {
+        Iterable<PostModel> posts  = data.docs.map((doc) {
+          PostModel value = _populateDoc(doc);
+          return value;
+        }).toList();
+        return posts;
+      });
+    } else {
+      stream = getCollection().orderBy(orderBy, descending ? 'desc': 'asc').where("readAccess", 'array-contains-any', [currentMember, 'PUBLIC']).onSnapshot
+          .map((data) {
+        Iterable<PostModel> posts  = data.docs.map((doc) {
+          PostModel value = _populateDoc(doc);
+          return value;
+        }).toList();
+        return posts;
+      });
+    }
 
     return stream.listen((listOfPostModels) {
       trigger(listOfPostModels);

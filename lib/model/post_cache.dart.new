@@ -67,23 +67,23 @@ class PostCache implements PostRepository {
   }
 
   @override
-  Stream<List<PostModel>> values(String currentMember, ) {
-    return reference.values(currentMember,);
+  Stream<List<PostModel>> values() {
+    return reference.values();
   }
 
   @override
-  Stream<List<PostModel>> valuesWithDetails(String currentMember, ) {
-    return reference.valuesWithDetails(currentMember,);
+  Stream<List<PostModel>> valuesWithDetails() {
+    return reference.valuesWithDetails();
   }
 
   @override
-  Future<List<PostModel>> valuesList(String currentMember, ) async {
-    return await reference.valuesList(currentMember,);
+  Future<List<PostModel>> valuesList() async {
+    return await reference.valuesList();
   }
   
   @override
-  Future<List<PostModel>> valuesListWithDetails(String currentMember, ) async {
-    return await reference.valuesListWithDetails(currentMember,);
+  Future<List<PostModel>> valuesListWithDetails() async {
+    return await reference.valuesListWithDetails();
   }
 
   void flush() {
@@ -97,12 +97,12 @@ class PostCache implements PostRepository {
 
   @override
   StreamSubscription<List<PostModel>> listen(String currentMember, trigger, { String orderBy, bool descending }) {
-    return reference.listen(currentMember,trigger, orderBy: orderBy, descending: descending);
+    return reference.listen(currentMember, trigger, orderBy: orderBy, descending: descending);
   }
 
   @override
-  StreamSubscription<List<PostModel>> listenWithDetails(String currentMember, trigger) {
-    return reference.listenWithDetails(currentMember,trigger);
+  StreamSubscription<List<PostModel>> listenWithDetails(trigger) {
+    return reference.listenWithDetails(trigger);
   }
 
 

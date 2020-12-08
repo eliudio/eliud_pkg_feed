@@ -23,13 +23,13 @@ abstract class PostRepository {
   Future<void> delete(PostModel value);
   Future<PostModel> get(String id);
   Future<PostModel> update(PostModel value);
-  Stream<List<PostModel>> values(String currentMember);
-  Stream<List<PostModel>> valuesWithDetails(String currentMember);
-  Future<List<PostModel>> valuesList(String currentMember);
-  Future<List<PostModel>> valuesListWithDetails(String currentMember);
+  Stream<List<PostModel>> values();
+  Stream<List<PostModel>> valuesWithDetails();
   StreamSubscription<List<PostModel>> listen(String currentMember, PostModelTrigger trigger, { String orderBy, bool descending });
-  StreamSubscription<List<PostModel>> listenWithDetails(String currentMember, PostModelTrigger trigger);
+  StreamSubscription<List<PostModel>> listenWithDetails(PostModelTrigger trigger);
   void flush();
+  Future<List<PostModel>> valuesList();
+  Future<List<PostModel>> valuesListWithDetails();
 
   Future<void> deleteAll();
 }

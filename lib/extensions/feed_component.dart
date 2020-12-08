@@ -5,8 +5,10 @@ import 'package:eliud_core/tools/component_constructor.dart';
 import 'package:eliud_pkg_feed/extensions/widgets/post.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/feed_component.dart';
+import 'package:eliud_pkg_feed/model/feed_list.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
 import 'package:eliud_pkg_feed/model/feed_repository.dart';
+import 'package:eliud_pkg_feed/model/post_list.dart';
 import 'package:eliud_pkg_feed/model/post_list_bloc.dart';
 import 'package:eliud_pkg_feed/model/post_list_event.dart';
 import 'package:eliud_pkg_feed/model/post_list_state.dart';
@@ -38,10 +40,15 @@ class FeedComponent extends AbstractFeedComponent {
     return MultiBlocProvider(providers: [
       BlocProvider<PostListBloc>(
         create: (context) => PostListBloc(
+          BlocProvider.of<AccessBloc>(context),
           postRepository: postRepository(appId: feedModel.appId),
         )..add(LoadPostList(orderBy: 'timestamp', descending: true)),
       )
-    ], child: _widget(context));
+    ], child: _oldwidget(context));
+  }
+
+  Widget _oldwidget(BuildContext context) {
+    return PostListWidget();
   }
 
   Widget _widget(BuildContext context) {

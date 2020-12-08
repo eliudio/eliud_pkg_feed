@@ -42,10 +42,9 @@ import 'package:eliud_pkg_feed/model/post_form_state.dart';
 import 'package:eliud_pkg_feed/model/post_repository.dart';
 
 class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
-  final FormAction formAction;
   final String appId;
 
-  PostFormBloc(this.appId, { this.formAction }): super(PostFormUninitialized());
+  PostFormBloc(this.appId, ): super(PostFormUninitialized());
   @override
   Stream<PostFormState> mapEventToState(PostFormEvent event) async* {
     final currentState = state;
@@ -67,8 +66,7 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
 
 
       if (event is InitialisePostFormEvent) {
-        // Need to re-retrieve the document from the repository so that I get all associated types
-        PostFormLoaded loaded = PostFormLoaded(value: await postRepository(appId: appId).get(event.value.documentID));
+        PostFormLoaded loaded = PostFormLoaded(value: event.value);
         yield loaded;
         return;
       } else if (event is InitialisePostFormNoLoadEvent) {
@@ -80,11 +78,7 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
       PostModel newValue = null;
       if (event is ChangedPostDocumentID) {
         newValue = currentState.value.copyWith(documentID: event.value);
-        if (formAction == FormAction.AddAction) {
-          yield* _isDocumentIDValid(event.value, newValue).asStream();
-        } else {
-          yield SubmittablePostForm(value: newValue);
-        }
+        yield SubmittablePostForm(value: newValue);
 
         return;
       }
@@ -144,22 +138,6 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
         return;
       }
     }
-  }
-
-
-  DocumentIDPostFormError error(String message, PostModel newValue) => DocumentIDPostFormError(message: message, value: newValue);
-
-  Future<PostFormState> _isDocumentIDValid(String value, PostModel newValue) async {
-    if (value == null) return Future.value(error("Provide value for documentID", newValue));
-    if (value.length == 0) return Future.value(error("Provide value for documentID", newValue));
-    Future<PostModel> findDocument = postRepository(appId: appId).get(value);
-    return await findDocument.then((documentFound) {
-      if (documentFound == null) {
-        return SubmittablePostForm(value: newValue);
-      } else {
-        return error("Invalid documentID: already exists", newValue);
-      }
-    });
   }
 
 

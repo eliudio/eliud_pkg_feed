@@ -136,7 +136,7 @@ class ListComponent extends StatelessWidget with HasFab {
       providers: [
         BlocProvider<PostListBloc>(
           create: (context) => PostListBloc(
-            
+            BlocProvider.of<AccessBloc>(context), 
             postRepository: postRepository(appId: AccessBloc.appId(context)),
           )..add(LoadPostList()),
         )
@@ -186,7 +186,7 @@ class DropdownButtonComponent extends StatelessWidget {
       providers: [
         BlocProvider<PostListBloc>(
           create: (context) => PostListBloc(
-            
+            BlocProvider.of<AccessBloc>(context), 
             postRepository: postRepository(appId: AccessBloc.appId(context)),
           )..add(LoadPostList()),
         )

@@ -59,16 +59,32 @@ class PostFirestore implements PostRepository {
     });
   }
 
-  StreamSubscription<List<PostModel>> listen(PostModelTrigger trigger, { String orderBy, bool descending }) {
-    var stream = (orderBy == null ?  PostCollection : PostCollection.orderBy(orderBy, descending: descending)).snapshots()
-        .map((data) {
-      Iterable<PostModel> posts  = data.documents.map((doc) {
-        PostModel value = _populateDoc(doc);
-        return value;
-      }).toList();
-      return posts;
-    });
-
+  StreamSubscription<List<PostModel>> listen(String currentMember, PostModelTrigger trigger, { String orderBy, bool descending }) {
+    Stream<List<PostModel>> stream;
+    if (orderBy == null) {
+      stream = PostCollection.where(
+          'readAccess', arrayContainsAny: [currentMember, 'PUBLIC'])
+          .snapshots()
+          .map((data) {
+        Iterable<PostModel> posts = data.documents.map((doc) {
+          PostModel value = _populateDoc(doc);
+          return value;
+        }).toList();
+        return posts;
+      });
+    } else {
+      stream = PostCollection
+          .where('readAccess', arrayContainsAny: [currentMember, 'PUBLIC'])
+          .orderBy(orderBy, descending: descending)
+          .snapshots()
+          .map((data) {
+        Iterable<PostModel> posts = data.documents.map((doc) {
+          PostModel value = _populateDoc(doc);
+          return value;
+        }).toList();
+        return posts;
+      });
+    }
     return stream.listen((listOfPostModels) {
       trigger(listOfPostModels);
     });
@@ -84,7 +100,6 @@ class PostFirestore implements PostRepository {
       trigger(listOfPostModels);
     });
   }
-
 
   Stream<List<PostModel>> values() {
     return PostCollection.snapshots().map((snapshot) {
