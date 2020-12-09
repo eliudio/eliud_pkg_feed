@@ -44,7 +44,7 @@ class FeedComponent extends AbstractFeedComponent {
           postRepository: postRepository(appId: feedModel.appId),
         )..add(LoadPostList(orderBy: 'timestamp', descending: true)),
       )
-    ], child: _oldwidget(context));
+    ], child: _widget(context));
   }
 
   Widget _oldwidget(BuildContext context) {
@@ -59,6 +59,8 @@ class FeedComponent extends AbstractFeedComponent {
         if (state is PostListLoaded) {
           final values = state.values;
           return ListView.builder(
+            shrinkWrap: true,
+            physics: ScrollPhysics(),
             itemBuilder: buildList,
             itemCount: values.length,
           );
