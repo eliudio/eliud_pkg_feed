@@ -73,7 +73,8 @@ class PostForm extends StatelessWidget {
     if (formAction == FormAction.ShowData) {
       return BlocProvider<PostFormBloc >(
             create: (context) => PostFormBloc(AccessBloc.appId(context),
-                                       
+                                       formAction: formAction,
+
                                                 )..add(InitialisePostFormEvent(value: value)),
   
         child: MyPostForm(submitAction: submitAction, formAction: formAction),
@@ -81,7 +82,8 @@ class PostForm extends StatelessWidget {
     } if (formAction == FormAction.ShowPreloadedData) {
       return BlocProvider<PostFormBloc >(
             create: (context) => PostFormBloc(AccessBloc.appId(context),
-                                       
+                                       formAction: formAction,
+
                                                 )..add(InitialisePostFormNoLoadEvent(value: value)),
   
         child: MyPostForm(submitAction: submitAction, formAction: formAction),
@@ -101,7 +103,8 @@ class PostForm extends StatelessWidget {
                 ),
         body: BlocProvider<PostFormBloc >(
             create: (context) => PostFormBloc(AccessBloc.appId(context),
-                                       
+                                       formAction: formAction,
+
                                                 )..add((formAction == FormAction.UpdateAction ? InitialisePostFormEvent(value: value) : InitialiseNewPostFormEvent())),
   
         child: MyPostForm(submitAction: submitAction, formAction: formAction),

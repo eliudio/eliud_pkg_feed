@@ -7,7 +7,7 @@
     "generateRepository": true,
     "generateCache": true,
 	"hasPersistentRepository": true,
-    "generateFirestoreRepository": false,
+    "generateFirestoreRepository": true,
     "generateRepositorySingleton": true,
     "generateModel": true,
     "generateEntity": true,

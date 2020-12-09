@@ -62,28 +62,22 @@ class PostFirestore implements PostRepository {
   StreamSubscription<List<PostModel>> listen(String currentMember, PostModelTrigger trigger, { String orderBy, bool descending }) {
     Stream<List<PostModel>> stream;
     if (orderBy == null) {
-      stream = PostCollection.where(
-          'readAccess', arrayContainsAny: [currentMember, 'PUBLIC'])
-          .snapshots()
-          .map((data) {
-        Iterable<PostModel> posts = data.documents.map((doc) {
+       stream = PostCollection.where('readAccess', arrayContainsAny: [currentMember, 'PUBLIC']).snapshots().map((data) {
+        Iterable<PostModel> posts  = data.documents.map((doc) {
           PostModel value = _populateDoc(doc);
           return value;
         }).toList();
         return posts;
       });
     } else {
-      stream = PostCollection
-          .where('readAccess', arrayContainsAny: [currentMember, 'PUBLIC'])
-          .orderBy(orderBy, descending: descending)
-          .snapshots()
-          .map((data) {
-        Iterable<PostModel> posts = data.documents.map((doc) {
+      stream = PostCollection.orderBy(orderBy, descending: descending).where('readAccess', arrayContainsAny: [currentMember, 'PUBLIC']).snapshots().map((data) {
+        Iterable<PostModel> posts  = data.documents.map((doc) {
           PostModel value = _populateDoc(doc);
           return value;
         }).toList();
         return posts;
       });
+  
     }
     return stream.listen((listOfPostModels) {
       trigger(listOfPostModels);
@@ -101,29 +95,30 @@ class PostFirestore implements PostRepository {
     });
   }
 
+
   Stream<List<PostModel>> values(String currentMember, ) {
-    return PostCollection.snapshots().map((snapshot) {
+    return PostCollection.where('readAccess', arrayContainsAny: [currentMember, 'PUBLIC']).snapshots().map((snapshot) {
       return snapshot.documents
             .map((doc) => _populateDoc(doc)).toList();
     });
   }
 
   Stream<List<PostModel>> valuesWithDetails(String currentMember, ) {
-    return PostCollection.snapshots().asyncMap((snapshot) {
+    return PostCollection.where('readAccess', arrayContainsAny: [currentMember, 'PUBLIC']).snapshots().asyncMap((snapshot) {
       return Future.wait(snapshot.documents
           .map((doc) => _populateDocPlus(doc)).toList());
     });
   }
 
   Future<List<PostModel>> valuesList(String currentMember, ) async {
-    return await PostCollection.getDocuments().then((value) {
+    return await PostCollection.where('readAccess', arrayContainsAny: [currentMember, 'PUBLIC']).getDocuments().then((value) {
       var list = value.documents;
       return list.map((doc) => _populateDoc(doc)).toList();
     });
   }
 
   Future<List<PostModel>> valuesListWithDetails(String currentMember, ) async {
-    return await PostCollection.getDocuments().then((value) {
+    return await PostCollection.where('readAccess', arrayContainsAny: [currentMember, 'PUBLIC']).getDocuments().then((value) {
       var list = value.documents;
       return Future.wait(list.map((doc) =>  _populateDocPlus(doc)).toList());
     });
