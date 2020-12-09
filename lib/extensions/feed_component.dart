@@ -5,18 +5,17 @@ import 'package:eliud_core/tools/component_constructor.dart';
 import 'package:eliud_pkg_feed/extensions/widgets/post.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/feed_component.dart';
-import 'package:eliud_pkg_feed/model/feed_list.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
 import 'package:eliud_pkg_feed/model/feed_repository.dart';
-import 'package:eliud_pkg_feed/model/post_list.dart';
 import 'package:eliud_pkg_feed/model/post_list_bloc.dart';
 import 'package:eliud_pkg_feed/model/post_list_event.dart';
 import 'package:eliud_pkg_feed/model/post_list_state.dart';
+import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FeedComponentConstructorDefault implements ComponentConstructor {
-  Widget createNew({String id, Map<String, String> parameters}) {
+  Widget createNew({String id, Map<String, Object> parameters}) {
     return FeedComponent(id: id);
   }
 }
@@ -47,10 +46,6 @@ class FeedComponent extends AbstractFeedComponent {
     ], child: _widget(context));
   }
 
-  Widget _oldwidget(BuildContext context) {
-    return PostListWidget();
-  }
-
   Widget _widget(BuildContext context) {
     var accessState = AccessBloc.getState(context);
     if (accessState is AppLoaded) {
@@ -61,7 +56,7 @@ class FeedComponent extends AbstractFeedComponent {
           return ListView.builder(
             shrinkWrap: true,
             physics: ScrollPhysics(),
-            itemBuilder: buildList,
+            itemBuilder: (context, index) => post(context, values[index]),
             itemCount: values.length,
           );
         } else {
@@ -83,7 +78,7 @@ class FeedComponent extends AbstractFeedComponent {
         .feedRepository(AccessBloc.appId(context));
   }
 
-  Widget buildList(BuildContext context, int index) {
-    return Post(index);
+  Widget post(BuildContext context, PostModel post) {
+    return Post(post);
   }
 }
