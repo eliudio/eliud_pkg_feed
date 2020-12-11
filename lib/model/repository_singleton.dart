@@ -29,11 +29,11 @@ class RepositorySingleton extends AbstractRepositorySingleton {
     var _postRepository = HashMap<String, PostRepository>();
 
     FeedRepository feedRepository(String appId) {
-      if (_feedRepository[appId] == null) _feedRepository[appId] = FeedFirestore(appId);
+      if (_feedRepository[appId] == null) _feedRepository[appId] = FeedCache(FeedFirestore(appId));
       return _feedRepository[appId];
     }
     PostRepository postRepository(String appId) {
-      if (_postRepository[appId] == null) _postRepository[appId] = PostFirestore(appId);
+      if (_postRepository[appId] == null) _postRepository[appId] = PostCache(PostFirestore(appId));
       return _postRepository[appId];
     }
 
