@@ -32,9 +32,7 @@ class FeedComponent extends AbstractFeedComponent {
   Widget yourWidget(BuildContext context, FeedModel feedModel) {
     // if logged on: show this person's feed
     // if not logged on, show public feed only
-    // feed = posts where feedDocumentID == feedModel.documentID && appId = feedModel.appIdx
     // Need to improve generation of list bloc so that we can support multi page (or "load more") type of entries
-    // Need to implement manually (I guess) the list widget
     // Need to support ordering
     return MultiBlocProvider(providers: [
       BlocProvider<PostListBloc>(

@@ -62,7 +62,7 @@ class PostFirestore implements PostRepository {
   StreamSubscription<List<PostModel>> listen(String currentMember, PostModelTrigger trigger, { String orderBy, bool descending }) {
     Stream<List<PostModel>> stream;
     if (orderBy == null) {
-       stream = PostCollection.where('readAccess', arrayContainsAny: [currentMember, 'PUBLIC']).snapshots().map((data) {
+       stream = PostCollection.where('readAccess', arrayContainsAny: ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).snapshots().map((data) {
         Iterable<PostModel> posts  = data.documents.map((doc) {
           PostModel value = _populateDoc(doc);
           return value;
@@ -70,14 +70,13 @@ class PostFirestore implements PostRepository {
         return posts;
       });
     } else {
-      stream = PostCollection.orderBy(orderBy, descending: descending).where('readAccess', arrayContainsAny: [currentMember, 'PUBLIC']).snapshots().map((data) {
+      stream = PostCollection.orderBy(orderBy, descending: descending).where('readAccess', arrayContainsAny: ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).snapshots().map((data) {
         Iterable<PostModel> posts  = data.documents.map((doc) {
           PostModel value = _populateDoc(doc);
           return value;
         }).toList();
         return posts;
       });
-  
     }
     return stream.listen((listOfPostModels) {
       trigger(listOfPostModels);

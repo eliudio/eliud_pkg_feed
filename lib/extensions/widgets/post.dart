@@ -7,13 +7,11 @@ import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/model/page_component_bloc.dart';
 import 'package:eliud_core/model/page_component_event.dart';
 import 'package:eliud_core/model/page_component_state.dart';
-import 'package:eliud_core/tools/action_model.dart';
 import 'package:eliud_pkg_feed/constants/size.dart';
 import 'package:eliud_pkg_feed/extensions/widgets/rounded_avatar.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:eliud_core/core/navigate/router.dart' as eliud_router;
 
 import 'comment.dart';
 
@@ -29,12 +27,13 @@ class Post extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (size == null) size = MediaQuery.of(context).size;
-
+    var originalAccessBloc = BlocProvider.of<AccessBloc>(context);
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _postHeader(),
-        _postDetails(context),
+        _postDetails(originalAccessBloc, context),
         _postActionBtns(),
         _postLikes(),
         _postCaption(),
@@ -46,36 +45,28 @@ class Post extends StatelessWidget {
     return Row(
       children: <Widget>[
         IconButton(
-            icon: Icon(Icons
-                .add) /*ImageIcon(
-              AssetImage("assets/images/heart_selected.png"),
-            )*/
-            ,
+            icon: ImageIcon(
+              AssetImage("lib/_assets/images/heart_selected.png", package: "eliud_pkg_feed"),
+            ),
             onPressed: null,
             color: Colors.black87),
         IconButton(
-            icon: Icon(Icons
-                .add) /*ImageIcon(
-              AssetImage("assets/images/comment.png"),
-            )*/
-            ,
+            icon: ImageIcon(
+              AssetImage("lib/_assets/images/comment2.png", package: "eliud_pkg_feed"),
+            ),
             onPressed: null,
             color: Colors.black87),
         IconButton(
-            icon: Icon(Icons
-                .add) /*ImageIcon(
-              AssetImage("assets/images/direct_message.png"),
-            )*/
-            ,
+            icon: ImageIcon(
+              AssetImage("lib/_assets/images/direct_message.png", package: "eliud_pkg_feed"),
+            ),
             onPressed: null,
             color: Colors.black87),
         Spacer(),
         IconButton(
-            icon: Icon(Icons
-                .add) /*ImageIcon(
-              AssetImage("assets/images/bookmark.png"),
-            )*/
-            ,
+            icon: ImageIcon(
+              AssetImage("lib/_assets/images/bookmark.png", package: "eliud_pkg_feed"),
+            ),
             onPressed: null,
             color: Colors.black87),
       ],
@@ -126,16 +117,17 @@ class Post extends StatelessWidget {
 
 
 */
-  Widget _postDetails(BuildContext context) {
+  Widget _postDetails(AccessBloc originalAccessBloc, BuildContext context) {
     String appId = post.postAppId;
     String pageId = post.postPageId;
     Map<String, Object> parameters = post.pageParameters;
-    var navigatorBloc; //NavigatorBloc(navigatorKey: navigatorKey);
+    //var navigatorBloc; //NavigatorBloc(navigatorKey: navigatorKey);
     var asPlaystore = false;
+    // BlocProvider.of<NavigatorBloc>(context)
     var blocProviders = <BlocProvider>[];
     blocProviders.add(BlocProvider<AccessBloc>(
         create: (context) =>
-            AccessBloc(navigatorBloc)..add(InitApp(appId, asPlaystore))));
+            AccessBloc(null)..add(InitApp(appId, asPlaystore))));
     //blocProviders.add(BlocProvider<NavigatorBloc>(create: (context) => navigatorBloc));
     return MultiBlocProvider(
         providers: blocProviders,
@@ -147,7 +139,7 @@ class Post extends StatelessWidget {
                 return Container(
                     height: 300,
                     child:
-                        _body(context, accessState, appId, pageId, parameters));
+                        _body(context, originalAccessBloc, accessState, appId, pageId, parameters));
               } else {
                 return Center(
                   child: CircularProgressIndicator(),
@@ -179,7 +171,7 @@ class Post extends StatelessWidget {
         text: "Hello, World. I want to make a lot of money!");
   }
 
-  Widget _body(BuildContext context, AccessState accessState, String appId,
+  Widget _body(BuildContext context, AccessBloc originalAccessBloc, AccessState accessState, String appId,
       String pageId, Map<String, Object> parameters) {
     return Stack(
       children: <Widget>[
@@ -215,8 +207,7 @@ class Post extends StatelessWidget {
             })),
         InkWell(
             onTap: () {
-              var gotoPage = GotoPage(appId, pageID: pageId);
-              eliud_router.Router.navigateTo(context, gotoPage, parameters: parameters);
+              originalAccessBloc.add(SwitchAppAndPageEvent(appId, pageId, parameters));
             },
             child: new Container(
               width: 1000,
