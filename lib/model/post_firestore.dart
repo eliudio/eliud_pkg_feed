@@ -77,6 +77,7 @@ class PostFirestore implements PostRepository {
         }).toList();
         return posts;
       });
+  
     }
     return stream.listen((listOfPostModels) {
       trigger(listOfPostModels);
@@ -96,28 +97,28 @@ class PostFirestore implements PostRepository {
 
 
   Stream<List<PostModel>> values(String currentMember, ) {
-    return PostCollection.where('readAccess', arrayContainsAny: [currentMember, 'PUBLIC']).snapshots().map((snapshot) {
+    return PostCollection.where('readAccess', arrayContainsAny: ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).snapshots().map((snapshot) {
       return snapshot.documents
             .map((doc) => _populateDoc(doc)).toList();
     });
   }
 
   Stream<List<PostModel>> valuesWithDetails(String currentMember, ) {
-    return PostCollection.where('readAccess', arrayContainsAny: [currentMember, 'PUBLIC']).snapshots().asyncMap((snapshot) {
+    return PostCollection.where('readAccess', arrayContainsAny: ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).snapshots().asyncMap((snapshot) {
       return Future.wait(snapshot.documents
           .map((doc) => _populateDocPlus(doc)).toList());
     });
   }
 
   Future<List<PostModel>> valuesList(String currentMember, ) async {
-    return await PostCollection.where('readAccess', arrayContainsAny: [currentMember, 'PUBLIC']).getDocuments().then((value) {
+    return await PostCollection.where('readAccess', arrayContainsAny: ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).getDocuments().then((value) {
       var list = value.documents;
       return list.map((doc) => _populateDoc(doc)).toList();
     });
   }
 
   Future<List<PostModel>> valuesListWithDetails(String currentMember, ) async {
-    return await PostCollection.where('readAccess', arrayContainsAny: [currentMember, 'PUBLIC']).getDocuments().then((value) {
+    return await PostCollection.where('readAccess', arrayContainsAny: ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).getDocuments().then((value) {
       var list = value.documents;
       return Future.wait(list.map((doc) =>  _populateDocPlus(doc)).toList());
     });

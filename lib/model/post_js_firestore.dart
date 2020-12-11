@@ -71,7 +71,7 @@ class PostJsFirestore implements PostRepository {
   StreamSubscription<List<PostModel>> listen(String currentMember, PostModelTrigger trigger, {String orderBy, bool descending }) {
     var stream;
     if (orderBy == null) {
-      stream = getCollection().where('readAccess', 'array-contains-any', [currentMember, 'PUBLIC']).onSnapshot
+      stream = getCollection().where('readAccess', 'array-contains-any', ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).onSnapshot
           .map((data) {
         Iterable<PostModel> posts  = data.docs.map((doc) {
           PostModel value = _populateDoc(doc);
@@ -80,7 +80,7 @@ class PostJsFirestore implements PostRepository {
         return posts;
       });
     } else {
-      stream = (orderBy == null ?  getCollection() : getCollection().orderBy(orderBy, descending ? 'desc': 'asc')).where('readAccess', 'array-contains-any', [currentMember, 'PUBLIC']).onSnapshot
+      stream = (orderBy == null ?  getCollection() : getCollection().orderBy(orderBy, descending ? 'desc': 'asc')).where('readAccess', 'array-contains-any', ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).onSnapshot
           .map((data) {
         Iterable<PostModel> posts  = data.docs.map((doc) {
           PostModel value = _populateDoc(doc);
@@ -96,7 +96,7 @@ class PostJsFirestore implements PostRepository {
 
   StreamSubscription<List<PostModel>> listenWithDetails(String currentMember, PostModelTrigger trigger) {
     // If we use postCollection here, then the second subscription fails
-    Stream<List<PostModel>> stream = getCollection().where('readAccess', 'array-contains-any', [currentMember, 'PUBLIC']).onSnapshot
+    Stream<List<PostModel>> stream = getCollection().where('readAccess', 'array-contains-any', ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).onSnapshot
         .asyncMap((data) async {
       return await Future.wait(data.docs.map((doc) =>  _populateDocPlus(doc)).toList());
     });
@@ -107,18 +107,18 @@ class PostJsFirestore implements PostRepository {
   }
 
   Stream<List<PostModel>> values(String currentMember, ) {
-    return postCollection.where('readAccess', 'array-contains-any', [currentMember, 'PUBLIC']).onSnapshot
+    return postCollection.where('readAccess', 'array-contains-any', ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).onSnapshot
         .map((data) => data.docs.map((doc) => _populateDoc(doc)).toList());
   }
 
   Stream<List<PostModel>> valuesWithDetails(String currentMember, ) {
-    return postCollection.where('readAccess', 'array-contains-any', [currentMember, 'PUBLIC']).onSnapshot
+    return postCollection.where('readAccess', 'array-contains-any', ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).onSnapshot
         .asyncMap((data) => Future.wait(data.docs.map((doc) => _populateDocPlus(doc)).toList()));
   }
 
   @override
   Future<List<PostModel>> valuesList(String currentMember, ) {
-    return postCollection.where('readAccess', 'array-contains-any', [currentMember, 'PUBLIC']).get().then((value) {
+    return postCollection.where('readAccess', 'array-contains-any', ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).get().then((value) {
       var list = value.docs;
       return list.map((doc) => _populateDoc(doc)).toList();
     });
@@ -126,7 +126,7 @@ class PostJsFirestore implements PostRepository {
 
   @override
   Future<List<PostModel>> valuesListWithDetails(String currentMember, ) {
-    return postCollection.where('readAccess', 'array-contains-any', [currentMember, 'PUBLIC']).get().then((value) {
+    return postCollection.where('readAccess', 'array-contains-any', ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).get().then((value) {
       var list = value.docs;
       return Future.wait(list.map((doc) =>  _populateDocPlus(doc)).toList());
     });
