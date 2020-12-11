@@ -46,29 +46,34 @@ class Post extends StatelessWidget {
       children: <Widget>[
         IconButton(
             icon: ImageIcon(
-              AssetImage("lib/_assets/images/heart_selected.png", package: "eliud_pkg_feed"),
+              AssetImage("assets/images/basicons.xyz/ThumbsUp.png", package: "eliud_pkg_feed"),
             ),
             onPressed: null,
-            color: Colors.black87),
-        IconButton(
-            icon: ImageIcon(
-              AssetImage("lib/_assets/images/comment2.png", package: "eliud_pkg_feed"),
-            ),
-            onPressed: null,
-            color: Colors.black87),
-        IconButton(
-            icon: ImageIcon(
-              AssetImage("lib/_assets/images/direct_message.png", package: "eliud_pkg_feed"),
-            ),
-            onPressed: null,
-            color: Colors.black87),
+            color: Colors.black),
+
         Spacer(),
         IconButton(
             icon: ImageIcon(
-              AssetImage("lib/_assets/images/bookmark.png", package: "eliud_pkg_feed"),
+              AssetImage("assets/images/basicons.xyz/CommentCircleChatMessage.png", package: "eliud_pkg_feed"),
             ),
             onPressed: null,
-            color: Colors.black87),
+            color: Colors.black),
+
+        Spacer(),
+        IconButton(
+            icon: ImageIcon(
+              AssetImage("assets/images/basicons.xyz/Forward.png", package: "eliud_pkg_feed"),
+            ),
+            onPressed: null,
+            color: Colors.black),
+        // if thumbsdown is allowed?
+        Spacer(),
+        IconButton(
+            icon: ImageIcon(
+              AssetImage("assets/images/basicons.xyz/ThumbsDown.png", package: "eliud_pkg_feed"),
+            ),
+            onPressed: null,
+            color: Colors.black),
       ],
     );
   }
