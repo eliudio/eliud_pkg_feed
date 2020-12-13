@@ -3,6 +3,7 @@ import 'package:eliud_core/core/access/bloc/access_event.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/components/page_body_helper.dart';
 import 'package:eliud_core/core/widgets/alert_widget.dart';
+import 'package:eliud_core/core/widgets/progress_indicator.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/model/page_component_bloc.dart';
 import 'package:eliud_core/model/page_component_event.dart';
@@ -147,13 +148,13 @@ class Post extends StatelessWidget {
                         _body(context, originalAccessBloc, accessState, appId, pageId, parameters));
               } else {
                 return Center(
-                  child: CircularProgressIndicator(),
+                  child: DelayedCircularProgressIndicator(),
                 );
               }
             });
           } else {
             return Center(
-              child: CircularProgressIndicator(),
+              child: DelayedCircularProgressIndicator(),
             );
           }
         }));
@@ -206,7 +207,7 @@ class Post extends StatelessWidget {
                 }
               } else {
                 return Center(
-                  child: CircularProgressIndicator(),
+                  child: DelayedCircularProgressIndicator(),
                 );
               }
             })),
