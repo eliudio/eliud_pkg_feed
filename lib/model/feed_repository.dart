@@ -23,11 +23,11 @@ abstract class FeedRepository {
   Future<void> delete(FeedModel value);
   Future<FeedModel> get(String id);
   Future<FeedModel> update(FeedModel value);
-  Stream<List<FeedModel>> values();
-  Stream<List<FeedModel>> valuesWithDetails();  Future<List<FeedModel>> valuesList();
-  Future<List<FeedModel>> valuesListWithDetails();
+  Stream<List<FeedModel>> values({String orderBy, bool descending });
+  Stream<List<FeedModel>> valuesWithDetails({String orderBy, bool descending });  Future<List<FeedModel>> valuesList({String orderBy, bool descending });
+  Future<List<FeedModel>> valuesListWithDetails({String orderBy, bool descending });
   StreamSubscription<List<FeedModel>> listen(FeedModelTrigger trigger, { String orderBy, bool descending });
-  StreamSubscription<List<FeedModel>> listenWithDetails(FeedModelTrigger trigger);
+  StreamSubscription<List<FeedModel>> listenWithDetails(FeedModelTrigger trigger, { String orderBy, bool descending });
   void flush();
 
   Future<void> deleteAll();

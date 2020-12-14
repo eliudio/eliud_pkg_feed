@@ -67,23 +67,23 @@ class PostCache implements PostRepository {
   }
 
   @override
-  Stream<List<PostModel>> values(String currentMember, ) {
-    return reference.values(currentMember,);
+  Stream<List<PostModel>> values(String currentMember, {String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc }) {
+    return reference.values(currentMember, orderBy: orderBy, descending: descending, startAfter: startAfter, limit: limit, setLastDoc: setLastDoc);
   }
 
   @override
-  Stream<List<PostModel>> valuesWithDetails(String currentMember, ) {
-    return reference.valuesWithDetails(currentMember,);
+  Stream<List<PostModel>> valuesWithDetails(String currentMember, {String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc }) {
+    return reference.valuesWithDetails(currentMember, orderBy: orderBy, descending: descending, startAfter: startAfter, limit: limit, setLastDoc: setLastDoc);
   }
 
   @override
-  Future<List<PostModel>> valuesList(String currentMember, ) async {
-    return await reference.valuesList(currentMember,);
+  Future<List<PostModel>> valuesList(String currentMember, {String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc }) async {
+    return await reference.valuesList(currentMember, orderBy: orderBy, descending: descending, startAfter: startAfter, limit: limit, setLastDoc: setLastDoc);
   }
-  
+
   @override
-  Future<List<PostModel>> valuesListWithDetails(String currentMember, ) async {
-    return await reference.valuesListWithDetails(currentMember,);
+  Future<List<PostModel>> valuesListWithDetails(String currentMember, {String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc }) async {
+    return await reference.valuesListWithDetails(currentMember, orderBy: orderBy, descending: descending, startAfter: startAfter, limit: limit, setLastDoc: setLastDoc);
   }
 
   void flush() {
@@ -101,7 +101,7 @@ class PostCache implements PostRepository {
   }
 
   @override
-  StreamSubscription<List<PostModel>> listenWithDetails(String currentMember, trigger) {
+  StreamSubscription<List<PostModel>> listenWithDetails(String currentMember, trigger, {String orderBy, bool descending }) {
     return reference.listenWithDetails(currentMember,trigger);
   }
 

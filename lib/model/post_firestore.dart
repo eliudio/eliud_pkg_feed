@@ -84,44 +84,91 @@ class PostFirestore implements PostRepository {
     });
   }
 
-  StreamSubscription<List<PostModel>> listenWithDetails(String currentMember, PostModelTrigger trigger) {
-    Stream<List<PostModel>> stream = PostCollection.snapshots()
-        .asyncMap((data) async {
-      return await Future.wait(data.documents.map((doc) =>  _populateDocPlus(doc)).toList());
-    });
+  StreamSubscription<List<PostModel>> listenWithDetails(String currentMember, PostModelTrigger trigger, { String orderBy, bool descending }) {
+    Stream<List<PostModel>> stream;
+    if (orderBy == null) {
+      stream = PostCollection.snapshots()
+          .asyncMap((data) async {
+        return await Future.wait(data.documents.map((doc) =>  _populateDocPlus(doc)).toList());
+      });
+    } else {
+      stream = PostCollection.orderBy(orderBy, descending: descending).snapshots()
+          .asyncMap((data) async {
+        return await Future.wait(data.documents.map((doc) =>  _populateDocPlus(doc)).toList());
+      });
+    }
 
     return stream.listen((listOfPostModels) {
       trigger(listOfPostModels);
     });
   }
 
+  Query getQuery(String currentMember, { String orderBy, bool descending, DocumentSnapshot startAfter, int limit}) {
+    Query useThisCollection = PostCollection;
+    if (orderBy != null) {
+      useThisCollection = useThisCollection.orderBy(orderBy, descending: descending);
+    }
+    useThisCollection = useThisCollection.where('readAccess', arrayContainsAny: ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']);
+    if (startAfter != null) {
+      useThisCollection = useThisCollection.startAfterDocument(startAfter);
+    }
+    if (limit != null) {
+      useThisCollection = useThisCollection.limit(limit);
+    }
+    return useThisCollection;
+  }
 
-  Stream<List<PostModel>> values(String currentMember, ) {
-    return PostCollection.where('readAccess', arrayContainsAny: ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).snapshots().map((snapshot) {
+  Stream<List<PostModel>> values(String currentMember, { String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc}) {
+    DocumentSnapshot lastDoc;
+    Stream<List<PostModel>> _values = getQuery(currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit).snapshots().map((snapshot) {
       return snapshot.documents
-            .map((doc) => _populateDoc(doc)).toList();
+          .map((doc) {
+            lastDoc = doc;
+            return _populateDoc(doc);
+      }).toList();
     });
+    if ((setLastDoc != null) && (lastDoc != null)) setLastDoc(lastDoc);
+    return _values;
   }
 
-  Stream<List<PostModel>> valuesWithDetails(String currentMember, ) {
-    return PostCollection.where('readAccess', arrayContainsAny: ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).snapshots().asyncMap((snapshot) {
-      return Future.wait(snapshot.documents
-          .map((doc) => _populateDocPlus(doc)).toList());
-    });
+  Stream<List<PostModel>> valuesWithDetails(String currentMember, { String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc}) {
+    DocumentSnapshot lastDoc;
+    Stream<List<PostModel>> _values = getQuery(currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit).snapshots().asyncMap((snapshot) {
+        return Future.wait(snapshot.documents
+            .map((doc)
+        {
+          lastDoc = doc;
+          return _populateDocPlus(doc);
+        }).toList());
+      });
+    if ((setLastDoc != null) && (lastDoc != null)) setLastDoc(lastDoc);
+    return _values;
   }
 
-  Future<List<PostModel>> valuesList(String currentMember, ) async {
-    return await PostCollection.where('readAccess', arrayContainsAny: ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).getDocuments().then((value) {
+  Future<List<PostModel>> valuesList(String currentMember, { String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc}) async {
+    DocumentSnapshot lastDoc;
+    List<PostModel> _values = await getQuery(currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit).getDocuments().then((value) {
       var list = value.documents;
-      return list.map((doc) => _populateDoc(doc)).toList();
+      return list.map((doc) {
+        lastDoc = doc;
+        return _populateDoc(doc);
+      }).toList();
     });
+    if ((setLastDoc != null) && (lastDoc != null)) setLastDoc(lastDoc);
+    return _values;
   }
 
-  Future<List<PostModel>> valuesListWithDetails(String currentMember, ) async {
-    return await PostCollection.where('readAccess', arrayContainsAny: ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).getDocuments().then((value) {
+  Future<List<PostModel>> valuesListWithDetails(String currentMember, { String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc}) async {
+    DocumentSnapshot lastDoc;
+    List<PostModel> _values = await getQuery(currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit).getDocuments().then((value) {
       var list = value.documents;
-      return Future.wait(list.map((doc) =>  _populateDocPlus(doc)).toList());
+      return Future.wait(list.map((doc) {
+        lastDoc = doc;
+        return _populateDocPlus(doc);
+      }).toList());
     });
+    if ((setLastDoc != null) && (lastDoc != null)) setLastDoc(lastDoc);
+    return _values;
   }
 
   void flush() {}
@@ -132,7 +179,6 @@ class PostFirestore implements PostRepository {
         ds.reference.delete();
       }});
   }
-
 
   final String appId;
   final CollectionReference PostCollection;

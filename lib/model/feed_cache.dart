@@ -67,22 +67,22 @@ class FeedCache implements FeedRepository {
   }
 
   @override
-  Stream<List<FeedModel>> values() {
+  Stream<List<FeedModel>> values({String orderBy, bool descending }) {
     return reference.values();
   }
 
   @override
-  Stream<List<FeedModel>> valuesWithDetails() {
+  Stream<List<FeedModel>> valuesWithDetails({String orderBy, bool descending }) {
     return reference.valuesWithDetails();
   }
 
   @override
-  Future<List<FeedModel>> valuesList() async {
+  Future<List<FeedModel>> valuesList({String orderBy, bool descending }) async {
     return await reference.valuesList();
   }
   
   @override
-  Future<List<FeedModel>> valuesListWithDetails() async {
+  Future<List<FeedModel>> valuesListWithDetails({String orderBy, bool descending }) async {
     return await reference.valuesListWithDetails();
   }
 
@@ -101,7 +101,7 @@ class FeedCache implements FeedRepository {
   }
 
   @override
-  StreamSubscription<List<FeedModel>> listenWithDetails(trigger) {
+  StreamSubscription<List<FeedModel>> listenWithDetails(trigger, {String orderBy, bool descending }) {
     return reference.listenWithDetails(trigger);
   }
 

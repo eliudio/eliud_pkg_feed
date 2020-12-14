@@ -84,11 +84,19 @@ class FeedFirestore implements FeedRepository {
     });
   }
 
-  StreamSubscription<List<FeedModel>> listenWithDetails(FeedModelTrigger trigger) {
-    Stream<List<FeedModel>> stream = FeedCollection.snapshots()
-        .asyncMap((data) async {
-      return await Future.wait(data.documents.map((doc) =>  _populateDocPlus(doc)).toList());
-    });
+  StreamSubscription<List<FeedModel>> listenWithDetails(FeedModelTrigger trigger, { String orderBy, bool descending }) {
+    Stream<List<FeedModel>> stream;
+    if (orderBy == null) {
+      stream = FeedCollection.snapshots()
+          .asyncMap((data) async {
+        return await Future.wait(data.documents.map((doc) =>  _populateDocPlus(doc)).toList());
+      });
+    } else {
+      stream = FeedCollection.orderBy(orderBy, descending: descending).snapshots()
+          .asyncMap((data) async {
+        return await Future.wait(data.documents.map((doc) =>  _populateDocPlus(doc)).toList());
+      });
+    }
 
     return stream.listen((listOfFeedModels) {
       trigger(listOfFeedModels);
@@ -96,32 +104,60 @@ class FeedFirestore implements FeedRepository {
   }
 
 
-  Stream<List<FeedModel>> values() {
-    return FeedCollection.snapshots().map((snapshot) {
-      return snapshot.documents
-            .map((doc) => _populateDoc(doc)).toList();
-    });
+  Stream<List<FeedModel>> values({ String orderBy, bool descending }) {
+    if (orderBy == null) {
+      return FeedCollection.snapshots().map((snapshot) {
+        return snapshot.documents
+              .map((doc) => _populateDoc(doc)).toList();
+      });
+    } else {
+      return FeedCollection.orderBy(orderBy, descending: descending).snapshots().map((snapshot) {
+        return snapshot.documents
+              .map((doc) => _populateDoc(doc)).toList();
+      });
+    }
   }
 
-  Stream<List<FeedModel>> valuesWithDetails() {
-    return FeedCollection.snapshots().asyncMap((snapshot) {
-      return Future.wait(snapshot.documents
-          .map((doc) => _populateDocPlus(doc)).toList());
-    });
+  Stream<List<FeedModel>> valuesWithDetails({ String orderBy, bool descending }) {
+    if (orderBy == null) {
+      return FeedCollection.snapshots().asyncMap((snapshot) {
+        return Future.wait(snapshot.documents
+            .map((doc) => _populateDocPlus(doc)).toList());
+      });
+    } else {
+      return FeedCollection.orderBy(orderBy, descending: descending).snapshots().asyncMap((snapshot) {
+        return Future.wait(snapshot.documents
+            .map((doc) => _populateDocPlus(doc)).toList());
+      });
+    }
   }
 
-  Future<List<FeedModel>> valuesList() async {
-    return await FeedCollection.getDocuments().then((value) {
-      var list = value.documents;
-      return list.map((doc) => _populateDoc(doc)).toList();
-    });
+  Future<List<FeedModel>> valuesList({ String orderBy, bool descending }) async {
+    if (orderBy == null) {
+      return await FeedCollection.getDocuments().then((value) {
+        var list = value.documents;
+        return list.map((doc) => _populateDoc(doc)).toList();
+      });
+    } else {
+      return await FeedCollection.orderBy(orderBy, descending: descending).getDocuments().then((value) {
+        var list = value.documents;
+        return list.map((doc) => _populateDoc(doc)).toList();
+      });
+    }
   }
 
-  Future<List<FeedModel>> valuesListWithDetails() async {
-    return await FeedCollection.getDocuments().then((value) {
-      var list = value.documents;
-      return Future.wait(list.map((doc) =>  _populateDocPlus(doc)).toList());
-    });
+  Future<List<FeedModel>> valuesListWithDetails({ String orderBy, bool descending }) async {
+    if (orderBy == null) {
+      return await FeedCollection.getDocuments().then((value) {
+        var list = value.documents;
+        return Future.wait(list.map((doc) =>  _populateDocPlus(doc)).toList());
+      });
+    } else {
+      return await FeedCollection.orderBy(orderBy, descending: descending).getDocuments().then((value) {
+        var list = value.documents;
+        return Future.wait(list.map((doc) =>  _populateDocPlus(doc)).toList());
+      });
+    }
   }
 
   void flush() {}

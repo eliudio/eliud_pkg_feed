@@ -17,18 +17,19 @@ import 'dart:async';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 
 typedef PostModelTrigger(List<PostModel> list);
+typedef SetLastDoc(Object value);
 
 abstract class PostRepository {
   Future<PostModel> add(PostModel value);
   Future<void> delete(PostModel value);
   Future<PostModel> get(String id);
   Future<PostModel> update(PostModel value);
-  Stream<List<PostModel>> values(String currentMember);
-  Stream<List<PostModel>> valuesWithDetails(String currentMember);
-  Future<List<PostModel>> valuesList(String currentMember);
-  Future<List<PostModel>> valuesListWithDetails(String currentMember);
+  Stream<List<PostModel>> values(String currentMember, {String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc });
+  Stream<List<PostModel>> valuesWithDetails(String currentMember, {String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc });
+  Future<List<PostModel>> valuesList(String currentMember, {String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc });
+  Future<List<PostModel>> valuesListWithDetails(String currentMember, {String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc });
   StreamSubscription<List<PostModel>> listen(String currentMember, PostModelTrigger trigger, { String orderBy, bool descending });
-  StreamSubscription<List<PostModel>> listenWithDetails(String currentMember, PostModelTrigger trigger);
+  StreamSubscription<List<PostModel>> listenWithDetails(String currentMember, PostModelTrigger trigger, { String orderBy, bool descending });
   void flush();
 
   Future<void> deleteAll();

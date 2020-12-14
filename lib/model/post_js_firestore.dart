@@ -33,7 +33,7 @@ import 'package:eliud_pkg_feed/model/entity_export.dart';
 
 
 class PostJsFirestore implements PostRepository {
-  Future<PostModel> add(PostModel value) {
+  Future<PostModel> add(PostModel value, ) {
     return postCollection.doc(value.documentID)
         .set(value.toEntity(appId: appId).copyWith(timestamp : FieldValue.serverTimestamp(), ).toDocument())
         .then((_) => value).then((v) => get(value.documentID));
@@ -80,7 +80,7 @@ class PostJsFirestore implements PostRepository {
         return posts;
       });
     } else {
-      stream = (orderBy == null ?  getCollection() : getCollection().orderBy(orderBy, descending ? 'desc': 'asc')).where('readAccess', 'array-contains-any', ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).onSnapshot
+      stream = getCollection().orderBy(orderBy, descending ? 'desc': 'asc').where('readAccess', 'array-contains-any', ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).onSnapshot
           .map((data) {
         Iterable<PostModel> posts  = data.docs.map((doc) {
           PostModel value = _populateDoc(doc);
@@ -94,42 +94,74 @@ class PostJsFirestore implements PostRepository {
     });
   }
 
-  StreamSubscription<List<PostModel>> listenWithDetails(String currentMember, PostModelTrigger trigger) {
-    // If we use postCollection here, then the second subscription fails
-    Stream<List<PostModel>> stream = getCollection().where('readAccess', 'array-contains-any', ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).onSnapshot
-        .asyncMap((data) async {
-      return await Future.wait(data.docs.map((doc) =>  _populateDocPlus(doc)).toList());
-    });
-
+  StreamSubscription<List<PostModel>> listenWithDetails(String currentMember, PostModelTrigger trigger, {String orderBy, bool descending }) {
+    var stream;
+    if (orderBy == null) {
+      // If we use postCollection here, then the second subscription fails
+      stream = getCollection().where('readAccess', 'array-contains-any', ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).onSnapshot
+          .asyncMap((data) async {
+        return await Future.wait(data.docs.map((doc) =>  _populateDocPlus(doc)).toList());
+      });
+    } else {
+      // If we use postCollection here, then the second subscription fails
+      stream = getCollection().orderBy(orderBy, descending ? 'desc': 'asc').where('readAccess', 'array-contains-any', ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).onSnapshot
+          .asyncMap((data) async {
+        return await Future.wait(data.docs.map((doc) =>  _populateDocPlus(doc)).toList());
+      });
+    }
     return stream.listen((listOfPostModels) {
       trigger(listOfPostModels);
     });
   }
 
-  Stream<List<PostModel>> values(String currentMember, ) {
-    return postCollection.where('readAccess', 'array-contains-any', ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).onSnapshot
-        .map((data) => data.docs.map((doc) => _populateDoc(doc)).toList());
+  Stream<List<PostModel>> values(String currentMember, {String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc }) {
+    if (orderBy == null) {
+      return postCollection.where('readAccess', 'array-contains-any', ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).onSnapshot
+          .map((data) => data.docs.map((doc) => _populateDoc(doc)).toList());
+    } else {
+      return postCollection.orderBy(orderBy, descending ? 'desc': 'asc').where('readAccess', 'array-contains-any', ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).onSnapshot
+          .map((data) => data.docs.map((doc) => _populateDoc(doc)).toList());
+    }
   }
 
-  Stream<List<PostModel>> valuesWithDetails(String currentMember, ) {
-    return postCollection.where('readAccess', 'array-contains-any', ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).onSnapshot
-        .asyncMap((data) => Future.wait(data.docs.map((doc) => _populateDocPlus(doc)).toList()));
+  Stream<List<PostModel>> valuesWithDetails(String currentMember, {String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc }) {
+    if (orderBy == null) {
+      return postCollection.where('readAccess', 'array-contains-any', ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).onSnapshot
+          .asyncMap((data) => Future.wait(data.docs.map((doc) => _populateDocPlus(doc)).toList()));
+    } else {
+      return postCollection.orderBy(orderBy, descending ? 'desc': 'asc').where('readAccess', 'array-contains-any', ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).onSnapshot
+          .asyncMap((data) => Future.wait(data.docs.map((doc) => _populateDocPlus(doc)).toList()));
+    }
   }
 
   @override
-  Future<List<PostModel>> valuesList(String currentMember, ) {
-    return postCollection.where('readAccess', 'array-contains-any', ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).get().then((value) {
-      var list = value.docs;
-      return list.map((doc) => _populateDoc(doc)).toList();
-    });
+  Future<List<PostModel>> valuesList(String currentMember, {String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc }) {
+    if (orderBy == null) {
+      return postCollection.where('readAccess', 'array-contains-any', ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).get().then((value) {
+        var list = value.docs;
+        return list.map((doc) => _populateDoc(doc)).toList();
+      });
+    } else {
+      return postCollection.orderBy(orderBy, descending ? 'desc': 'asc').where('readAccess', 'array-contains-any', ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).get().then((value) {
+        var list = value.docs;
+        return list.map((doc) => _populateDoc(doc)).toList();
+      });
+    }
   }
 
   @override
-  Future<List<PostModel>> valuesListWithDetails(String currentMember, ) {
-    return postCollection.where('readAccess', 'array-contains-any', ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).get().then((value) {
-      var list = value.docs;
-      return Future.wait(list.map((doc) =>  _populateDocPlus(doc)).toList());
-    });
+  Future<List<PostModel>> valuesListWithDetails(String currentMember, {String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc }) {
+    if (orderBy == null) {
+      return postCollection.where('readAccess', 'array-contains-any', ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).get().then((value) {
+        var list = value.docs;
+        return Future.wait(list.map((doc) =>  _populateDocPlus(doc)).toList());
+      });
+    } else {
+      return postCollection.orderBy(orderBy, descending ? 'desc': 'asc').where('readAccess', 'array-contains-any', ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).get().then((value) {
+        var list = value.docs;
+        return Future.wait(list.map((doc) =>  _populateDocPlus(doc)).toList());
+      });
+    }
   }
 
   void flush() {
