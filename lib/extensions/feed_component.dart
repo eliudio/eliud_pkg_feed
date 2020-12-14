@@ -1,6 +1,7 @@
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/widgets/alert_widget.dart';
 import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core/model/rgb_model.dart';
 import 'package:eliud_core/tools/component_constructor.dart';
 import 'package:eliud_core/tools/etc.dart';
 import 'package:eliud_pkg_feed/extensions/widgets/post.dart';
@@ -29,7 +30,7 @@ class FeedComponent extends AbstractFeedComponent {
   Widget alertWidget({title = String, content = String}) {
     return AlertWidget(title: title, content: content);
   }
-  
+
   @override
   Widget yourWidget(BuildContext context, FeedModel feedModel) {
     // if logged on: show this person's feed
@@ -103,11 +104,63 @@ class _PostsListState extends State<PostsList> {
   }
 
   Widget _buttonNextPage() {
-    return RaisedButton(
-        color: RgbHelper.color(rgbo: _app.formSubmitButtonColor),
-        onPressed: () {
-          _postBloc.add(PostPagedFetched());
-        },
-        child: Text('more'));
+    return MyButton(
+      buttonColor: _app.formSubmitButtonColor,
+      onClickFunction: _onClick,
+    );
+  }
+
+  void _onClick() {
+    _postBloc.add(PostPagedFetched());
+  }
+}
+
+typedef OnClickFunction();
+
+class MyButton extends StatefulWidget {
+  final RgbModel buttonColor;
+  final OnClickFunction onClickFunction;
+
+  const MyButton({Key key, this.buttonColor, this.onClickFunction})
+      : super(key: key);
+
+  @override
+  _MyButtonState createState() => _MyButtonState();
+}
+
+class _MyButtonState extends State<MyButton> {
+  bool clicked;
+
+  @override
+  void initState() {
+    super.initState();
+    clicked = false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!clicked) {
+      return RaisedButton(
+          color: RgbHelper.color(rgbo: widget.buttonColor),
+          onPressed: () {
+            setState(() {
+              clicked = true;
+            });
+            widget.onClickFunction();
+          },
+          child: Text('More...'));
+    } else {
+      return RaisedButton(
+          color: RgbHelper.color(rgbo: widget.buttonColor),
+          onPressed: () {
+            setState(() {
+              clicked = true;
+            });
+            widget.onClickFunction();
+          },
+          child: Center(
+              child: SizedBox(
+                  width: 30, height: 30, child: CircularProgressIndicator())));
+    }
   }
 }
