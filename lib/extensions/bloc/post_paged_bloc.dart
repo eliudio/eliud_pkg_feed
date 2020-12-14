@@ -77,7 +77,7 @@ class PostPagedBloc extends Bloc<PostPagedEvent, PostPagedState> {
 
   Future<List<PostModel>> _fetchPosts({Object lastRowFetched}) async {
     String currentMember = _currentMember();
-    return _postRepository.valuesList(currentMember, orderBy: 'timestamp', descending: true, limit: _postLimit, startAfter: lastRowFetched, setLastDoc: _setLastRowFetched);
+    return _postRepository.valuesList(currentMember: currentMember, orderBy: 'timestamp', descending: true, limit: _postLimit, startAfter: lastRowFetched, setLastDoc: _setLastRowFetched);
   }
 
   void _setLastRowFetched(Object o) {

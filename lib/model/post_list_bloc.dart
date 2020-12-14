@@ -43,12 +43,12 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
 
   Stream<PostListState> _mapLoadPostListToState({ String orderBy, bool descending }) async* {
     _postsListSubscription?.cancel();
-    _postsListSubscription = _postRepository.listen(_currentMember(),  (list) => add(PostListUpdated(value: list)), orderBy: orderBy, descending: descending);
+    _postsListSubscription = _postRepository.listen((list) => add(PostListUpdated(value: list)), orderBy: orderBy, descending: descending, currentMember: _currentMember(), );
   }
 
   Stream<PostListState> _mapLoadPostListWithDetailsToState() async* {
     _postsListSubscription?.cancel();
-    _postsListSubscription = _postRepository.listenWithDetails(_currentMember(),  (list) => add(PostListUpdated(value: list)));
+    _postsListSubscription = _postRepository.listenWithDetails((list) => add(PostListUpdated(value: list)), currentMember: _currentMember(), );
   }
 
   Stream<PostListState> _mapAddPostListToState(AddPostList event) async* {

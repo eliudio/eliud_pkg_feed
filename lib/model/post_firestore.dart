@@ -13,8 +13,6 @@
 
 */
 
-import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_pkg_feed/model/post_repository.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
@@ -29,6 +27,11 @@ import 'package:eliud_core/model/entity_export.dart';
 import 'package:eliud_core/tools/action_entity.dart';
 import 'package:eliud_pkg_feed/model/entity_export.dart';
 
+
+import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eliud_core/tools/firestore_tools.dart';
+import 'package:eliud_core/tools/common_tools.dart';
 
 class PostFirestore implements PostRepository {
   Future<PostModel> add(PostModel value) {
@@ -59,7 +62,7 @@ class PostFirestore implements PostRepository {
     });
   }
 
-  StreamSubscription<List<PostModel>> listen(String currentMember, PostModelTrigger trigger, { String orderBy, bool descending }) {
+  StreamSubscription<List<PostModel>> listen(PostModelTrigger trigger, {String currentMember, String orderBy, bool descending}) {
     Stream<List<PostModel>> stream;
     if (orderBy == null) {
        stream = PostCollection.where('readAccess', arrayContainsAny: ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']).snapshots().map((data) {
@@ -84,7 +87,7 @@ class PostFirestore implements PostRepository {
     });
   }
 
-  StreamSubscription<List<PostModel>> listenWithDetails(String currentMember, PostModelTrigger trigger, { String orderBy, bool descending }) {
+  StreamSubscription<List<PostModel>> listenWithDetails(PostModelTrigger trigger, {String currentMember, String orderBy, bool descending}) {
     Stream<List<PostModel>> stream;
     if (orderBy == null) {
       stream = PostCollection.snapshots()
@@ -103,53 +106,35 @@ class PostFirestore implements PostRepository {
     });
   }
 
-  Query getQuery(String currentMember, { String orderBy, bool descending, DocumentSnapshot startAfter, int limit}) {
-    Query useThisCollection = PostCollection;
-    if (orderBy != null) {
-      useThisCollection = useThisCollection.orderBy(orderBy, descending: descending);
-    }
-    useThisCollection = useThisCollection.where('readAccess', arrayContainsAny: ((currentMember == null) || (currentMember == "")) ? ['PUBLIC'] : [currentMember, 'PUBLIC']);
-    if (startAfter != null) {
-      useThisCollection = useThisCollection.startAfterDocument(startAfter);
-    }
-    if (limit != null) {
-      useThisCollection = useThisCollection.limit(limit);
-    }
-    return useThisCollection;
+
+  Stream<List<PostModel>> values({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc }) {
+    DocumentSnapshot lastDoc;
+    Stream<List<PostModel>> _values = getQuery(PostCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit).snapshots().map((snapshot) {
+      return snapshot.documents.map((doc) {
+        lastDoc = doc;
+        return _populateDoc(doc);
+      }).toList();});
+    if ((setLastDoc != null) && (lastDoc != null)) setLastDoc(lastDoc);
+    return _values;
   }
 
-  Stream<List<PostModel>> values(String currentMember, { String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc}) {
+  Stream<List<PostModel>> valuesWithDetails({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc }) {
     DocumentSnapshot lastDoc;
-    Stream<List<PostModel>> _values = getQuery(currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit).snapshots().map((snapshot) {
-      return snapshot.documents
-          .map((doc) {
-            lastDoc = doc;
-            return _populateDoc(doc);
-      }).toList();
+    Stream<List<PostModel>> _values = getQuery(PostCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit).snapshots().asyncMap((snapshot) {
+      return Future.wait(snapshot.documents.map((doc) {
+        lastDoc = doc;
+        return _populateDocPlus(doc);
+      }).toList());
     });
     if ((setLastDoc != null) && (lastDoc != null)) setLastDoc(lastDoc);
     return _values;
   }
 
-  Stream<List<PostModel>> valuesWithDetails(String currentMember, { String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc}) {
+  Future<List<PostModel>> valuesList({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc }) async {
     DocumentSnapshot lastDoc;
-    Stream<List<PostModel>> _values = getQuery(currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit).snapshots().asyncMap((snapshot) {
-        return Future.wait(snapshot.documents
-            .map((doc)
-        {
-          lastDoc = doc;
-          return _populateDocPlus(doc);
-        }).toList());
-      });
-    if ((setLastDoc != null) && (lastDoc != null)) setLastDoc(lastDoc);
-    return _values;
-  }
-
-  Future<List<PostModel>> valuesList(String currentMember, { String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc}) async {
-    DocumentSnapshot lastDoc;
-    List<PostModel> _values = await getQuery(currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit).getDocuments().then((value) {
+    List<PostModel> _values = await getQuery(PostCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit).getDocuments().then((value) {
       var list = value.documents;
-      return list.map((doc) {
+      return list.map((doc) { 
         lastDoc = doc;
         return _populateDoc(doc);
       }).toList();
@@ -158,9 +143,9 @@ class PostFirestore implements PostRepository {
     return _values;
   }
 
-  Future<List<PostModel>> valuesListWithDetails(String currentMember, { String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc}) async {
+  Future<List<PostModel>> valuesListWithDetails({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc }) async {
     DocumentSnapshot lastDoc;
-    List<PostModel> _values = await getQuery(currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit).getDocuments().then((value) {
+    List<PostModel> _values = await getQuery(PostCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit).getDocuments().then((value) {
       var list = value.documents;
       return Future.wait(list.map((doc) {
         lastDoc = doc;
@@ -177,8 +162,10 @@ class PostFirestore implements PostRepository {
     return PostCollection.getDocuments().then((snapshot) {
       for (DocumentSnapshot ds in snapshot.documents){
         ds.reference.delete();
-      }});
+      }
+    });
   }
+
 
   final String appId;
   final CollectionReference PostCollection;
