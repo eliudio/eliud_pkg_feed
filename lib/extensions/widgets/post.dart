@@ -200,10 +200,11 @@ class Post extends StatelessWidget {
                   var helper = PageBodyHelper();
                   var components = helper.getComponents(
                       state.value.bodyComponents, parameters);
-                  return helper.body(context, accessState,
+                  return helper.theBody(context, accessState,
                       backgroundDecoration: state.value.background,
                       components: components,
-                      pageModel: state.value);
+                      layout: fromPageLayout(state.value.layout),
+                      gridView: state.value.gridView);
                 }
               } else {
                 return Center(
