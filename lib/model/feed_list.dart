@@ -41,14 +41,17 @@ import 'package:eliud_pkg_feed/model/feed_model.dart';
 
 import 'package:eliud_core/model/app_model.dart';
 
+
 import 'feed_form.dart';
+
 class FeedListWidget extends StatefulWidget with HasFab {
   bool readOnly;
   String form;
+  String listItemWidget;
   FeedListWidgetState state;
   bool isEmbedded;
 
-  FeedListWidget({ Key key, this.readOnly, this.form, this.isEmbedded }): super(key: key);
+  FeedListWidget({ Key key, this.readOnly, this.form, this.listItemWidget, this.isEmbedded }): super(key: key);
 
   @override
   FeedListWidgetState createState() {
@@ -166,6 +169,7 @@ class FeedListWidgetState extends State<FeedListWidget> {
         itemCount: values.length,
         itemBuilder: (context, index) {
           final value = values[index];
+
           return FeedListItem(
             value: value,
             app: accessState.app,
@@ -207,6 +211,7 @@ class FeedListWidgetState extends State<FeedListWidget> {
       return null;
     }
   }
+  
   
 }
 

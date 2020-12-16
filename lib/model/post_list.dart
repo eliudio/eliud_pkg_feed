@@ -41,14 +41,17 @@ import 'package:eliud_pkg_feed/model/post_model.dart';
 
 import 'package:eliud_core/model/app_model.dart';
 
+
 import 'post_form.dart';
+
 class PostListWidget extends StatefulWidget with HasFab {
   bool readOnly;
   String form;
+  String listItemWidget;
   PostListWidgetState state;
   bool isEmbedded;
 
-  PostListWidget({ Key key, this.readOnly, this.form, this.isEmbedded }): super(key: key);
+  PostListWidget({ Key key, this.readOnly, this.form, this.listItemWidget, this.isEmbedded }): super(key: key);
 
   @override
   PostListWidgetState createState() {
@@ -166,6 +169,7 @@ class PostListWidgetState extends State<PostListWidget> {
         itemCount: values.length,
         itemBuilder: (context, index) {
           final value = values[index];
+
           return PostListItem(
             value: value,
             app: accessState.app,
@@ -207,6 +211,7 @@ class PostListWidgetState extends State<PostListWidget> {
       return null;
     }
   }
+  
   
 }
 
