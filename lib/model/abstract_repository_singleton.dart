@@ -16,7 +16,7 @@
 import '../model/feed_repository.dart';
 import '../model/post_repository.dart';
 import 'package:eliud_core/core/access/bloc/user_repository.dart';
-import 'package:eliud_core/tools/types.dart';
+import 'package:eliud_core/tools/common_tools.dart';
 
 FeedRepository feedRepository({ String appId }) => AbstractRepositorySingleton.singleton.feedRepository(appId);
 PostRepository postRepository({ String appId }) => AbstractRepositorySingleton.singleton.postRepository(appId);

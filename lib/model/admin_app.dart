@@ -16,6 +16,8 @@
 
 import 'package:eliud_core/tools/admin_app_base.dart';
 import 'package:eliud_core/tools/action_model.dart';
+import 'package:eliud_core/tools/common_tools.dart';
+import 'package:eliud_core/tools/common_tools.dart';
 
 import 'package:eliud_core/model/menu_def_model.dart';
 import 'package:eliud_core/model/page_model.dart';
@@ -55,7 +57,8 @@ class AdminApp extends AdminAppInstallerBase {
     components.add(BodyComponentModel(
       documentID: "internalWidget-feeds", componentName: "eliud_pkg_feed_internalWidgets", componentId: "feeds"));
     PageModel page = PageModel(
-        conditional: PageCondition.AdminOnly,
+        readCondition: ReadCondition.AsSpecifiedInPrivilegeLevelRequired,
+        privilegeLevelRequired: 99999,
         appId: appId,
         documentID: "eliud_pkg_feed_feeds_page",
         title: "Feeds",
@@ -75,7 +78,8 @@ class AdminApp extends AdminAppInstallerBase {
     components.add(BodyComponentModel(
       documentID: "internalWidget-posts", componentName: "eliud_pkg_feed_internalWidgets", componentId: "posts"));
     PageModel page = PageModel(
-        conditional: PageCondition.AdminOnly,
+        readCondition: ReadCondition.AsSpecifiedInPrivilegeLevelRequired,
+        privilegeLevelRequired: 99999,
         appId: appId,
         documentID: "eliud_pkg_feed_posts_page",
         title: "Posts",
