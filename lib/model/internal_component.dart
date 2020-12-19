@@ -122,7 +122,7 @@ class ListComponent extends StatelessWidget with HasFab {
       providers: [
         BlocProvider<FeedListBloc>(
           create: (context) => FeedListBloc(
-            
+            BlocProvider.of<AccessBloc>(context), 
             feedRepository: feedRepository(appId: AccessBloc.appId(context)),
           )..add(LoadFeedList()),
         )
@@ -172,7 +172,7 @@ class DropdownButtonComponent extends StatelessWidget {
       providers: [
         BlocProvider<FeedListBloc>(
           create: (context) => FeedListBloc(
-            
+            BlocProvider.of<AccessBloc>(context), 
             feedRepository: feedRepository(appId: AccessBloc.appId(context)),
           )..add(LoadFeedList()),
         )

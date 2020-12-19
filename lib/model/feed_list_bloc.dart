@@ -20,13 +20,17 @@ import 'package:meta/meta.dart';
 import 'package:eliud_pkg_feed/model/feed_repository.dart';
 import 'package:eliud_pkg_feed/model/feed_list_event.dart';
 import 'package:eliud_pkg_feed/model/feed_list_state.dart';
+import 'package:eliud_core/core/access/bloc/access_bloc.dart';
+import 'package:eliud_core/core/access/bloc/access_event.dart';
+import 'package:eliud_core/core/access/bloc/access_state.dart';
 
 
 class FeedListBloc extends Bloc<FeedListEvent, FeedListState> {
   final FeedRepository _feedRepository;
   StreamSubscription _feedsListSubscription;
+  final AccessBloc accessBloc;
 
-  FeedListBloc({ @required FeedRepository feedRepository })
+  FeedListBloc(this.accessBloc,{ @required FeedRepository feedRepository })
       : assert(feedRepository != null),
       _feedRepository = feedRepository,
       super(FeedListLoading());
