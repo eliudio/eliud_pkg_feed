@@ -39,7 +39,7 @@ import 'package:eliud_core/tools/common_tools.dart';
 class PostJsFirestore implements PostRepository {
   Future<PostModel> add(PostModel value) {
     return postCollection.doc(value.documentID)
-        .set(value.toEntity().copyWith(timestamp : FieldValue.serverTimestamp(), ).toDocument())
+        .set(value.toEntity(appId: appId).copyWith(timestamp : FieldValue.serverTimestamp(), ).toDocument())
         .then((_) => value).then((v) => get(value.documentID));
   }
 
@@ -49,7 +49,7 @@ class PostJsFirestore implements PostRepository {
 
   Future<PostModel> update(PostModel value) {
     return postCollection.doc(value.documentID)
-        .update(data: value.toEntity().copyWith(timestamp : FieldValue.serverTimestamp(), ).toDocument())
+        .update(data: value.toEntity(appId: appId).copyWith(timestamp : FieldValue.serverTimestamp(), ).toDocument())
         .then((_) => value).then((v) => get(value.documentID));
   }
 
@@ -58,7 +58,7 @@ class PostJsFirestore implements PostRepository {
   }
 
   Future<PostModel> _populateDocPlus(DocumentSnapshot value) async {
-    return PostModel.fromEntityPlus(value.id, PostEntity.fromMap(value.data()), );
+    return PostModel.fromEntityPlus(value.id, PostEntity.fromMap(value.data()), appId: appId);
   }
 
   Future<PostModel> get(String id) {
@@ -120,7 +120,7 @@ class PostJsFirestore implements PostRepository {
 
   Stream<List<PostModel>> values({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel }) {
     DocumentSnapshot lastDoc;
-    Stream<List<PostModel>> _values = getQuery(postCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, )
+    Stream<List<PostModel>> _values = getQuery(postCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, appId: appId)
       .onSnapshot
       .map((data) { 
         return data.docs.map((doc) {
@@ -133,7 +133,7 @@ class PostJsFirestore implements PostRepository {
 
   Stream<List<PostModel>> valuesWithDetails({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel }) {
     DocumentSnapshot lastDoc;
-    Stream<List<PostModel>> _values = getQuery(postCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, )
+    Stream<List<PostModel>> _values = getQuery(postCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, appId: appId)
       .onSnapshot
       .asyncMap((data) {
         return Future.wait(data.docs.map((doc) { 
@@ -148,7 +148,7 @@ class PostJsFirestore implements PostRepository {
   @override
   Future<List<PostModel>> valuesList({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel }) async {
     DocumentSnapshot lastDoc;
-    List<PostModel> _values = await getQuery(postCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, ).get().then((value) {
+    List<PostModel> _values = await getQuery(postCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, appId: appId).get().then((value) {
       var list = value.docs;
       return list.map((doc) { 
         lastDoc = doc;
@@ -162,7 +162,7 @@ class PostJsFirestore implements PostRepository {
   @override
   Future<List<PostModel>> valuesListWithDetails({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel }) async {
     DocumentSnapshot lastDoc;
-    List<PostModel> _values = await getQuery(postCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, ).get().then((value) {
+    List<PostModel> _values = await getQuery(postCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, appId: appId).get().then((value) {
       var list = value.docs;
       return Future.wait(list.map((doc) {  
         lastDoc = doc;
@@ -185,10 +185,10 @@ class PostJsFirestore implements PostRepository {
     return postCollection.doc(documentId).collection(name);
   }
 
+  final String appId;
+  PostJsFirestore(this.postCollection, this.appId);
+
   CollectionReference getCollection() => postCollection;
-
-  PostJsFirestore(this.postCollection);
-
   final CollectionReference postCollection;
 }
 
