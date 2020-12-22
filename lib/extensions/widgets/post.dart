@@ -185,8 +185,7 @@ class Post extends StatelessWidget {
             providers: [
               BlocProvider<PageComponentBloc>(
                 create: (context) => PageComponentBloc(
-                    pageRepository: AbstractRepositorySingleton.singleton
-                        .pageRepository(appId))
+                    pageRepository: pageRepository(appId: appId))
                   ..add(FetchPageComponent(id: pageId)),
               ),
             ],

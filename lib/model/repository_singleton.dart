@@ -14,6 +14,7 @@
 */
 
 import 'abstract_repository_singleton.dart';
+import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
 import 'dart:collection';
 import '../model/feed_firestore.dart';
 import '../model/feed_repository.dart';
@@ -29,11 +30,11 @@ class RepositorySingleton extends AbstractRepositorySingleton {
     var _postRepository = HashMap<String, PostRepository>();
 
     FeedRepository feedRepository(String appId) {
-      if (_feedRepository[appId] == null) _feedRepository[appId] = FeedCache(FeedFirestore(appId));
+      if (_feedRepository[appId] == null) _feedRepository[appId] = FeedCache(FeedFirestore(appRepository().getSubCollection(appId, 'feed')));
       return _feedRepository[appId];
     }
     PostRepository postRepository(String appId) {
-      if (_postRepository[appId] == null) _postRepository[appId] = PostCache(PostFirestore(appId));
+      if (_postRepository[appId] == null) _postRepository[appId] = PostCache(PostFirestore(appRepository().getSubCollection(appId, 'post')));
       return _postRepository[appId];
     }
 

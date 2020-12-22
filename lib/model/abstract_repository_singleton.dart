@@ -17,6 +17,7 @@ import '../model/feed_repository.dart';
 import '../model/post_repository.dart';
 import 'package:eliud_core/core/access/bloc/user_repository.dart';
 import 'package:eliud_core/tools/common_tools.dart';
+import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
 
 FeedRepository feedRepository({ String appId }) => AbstractRepositorySingleton.singleton.feedRepository(appId);
 PostRepository postRepository({ String appId }) => AbstractRepositorySingleton.singleton.postRepository(appId);
@@ -28,7 +29,5 @@ abstract class AbstractRepositorySingleton {
   PostRepository postRepository(String appId);
 
   void flush(String appId) {
-    feedRepository(appId).flush();
-    postRepository(appId).flush();
   }
 }

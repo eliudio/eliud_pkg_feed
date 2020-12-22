@@ -152,8 +152,6 @@ class AdminAppWiper extends AdminAppWiperBase {
 
   @override
   Future<void> deleteAll(String appId) async {
-    await feedRepository(appId: appId).deleteAll();
-    await postRepository(appId: appId).deleteAll();
     ;
   }
 

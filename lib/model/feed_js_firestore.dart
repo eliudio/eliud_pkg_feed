@@ -39,7 +39,7 @@ import 'package:eliud_core/tools/common_tools.dart';
 class FeedJsFirestore implements FeedRepository {
   Future<FeedModel> add(FeedModel value) {
     return feedCollection.doc(value.documentID)
-        .set(value.toEntity(appId: appId).toDocument())
+        .set(value.toEntity().toDocument())
         .then((_) => value);
   }
 
@@ -49,7 +49,7 @@ class FeedJsFirestore implements FeedRepository {
 
   Future<FeedModel> update(FeedModel value) {
     return feedCollection.doc(value.documentID)
-        .update(data: value.toEntity(appId: appId).toDocument())
+        .update(data: value.toEntity().toDocument())
         .then((_) => value);
   }
 
@@ -58,7 +58,7 @@ class FeedJsFirestore implements FeedRepository {
   }
 
   Future<FeedModel> _populateDocPlus(DocumentSnapshot value) async {
-    return FeedModel.fromEntityPlus(value.id, FeedEntity.fromMap(value.data()), appId: appId);
+    return FeedModel.fromEntityPlus(value.id, FeedEntity.fromMap(value.data()), );
   }
 
   Future<FeedModel> get(String id) {
@@ -120,7 +120,7 @@ class FeedJsFirestore implements FeedRepository {
 
   Stream<List<FeedModel>> values({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel }) {
     DocumentSnapshot lastDoc;
-    Stream<List<FeedModel>> _values = getQuery(feedCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, appId: appId)
+    Stream<List<FeedModel>> _values = getQuery(feedCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, )
       .onSnapshot
       .map((data) { 
         return data.docs.map((doc) {
@@ -133,7 +133,7 @@ class FeedJsFirestore implements FeedRepository {
 
   Stream<List<FeedModel>> valuesWithDetails({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel }) {
     DocumentSnapshot lastDoc;
-    Stream<List<FeedModel>> _values = getQuery(feedCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, appId: appId)
+    Stream<List<FeedModel>> _values = getQuery(feedCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, )
       .onSnapshot
       .asyncMap((data) {
         return Future.wait(data.docs.map((doc) { 
@@ -148,7 +148,7 @@ class FeedJsFirestore implements FeedRepository {
   @override
   Future<List<FeedModel>> valuesList({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel }) async {
     DocumentSnapshot lastDoc;
-    List<FeedModel> _values = await getQuery(feedCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, appId: appId).get().then((value) {
+    List<FeedModel> _values = await getQuery(feedCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, ).get().then((value) {
       var list = value.docs;
       return list.map((doc) { 
         lastDoc = doc;
@@ -162,7 +162,7 @@ class FeedJsFirestore implements FeedRepository {
   @override
   Future<List<FeedModel>> valuesListWithDetails({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel }) async {
     DocumentSnapshot lastDoc;
-    List<FeedModel> _values = await getQuery(feedCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, appId: appId).get().then((value) {
+    List<FeedModel> _values = await getQuery(feedCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, ).get().then((value) {
       var list = value.docs;
       return Future.wait(list.map((doc) {  
         lastDoc = doc;
@@ -180,11 +180,15 @@ class FeedJsFirestore implements FeedRepository {
     return feedCollection.get().then((snapshot) => snapshot.docs
         .forEach((element) => feedCollection.doc(element.id).delete()));
   }
-  CollectionReference getCollection() => firestore().collection('Feed-$appId');
-
-  final String appId;
   
-  FeedJsFirestore(this.appId) : feedCollection = firestore().collection('Feed-$appId');
+  dynamic getSubCollection(String documentId, String name) {
+    return feedCollection.doc(documentId).collection(name);
+  }
+
+  CollectionReference getCollection() => feedCollection;
+
+  FeedJsFirestore(this.feedCollection);
 
   final CollectionReference feedCollection;
 }
+
