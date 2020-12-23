@@ -188,7 +188,9 @@ class FeedJsFirestore implements FeedRepository {
   final String appId;
   FeedJsFirestore(this.feedCollection, this.appId);
 
-  CollectionReference getCollection() => feedCollection;
+  // In flutterweb, it seems we require to re-retrieve the collection. If not then subscribing / listening to it a second time fails.
+  // CollectionReference getCollection() => feedCollection;
+  CollectionReference getCollection() => appRepository().getSubCollection(appId, 'feed');
   final CollectionReference feedCollection;
 }
 
