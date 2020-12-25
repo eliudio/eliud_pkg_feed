@@ -3,7 +3,7 @@ import 'package:eliud_pkg_feed/model/js_repository_singleton.dart';
 
 import 'feed_package.dart';
 
-class FundamentalsWebPackage extends FeedPackage {
+class FeedWebPackage extends FeedPackage {
   @override
   void init() {
     AbstractRepositorySingleton.singleton = JsRepositorySingleton();
