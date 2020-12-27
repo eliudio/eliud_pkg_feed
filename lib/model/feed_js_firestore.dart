@@ -185,6 +185,9 @@ class FeedJsFirestore implements FeedRepository {
     return feedCollection.doc(documentId).collection(name);
   }
 
+  String timeStampToString(dynamic timeStamp) {
+    return firestoreTimeStampToString(timeStamp);
+  } 
   final String appId;
   FeedJsFirestore(this.feedCollection, this.appId);
 

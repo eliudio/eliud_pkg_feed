@@ -16,6 +16,7 @@
 import 'dart:collection';
 import 'dart:convert';
 import 'package:eliud_core/tools/common_tools.dart';
+import 'abstract_repository_singleton.dart';
 import 'package:eliud_core/model/entity_export.dart';
 import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_feed/model/entity_export.dart';
@@ -53,7 +54,7 @@ class PostEntity {
       pageParametersFromMap = map['pageParameters'];
     return PostEntity(
       authorId: map['authorId'], 
-      timestamp: map['timestamp']?.toDate(), 
+      timestamp: postRepository().timeStampToString(map['timestamp']), 
       appId: map['appId'], 
       postAppId: map['postAppId'], 
       postPageId: map['postPageId'], 

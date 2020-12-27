@@ -39,7 +39,7 @@ import 'package:eliud_core/tools/random.dart';
 class PostModel {
   String documentID;
   MemberModel author;
-  DateTime timestamp;
+  String timestamp;
 
   // This is the identifier of the app to which this feed belongs
   String appId;
@@ -57,7 +57,7 @@ class PostModel {
     assert(documentID != null);
   }
 
-  PostModel copyWith({String documentID, MemberModel author, DateTime timestamp, String appId, String postAppId, String postPageId, Map<String, Object> pageParameters, String description, List<String> readAccess, }) {
+  PostModel copyWith({String documentID, MemberModel author, String timestamp, String appId, String postAppId, String postPageId, Map<String, Object> pageParameters, String description, List<String> readAccess, }) {
     return PostModel(documentID: documentID ?? this.documentID, author: author ?? this.author, timestamp: timestamp ?? this.timestamp, appId: appId ?? this.appId, postAppId: postAppId ?? this.postAppId, postPageId: postPageId ?? this.postPageId, pageParameters: pageParameters ?? this.pageParameters, description: description ?? this.description, readAccess: readAccess ?? this.readAccess, );
   }
 

@@ -84,7 +84,7 @@ class ChangedPostAuthor extends PostFormEvent {
 }
 
 class ChangedPostTimestamp extends PostFormEvent {
-  final DateTime value;
+  final String value;
 
   ChangedPostTimestamp({this.value});
 

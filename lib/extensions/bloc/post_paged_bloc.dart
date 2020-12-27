@@ -89,7 +89,18 @@ class PostPagedBloc extends Bloc<PostPagedEvent, PostPagedState> {
       isLoggedIn = false;
     }
 */
-    return _postRepository.valuesList(currentMember: currentMember, orderBy: 'timestamp', descending: true, limit: _postLimit, startAfter: lastRowFetched, setLastDoc: _setLastRowFetched/*, isLoggedIn: isLoggedIn, privilegeLevel: privilegeLevel*/);
+    print("before valueList");
+    try {
+      return _postRepository.valuesList(currentMember: currentMember,
+          orderBy: 'timestamp',
+          descending: true,
+          limit: _postLimit,
+          startAfter: lastRowFetched,
+          setLastDoc: _setLastRowFetched /*, isLoggedIn: isLoggedIn, privilegeLevel: privilegeLevel*/);
+    } catch (Exception) {
+      print("Exception: " + Exception);
+    }
+    print("after valuelist");
   }
 
   void _setLastRowFetched(Object o) {

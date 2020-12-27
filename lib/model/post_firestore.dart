@@ -171,6 +171,9 @@ class PostFirestore implements PostRepository {
     return PostCollection.document(documentId).collection(name);
   }
 
+  String timeStampToString(dynamic timeStamp) {
+    return firestoreTimeStampToString(timeStamp);
+  }
 
   final String appId;
   PostFirestore(this.PostCollection, this.appId);

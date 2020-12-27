@@ -13,7 +13,7 @@ import 'package:eliud_pkg_feed/extensions/widgets/rounded_avatar.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:intl/intl.dart';
 import 'comment.dart';
 
 class Post extends StatelessWidget {
@@ -80,12 +80,13 @@ class Post extends StatelessWidget {
   }
 
   Widget _postHeader() {
+    String formattedDate = post.timestamp;
     var children2 = [
       Padding(
         padding: const EdgeInsets.all(COMMON_XXS_GAP),
         child: RoundedAvatar(),
       ),
-      Expanded(child: Text("username")),
+      Expanded(child: Text(formattedDate)),
       IconButton(
         icon: Icon(Icons.more_horiz),
         onPressed: null,
@@ -173,7 +174,7 @@ class Post extends StatelessWidget {
   Widget _postCaption() {
     return Comment(
         showImage: false,
-        username: "sjquant",
+        username: "someone",
         text: "Hello, World. I want to make a lot of money!");
   }
 
