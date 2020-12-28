@@ -64,44 +64,26 @@ class FeedFirestore implements FeedRepository {
     });
   }
 
-  StreamSubscription<List<FeedModel>> listen(FeedModelTrigger trigger, {String currentMember, String orderBy, bool descending, int privilegeLevel, EliudQuery eliudQuery}) {
+  StreamSubscription<List<FeedModel>> listen(FeedModelTrigger trigger, {String currentMember, String orderBy, bool descending, Object startAfter, int limit, int privilegeLevel, EliudQuery eliudQuery}) {
     Stream<List<FeedModel>> stream;
-    if (orderBy == null) {
-       stream = FeedCollection.snapshots().map((data) {
-        Iterable<FeedModel> feeds  = data.documents.map((doc) {
-          FeedModel value = _populateDoc(doc);
-          return value;
-        }).toList();
-        return feeds;
-      });
-    } else {
-      stream = FeedCollection.orderBy(orderBy, descending: descending).snapshots().map((data) {
-        Iterable<FeedModel> feeds  = data.documents.map((doc) {
-          FeedModel value = _populateDoc(doc);
-          return value;
-        }).toList();
-        return feeds;
-      });
-  
-    }
+    stream = getQuery(FeedCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId).snapshots().map((data) {
+      Iterable<FeedModel> feeds  = data.documents.map((doc) {
+        FeedModel value = _populateDoc(doc);
+        return value;
+      }).toList();
+      return feeds;
+    });
     return stream.listen((listOfFeedModels) {
       trigger(listOfFeedModels);
     });
   }
 
-  StreamSubscription<List<FeedModel>> listenWithDetails(FeedModelTrigger trigger, {String currentMember, String orderBy, bool descending, int privilegeLevel, EliudQuery eliudQuery}) {
+  StreamSubscription<List<FeedModel>> listenWithDetails(FeedModelTrigger trigger, {String currentMember, String orderBy, bool descending, Object startAfter, int limit, int privilegeLevel, EliudQuery eliudQuery}) {
     Stream<List<FeedModel>> stream;
-    if (orderBy == null) {
-      stream = FeedCollection.snapshots()
-          .asyncMap((data) async {
-        return await Future.wait(data.documents.map((doc) =>  _populateDocPlus(doc)).toList());
-      });
-    } else {
-      stream = FeedCollection.orderBy(orderBy, descending: descending).snapshots()
-          .asyncMap((data) async {
-        return await Future.wait(data.documents.map((doc) =>  _populateDocPlus(doc)).toList());
-      });
-    }
+    stream = getQuery(FeedCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId).snapshots()
+        .asyncMap((data) async {
+      return await Future.wait(data.documents.map((doc) =>  _populateDocPlus(doc)).toList());
+    });
 
     return stream.listen((listOfFeedModels) {
       trigger(listOfFeedModels);
