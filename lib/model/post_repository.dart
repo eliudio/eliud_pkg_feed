@@ -34,6 +34,7 @@ import 'package:eliud_core/tools/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
 typedef PostModelTrigger(List<PostModel> list);
+typedef PostChanged(PostModel value);
 
 abstract class PostRepository {
   Future<PostModel> add(PostModel value);
@@ -48,6 +49,7 @@ abstract class PostRepository {
 
   StreamSubscription<List<PostModel>> listen(PostModelTrigger trigger, {String currentMember, String orderBy, bool descending, int privilegeLevel});
   StreamSubscription<List<PostModel>> listenWithDetails(PostModelTrigger trigger, {String currentMember, String orderBy, bool descending, int privilegeLevel});
+  StreamSubscription<PostModel> listenTo(String documentId, PostChanged changed);
   void flush();
   
   String timeStampToString(dynamic timeStamp);

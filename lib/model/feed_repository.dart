@@ -34,6 +34,7 @@ import 'package:eliud_core/tools/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
 typedef FeedModelTrigger(List<FeedModel> list);
+typedef FeedChanged(FeedModel value);
 
 abstract class FeedRepository {
   Future<FeedModel> add(FeedModel value);
@@ -48,6 +49,7 @@ abstract class FeedRepository {
 
   StreamSubscription<List<FeedModel>> listen(FeedModelTrigger trigger, {String currentMember, String orderBy, bool descending, int privilegeLevel});
   StreamSubscription<List<FeedModel>> listenWithDetails(FeedModelTrigger trigger, {String currentMember, String orderBy, bool descending, int privilegeLevel});
+  StreamSubscription<FeedModel> listenTo(String documentId, FeedChanged changed);
   void flush();
   
   String timeStampToString(dynamic timeStamp);
