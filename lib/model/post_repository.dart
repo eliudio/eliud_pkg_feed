@@ -30,7 +30,7 @@ import 'package:eliud_pkg_feed/model/entity_export.dart';
 
 
 import 'dart:async';
-import 'package:eliud_core/tools/firestore_tools.dart';
+import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
 typedef PostModelTrigger(List<PostModel> list);
@@ -42,13 +42,13 @@ abstract class PostRepository {
   Future<PostModel> get(String id);
   Future<PostModel> update(PostModel value);
 
-  Stream<List<PostModel>> values({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel});
-  Stream<List<PostModel>> valuesWithDetails({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel});
-  Future<List<PostModel>> valuesList({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel});
-  Future<List<PostModel>> valuesListWithDetails({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel});
+  Stream<List<PostModel>> values({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel, EliudQuery eliudQuery });
+  Stream<List<PostModel>> valuesWithDetails({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel, EliudQuery eliudQuery });
+  Future<List<PostModel>> valuesList({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel, EliudQuery eliudQuery });
+  Future<List<PostModel>> valuesListWithDetails({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel, EliudQuery eliudQuery });
 
-  StreamSubscription<List<PostModel>> listen(PostModelTrigger trigger, {String currentMember, String orderBy, bool descending, int privilegeLevel});
-  StreamSubscription<List<PostModel>> listenWithDetails(PostModelTrigger trigger, {String currentMember, String orderBy, bool descending, int privilegeLevel});
+  StreamSubscription<List<PostModel>> listen(PostModelTrigger trigger, {String currentMember, String orderBy, bool descending, int privilegeLevel, EliudQuery eliudQuery });
+  StreamSubscription<List<PostModel>> listenWithDetails(PostModelTrigger trigger, {String currentMember, String orderBy, bool descending, int privilegeLevel, EliudQuery eliudQuery });
   StreamSubscription<PostModel> listenTo(String documentId, PostChanged changed);
   void flush();
   
