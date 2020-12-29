@@ -55,6 +55,7 @@ class PostJsFirestore implements PostRepository {
   }
 
   PostModel _populateDoc(DocumentSnapshot value) {
+    print("in populateDoc");
     return PostModel.fromEntity(value.id, PostEntity.fromMap(value.data()));
   }
 
@@ -141,16 +142,34 @@ class PostJsFirestore implements PostRepository {
 
   @override
   Future<List<PostModel>> valuesList({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel, EliudQuery eliudQuery }) async {
+    print("in valuesList");
     DocumentSnapshot lastDoc;
-    List<PostModel> _values = await getQuery(postCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: EliudQuery.ensureQueryAvailable(eliudQuery).withMemberLimittedCondition(currentMember), appId: appId).get().then((value) {
-      var list = value.docs;
-      return list.map((doc) { 
-        lastDoc = doc;
-        return _populateDoc(doc);
-      }).toList();
-    });
-    if ((setLastDoc != null) && (lastDoc != null)) setLastDoc(lastDoc);
-    return _values;
+    try {
+      List<PostModel> _values = await getQuery(
+          postCollection, currentMember: currentMember,
+          orderBy: orderBy,
+          descending: descending,
+          startAfter: startAfter,
+          limit: limit,
+          privilegeLevel: privilegeLevel,
+          eliudQuery: EliudQuery.ensureQueryAvailable(eliudQuery)
+              .withMemberLimittedCondition(currentMember),
+          appId: appId).get().then((value) {
+        print("in then");
+        var list = value.docs;
+        return list.map((doc) {
+          print("in map");
+          lastDoc = doc;
+          return _populateDoc(doc);
+        }).toList();
+      });
+      if ((setLastDoc != null) && (lastDoc != null)) setLastDoc(lastDoc);
+      return _values;
+    } catch (Exception) {
+      print("Exception:");
+      print(Exception.toString());
+      print("End Exception");
+    }
   }
 
   @override
