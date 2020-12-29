@@ -98,7 +98,6 @@ class PostModel {
   }
 
   static PostModel fromEntity(String documentID, PostEntity entity) {
-    print("in fromEntity");
     if (entity == null) return null;
     return PostModel(
           documentID: documentID, 

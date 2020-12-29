@@ -46,7 +46,6 @@ class PostEntity {
   }
 
   static PostEntity fromMap(Map map) {
-    print("in fromMap");
     if (map == null) return null;
 
     var pageParametersFromMap;

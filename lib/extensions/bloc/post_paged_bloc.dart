@@ -77,19 +77,6 @@ class PostPagedBloc extends Bloc<PostPagedEvent, PostPagedState> {
 
   Future<List<PostModel>> _fetchPosts({Object lastRowFetched}) async {
     String currentMember = _currentMember();
-/*
-    var isLoggedIn;
-    var state = accessBloc.state;
-    var privilegeLevel;
-    if (state is LoggedIn) {
-      privilegeLevel = await AccessHelper.getPrivilegeLevel(state.app, state.member);
-      isLoggedIn = true;
-    } else {
-      privilegeLevel = 0;
-      isLoggedIn = false;
-    }
-*/
-    print("before valueList");
     try {
       return _postRepository.valuesList(currentMember: currentMember,
           orderBy: 'timestamp',
@@ -100,7 +87,6 @@ class PostPagedBloc extends Bloc<PostPagedEvent, PostPagedState> {
     } catch (Exception) {
       print("Exception: " + Exception);
     }
-    print("after valuelist");
   }
 
   void _setLastRowFetched(Object o) {
