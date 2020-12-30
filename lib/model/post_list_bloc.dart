@@ -22,6 +22,7 @@ import 'package:eliud_pkg_feed/model/post_list_event.dart';
 import 'package:eliud_pkg_feed/model/post_list_state.dart';
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/access/bloc/access_event.dart';
+import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
 
 
@@ -29,8 +30,10 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
   final PostRepository _postRepository;
   StreamSubscription _postsListSubscription;
   final AccessBloc accessBloc;
+  final EliudQuery eliudQuery;
 
-  PostListBloc(this.accessBloc,{ @required PostRepository postRepository })
+
+  PostListBloc(this.accessBloc,{ this.eliudQuery, @required PostRepository postRepository })
       : assert(postRepository != null),
       _postRepository = postRepository,
       super(PostListLoading());
@@ -43,7 +46,7 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
 
   Stream<PostListState> _mapLoadPostListToState({ String orderBy, bool descending }) async* {
     _postsListSubscription?.cancel();
-    _postsListSubscription = _postRepository.listen((list) => add(PostListUpdated(value: list)), orderBy: orderBy, descending: descending, currentMember: _currentMember(), );
+    _postsListSubscription = _postRepository.listen((list) => add(PostListUpdated(value: list)), orderBy: orderBy, descending: descending, eliudQuery: eliudQuery, currentMember: _currentMember(), );
   }
 
   Stream<PostListState> _mapLoadPostListWithDetailsToState() async* {

@@ -22,6 +22,7 @@ import 'package:eliud_pkg_feed/model/feed_list_event.dart';
 import 'package:eliud_pkg_feed/model/feed_list_state.dart';
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/access/bloc/access_event.dart';
+import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
 
 
@@ -29,15 +30,17 @@ class FeedListBloc extends Bloc<FeedListEvent, FeedListState> {
   final FeedRepository _feedRepository;
   StreamSubscription _feedsListSubscription;
   final AccessBloc accessBloc;
+  final EliudQuery eliudQuery;
 
-  FeedListBloc(this.accessBloc,{ @required FeedRepository feedRepository })
+
+  FeedListBloc(this.accessBloc,{ this.eliudQuery, @required FeedRepository feedRepository })
       : assert(feedRepository != null),
       _feedRepository = feedRepository,
       super(FeedListLoading());
 
   Stream<FeedListState> _mapLoadFeedListToState({ String orderBy, bool descending }) async* {
     _feedsListSubscription?.cancel();
-    _feedsListSubscription = _feedRepository.listen((list) => add(FeedListUpdated(value: list)), orderBy: orderBy, descending: descending, );
+    _feedsListSubscription = _feedRepository.listen((list) => add(FeedListUpdated(value: list)), orderBy: orderBy, descending: descending, eliudQuery: eliudQuery, );
   }
 
   Stream<FeedListState> _mapLoadFeedListWithDetailsToState() async* {
