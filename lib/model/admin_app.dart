@@ -58,8 +58,9 @@ class AdminApp extends AdminAppInstallerBase {
       documentID: "internalWidget-feeds", componentName: "eliud_pkg_feed_internalWidgets", componentId: "feeds"));
     PageModel page = PageModel(
         conditions: ConditionsModel(
-          readCondition: ReadCondition.MemberOrPrivilegedMemberOnly,
-          privilegeLevelRequired: OWNER_PRIVILEGES
+          privilegeLevelRequired: PrivilegeLevelRequired.OwnerPrivilegeRequired,
+          packageCondition: null,
+          conditionOverride: null,
         ),
         appId: appId,
         documentID: "eliud_pkg_feed_feeds_page",
@@ -81,8 +82,9 @@ class AdminApp extends AdminAppInstallerBase {
       documentID: "internalWidget-posts", componentName: "eliud_pkg_feed_internalWidgets", componentId: "posts"));
     PageModel page = PageModel(
         conditions: ConditionsModel(
-          readCondition: ReadCondition.MemberOrPrivilegedMemberOnly,
-          privilegeLevelRequired: OWNER_PRIVILEGES
+          privilegeLevelRequired: PrivilegeLevelRequired.OwnerPrivilegeRequired,
+          packageCondition: null,
+          conditionOverride: null,
         ),
         appId: appId,
         documentID: "eliud_pkg_feed_posts_page",
