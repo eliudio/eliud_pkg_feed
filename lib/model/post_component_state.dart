@@ -30,6 +30,10 @@ class PostComponentError extends PostComponentState {
   PostComponentError({ this.message });
 }
 
+class PostComponentPermissionDenied extends PostComponentState {
+  PostComponentPermissionDenied();
+}
+
 class PostComponentLoaded extends PostComponentState {
   final PostModel value;
 
@@ -45,5 +49,4 @@ class PostComponentLoaded extends PostComponentState {
   @override
   String toString() => 'PostComponentLoaded { value: $value }';
 }
-
 

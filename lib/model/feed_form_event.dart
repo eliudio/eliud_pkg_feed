@@ -95,3 +95,15 @@ class ChangedFeedDescription extends FeedFormEvent {
   String toString() => 'ChangedFeedDescription{ value: $value }';
 }
 
+class ChangedFeedConditions extends FeedFormEvent {
+  final ConditionsSimpleModel value;
+
+  ChangedFeedConditions({this.value});
+
+  @override
+  List<Object> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedFeedConditions{ value: $value }';
+}
+

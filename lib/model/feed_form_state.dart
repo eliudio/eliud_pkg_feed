@@ -111,6 +111,22 @@ class DescriptionFeedFormError extends FeedFormError {
 }
 
 
+class ConditionsFeedFormError extends FeedFormError { 
+  const ConditionsFeedFormError({ String message, FeedModel value }): super(message: message, value: value);
+
+  @override
+  List<Object> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''ConditionsFeedFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
 class FeedFormLoaded extends FeedFormInitialized { 
   const FeedFormLoaded({ FeedModel value }): super(value: value);
 

@@ -41,17 +41,18 @@ class FeedModel {
   // This is the identifier of the app to which this feed belongs
   String appId;
   String description;
+  ConditionsSimpleModel conditions;
 
-  FeedModel({this.documentID, this.appId, this.description, })  {
+  FeedModel({this.documentID, this.appId, this.description, this.conditions, })  {
     assert(documentID != null);
   }
 
-  FeedModel copyWith({String documentID, String appId, String description, }) {
-    return FeedModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, );
+  FeedModel copyWith({String documentID, String appId, String description, ConditionsSimpleModel conditions, }) {
+    return FeedModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, conditions: conditions ?? this.conditions, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ appId.hashCode ^ description.hashCode;
+  int get hashCode => documentID.hashCode ^ appId.hashCode ^ description.hashCode ^ conditions.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -60,17 +61,19 @@ class FeedModel {
           runtimeType == other.runtimeType && 
           documentID == other.documentID &&
           appId == other.appId &&
-          description == other.description;
+          description == other.description &&
+          conditions == other.conditions;
 
   @override
   String toString() {
-    return 'FeedModel{documentID: $documentID, appId: $appId, description: $description}';
+    return 'FeedModel{documentID: $documentID, appId: $appId, description: $description, conditions: $conditions}';
   }
 
   FeedEntity toEntity({String appId}) {
     return FeedEntity(
           appId: (appId != null) ? appId : null, 
           description: (description != null) ? description : null, 
+          conditions: (conditions != null) ? conditions.toEntity(appId: appId) : null, 
     );
   }
 
@@ -80,6 +83,8 @@ class FeedModel {
           documentID: documentID, 
           appId: entity.appId, 
           description: entity.description, 
+          conditions: 
+            ConditionsSimpleModel.fromEntity(entity.conditions), 
     );
   }
 
@@ -90,6 +95,8 @@ class FeedModel {
           documentID: documentID, 
           appId: entity.appId, 
           description: entity.description, 
+          conditions: 
+            await ConditionsSimpleModel.fromEntityPlus(entity.conditions, appId: appId), 
     );
   }
 

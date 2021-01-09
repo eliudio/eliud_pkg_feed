@@ -24,32 +24,45 @@ import 'package:eliud_pkg_feed/model/entity_export.dart';
 class FeedEntity {
   final String appId;
   final String description;
+  final ConditionsSimpleEntity conditions;
 
-  FeedEntity({this.appId, this.description, });
+  FeedEntity({this.appId, this.description, this.conditions, });
 
 
-  List<Object> get props => [appId, description, ];
+  List<Object> get props => [appId, description, conditions, ];
 
   @override
   String toString() {
-    return 'FeedEntity{appId: $appId, description: $description}';
+    return 'FeedEntity{appId: $appId, description: $description, conditions: $conditions}';
   }
 
   static FeedEntity fromMap(Map map) {
     if (map == null) return null;
 
+    var conditionsFromMap;
+    conditionsFromMap = map['conditions'];
+    if (conditionsFromMap != null)
+      conditionsFromMap = ConditionsSimpleEntity.fromMap(conditionsFromMap);
+
     return FeedEntity(
       appId: map['appId'], 
       description: map['description'], 
+      conditions: conditionsFromMap, 
     );
   }
 
   Map<String, Object> toDocument() {
+    final Map<String, dynamic> conditionsMap = conditions != null 
+        ? conditions.toDocument()
+        : null;
+
     Map<String, Object> theDocument = HashMap();
     if (appId != null) theDocument["appId"] = appId;
       else theDocument["appId"] = null;
     if (description != null) theDocument["description"] = description;
       else theDocument["description"] = null;
+    if (conditions != null) theDocument["conditions"] = conditionsMap;
+      else theDocument["conditions"] = null;
     return theDocument;
   }
 

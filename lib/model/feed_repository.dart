@@ -39,7 +39,7 @@ typedef FeedChanged(FeedModel value);
 abstract class FeedRepository {
   Future<FeedModel> add(FeedModel value);
   Future<void> delete(FeedModel value);
-  Future<FeedModel> get(String id);
+  Future<FeedModel> get(String id, { Function(Exception) onError });
   Future<FeedModel> update(FeedModel value);
 
   Stream<List<FeedModel>> values({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel, EliudQuery eliudQuery });

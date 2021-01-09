@@ -62,12 +62,16 @@ class PostJsFirestore implements PostRepository {
     return PostModel.fromEntityPlus(value.id, PostEntity.fromMap(value.data()), appId: appId);
   }
 
-  Future<PostModel> get(String id) {
+  Future<PostModel> get(String id, { Function(Exception) onError }) {
     return postCollection.doc(id).get().then((data) {
       if (data.data() != null) {
         return _populateDocPlus(data);
       } else {
         return null;
+      }
+    }).catchError((Object e) {
+      if (onError != null) {
+        onError(e);
       }
     });
   }

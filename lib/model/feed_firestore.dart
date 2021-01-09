@@ -55,12 +55,16 @@ class FeedFirestore implements FeedRepository {
   Future<FeedModel> _populateDocPlus(DocumentSnapshot value) async {
     return FeedModel.fromEntityPlus(value.documentID, FeedEntity.fromMap(value.data), appId: appId);  }
 
-  Future<FeedModel> get(String id) {
+  Future<FeedModel> get(String id, {Function(Exception) onError}) {
     return FeedCollection.document(id).get().then((doc) {
       if (doc.data != null)
         return _populateDocPlus(doc);
       else
         return null;
+    }).catchError((Object e) {
+      if (onError != null) {
+        onError(e);
+      }
     });
   }
 

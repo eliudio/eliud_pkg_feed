@@ -39,7 +39,7 @@ typedef PostChanged(PostModel value);
 abstract class PostRepository {
   Future<PostModel> add(PostModel value);
   Future<void> delete(PostModel value);
-  Future<PostModel> get(String id);
+  Future<PostModel> get(String id, { Function(Exception) onError });
   Future<PostModel> update(PostModel value);
 
   Stream<List<PostModel>> values({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel, EliudQuery eliudQuery });

@@ -30,6 +30,10 @@ class FeedComponentError extends FeedComponentState {
   FeedComponentError({ this.message });
 }
 
+class FeedComponentPermissionDenied extends FeedComponentState {
+  FeedComponentPermissionDenied();
+}
+
 class FeedComponentLoaded extends FeedComponentState {
   final FeedModel value;
 
@@ -45,5 +49,4 @@ class FeedComponentLoaded extends FeedComponentState {
   @override
   String toString() => 'FeedComponentLoaded { value: $value }';
 }
-
 

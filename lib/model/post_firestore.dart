@@ -55,12 +55,16 @@ class PostFirestore implements PostRepository {
   Future<PostModel> _populateDocPlus(DocumentSnapshot value) async {
     return PostModel.fromEntityPlus(value.documentID, PostEntity.fromMap(value.data), appId: appId);  }
 
-  Future<PostModel> get(String id) {
+  Future<PostModel> get(String id, {Function(Exception) onError}) {
     return PostCollection.document(id).get().then((doc) {
       if (doc.data != null)
         return _populateDocPlus(doc);
       else
         return null;
+    }).catchError((Object e) {
+      if (onError != null) {
+        onError(e);
+      }
     });
   }
 

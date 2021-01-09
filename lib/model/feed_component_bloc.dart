@@ -20,6 +20,8 @@ import 'package:eliud_pkg_feed/model/feed_model.dart';
 import 'package:eliud_pkg_feed/model/feed_component_event.dart';
 import 'package:eliud_pkg_feed/model/feed_component_state.dart';
 import 'package:eliud_pkg_feed/model/feed_repository.dart';
+import 'package:flutter/services.dart';
+
 class FeedComponentBloc extends Bloc<FeedComponentEvent, FeedComponentState> {
   final FeedRepository feedRepository;
 
@@ -30,13 +32,23 @@ class FeedComponentBloc extends Bloc<FeedComponentEvent, FeedComponentState> {
     if (event is FetchFeedComponent) {
       try {
         if (currentState is FeedComponentUninitialized) {
-          final FeedModel model = await _fetchFeed(event.id);
-
-          if (model != null) {
-            yield FeedComponentLoaded(value: model);
+          bool permissionDenied = false;
+          final model = await feedRepository.get(event.id, onError: (error) {
+            // Unfortunatly the below is currently the only way we know how to identify if a document is read protected
+            if ((error is PlatformException) &&  (error.message.startsWith("PERMISSION_DENIED"))) {
+              permissionDenied = true;
+            }
+          });
+          if (permissionDenied) {
+            yield FeedComponentPermissionDenied();
           } else {
-            String id = event.id;
-            yield FeedComponentError(message: "Feed with id = '$id' not found");
+            if (model != null) {
+              yield FeedComponentLoaded(value: model);
+            } else {
+              String id = event.id;
+              yield FeedComponentError(
+                  message: "Feed with id = '$id' not found");
+            }
           }
           return;
         }
@@ -46,15 +58,10 @@ class FeedComponentBloc extends Bloc<FeedComponentEvent, FeedComponentState> {
     }
   }
 
-  Future<FeedModel> _fetchFeed(String id) async {
-    return feedRepository.get(id);
-  }
-
   @override
   Future<void> close() {
     return super.close();
   }
 
 }
-
 

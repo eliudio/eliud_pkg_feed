@@ -20,6 +20,8 @@ import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:eliud_pkg_feed/model/post_component_event.dart';
 import 'package:eliud_pkg_feed/model/post_component_state.dart';
 import 'package:eliud_pkg_feed/model/post_repository.dart';
+import 'package:flutter/services.dart';
+
 
 class PostComponentBloc extends Bloc<PostComponentEvent, PostComponentState> {
   final PostRepository postRepository;
@@ -31,13 +33,23 @@ class PostComponentBloc extends Bloc<PostComponentEvent, PostComponentState> {
     if (event is FetchPostComponent) {
       try {
         if (currentState is PostComponentUninitialized) {
-          final PostModel model = await _fetchPost(event.id);
-
-          if (model != null) {
-            yield PostComponentLoaded(value: model);
+          bool permissionDenied = false;
+          final model = await postRepository.get(event.id, onError: (error) {
+            // Unfortunatly the below is currently the only way we know how to identify if a document is read protected
+            if ((error is PlatformException) &&  (error.message.startsWith("PERMISSION_DENIED"))) {
+              permissionDenied = true;
+            }
+          });
+          if (permissionDenied) {
+            yield PostComponentPermissionDenied();
           } else {
-            String id = event.id;
-            yield PostComponentError(message: "Post with id = '$id' not found");
+            if (model != null) {
+              yield PostComponentLoaded(value: model);
+            } else {
+              String id = event.id;
+              yield PostComponentError(
+                  message: "Post with id = '$id' not found");
+            }
           }
           return;
         }
@@ -47,15 +59,10 @@ class PostComponentBloc extends Bloc<PostComponentEvent, PostComponentState> {
     }
   }
 
-  Future<PostModel> _fetchPost(String id) async {
-    return postRepository.get(id);
-  }
-
   @override
   Future<void> close() {
     return super.close();
   }
 
 }
-
 

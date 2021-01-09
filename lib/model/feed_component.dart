@@ -43,10 +43,16 @@ abstract class AbstractFeedComponent extends StatelessWidget {
     return BlocBuilder<FeedComponentBloc, FeedComponentState>(builder: (context, state) {
       if (state is FeedComponentLoaded) {
         if (state.value == null) {
-          return alertWidget(title: 'Error', content: 'No feed defined');
+          return alertWidget(title: 'Error', content: 'No Feed defined');
         } else {
           return yourWidget(context, state.value);
         }
+      } else if (state is FeedComponentPermissionDenied) {
+        return Icon(
+          Icons.highlight_off,
+          color: Colors.red,
+          size: 30.0,
+        );
       } else if (state is FeedComponentError) {
         return alertWidget(title: 'Error', content: state.message);
       } else {
@@ -61,5 +67,4 @@ abstract class AbstractFeedComponent extends StatelessWidget {
   Widget alertWidget({ title: String, content: String});
   FeedRepository getFeedRepository(BuildContext context);
 }
-
 
