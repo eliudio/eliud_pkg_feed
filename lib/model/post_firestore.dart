@@ -37,27 +37,27 @@ import 'package:eliud_core/tools/common_tools.dart';
 
 class PostFirestore implements PostRepository {
   Future<PostModel> add(PostModel value) {
-    return PostCollection.document(value.documentID).setData(value.toEntity(appId: appId).copyWith(timestamp : FieldValue.serverTimestamp(), ).toDocument()).then((_) => value).then((v) => get(value.documentID));
+    return PostCollection.doc(value.documentID).set(value.toEntity(appId: appId).copyWith(timestamp : FieldValue.serverTimestamp(), ).toDocument()).then((_) => value).then((v) => get(value.documentID));
   }
 
   Future<void> delete(PostModel value) {
-    return PostCollection.document(value.documentID).delete();
+    return PostCollection.doc(value.documentID).delete();
   }
 
   Future<PostModel> update(PostModel value) {
-    return PostCollection.document(value.documentID).updateData(value.toEntity(appId: appId).copyWith(timestamp : FieldValue.serverTimestamp(), ).toDocument()).then((_) => value).then((v) => get(value.documentID));
+    return PostCollection.doc(value.documentID).update(value.toEntity(appId: appId).copyWith(timestamp : FieldValue.serverTimestamp(), ).toDocument()).then((_) => value).then((v) => get(value.documentID));
   }
 
   PostModel _populateDoc(DocumentSnapshot value) {
-    return PostModel.fromEntity(value.documentID, PostEntity.fromMap(value.data));
+    return PostModel.fromEntity(value.id, PostEntity.fromMap(value.data()));
   }
 
   Future<PostModel> _populateDocPlus(DocumentSnapshot value) async {
-    return PostModel.fromEntityPlus(value.documentID, PostEntity.fromMap(value.data), appId: appId);  }
+    return PostModel.fromEntityPlus(value.id, PostEntity.fromMap(value.data()), appId: appId);  }
 
   Future<PostModel> get(String id, {Function(Exception) onError}) {
-    return PostCollection.document(id).get().then((doc) {
-      if (doc.data != null)
+    return PostCollection.doc(id).get().then((doc) {
+      if (doc.data() != null)
         return _populateDocPlus(doc);
       else
         return null;
@@ -71,7 +71,7 @@ class PostFirestore implements PostRepository {
   StreamSubscription<List<PostModel>> listen(PostModelTrigger trigger, {String currentMember, String orderBy, bool descending, Object startAfter, int limit, int privilegeLevel, EliudQuery eliudQuery}) {
     Stream<List<PostModel>> stream;
     stream = getQuery(PostCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: EliudQuery.ensureQueryAvailable(eliudQuery).withMemberLimittedCondition(currentMember), appId: appId).snapshots().map((data) {
-      Iterable<PostModel> posts  = data.documents.map((doc) {
+      Iterable<PostModel> posts  = data.docs.map((doc) {
         PostModel value = _populateDoc(doc);
         return value;
       }).toList();
@@ -86,7 +86,7 @@ class PostFirestore implements PostRepository {
     Stream<List<PostModel>> stream;
     stream = getQuery(PostCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: EliudQuery.ensureQueryAvailable(eliudQuery).withMemberLimittedCondition(currentMember), appId: appId).snapshots()
         .asyncMap((data) async {
-      return await Future.wait(data.documents.map((doc) =>  _populateDocPlus(doc)).toList());
+      return await Future.wait(data.docs.map((doc) =>  _populateDocPlus(doc)).toList());
     });
 
     return stream.listen((listOfPostModels) {
@@ -96,7 +96,7 @@ class PostFirestore implements PostRepository {
 
   @override
   StreamSubscription<PostModel> listenTo(String documentId, PostChanged changed) {
-    var stream = PostCollection.document(documentId)
+    var stream = PostCollection.doc(documentId)
         .snapshots()
         .asyncMap((data) {
       return _populateDocPlus(data);
@@ -109,7 +109,7 @@ class PostFirestore implements PostRepository {
   Stream<List<PostModel>> values({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel, EliudQuery eliudQuery }) {
     DocumentSnapshot lastDoc;
     Stream<List<PostModel>> _values = getQuery(PostCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter, limit: limit, privilegeLevel: privilegeLevel, eliudQuery: EliudQuery.ensureQueryAvailable(eliudQuery).withMemberLimittedCondition(currentMember), appId: appId).snapshots().map((snapshot) {
-      return snapshot.documents.map((doc) {
+      return snapshot.docs.map((doc) {
         lastDoc = doc;
         return _populateDoc(doc);
       }).toList();});
@@ -120,7 +120,7 @@ class PostFirestore implements PostRepository {
   Stream<List<PostModel>> valuesWithDetails({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel, EliudQuery eliudQuery }) {
     DocumentSnapshot lastDoc;
     Stream<List<PostModel>> _values = getQuery(PostCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter, limit: limit, privilegeLevel: privilegeLevel, eliudQuery: EliudQuery.ensureQueryAvailable(eliudQuery).withMemberLimittedCondition(currentMember), appId: appId).snapshots().asyncMap((snapshot) {
-      return Future.wait(snapshot.documents.map((doc) {
+      return Future.wait(snapshot.docs.map((doc) {
         lastDoc = doc;
         return _populateDocPlus(doc);
       }).toList());
@@ -131,8 +131,8 @@ class PostFirestore implements PostRepository {
 
   Future<List<PostModel>> valuesList({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel, EliudQuery eliudQuery }) async {
     DocumentSnapshot lastDoc;
-    List<PostModel> _values = await getQuery(PostCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: EliudQuery.ensureQueryAvailable(eliudQuery).withMemberLimittedCondition(currentMember), appId: appId).getDocuments().then((value) {
-      var list = value.documents;
+    List<PostModel> _values = await getQuery(PostCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: EliudQuery.ensureQueryAvailable(eliudQuery).withMemberLimittedCondition(currentMember), appId: appId).get().then((value) {
+      var list = value.docs;
       return list.map((doc) { 
         lastDoc = doc;
         return _populateDoc(doc);
@@ -144,8 +144,8 @@ class PostFirestore implements PostRepository {
 
   Future<List<PostModel>> valuesListWithDetails({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel, EliudQuery eliudQuery }) async {
     DocumentSnapshot lastDoc;
-    List<PostModel> _values = await getQuery(PostCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: EliudQuery.ensureQueryAvailable(eliudQuery).withMemberLimittedCondition(currentMember), appId: appId).getDocuments().then((value) {
-      var list = value.documents;
+    List<PostModel> _values = await getQuery(PostCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: EliudQuery.ensureQueryAvailable(eliudQuery).withMemberLimittedCondition(currentMember), appId: appId).get().then((value) {
+      var list = value.docs;
       return Future.wait(list.map((doc) {
         lastDoc = doc;
         return _populateDocPlus(doc);
@@ -158,15 +158,15 @@ class PostFirestore implements PostRepository {
   void flush() {}
 
   Future<void> deleteAll() {
-    return PostCollection.getDocuments().then((snapshot) {
-      for (DocumentSnapshot ds in snapshot.documents){
+    return PostCollection.get().then((snapshot) {
+      for (DocumentSnapshot ds in snapshot.docs){
         ds.reference.delete();
       }
     });
   }
 
   dynamic getSubCollection(String documentId, String name) {
-    return PostCollection.document(documentId).collection(name);
+    return PostCollection.doc(documentId).collection(name);
   }
 
   String timeStampToString(dynamic timeStamp) {
