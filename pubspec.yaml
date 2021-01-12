@@ -12,9 +12,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  bloc: ^5.0.1
-  flutter_bloc: ^5.0.1
-
   eliud_core:
     path: ../eliud_core
 
