@@ -43,9 +43,9 @@ class FeedListBloc extends Bloc<FeedListEvent, FeedListState> {
     _feedsListSubscription = _feedRepository.listen((list) => add(FeedListUpdated(value: list)), orderBy: orderBy, descending: descending, eliudQuery: eliudQuery, );
   }
 
-  Stream<FeedListState> _mapLoadFeedListWithDetailsToState() async* {
+  Stream<FeedListState> _mapLoadFeedListWithDetailsToState({ String orderBy, bool descending }) async* {
     _feedsListSubscription?.cancel();
-    _feedsListSubscription = _feedRepository.listenWithDetails((list) => add(FeedListUpdated(value: list)), );
+    _feedsListSubscription = _feedRepository.listenWithDetails((list) => add(FeedListUpdated(value: list)), orderBy: orderBy, descending: descending, eliudQuery: eliudQuery, );
   }
 
   Stream<FeedListState> _mapAddFeedListToState(AddFeedList event) async* {
