@@ -3,7 +3,6 @@ import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/widgets/alert_widget.dart';
 import 'package:eliud_core/core/widgets/progress_indicator.dart';
 import 'package:eliud_core/model/app_model.dart';
-import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/model/rgb_model.dart';
 import 'package:eliud_core/tools/component_constructor.dart';
 import 'package:eliud_core/tools/etc.dart';
@@ -14,7 +13,6 @@ import 'package:eliud_pkg_feed/model/feed_component.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
 import 'package:eliud_pkg_feed/model/feed_repository.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
-import 'package:eliud_pkg_follow/tools/follower_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -45,7 +43,8 @@ class FeedComponent extends AbstractFeedComponent {
           // However, combining this query with arrayContainsAny in 1 query is not possible currently in the app.
           // For now we lay the responsibility with the one posting the post, i.e. that the readAccess includes the person.
           // More comments, see firestore.rules > match /post/{id} > allow create
-          .withCondition(EliudQueryCondition('readAccess', arrayContainsAny: [state.getMember().documentID, 'PUBLIC'])));
+          .withCondition(EliudQueryCondition('readAccess', arrayContainsAny: [state.getMember().documentID, 'PUBLIC']))
+        );
     } else if (state is AppLoaded) {
         return _postPagedBloc(context, feedModel, EliudQuery()
             .withCondition(EliudQueryCondition('readAccess', arrayContains: 'PUBLIC')));
