@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
+import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/post_paged_event.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/post_paged_state.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
@@ -16,8 +17,9 @@ class PostPagedBloc extends Bloc<PostPagedEvent, PostPagedState> {
   final PostRepository _postRepository;
   final AccessBloc accessBloc;
   Object lastRowFetched;
+  EliudQuery eliudQuery;
 
-  PostPagedBloc(this.accessBloc,{ @required PostRepository postRepository }) :
+  PostPagedBloc(this.eliudQuery, this.accessBloc,{ @required PostRepository postRepository }) :
        assert(postRepository != null),
       _postRepository = postRepository,
         super(const PostPagedState());
@@ -78,10 +80,11 @@ class PostPagedBloc extends Bloc<PostPagedEvent, PostPagedState> {
   Future<List<PostModel>> _fetchPosts({Object lastRowFetched}) async {
     String currentMember = _currentMember();
     try {
-      return _postRepository.valuesList(currentMember: currentMember,
+      return _postRepository.valuesList(/*currentMember: currentMember,*/
           orderBy: 'timestamp',
           descending: true,
           limit: _postLimit,
+          eliudQuery: eliudQuery,
           startAfter: lastRowFetched,
           setLastDoc: _setLastRowFetched /*, isLoggedIn: isLoggedIn, privilegeLevel: privilegeLevel*/);
     } catch (Exception) {

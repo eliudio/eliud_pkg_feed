@@ -75,7 +75,7 @@ class PostFirestore implements PostRepository {
 //    The reason we're subscribing twice to the same list, is because the close on bloc isn't called. This needs to be fixed.
 //    See https://github.com/felangel/bloc/issues/2073.
 //    In the meantime:
-      stream = getQuery(appRepository().getSubCollection(appId, 'post'), currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: EliudQuery.ensureQueryAvailable(eliudQuery).withMemberLimittedCondition(currentMember), appId: appId).snapshots().map((data) {
+    stream = getQuery(appRepository().getSubCollection(appId, 'post'), currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: EliudQuery.ensureQueryAvailable(eliudQuery).withMemberLimittedCondition(currentMember), appId: appId).snapshots().map((data) {
       Iterable<PostModel> posts  = data.docs.map((doc) {
         PostModel value = _populateDoc(doc);
         return value;
@@ -138,9 +138,9 @@ class PostFirestore implements PostRepository {
 
   Future<List<PostModel>> valuesList({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel, EliudQuery eliudQuery }) async {
     DocumentSnapshot lastDoc;
-    List<PostModel> _values = await getQuery(PostCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: EliudQuery.ensureQueryAvailable(eliudQuery).withMemberLimittedCondition(currentMember), appId: appId).get().then((value) {
+    List<PostModel> _values = await getQuery(PostCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId).get().then((value) {
       var list = value.docs;
-      return list.map((doc) { 
+      return list.map((doc) {
         lastDoc = doc;
         return _populateDoc(doc);
       }).toList();
