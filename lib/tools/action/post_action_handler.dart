@@ -31,7 +31,7 @@ class PostActionHandler extends PackageActionHandler {
         postPageId: null,
         pageParameters: null,
         description: "",
-        readAccess: null,
+        readAccess: [accessState.member.documentID],
       ));
     }
   }
