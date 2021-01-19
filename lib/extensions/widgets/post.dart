@@ -17,24 +17,29 @@ import 'package:intl/intl.dart';
 import 'comment.dart';
 
 class Post extends StatelessWidget {
+  final bool recursive;
   final PostModel post;
   Size size;
 
   Post(
     this.post, {
     Key key,
+    this.recursive,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     if (size == null) size = MediaQuery.of(context).size;
     var originalAccessBloc = BlocProvider.of<AccessBloc>(context);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _postHeader(),
-        _postDetails(originalAccessBloc, context),
+        recursive
+            ? Text(
+                "This link is a reference to this feed. I'm not show recursive pages.")
+            : _postDetails(originalAccessBloc, context),
         _postActionBtns(),
         _postLikes(),
         _postCaption(),
@@ -47,7 +52,8 @@ class Post extends StatelessWidget {
       children: <Widget>[
         IconButton(
             icon: ImageIcon(
-              AssetImage("assets/images/basicons.xyz/ThumbsUp.png", package: "eliud_pkg_feed"),
+              AssetImage("assets/images/basicons.xyz/ThumbsUp.png",
+                  package: "eliud_pkg_feed"),
             ),
             onPressed: null,
             color: Colors.black),
@@ -55,7 +61,9 @@ class Post extends StatelessWidget {
         Spacer(),
         IconButton(
             icon: ImageIcon(
-              AssetImage("assets/images/basicons.xyz/CommentCircleChatMessage.png", package: "eliud_pkg_feed"),
+              AssetImage(
+                  "assets/images/basicons.xyz/CommentCircleChatMessage.png",
+                  package: "eliud_pkg_feed"),
             ),
             onPressed: null,
             color: Colors.black),
@@ -63,7 +71,8 @@ class Post extends StatelessWidget {
         Spacer(),
         IconButton(
             icon: ImageIcon(
-              AssetImage("assets/images/basicons.xyz/Forward.png", package: "eliud_pkg_feed"),
+              AssetImage("assets/images/basicons.xyz/Forward.png",
+                  package: "eliud_pkg_feed"),
             ),
             onPressed: null,
             color: Colors.black),
@@ -71,7 +80,8 @@ class Post extends StatelessWidget {
         Spacer(),
         IconButton(
             icon: ImageIcon(
-              AssetImage("assets/images/basicons.xyz/ThumbsDown.png", package: "eliud_pkg_feed"),
+              AssetImage("assets/images/basicons.xyz/ThumbsDown.png",
+                  package: "eliud_pkg_feed"),
             ),
             onPressed: null,
             color: Colors.black),
@@ -145,8 +155,8 @@ class Post extends StatelessWidget {
               if (accessState is AppLoaded) {
                 return Container(
                     height: 300,
-                    child:
-                        _body(context, originalAccessBloc, accessState, appId, pageId, parameters));
+                    child: _body(context, originalAccessBloc, accessState,
+                        appId, pageId, parameters));
               } else {
                 return Center(
                   child: DelayedCircularProgressIndicator(),
@@ -178,8 +188,13 @@ class Post extends StatelessWidget {
         text: "Hello, World. I want to make a lot of money!");
   }
 
-  Widget _body(BuildContext context, AccessBloc originalAccessBloc, AccessState accessState, String appId,
-      String pageId, Map<String, Object> parameters) {
+  Widget _body(
+      BuildContext context,
+      AccessBloc originalAccessBloc,
+      AccessState accessState,
+      String appId,
+      String pageId,
+      Map<String, Object> parameters) {
     return Stack(
       children: <Widget>[
         MultiBlocProvider(
@@ -214,7 +229,8 @@ class Post extends StatelessWidget {
             })),
         InkWell(
             onTap: () {
-              originalAccessBloc.add(SwitchAppAndPageEvent(appId, pageId, parameters));
+              originalAccessBloc
+                  .add(SwitchAppAndPageEvent(appId, pageId, parameters));
             },
             child: new Container(
               width: 1000,

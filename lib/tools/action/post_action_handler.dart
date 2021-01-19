@@ -9,6 +9,7 @@ import 'package:eliud_pkg_feed/model/feed_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:eliud_pkg_feed/tools/action/post_action_model.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/material.dart';
 
 class PostActionHandler extends PackageActionHandler {
   @override
@@ -20,6 +21,10 @@ class PostActionHandler extends PackageActionHandler {
 
   void executePostIt(BuildContext context, PostActionModel action) {
     var accessState = AccessBloc.getState(context);
+    var modalRoute = ModalRoute.of(context);
+    var settings = modalRoute.settings;
+    var pageId = settings.name;
+    var parameters = settings.arguments;
     if (accessState is LoggedIn) {
       // What is the current page?
       // Can we actually add the current page? (page should have an indicator if it's allowed to be added)
@@ -28,9 +33,9 @@ class PostActionHandler extends PackageActionHandler {
         author: accessState.member,
         appId: action.appID,
         postAppId: action.feed.appId,
-        postPageId: null,
-        pageParameters: null,
-        description: "",
+        postPageId: pageId,
+        pageParameters: parameters,
+        description: "Post added by Add To Post button",
         readAccess: [accessState.member.documentID],
       ));
     }

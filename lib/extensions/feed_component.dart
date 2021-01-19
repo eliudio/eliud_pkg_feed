@@ -21,12 +21,16 @@ import 'bloc/post_paged_event.dart';
 import 'bloc/post_paged_state.dart';
 
 class FeedComponentConstructorDefault implements ComponentConstructor {
+  FeedComponentConstructorDefault();
+
   Widget createNew({String id, Map<String, Object> parameters}) {
     return FeedComponent(id: id);
   }
 }
 
 class FeedComponent extends AbstractFeedComponent {
+  String parentPageId;
+
   FeedComponent({String id}) : super(feedID: id);
 
   @override
@@ -36,9 +40,12 @@ class FeedComponent extends AbstractFeedComponent {
 
   @override
   Widget yourWidget(BuildContext context, FeedModel feedModel) {
+    var modalRoute = ModalRoute.of(context);
+    var settings = modalRoute.settings;
+    parentPageId = settings.name;
     AccessState state = AccessBloc.getState(context);
     if (state is LoggedIn) {
-      return _postPagedBloc(context, feedModel, EliudQuery()
+      return _postPagedBloc(parentPageId, context, feedModel, EliudQuery()
           // We could limit the posts retrieve by making adding the condition: 'authorId' whereIn FollowerHelper.following(me, state.app.documentID)
           // However, combining this query with arrayContainsAny in 1 query is not possible currently in the app.
           // For now we lay the responsibility with the one posting the post, i.e. that the readAccess includes the person.
@@ -46,21 +53,21 @@ class FeedComponent extends AbstractFeedComponent {
           .withCondition(EliudQueryCondition('readAccess', arrayContainsAny: [state.getMember().documentID, 'PUBLIC']))
         );
     } else if (state is AppLoaded) {
-        return _postPagedBloc(context, feedModel, EliudQuery()
+        return _postPagedBloc(parentPageId, context, feedModel, EliudQuery()
             .withCondition(EliudQueryCondition('readAccess', arrayContains: 'PUBLIC')));
     } else {
       return Center(child: DelayedCircularProgressIndicator());
     }
   }
 
-  Widget _postPagedBloc(BuildContext context, FeedModel feedModel, EliudQuery eliudQuery) {
+  Widget _postPagedBloc(String parentPageId, BuildContext context, FeedModel feedModel, EliudQuery eliudQuery) {
     return BlocProvider(
       create: (_) => PostPagedBloc(
         eliudQuery,
         BlocProvider.of<AccessBloc>(context),
         postRepository: postRepository(appId: feedModel.appId),
       )..add(PostPagedFetched()),
-      child: PostsList(),
+      child: PostsList(parentPageId: parentPageId),
     );
   }
 
@@ -69,13 +76,13 @@ class FeedComponent extends AbstractFeedComponent {
     return AbstractRepositorySingleton.singleton
         .feedRepository(AccessBloc.appId(context));
   }
-
-  Widget post(BuildContext context, PostModel post) {
-    return Post(post);
-  }
 }
 
 class PostsList extends StatefulWidget {
+  final String parentPageId;
+
+  const PostsList({Key key, this.parentPageId}) : super(key: key);
+
   @override
   _PostsListState createState() => _PostsListState();
 }
@@ -108,7 +115,7 @@ class _PostsListState extends State<PostsList> {
               itemBuilder: (BuildContext context, int index) {
                 return index >= state.values.length
                     ? _buttonNextPage()
-                    : Post(state.values[index]);
+                    : post(state.values[index]);
               },
               itemCount: state.hasReachedMax
                   ? state.values.length
@@ -119,6 +126,10 @@ class _PostsListState extends State<PostsList> {
         }
       },
     );
+  }
+
+  Widget post(PostModel postModel) {
+    return Post(postModel, recursive: postModel.postPageId == widget.parentPageId,);
   }
 
   Widget _buttonNextPage() {
