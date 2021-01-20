@@ -90,7 +90,7 @@ class Post extends StatelessWidget {
   }
 
   Widget _postHeader() {
-    String formattedDate = post.timestamp;
+    String formattedDate = post.timestamp != null ? post.timestamp : "?";
     var children2 = [
       Padding(
         padding: const EdgeInsets.all(COMMON_XXS_GAP),

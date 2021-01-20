@@ -22,18 +22,9 @@ abstract class PostListEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoadPostList extends PostListEvent {
-  final String orderBy;
-  final bool descending;
+class LoadPostList extends PostListEvent {}
 
-  LoadPostList({this.orderBy, this.descending});
-
-  @override
-  List<Object> get props => [orderBy, descending];
-
-}
-
-class LoadPostListWithDetails extends PostListEvent {}
+class NewPage extends PostListEvent {}
 
 class AddPostList extends PostListEvent {
   final PostModel value;
@@ -73,13 +64,14 @@ class DeletePostList extends PostListEvent {
 
 class PostListUpdated extends PostListEvent {
   final List<PostModel> value;
+  final bool mightHaveMore;
 
-  const PostListUpdated({ this.value });
-
-  @override
-  List<Object> get props => [ value ];
+  const PostListUpdated({ this.value, this.mightHaveMore });
 
   @override
-  String toString() => 'PostListUpdated{ value: $value }';
+  List<Object> get props => [ value, mightHaveMore ];
+
+  @override
+  String toString() => 'PostListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
 }
 

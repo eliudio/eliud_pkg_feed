@@ -27,14 +27,15 @@ class PostListLoading extends PostListState {}
 
 class PostListLoaded extends PostListState {
   final List<PostModel> values;
+  final bool mightHaveMore;
 
-  const PostListLoaded({this.values = const []});
-
-  @override
-  List<Object> get props => [ values ];
+  const PostListLoaded({this.values = const [], this.mightHaveMore});
 
   @override
-  String toString() => 'PostListLoaded { values: $values }';
+  List<Object> get props => [ values, mightHaveMore ];
+
+  @override
+  String toString() => 'PostListLoaded { values: $values, mightHaveMore: $mightHaveMore }';
 }
 
 class PostNotLoaded extends PostListState {}
