@@ -71,7 +71,6 @@ class FeedComponent extends AbstractFeedComponent {
       FeedModel feedModel, EliudQuery eliudQuery) {
     return BlocProvider(
       create: (_) => PostListBloc(
-        BlocProvider.of<AccessBloc>(context),
         eliudQuery: eliudQuery,
         postRepository: postRepository(appId: feedModel.appId),
         orderBy: 'timestamp',

@@ -20,17 +20,14 @@ import 'package:meta/meta.dart';
 import 'package:eliud_pkg_feed/model/post_repository.dart';
 import 'package:eliud_pkg_feed/model/post_list_event.dart';
 import 'package:eliud_pkg_feed/model/post_list_state.dart';
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
-import 'package:eliud_core/core/access/bloc/access_event.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
-import 'package:eliud_core/core/access/bloc/access_state.dart';
+
 
 const _postLimit = 5;
 
 class PostListBloc extends Bloc<PostListEvent, PostListState> {
   final PostRepository _postRepository;
   StreamSubscription _postsListSubscription;
-  final AccessBloc accessBloc;
   final EliudQuery eliudQuery;
   int pages = 1;
   final bool paged;
@@ -38,12 +35,10 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
   final bool descending;
   final bool detailed;
 
-  PostListBloc(this.accessBloc,
-      {this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, @required PostRepository postRepository})
+  PostListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, @required PostRepository postRepository})
       : assert(postRepository != null),
         _postRepository = postRepository,
-        super(PostListLoading()) {
-  }
+        super(PostListLoading());
 
   Stream<PostListState> _mapLoadPostListToState() async* {
     int amountNow =  (state is PostListLoaded) ? (state as PostListLoaded).values.length : 0;
@@ -115,3 +110,5 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
     return super.close();
   }
 }
+
+

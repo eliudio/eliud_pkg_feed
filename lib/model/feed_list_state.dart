@@ -27,11 +27,12 @@ class FeedListLoading extends FeedListState {}
 
 class FeedListLoaded extends FeedListState {
   final List<FeedModel> values;
+  final bool mightHaveMore;
 
-  const FeedListLoaded({this.values = const []});
+  const FeedListLoaded({this.mightHaveMore, this.values = const []});
 
   @override
-  List<Object> get props => [ values ];
+  List<Object> get props => [ values, mightHaveMore ];
 
   @override
   String toString() => 'FeedListLoaded { values: $values }';

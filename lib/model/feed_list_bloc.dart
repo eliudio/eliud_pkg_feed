@@ -20,32 +20,48 @@ import 'package:meta/meta.dart';
 import 'package:eliud_pkg_feed/model/feed_repository.dart';
 import 'package:eliud_pkg_feed/model/feed_list_event.dart';
 import 'package:eliud_pkg_feed/model/feed_list_state.dart';
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
-import 'package:eliud_core/core/access/bloc/access_event.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
-import 'package:eliud_core/core/access/bloc/access_state.dart';
 
+
+const _feedLimit = 5;
 
 class FeedListBloc extends Bloc<FeedListEvent, FeedListState> {
   final FeedRepository _feedRepository;
   StreamSubscription _feedsListSubscription;
-  final AccessBloc accessBloc;
   final EliudQuery eliudQuery;
+  int pages = 1;
+  final bool paged;
+  final String orderBy;
+  final bool descending;
+  final bool detailed;
 
-
-  FeedListBloc(this.accessBloc,{ this.eliudQuery, @required FeedRepository feedRepository })
+  FeedListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, @required FeedRepository feedRepository})
       : assert(feedRepository != null),
-      _feedRepository = feedRepository,
-      super(FeedListLoading());
+        _feedRepository = feedRepository,
+        super(FeedListLoading());
 
-  Stream<FeedListState> _mapLoadFeedListToState({ String orderBy, bool descending }) async* {
+  Stream<FeedListState> _mapLoadFeedListToState() async* {
+    int amountNow =  (state is FeedListLoaded) ? (state as FeedListLoaded).values.length : 0;
     _feedsListSubscription?.cancel();
-    _feedsListSubscription = _feedRepository.listen((list) => add(FeedListUpdated(value: list)), orderBy: orderBy, descending: descending, eliudQuery: eliudQuery,);
+    _feedsListSubscription = _feedRepository.listen(
+          (list) => add(FeedListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+      orderBy: orderBy,
+      descending: descending,
+      eliudQuery: eliudQuery,
+      limit: ((paged != null) && (paged)) ? pages * _feedLimit : null
+    );
   }
 
-  Stream<FeedListState> _mapLoadFeedListWithDetailsToState({ String orderBy, bool descending }) async* {
+  Stream<FeedListState> _mapLoadFeedListWithDetailsToState() async* {
+    int amountNow =  (state is FeedListLoaded) ? (state as FeedListLoaded).values.length : 0;
     _feedsListSubscription?.cancel();
-    _feedsListSubscription = _feedRepository.listenWithDetails((list) => add(FeedListUpdated(value: list)), orderBy: orderBy, descending: descending, eliudQuery: eliudQuery,);
+    _feedsListSubscription = _feedRepository.listenWithDetails(
+            (list) => add(FeedListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+        orderBy: orderBy,
+        descending: descending,
+        eliudQuery: eliudQuery,
+        limit: ((paged != null) && (paged)) ? pages * _feedLimit : null
+    );
   }
 
   Stream<FeedListState> _mapAddFeedListToState(AddFeedList event) async* {
@@ -60,17 +76,22 @@ class FeedListBloc extends Bloc<FeedListEvent, FeedListState> {
     _feedRepository.delete(event.value);
   }
 
-  Stream<FeedListState> _mapFeedListUpdatedToState(FeedListUpdated event) async* {
-    yield FeedListLoaded(values: event.value);
+  Stream<FeedListState> _mapFeedListUpdatedToState(
+      FeedListUpdated event) async* {
+    yield FeedListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
   }
-
 
   @override
   Stream<FeedListState> mapEventToState(FeedListEvent event) async* {
-    final currentState = state;
     if (event is LoadFeedList) {
-      yield* _mapLoadFeedListToState(orderBy: event.orderBy, descending: event.descending);
-    } if (event is LoadFeedListWithDetails) {
+      if ((detailed == null) || (!detailed)) {
+        yield* _mapLoadFeedListToState();
+      } else {
+        yield* _mapLoadFeedListWithDetailsToState();
+      }
+    }
+    if (event is NewPage) {
+      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
       yield* _mapLoadFeedListWithDetailsToState();
     } else if (event is AddFeedList) {
       yield* _mapAddFeedListToState(event);
@@ -88,7 +109,6 @@ class FeedListBloc extends Bloc<FeedListEvent, FeedListState> {
     _feedsListSubscription?.cancel();
     return super.close();
   }
-
 }
 
 

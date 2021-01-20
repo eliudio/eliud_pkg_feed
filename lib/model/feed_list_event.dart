@@ -22,18 +22,9 @@ abstract class FeedListEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoadFeedList extends FeedListEvent {
-  final String orderBy;
-  final bool descending;
+class LoadFeedList extends FeedListEvent {}
 
-  LoadFeedList({this.orderBy, this.descending});
-
-  @override
-  List<Object> get props => [orderBy, descending];
-
-}
-
-class LoadFeedListWithDetails extends FeedListEvent {}
+class NewPage extends FeedListEvent {}
 
 class AddFeedList extends FeedListEvent {
   final FeedModel value;
@@ -73,13 +64,14 @@ class DeleteFeedList extends FeedListEvent {
 
 class FeedListUpdated extends FeedListEvent {
   final List<FeedModel> value;
+  final bool mightHaveMore;
 
-  const FeedListUpdated({ this.value });
-
-  @override
-  List<Object> get props => [ value ];
+  const FeedListUpdated({ this.value, this.mightHaveMore });
 
   @override
-  String toString() => 'FeedListUpdated{ value: $value }';
+  List<Object> get props => [ value, mightHaveMore ];
+
+  @override
+  String toString() => 'FeedListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
 }
 
