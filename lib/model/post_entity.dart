@@ -18,6 +18,7 @@ import 'dart:convert';
 import 'package:eliud_core/tools/common_tools.dart';
 import 'abstract_repository_singleton.dart';
 import 'package:eliud_core/model/entity_export.dart';
+import 'package:eliud_pkg_membership/model/entity_export.dart';
 import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_feed/model/entity_export.dart';
 
@@ -29,20 +30,22 @@ class PostEntity {
   final String postPageId;
   final Map<String, Object> pageParameters;
   final String description;
+  final int likes;
+  final int dislikes;
   final List<String> readAccess;
 
-  PostEntity({this.authorId, this.timestamp, this.appId, this.postAppId, this.postPageId, this.pageParameters, this.description, this.readAccess, });
+  PostEntity({this.authorId, this.timestamp, this.appId, this.postAppId, this.postPageId, this.pageParameters, this.description, this.likes, this.dislikes, this.readAccess, });
 
   PostEntity copyWith({Object timestamp, }) {
-    return PostEntity(authorId: authorId, timestamp : timestamp, appId: appId, postAppId: postAppId, postPageId: postPageId, pageParameters: pageParameters, description: description, readAccess: readAccess, );
+    return PostEntity(authorId: authorId, timestamp : timestamp, appId: appId, postAppId: postAppId, postPageId: postPageId, pageParameters: pageParameters, description: description, likes: likes, dislikes: dislikes, readAccess: readAccess, );
   }
-  List<Object> get props => [authorId, timestamp, appId, postAppId, postPageId, pageParameters, description, readAccess, ];
+  List<Object> get props => [authorId, timestamp, appId, postAppId, postPageId, pageParameters, description, likes, dislikes, readAccess, ];
 
   @override
   String toString() {
     String readAccessCsv = (readAccess == null) ? '' : readAccess.join(', ');
 
-    return 'PostEntity{authorId: $authorId, timestamp: $timestamp, appId: $appId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, description: $description, readAccess: String[] { $readAccessCsv }}';
+    return 'PostEntity{authorId: $authorId, timestamp: $timestamp, appId: $appId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, description: $description, likes: $likes, dislikes: $dislikes, readAccess: String[] { $readAccessCsv }}';
   }
 
   static PostEntity fromMap(Map map) {
@@ -60,6 +63,8 @@ class PostEntity {
       postPageId: map['postPageId'], 
       pageParameters: pageParametersFromMap, 
       description: map['description'], 
+      likes: int.tryParse(map['likes'].toString()), 
+      dislikes: int.tryParse(map['dislikes'].toString()), 
       readAccess: map['readAccess'] == null ? null : List.from(map['readAccess']), 
     );
   }
@@ -79,6 +84,10 @@ class PostEntity {
 
     if (description != null) theDocument["description"] = description;
       else theDocument["description"] = null;
+    if (likes != null) theDocument["likes"] = likes;
+      else theDocument["likes"] = null;
+    if (dislikes != null) theDocument["dislikes"] = dislikes;
+      else theDocument["dislikes"] = null;
     if (readAccess != null) theDocument["readAccess"] = readAccess.toList();
       else theDocument["readAccess"] = null;
     return theDocument;

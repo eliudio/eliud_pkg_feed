@@ -41,15 +41,20 @@ import 'package:eliud_core/tools/etc.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_membership/model/repository_export.dart';
+import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/repository_export.dart';
 import 'package:eliud_core/model/embedded_component.dart';
+import 'package:eliud_pkg_membership/model/embedded_component.dart';
 import 'package:eliud_pkg_feed/model/embedded_component.dart';
 import 'package:eliud_core/model/model_export.dart';
+import 'package:eliud_pkg_membership/model/model_export.dart';
 import '../tools/bespoke_models.dart';
 import 'package:eliud_pkg_feed/model/model_export.dart';
 import 'package:eliud_core/model/entity_export.dart';
+import 'package:eliud_pkg_membership/model/entity_export.dart';
 import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_feed/model/entity_export.dart';
 
@@ -136,6 +141,8 @@ class _MyPostFormState extends State<MyPostForm> {
   final TextEditingController _postAppIdController = TextEditingController();
   final TextEditingController _postPageIdController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _likesController = TextEditingController();
+  final TextEditingController _dislikesController = TextEditingController();
 
 
   _MyPostFormState(this.formAction);
@@ -149,6 +156,8 @@ class _MyPostFormState extends State<MyPostForm> {
     _postAppIdController.addListener(_onPostAppIdChanged);
     _postPageIdController.addListener(_onPostPageIdChanged);
     _descriptionController.addListener(_onDescriptionChanged);
+    _likesController.addListener(_onLikesChanged);
+    _dislikesController.addListener(_onDislikesChanged);
   }
 
   @override
@@ -185,6 +194,14 @@ class _MyPostFormState extends State<MyPostForm> {
           _descriptionController.text = state.value.description.toString();
         else
           _descriptionController.text = "";
+        if (state.value.likes != null)
+          _likesController.text = state.value.likes.toString();
+        else
+          _likesController.text = "";
+        if (state.value.dislikes != null)
+          _dislikesController.text = state.value.dislikes.toString();
+        else
+          _dislikesController.text = "";
       }
       if (state is PostFormInitialized) {
         List<Widget> children = List();
@@ -304,6 +321,42 @@ class _MyPostFormState extends State<MyPostForm> {
                 ),
           );
 
+        children.add(
+
+                TextFormField(
+                style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor)),
+                  readOnly: _readOnly(accessState, state),
+                  controller: _likesController,
+                  decoration: InputDecoration(
+                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldTextColor))),                    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldFocusColor))),                    icon: Icon(Icons.text_format, color: RgbHelper.color(rgbo: app.formFieldHeaderColor)),
+                    labelText: 'Likes',
+                  ),
+                  keyboardType: TextInputType.number,
+                  autovalidate: true,
+                  validator: (_) {
+                    return state is LikesPostFormError ? state.message : null;
+                  },
+                ),
+          );
+
+        children.add(
+
+                TextFormField(
+                style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor)),
+                  readOnly: _readOnly(accessState, state),
+                  controller: _dislikesController,
+                  decoration: InputDecoration(
+                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldTextColor))),                    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldFocusColor))),                    icon: Icon(Icons.text_format, color: RgbHelper.color(rgbo: app.formFieldHeaderColor)),
+                    labelText: 'Dislikes',
+                  ),
+                  keyboardType: TextInputType.number,
+                  autovalidate: true,
+                  validator: (_) {
+                    return state is DislikesPostFormError ? state.message : null;
+                  },
+                ),
+          );
+
 
         children.add(Container(height: 20.0));
         children.add(Divider(height: 1.0, thickness: 1.0, color: RgbHelper.color(rgbo: app.dividerColor)));
@@ -319,7 +372,7 @@ class _MyPostFormState extends State<MyPostForm> {
 
         children.add(
 
-                DropdownButtonComponentFactory().createNew(id: "members", value: _author, trigger: _onAuthorSelected, optional: false),
+                DropdownButtonComponentFactory().createNew(id: "memberPublicInfos", value: _author, trigger: _onAuthorSelected, optional: false),
           );
 
 
@@ -345,6 +398,8 @@ class _MyPostFormState extends State<MyPostForm> {
                               postPageId: state.value.postPageId, 
                               pageParameters: state.value.pageParameters, 
                               description: state.value.description, 
+                              likes: state.value.likes, 
+                              dislikes: state.value.dislikes, 
                               readAccess: state.value.readAccess, 
                         )));
                       } else {
@@ -358,6 +413,8 @@ class _MyPostFormState extends State<MyPostForm> {
                               postPageId: state.value.postPageId, 
                               pageParameters: state.value.pageParameters, 
                               description: state.value.description, 
+                              likes: state.value.likes, 
+                              dislikes: state.value.dislikes, 
                               readAccess: state.value.readAccess, 
                           )));
                       }
@@ -425,6 +482,16 @@ class _MyPostFormState extends State<MyPostForm> {
   }
 
 
+  void _onLikesChanged() {
+    _myFormBloc.add(ChangedPostLikes(value: _likesController.text));
+  }
+
+
+  void _onDislikesChanged() {
+    _myFormBloc.add(ChangedPostDislikes(value: _dislikesController.text));
+  }
+
+
   void _onReadAccessChanged(value) {
     _myFormBloc.add(ChangedPostReadAccess(value: value));
     setState(() {});
@@ -439,6 +506,8 @@ class _MyPostFormState extends State<MyPostForm> {
     _postAppIdController.dispose();
     _postPageIdController.dispose();
     _descriptionController.dispose();
+    _likesController.dispose();
+    _dislikesController.dispose();
     super.dispose();
   }
 

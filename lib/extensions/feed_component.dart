@@ -7,7 +7,8 @@ import 'package:eliud_core/model/rgb_model.dart';
 import 'package:eliud_core/tools/component_constructor.dart';
 import 'package:eliud_core/tools/etc.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
-import 'package:eliud_pkg_feed/extensions/widgets/post.dart';
+import 'package:eliud_pkg_feed/extensions/widgets/bloc/post_bloc.dart';
+import 'package:eliud_pkg_feed/extensions/widgets/post_widget.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/feed_component.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
@@ -120,7 +121,7 @@ class _PostsListState extends State<PostsList> {
               itemBuilder: (BuildContext context, int index) {
                 return index >= state.values.length
                     ? _buttonNextPage(state.mightHaveMore)
-                    : post(state.values[index]);
+                    : post(context, state.values[index]);
               },
               itemCount: state.values.length + 1);
         } else {
@@ -132,11 +133,12 @@ class _PostsListState extends State<PostsList> {
     );
   }
 
-  Widget post(PostModel postModel) {
-    return Post(
-      postModel,
-      recursive: postModel.postPageId == widget.parentPageId,
-    );
+  Widget post(BuildContext context, PostModel postModel) {
+    return BlocProvider<PostBloc>(
+        create: (context) => PostBloc(postModel, AccessBloc.memberFor(AccessBloc.getState(context)).documentID),
+        child: PostWidget(
+          isRecursive: postModel.postPageId == widget.parentPageId,
+        ));
   }
 
   Widget _buttonNextPage(bool mightHaveMore) {
@@ -152,7 +154,9 @@ class _PostsListState extends State<PostsList> {
           itemCount: 2,
           itemBuilder: (BuildContext context, int index) {
             if (index == 0) {
-              return Divider(height: 5,);
+              return Divider(
+                height: 5,
+              );
             } else {
               return Center(
                   child: Text(

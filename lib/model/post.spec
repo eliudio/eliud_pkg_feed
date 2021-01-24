@@ -30,7 +30,7 @@
     {
       "fieldName": "author",
       "displayName": "Author",
-      "fieldType": "Member",
+      "fieldType": "MemberPublicInfo",
       "association": true,
       "group": "member"
     },
@@ -78,6 +78,18 @@
       "group": "general"
     },
     {
+      "fieldName": "likes",
+      "displayName": "Likes",
+      "fieldType": "int",
+      "group": "general"
+    },
+    {
+      "fieldName": "dislikes",
+      "displayName": "Dislikes",
+      "fieldType": "int",
+      "group": "general"
+    },
+    {
       "fieldName": "readAccess",
       "displayName": "Members that can read this post. Array can contain 'public'",
       "fieldType": "String",
@@ -100,5 +112,5 @@
     "title": "timestamp.toString()",
     "subTitle": "documentID"
   },
-  "depends": ["eliud_core"]
+  "depends": ["eliud_core", "eliud_pkg_membership"]
 }

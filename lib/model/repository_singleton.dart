@@ -22,12 +22,20 @@ import '../model/feed_cache.dart';
 import '../model/post_firestore.dart';
 import '../model/post_repository.dart';
 import '../model/post_cache.dart';
+import '../model/post_comment_firestore.dart';
+import '../model/post_comment_repository.dart';
+import '../model/post_comment_cache.dart';
+import '../model/post_like_firestore.dart';
+import '../model/post_like_repository.dart';
+import '../model/post_like_cache.dart';
 
 import '../model/post_model.dart';
 
 class RepositorySingleton extends AbstractRepositorySingleton {
     var _feedRepository = HashMap<String, FeedRepository>();
     var _postRepository = HashMap<String, PostRepository>();
+    var _postCommentRepository = HashMap<String, PostCommentRepository>();
+    var _postLikeRepository = HashMap<String, PostLikeRepository>();
 
     FeedRepository feedRepository(String appId) {
       if (_feedRepository[appId] == null) _feedRepository[appId] = FeedCache(FeedFirestore(appRepository().getSubCollection(appId, 'feed'), appId));
@@ -36,6 +44,14 @@ class RepositorySingleton extends AbstractRepositorySingleton {
     PostRepository postRepository(String appId) {
       if (_postRepository[appId] == null) _postRepository[appId] = PostCache(PostFirestore(appRepository().getSubCollection(appId, 'post'), appId));
       return _postRepository[appId];
+    }
+    PostCommentRepository postCommentRepository(String appId) {
+      if (_postCommentRepository[appId] == null) _postCommentRepository[appId] = PostCommentCache(PostCommentFirestore(appRepository().getSubCollection(appId, 'postcomment'), appId));
+      return _postCommentRepository[appId];
+    }
+    PostLikeRepository postLikeRepository(String appId) {
+      if (_postLikeRepository[appId] == null) _postLikeRepository[appId] = PostLikeCache(PostLikeFirestore(appRepository().getSubCollection(appId, 'postlike'), appId));
+      return _postLikeRepository[appId];
     }
 
 }

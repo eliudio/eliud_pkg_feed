@@ -21,15 +21,20 @@ import 'package:eliud_pkg_feed/model/post_repository.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_membership/model/repository_export.dart';
+import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/repository_export.dart';
 import 'package:eliud_core/model/cache_export.dart';
+import 'package:eliud_pkg_membership/model/cache_export.dart';
 import 'package:eliud_pkg_feed/model/cache_export.dart';
 import 'package:eliud_core/model/model_export.dart';
+import 'package:eliud_pkg_membership/model/model_export.dart';
 import '../tools/bespoke_models.dart';
 import 'package:eliud_pkg_feed/model/model_export.dart';
 import 'package:eliud_core/model/entity_export.dart';
+import 'package:eliud_pkg_membership/model/entity_export.dart';
 import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_feed/model/entity_export.dart';
 
@@ -101,6 +106,12 @@ class PostCache implements PostRepository {
     return reference.getSubCollection(documentId, name);
   }
 
+  Future<PostModel> changeValue(String documentId, String fieldName, num changeByThisValue) {
+    return reference.changeValue(documentId, fieldName, changeByThisValue).then((newValue) {
+      fullCache[documentId] = newValue;
+      return newValue;
+    });
+  }
 
   Future<void> deleteAll() {
     return reference.deleteAll();
@@ -123,10 +134,10 @@ class PostCache implements PostRepository {
 
   static Future<PostModel> refreshRelations(PostModel model) async {
 
-    MemberModel authorHolder;
+    MemberPublicInfoModel authorHolder;
     if (model.author != null) {
       try {
-        await memberRepository().get(model.author.documentID).then((val) {
+        await memberPublicInfoRepository().get(model.author.documentID).then((val) {
           authorHolder = val;
         }).catchError((error) {});
       } catch (_) {}

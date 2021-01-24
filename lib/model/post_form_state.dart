@@ -191,6 +191,38 @@ class DescriptionPostFormError extends PostFormError {
 }
 
 
+class LikesPostFormError extends PostFormError { 
+  const LikesPostFormError({ String message, PostModel value }): super(message: message, value: value);
+
+  @override
+  List<Object> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''LikesPostFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
+class DislikesPostFormError extends PostFormError { 
+  const DislikesPostFormError({ String message, PostModel value }): super(message: message, value: value);
+
+  @override
+  List<Object> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''DislikesPostFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
 class ReadAccessPostFormError extends PostFormError { 
   const ReadAccessPostFormError({ String message, PostModel value }): super(message: message, value: value);
 

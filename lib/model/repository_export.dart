@@ -15,3 +15,5 @@
 
 export '../model/feed_repository.dart';
 export '../model/post_repository.dart';
+export '../model/post_comment_repository.dart';
+export '../model/post_like_repository.dart';

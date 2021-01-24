@@ -46,13 +46,59 @@ import 'package:eliud_pkg_feed/model/post_list_event.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_membership/model/repository_export.dart';
+import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/repository_export.dart';
 import 'package:eliud_core/model/model_export.dart';
+import 'package:eliud_pkg_membership/model/model_export.dart';
 import '../tools/bespoke_models.dart';
 import 'package:eliud_pkg_feed/model/model_export.dart';
 import 'package:eliud_core/model/entity_export.dart';
+import 'package:eliud_pkg_membership/model/entity_export.dart';
+import '../tools/bespoke_entities.dart';
+import 'package:eliud_pkg_feed/model/entity_export.dart';
+
+import 'package:eliud_pkg_feed/model/post_comment_list_bloc.dart';
+import 'package:eliud_pkg_feed/model/post_comment_list.dart';
+import 'package:eliud_pkg_feed/model/post_comment_dropdown_button.dart';
+import 'package:eliud_pkg_feed/model/post_comment_list_event.dart';
+
+import 'package:eliud_core/model/repository_export.dart';
+import 'package:eliud_core/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_membership/model/repository_export.dart';
+import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
+import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
+import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_feed/model/repository_export.dart';
+import 'package:eliud_core/model/model_export.dart';
+import 'package:eliud_pkg_membership/model/model_export.dart';
+import '../tools/bespoke_models.dart';
+import 'package:eliud_pkg_feed/model/model_export.dart';
+import 'package:eliud_core/model/entity_export.dart';
+import 'package:eliud_pkg_membership/model/entity_export.dart';
+import '../tools/bespoke_entities.dart';
+import 'package:eliud_pkg_feed/model/entity_export.dart';
+
+import 'package:eliud_pkg_feed/model/post_like_list_bloc.dart';
+import 'package:eliud_pkg_feed/model/post_like_list.dart';
+import 'package:eliud_pkg_feed/model/post_like_dropdown_button.dart';
+import 'package:eliud_pkg_feed/model/post_like_list_event.dart';
+
+import 'package:eliud_core/model/repository_export.dart';
+import 'package:eliud_core/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_membership/model/repository_export.dart';
+import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
+import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
+import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_feed/model/repository_export.dart';
+import 'package:eliud_core/model/model_export.dart';
+import 'package:eliud_pkg_membership/model/model_export.dart';
+import '../tools/bespoke_models.dart';
+import 'package:eliud_pkg_feed/model/model_export.dart';
+import 'package:eliud_core/model/entity_export.dart';
+import 'package:eliud_pkg_membership/model/entity_export.dart';
 import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_feed/model/entity_export.dart';
 
@@ -71,6 +117,8 @@ class DropdownButtonComponentFactory implements ComponentDropDown {
 
     if (id == "feeds") return true;
     if (id == "posts") return true;
+    if (id == "postComments") return true;
+    if (id == "postLikes") return true;
     return false;
   }
 
@@ -80,6 +128,12 @@ class DropdownButtonComponentFactory implements ComponentDropDown {
       return DropdownButtonComponent(componentId: id, value: value, trigger: trigger, optional: optional);
 
     if (id == "posts")
+      return DropdownButtonComponent(componentId: id, value: value, trigger: trigger, optional: optional);
+
+    if (id == "postComments")
+      return DropdownButtonComponent(componentId: id, value: value, trigger: trigger, optional: optional);
+
+    if (id == "postLikes")
       return DropdownButtonComponent(componentId: id, value: value, trigger: trigger, optional: optional);
 
     return null;
@@ -109,12 +163,16 @@ class ListComponent extends StatelessWidget with HasFab {
 
     if (componentId == 'feeds') return _feedBuild(context);
     if (componentId == 'posts') return _postBuild(context);
+    if (componentId == 'postComments') return _postCommentBuild(context);
+    if (componentId == 'postLikes') return _postLikeBuild(context);
     return Text('Component with componentId == $componentId not found');
   }
 
   Widget initWidget() {
     if (componentId == 'feeds') widget = FeedListWidget();
     if (componentId == 'posts') widget = PostListWidget();
+    if (componentId == 'postComments') widget = PostCommentListWidget();
+    if (componentId == 'postLikes') widget = PostLikeListWidget();
   }
 
   Widget _feedBuild(BuildContext context) {
@@ -143,6 +201,32 @@ class ListComponent extends StatelessWidget with HasFab {
     );
   }
 
+  Widget _postCommentBuild(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<PostCommentListBloc>(
+          create: (context) => PostCommentListBloc(
+            postCommentRepository: postCommentRepository(appId: AccessBloc.appId(context)),
+          )..add(LoadPostCommentList()),
+        )
+      ],
+      child: widget,
+    );
+  }
+
+  Widget _postLikeBuild(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<PostLikeListBloc>(
+          create: (context) => PostLikeListBloc(
+            postLikeRepository: postLikeRepository(appId: AccessBloc.appId(context)),
+          )..add(LoadPostLikeList()),
+        )
+      ],
+      child: widget,
+    );
+  }
+
 }
 
 
@@ -161,6 +245,8 @@ class DropdownButtonComponent extends StatelessWidget {
 
     if (componentId == 'feeds') return _feedBuild(context);
     if (componentId == 'posts') return _postBuild(context);
+    if (componentId == 'postComments') return _postCommentBuild(context);
+    if (componentId == 'postLikes') return _postLikeBuild(context);
     return Text('Component with componentId == $componentId not found');
   }
 
@@ -188,6 +274,32 @@ class DropdownButtonComponent extends StatelessWidget {
         )
       ],
       child: PostDropdownButtonWidget(value: value, trigger: trigger, optional: optional),
+    );
+  }
+
+  Widget _postCommentBuild(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<PostCommentListBloc>(
+          create: (context) => PostCommentListBloc(
+            postCommentRepository: postCommentRepository(appId: AccessBloc.appId(context)),
+          )..add(LoadPostCommentList()),
+        )
+      ],
+      child: PostCommentDropdownButtonWidget(value: value, trigger: trigger, optional: optional),
+    );
+  }
+
+  Widget _postLikeBuild(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<PostLikeListBloc>(
+          create: (context) => PostLikeListBloc(
+            postLikeRepository: postLikeRepository(appId: AccessBloc.appId(context)),
+          )..add(LoadPostLikeList()),
+        )
+      ],
+      child: PostLikeDropdownButtonWidget(value: value, trigger: trigger, optional: optional),
     );
   }
 

@@ -19,13 +19,17 @@ import 'package:eliud_core/tools/common_tools.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_membership/model/repository_export.dart';
+import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/repository_export.dart';
 import 'package:eliud_core/model/model_export.dart';
+import 'package:eliud_pkg_membership/model/model_export.dart';
 import '../tools/bespoke_models.dart';
 import 'package:eliud_pkg_feed/model/model_export.dart';
 import 'package:eliud_core/model/entity_export.dart';
+import 'package:eliud_pkg_membership/model/entity_export.dart';
 import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_feed/model/entity_export.dart';
 
@@ -38,7 +42,7 @@ import 'package:eliud_core/tools/random.dart';
 
 class PostModel {
   String documentID;
-  MemberModel author;
+  MemberPublicInfoModel author;
   String timestamp;
 
   // This is the identifier of the app to which this feed belongs
@@ -51,18 +55,20 @@ class PostModel {
   String postPageId;
   Map<String, Object> pageParameters;
   String description;
+  int likes;
+  int dislikes;
   List<String> readAccess;
 
-  PostModel({this.documentID, this.author, this.timestamp, this.appId, this.postAppId, this.postPageId, this.pageParameters, this.description, this.readAccess, })  {
+  PostModel({this.documentID, this.author, this.timestamp, this.appId, this.postAppId, this.postPageId, this.pageParameters, this.description, this.likes, this.dislikes, this.readAccess, })  {
     assert(documentID != null);
   }
 
-  PostModel copyWith({String documentID, MemberModel author, String timestamp, String appId, String postAppId, String postPageId, Map<String, Object> pageParameters, String description, List<String> readAccess, }) {
-    return PostModel(documentID: documentID ?? this.documentID, author: author ?? this.author, timestamp: timestamp ?? this.timestamp, appId: appId ?? this.appId, postAppId: postAppId ?? this.postAppId, postPageId: postPageId ?? this.postPageId, pageParameters: pageParameters ?? this.pageParameters, description: description ?? this.description, readAccess: readAccess ?? this.readAccess, );
+  PostModel copyWith({String documentID, MemberPublicInfoModel author, String timestamp, String appId, String postAppId, String postPageId, Map<String, Object> pageParameters, String description, int likes, int dislikes, List<String> readAccess, }) {
+    return PostModel(documentID: documentID ?? this.documentID, author: author ?? this.author, timestamp: timestamp ?? this.timestamp, appId: appId ?? this.appId, postAppId: postAppId ?? this.postAppId, postPageId: postPageId ?? this.postPageId, pageParameters: pageParameters ?? this.pageParameters, description: description ?? this.description, likes: likes ?? this.likes, dislikes: dislikes ?? this.dislikes, readAccess: readAccess ?? this.readAccess, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ author.hashCode ^ timestamp.hashCode ^ appId.hashCode ^ postAppId.hashCode ^ postPageId.hashCode ^ pageParameters.hashCode ^ description.hashCode ^ readAccess.hashCode;
+  int get hashCode => documentID.hashCode ^ author.hashCode ^ timestamp.hashCode ^ appId.hashCode ^ postAppId.hashCode ^ postPageId.hashCode ^ pageParameters.hashCode ^ description.hashCode ^ likes.hashCode ^ dislikes.hashCode ^ readAccess.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -77,13 +83,15 @@ class PostModel {
           postPageId == other.postPageId &&
           pageParameters == other.pageParameters &&
           description == other.description &&
+          likes == other.likes &&
+          dislikes == other.dislikes &&
           ListEquality().equals(readAccess, other.readAccess);
 
   @override
   String toString() {
     String readAccessCsv = (readAccess == null) ? '' : readAccess.join(', ');
 
-    return 'PostModel{documentID: $documentID, author: $author, timestamp: $timestamp, appId: $appId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, description: $description, readAccess: String[] { $readAccessCsv }}';
+    return 'PostModel{documentID: $documentID, author: $author, timestamp: $timestamp, appId: $appId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, description: $description, likes: $likes, dislikes: $dislikes, readAccess: String[] { $readAccessCsv }}';
   }
 
   PostEntity toEntity({String appId}) {
@@ -93,6 +101,8 @@ class PostModel {
           postAppId: (postAppId != null) ? postAppId : null, 
           postPageId: (postPageId != null) ? postPageId : null, 
           pageParameters: pageParameters,           description: (description != null) ? description : null, 
+          likes: (likes != null) ? likes : null, 
+          dislikes: (dislikes != null) ? dislikes : null, 
           readAccess: (readAccess != null) ? readAccess : null, 
     );
   }
@@ -107,6 +117,8 @@ class PostModel {
           postPageId: entity.postPageId, 
           pageParameters: entity.pageParameters, 
           description: entity.description, 
+          likes: entity.likes, 
+          dislikes: entity.dislikes, 
           readAccess: entity.readAccess, 
     );
   }
@@ -114,10 +126,10 @@ class PostModel {
   static Future<PostModel> fromEntityPlus(String documentID, PostEntity entity, { String appId}) async {
     if (entity == null) return null;
 
-    MemberModel authorHolder;
+    MemberPublicInfoModel authorHolder;
     if (entity.authorId != null) {
       try {
-        await memberRepository(appId: appId).get(entity.authorId).then((val) {
+        await memberPublicInfoRepository(appId: appId).get(entity.authorId).then((val) {
           authorHolder = val;
         }).catchError((error) {});
       } catch (_) {}
@@ -132,6 +144,8 @@ class PostModel {
           postPageId: entity.postPageId, 
           pageParameters: entity.pageParameters, 
           description: entity.description, 
+          likes: entity.likes, 
+          dislikes: entity.dislikes, 
           readAccess: entity.readAccess, 
     );
   }

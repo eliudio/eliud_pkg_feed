@@ -10,7 +10,7 @@ import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:eliud_pkg_feed/tools/action/post_action_model.dart';
 import 'package:eliud_pkg_follow/model/abstract_repository_singleton.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
 import 'package:flutter/material.dart';
 
 class PostActionHandler extends PackageActionHandler {
@@ -60,8 +60,8 @@ class PostActionHandler extends PackageActionHandler {
     executePostIt(context, action, ['PUBLIC'], accessState);
   }
 
-  void executePostIt(BuildContext context, PostActionModel action,
-      List<String> readAccess, LoggedIn accessState) {
+  Future<void> executePostIt(BuildContext context, PostActionModel action,
+      List<String> readAccess, LoggedIn accessState) async {
     var modalRoute = ModalRoute.of(context);
     var settings = modalRoute.settings;
     var pageId = settings.name;
@@ -70,7 +70,7 @@ class PostActionHandler extends PackageActionHandler {
     // Can we actually add the current page? (page should have an indicator if it's allowed to be added)
     postRepository(appId: action.appID).add(PostModel(
       documentID: newRandomKey(),
-      author: accessState.member,
+      author: await memberPublicInfoRepository(appId: action.appID).get(accessState.member.documentID),
       appId: action.appID,
       postAppId: action.feed.appId,
       postPageId: pageId,

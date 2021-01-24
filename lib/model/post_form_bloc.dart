@@ -27,13 +27,17 @@ import 'package:eliud_core/tools/string_validator.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_membership/model/repository_export.dart';
+import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/repository_export.dart';
 import 'package:eliud_core/model/model_export.dart';
+import 'package:eliud_pkg_membership/model/model_export.dart';
 import '../tools/bespoke_models.dart';
 import 'package:eliud_pkg_feed/model/model_export.dart';
 import 'package:eliud_core/model/entity_export.dart';
+import 'package:eliud_pkg_membership/model/entity_export.dart';
 import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_feed/model/entity_export.dart';
 
@@ -57,6 +61,8 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
                                  postAppId: "",
                                  postPageId: "",
                                  description: "",
+                                 likes: 0,
+                                 dislikes: 0,
                                  readAccess: [],
 
         ));
@@ -90,7 +96,7 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
       }
       if (event is ChangedPostAuthor) {
         if (event.value != null)
-          newValue = currentState.value.copyWith(author: await memberRepository(appId: appId).get(event.value));
+          newValue = currentState.value.copyWith(author: await memberPublicInfoRepository(appId: appId).get(event.value));
         else
           newValue = new PostModel(
                                  documentID: currentState.value.documentID,
@@ -101,6 +107,8 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
                                  postPageId: currentState.value.postPageId,
                                  pageParameters: currentState.value.pageParameters,
                                  description: currentState.value.description,
+                                 likes: currentState.value.likes,
+                                 dislikes: currentState.value.dislikes,
                                  readAccess: currentState.value.readAccess,
           );
         yield SubmittablePostForm(value: newValue);
@@ -141,6 +149,28 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
         newValue = currentState.value.copyWith(description: event.value);
         yield SubmittablePostForm(value: newValue);
 
+        return;
+      }
+      if (event is ChangedPostLikes) {
+        if (isInt(event.value)) {
+          newValue = currentState.value.copyWith(likes: int.parse(event.value));
+          yield SubmittablePostForm(value: newValue);
+
+        } else {
+          newValue = currentState.value.copyWith(likes: 0);
+          yield LikesPostFormError(message: "Value should be a number", value: newValue);
+        }
+        return;
+      }
+      if (event is ChangedPostDislikes) {
+        if (isInt(event.value)) {
+          newValue = currentState.value.copyWith(dislikes: int.parse(event.value));
+          yield SubmittablePostForm(value: newValue);
+
+        } else {
+          newValue = currentState.value.copyWith(dislikes: 0);
+          yield DislikesPostFormError(message: "Value should be a number", value: newValue);
+        }
         return;
       }
     }
