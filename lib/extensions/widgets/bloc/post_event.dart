@@ -10,6 +10,7 @@ abstract class PostEvent extends Equatable {
   List<Object> get props => [];
 }
 
+// Load Comments
 class LoadCommentsEvent extends PostEvent {
   final PostModel postModel;
   final String memberId;
@@ -20,6 +21,7 @@ class LoadCommentsEvent extends PostEvent {
   List<Object> get props => [ postModel, memberId ];
 }
 
+// Like Post Event
 class LikePostEvent extends PostEvent {
   final PostModel postModel;
   final LikeType likeType;
@@ -30,6 +32,8 @@ class LikePostEvent extends PostEvent {
   List<Object> get props => [ postModel, likeType ];
 }
 
+// Comment Events
+// Add comment
 class AddCommentEvent extends PostEvent {
   final PostModel postModel;
   final String comment;
@@ -40,6 +44,7 @@ class AddCommentEvent extends PostEvent {
   List<Object> get props => [ postModel, comment ];
 }
 
+// Delete comment
 class DeleteCommentEvent extends PostEvent {
   final PostCommentModel deleteThis;
 
@@ -49,6 +54,7 @@ class DeleteCommentEvent extends PostEvent {
   List<Object> get props => [ deleteThis ];
 }
 
+// Update comment
 class UpdateCommentEvent extends PostEvent {
   final PostCommentModel updateThis;
   final String newValue;
@@ -59,12 +65,3 @@ class UpdateCommentEvent extends PostEvent {
   List<Object> get props => [ updateThis, newValue ];
 }
 
-class UpdatePostEvent extends PostEvent {
-  final PostModel postModel;
-  final String comment;
-
-  UpdatePostEvent(this.postModel, this.comment);
-
-  @override
-  List<Object> get props => [ postModel, comment ];
-}

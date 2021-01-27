@@ -38,6 +38,18 @@ import 'package:eliud_pkg_feed/model/post_entity.dart';
 
 import 'package:eliud_core/tools/random.dart';
 
+enum PostArchiveStatus {
+  Active, Archived, Unknown
+}
+
+
+PostArchiveStatus toPostArchiveStatus(int index) {
+  switch (index) {
+    case 0: return PostArchiveStatus.Active;
+    case 1: return PostArchiveStatus.Archived;
+  }
+  return PostArchiveStatus.Unknown;
+}
 
 
 class PostModel {
@@ -58,17 +70,18 @@ class PostModel {
   int likes;
   int dislikes;
   List<String> readAccess;
+  PostArchiveStatus archived;
 
-  PostModel({this.documentID, this.author, this.timestamp, this.appId, this.postAppId, this.postPageId, this.pageParameters, this.description, this.likes, this.dislikes, this.readAccess, })  {
+  PostModel({this.documentID, this.author, this.timestamp, this.appId, this.postAppId, this.postPageId, this.pageParameters, this.description, this.likes, this.dislikes, this.readAccess, this.archived, })  {
     assert(documentID != null);
   }
 
-  PostModel copyWith({String documentID, MemberPublicInfoModel author, String timestamp, String appId, String postAppId, String postPageId, Map<String, Object> pageParameters, String description, int likes, int dislikes, List<String> readAccess, }) {
-    return PostModel(documentID: documentID ?? this.documentID, author: author ?? this.author, timestamp: timestamp ?? this.timestamp, appId: appId ?? this.appId, postAppId: postAppId ?? this.postAppId, postPageId: postPageId ?? this.postPageId, pageParameters: pageParameters ?? this.pageParameters, description: description ?? this.description, likes: likes ?? this.likes, dislikes: dislikes ?? this.dislikes, readAccess: readAccess ?? this.readAccess, );
+  PostModel copyWith({String documentID, MemberPublicInfoModel author, String timestamp, String appId, String postAppId, String postPageId, Map<String, Object> pageParameters, String description, int likes, int dislikes, List<String> readAccess, PostArchiveStatus archived, }) {
+    return PostModel(documentID: documentID ?? this.documentID, author: author ?? this.author, timestamp: timestamp ?? this.timestamp, appId: appId ?? this.appId, postAppId: postAppId ?? this.postAppId, postPageId: postPageId ?? this.postPageId, pageParameters: pageParameters ?? this.pageParameters, description: description ?? this.description, likes: likes ?? this.likes, dislikes: dislikes ?? this.dislikes, readAccess: readAccess ?? this.readAccess, archived: archived ?? this.archived, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ author.hashCode ^ timestamp.hashCode ^ appId.hashCode ^ postAppId.hashCode ^ postPageId.hashCode ^ pageParameters.hashCode ^ description.hashCode ^ likes.hashCode ^ dislikes.hashCode ^ readAccess.hashCode;
+  int get hashCode => documentID.hashCode ^ author.hashCode ^ timestamp.hashCode ^ appId.hashCode ^ postAppId.hashCode ^ postPageId.hashCode ^ pageParameters.hashCode ^ description.hashCode ^ likes.hashCode ^ dislikes.hashCode ^ readAccess.hashCode ^ archived.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -85,13 +98,14 @@ class PostModel {
           description == other.description &&
           likes == other.likes &&
           dislikes == other.dislikes &&
-          ListEquality().equals(readAccess, other.readAccess);
+          ListEquality().equals(readAccess, other.readAccess) &&
+          archived == other.archived;
 
   @override
   String toString() {
     String readAccessCsv = (readAccess == null) ? '' : readAccess.join(', ');
 
-    return 'PostModel{documentID: $documentID, author: $author, timestamp: $timestamp, appId: $appId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, description: $description, likes: $likes, dislikes: $dislikes, readAccess: String[] { $readAccessCsv }}';
+    return 'PostModel{documentID: $documentID, author: $author, timestamp: $timestamp, appId: $appId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, description: $description, likes: $likes, dislikes: $dislikes, readAccess: String[] { $readAccessCsv }, archived: $archived}';
   }
 
   PostEntity toEntity({String appId}) {
@@ -104,6 +118,7 @@ class PostModel {
           likes: (likes != null) ? likes : null, 
           dislikes: (dislikes != null) ? dislikes : null, 
           readAccess: (readAccess != null) ? readAccess : null, 
+          archived: (archived != null) ? archived.index : null, 
     );
   }
 
@@ -120,6 +135,7 @@ class PostModel {
           likes: entity.likes, 
           dislikes: entity.dislikes, 
           readAccess: entity.readAccess, 
+          archived: toPostArchiveStatus(entity.archived), 
     );
   }
 
@@ -147,6 +163,7 @@ class PostModel {
           likes: entity.likes, 
           dislikes: entity.dislikes, 
           readAccess: entity.readAccess, 
+          archived: toPostArchiveStatus(entity.archived), 
     );
   }
 

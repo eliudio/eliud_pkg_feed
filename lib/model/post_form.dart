@@ -143,6 +143,7 @@ class _MyPostFormState extends State<MyPostForm> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _likesController = TextEditingController();
   final TextEditingController _dislikesController = TextEditingController();
+  int _archivedSelectedRadioTile;
 
 
   _MyPostFormState(this.formAction);
@@ -158,6 +159,7 @@ class _MyPostFormState extends State<MyPostForm> {
     _descriptionController.addListener(_onDescriptionChanged);
     _likesController.addListener(_onLikesChanged);
     _dislikesController.addListener(_onDislikesChanged);
+    _archivedSelectedRadioTile = 0;
   }
 
   @override
@@ -202,6 +204,10 @@ class _MyPostFormState extends State<MyPostForm> {
           _dislikesController.text = state.value.dislikes.toString();
         else
           _dislikesController.text = "";
+        if (state.value.archived != null)
+          _archivedSelectedRadioTile = state.value.archived.index;
+        else
+          _archivedSelectedRadioTile = 0;
       }
       if (state is PostFormInitialized) {
         List<Widget> children = List();
@@ -213,6 +219,33 @@ class _MyPostFormState extends State<MyPostForm> {
                           color: RgbHelper.color(rgbo: app.formGroupTitleColor), fontWeight: FontWeight.bold)),
                 ));
 
+
+        children.add(
+
+                RadioListTile(
+                    value: 0,
+                    activeColor: RgbHelper.color(rgbo: app.formFieldTextColor),
+                    groupValue: _archivedSelectedRadioTile,
+                    title: Text("Active", style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor))),
+                    subtitle: Text("Active", style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor))),
+                    onChanged: !accessState.memberIsOwner() ? null : (val) {
+                      setSelectionArchived(val);
+                    },
+                ),
+          );
+        children.add(
+
+                RadioListTile(
+                    value: 1,
+                    activeColor: RgbHelper.color(rgbo: app.formFieldTextColor),
+                    groupValue: _archivedSelectedRadioTile,
+                    title: Text("Archived", style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor))),
+                    subtitle: Text("Archived", style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor))),
+                    onChanged: !accessState.memberIsOwner() ? null : (val) {
+                      setSelectionArchived(val);
+                    },
+                ),
+          );
 
 
         children.add(Container(height: 20.0));
@@ -401,6 +434,7 @@ class _MyPostFormState extends State<MyPostForm> {
                               likes: state.value.likes, 
                               dislikes: state.value.dislikes, 
                               readAccess: state.value.readAccess, 
+                              archived: state.value.archived, 
                         )));
                       } else {
                         BlocProvider.of<PostListBloc>(context).add(
@@ -416,6 +450,7 @@ class _MyPostFormState extends State<MyPostForm> {
                               likes: state.value.likes, 
                               dislikes: state.value.dislikes, 
                               readAccess: state.value.readAccess, 
+                              archived: state.value.archived, 
                           )));
                       }
                       if (widget.submitAction != null) {
@@ -495,6 +530,14 @@ class _MyPostFormState extends State<MyPostForm> {
   void _onReadAccessChanged(value) {
     _myFormBloc.add(ChangedPostReadAccess(value: value));
     setState(() {});
+  }
+
+
+  void setSelectionArchived(int val) {
+    setState(() {
+      _archivedSelectedRadioTile = val;
+    });
+    _myFormBloc.add(ChangedPostArchived(value: toPostArchiveStatus(val)));
   }
 
 

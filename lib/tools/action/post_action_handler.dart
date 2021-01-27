@@ -74,6 +74,7 @@ class PostActionHandler extends PackageActionHandler {
       appId: action.appID,
       postAppId: action.feed.appId,
       postPageId: pageId,
+      archived: PostArchiveStatus.Active,
       pageParameters: parameters,
       description: "Post added by Add To Post button",
       readAccess: readAccess,

@@ -239,6 +239,22 @@ class ReadAccessPostFormError extends PostFormError {
 }
 
 
+class ArchivedPostFormError extends PostFormError { 
+  const ArchivedPostFormError({ String message, PostModel value }): super(message: message, value: value);
+
+  @override
+  List<Object> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''ArchivedPostFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
 class PostFormLoaded extends PostFormInitialized { 
   const PostFormLoaded({ PostModel value }): super(value: value);
 

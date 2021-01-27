@@ -195,3 +195,15 @@ class ChangedPostReadAccess extends PostFormEvent {
   String toString() => 'ChangedPostReadAccess{ value: $value }';
 }
 
+class ChangedPostArchived extends PostFormEvent {
+  final PostArchiveStatus value;
+
+  ChangedPostArchived({this.value});
+
+  @override
+  List<Object> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedPostArchived{ value: $value }';
+}
+

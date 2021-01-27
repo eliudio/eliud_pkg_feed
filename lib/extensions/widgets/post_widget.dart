@@ -9,6 +9,8 @@ import 'package:eliud_core/model/page_component_bloc.dart';
 import 'package:eliud_core/model/page_component_event.dart';
 import 'package:eliud_core/model/page_component_state.dart';
 import 'package:eliud_core/platform/platform.dart';
+import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_bloc.dart';
+import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_event.dart';
 import 'package:eliud_pkg_feed/model/post_like_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:flutter/material.dart';
@@ -59,40 +61,28 @@ class PostWidget extends StatelessWidget {
 
   Widget _heading(BuildContext context, PostModel postModel, String memberId) {
     var widgets = <Widget>[
-      Text(postModel.author.name, style: textStyle),
+      Text(postModel.documentID + " -" + postModel.author.name, style: textStyle),
       Spacer(),
-      Text(postModel.timestamp, style: textStyle),
+      postModel.timestamp != null ? Text(postModel.timestamp, style: textStyle) : Text("?"),
       Spacer(),
     ];
     if (memberId == postModel.author.documentID) {
-      widgets.add(IconButton(
-        icon: Icon(Icons.more_horiz),
-        onPressed: () => _optionsPost(context),
-      ));
+      // we have an issue with deleting. We have a paged query for the feed, otherwise it would take forever to load.
+      // It appears that the query with a limit, which is required for pagination, causes issues. When we delete items or
+      // update items, the listen isn't informed about this change.
+      widgets.add(PopupMenuButton(
+          itemBuilder: (_) => <PopupMenuItem<String>>[
+            new PopupMenuItem<String>(
+                child: const Text('Delete'), value: 'Delete'),
+          ],
+          onSelected: (selection) => _deletePost(context, postModel)));
     }
     return Row(children: widgets);
   }
 
-  void _optionsPost(BuildContext context) {
-    new AlertDialog(
-      title: const Text('Popup example'),
-      content: new Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text("Hello"),
-        ],
-      ),
-      actions: <Widget>[
-        new FlatButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          textColor: Theme.of(context).primaryColor,
-          child: const Text('Close'),
-        ),
-      ],
-    );
+  void _deletePost(BuildContext context, PostModel postModel) {
+    BlocProvider.of<PostListPagedBloc>(context).add(
+        DeletePostPaged(value: postModel));
   }
 
   Widget _postDetails(String memberId, PostModel postModel,

@@ -96,6 +96,13 @@
       "iconName": "text_format",
       "arrayType": "Array",
       "hidden": true
+    },
+    {
+      "fieldName": "archived",
+      "fieldType": "enum",
+      "defaultValue": "PostArchiveStatus.Active",
+      "enumName": "PostArchiveStatus",
+      "enumValues" : [ "Active", "Archived" ]
     }
   ],
   "groups": [

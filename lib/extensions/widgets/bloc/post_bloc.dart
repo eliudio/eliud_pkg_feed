@@ -33,6 +33,8 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       var theState = state as PostLoaded;
       if (event is LoadCommentsEvent) {
         yield await _loadComments(event.postModel, event.memberId);
+
+      // Post comments events
       } else if (event is LikePostEvent) {
         yield await _updateEmotion(theState, event.likeType);
       } else if (event is AddCommentEvent) {
@@ -41,8 +43,6 @@ class PostBloc extends Bloc<PostEvent, PostState> {
         yield await _deleteComment(theState, event.deleteThis);
       } else if (event is UpdateCommentEvent) {
         yield await _updateComment(theState, event.updateThis, event.newValue);
-      } else if (event is UpdatePostEvent) {
-        //...
       }
     }
   }
@@ -67,10 +67,6 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   Future<CommentsLoaded> _updateComment(PostLoaded theState, PostCommentModel updateThis, String newValue) async {
     await postCommentRepository(appId: theState.postModel.appId).update(updateThis.copyWith(comment: newValue));
     return  _loadComments(theState.postModel, theState.memberId);
-  }
-
-  Future<CommentsLoaded> _updatePost() {
-    // later. For now we don't yet support this given we only add new posts through the post-to-feed button
   }
 
   Future<CommentsLoaded> _updateEmotion(
