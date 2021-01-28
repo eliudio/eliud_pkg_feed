@@ -1,3 +1,4 @@
+import 'package:eliud_pkg_feed/model/post_comment_model.dart';
 import 'package:eliud_pkg_feed/model/post_like_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:eliud_pkg_membership/model/member_public_info_model.dart';
@@ -26,14 +27,15 @@ class PostLoaded extends PostState {
 }
 
 class PostCommentContainer extends Equatable {
+  final PostCommentModel postComment;
   final String dateTime;
   final MemberPublicInfoModel member;
   final String comment;
 
-  PostCommentContainer({this.dateTime, this.member, this.comment});
+  PostCommentContainer({this.postComment, this.dateTime, this.member, this.comment});
 
   @override
-  List<Object> get props => [member, comment];
+  List<Object> get props => [postComment, dateTime, member, comment];
 }
 
 // Eventually this should also be loaded paged, rather than all in 1 go.

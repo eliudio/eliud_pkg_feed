@@ -30,6 +30,15 @@ class LikePostEvent extends PostEvent {
   List<Object> get props => [ postModel, likeType ];
 }
 
+class DeletePostEvent extends PostEvent {
+  final PostModel postModel;
+
+  DeletePostEvent(this.postModel);
+
+  @override
+  List<Object> get props => [ postModel ];
+}
+
 class AddCommentEvent extends PostEvent {
   final PostModel postModel;
   final String comment;

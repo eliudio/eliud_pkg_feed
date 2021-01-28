@@ -132,6 +132,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
                 isEqualTo: postModel.documentID)));
     List<PostCommentContainer> comments = await Future.wait(sourceComments.map((comment) async =>
       PostCommentContainer(
+        postComment: comment,
         dateTime: comment.timestamp,
         member: await memberPublicInfoRepository(appId: postModel.appId).get(comment.memberId),
         comment: comment.comment
