@@ -64,6 +64,7 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
                                  likes: 0,
                                  dislikes: 0,
                                  readAccess: [],
+                                 archived: PostArchiveStatus.Active, 
 
         ));
         yield loaded;
@@ -110,6 +111,7 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
                                  likes: currentState.value.likes,
                                  dislikes: currentState.value.dislikes,
                                  readAccess: currentState.value.readAccess,
+                                 archived: currentState.value.archived,
           );
         yield SubmittablePostForm(value: newValue);
 
@@ -171,6 +173,12 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
           newValue = currentState.value.copyWith(dislikes: 0);
           yield DislikesPostFormError(message: "Value should be a number", value: newValue);
         }
+        return;
+      }
+      if (event is ChangedPostArchived) {
+        newValue = currentState.value.copyWith(archived: event.value);
+        yield SubmittablePostForm(value: newValue);
+
         return;
       }
     }

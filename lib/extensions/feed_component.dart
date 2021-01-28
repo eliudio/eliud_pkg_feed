@@ -7,6 +7,9 @@ import 'package:eliud_core/model/rgb_model.dart';
 import 'package:eliud_core/tools/component_constructor.dart';
 import 'package:eliud_core/tools/etc.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
+import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_bloc.dart';
+import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_event.dart';
+import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_state.dart';
 import 'package:eliud_pkg_feed/extensions/widgets/bloc/post_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/widgets/post_widget.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
@@ -50,6 +53,8 @@ class FeedComponent extends AbstractFeedComponent {
           context,
           feedModel,
           EliudQuery()
+              .withCondition(EliudQueryCondition('archived',
+                  isEqualTo: PostArchiveStatus.Active.index))
               // We could limit the posts retrieve by making adding the condition: 'authorId' whereIn FollowerHelper.following(me, state.app.documentID)
               // However, combining this query with arrayContainsAny in 1 query is not possible currently in the app.
               // For now we lay the responsibility with the one posting the post, i.e. that the readAccess includes the person.
@@ -71,14 +76,7 @@ class FeedComponent extends AbstractFeedComponent {
   Widget _postPagedBloc(String parentPageId, BuildContext context,
       FeedModel feedModel, EliudQuery eliudQuery) {
     return BlocProvider(
-      create: (_) => PostListBloc(
-        eliudQuery: eliudQuery,
-        postRepository: postRepository(appId: feedModel.appId),
-        orderBy: 'timestamp',
-        descending: true,
-        paged: true,
-        detailed: true,
-      )..add(LoadPostList()),
+      create: (_) => PostListPagedBloc(eliudQuery, postRepository: postRepository(appId: feedModel.appId))..add(PostListPagedFetched()),
       child: PostsList(parentPageId: parentPageId),
     );
   }
@@ -100,30 +98,31 @@ class PostsList extends StatefulWidget {
 }
 
 class _PostsListState extends State<PostsList> {
-  PostListBloc _postBloc;
+  PostListPagedBloc _postBloc;
   AppModel _app;
 
   @override
   void initState() {
     super.initState();
-    _postBloc = BlocProvider.of<PostListBloc>(context);
+    _postBloc = BlocProvider.of<PostListPagedBloc>(context);
     _app = AccessBloc.app(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PostListBloc, PostListState>(
+    return BlocBuilder<PostListPagedBloc, PostListPagedState>(
       builder: (context, state) {
-        if (state is PostListLoaded) {
+        if (state is PostListPagedState) {
+          var theState = state as PostListPagedState;
           return ListView.builder(
               shrinkWrap: true,
               physics: ScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
-                return index >= state.values.length
-                    ? _buttonNextPage(state.mightHaveMore)
-                    : post(context, state.values[index]);
+                return index >= theState.values.length
+                    ? _buttonNextPage(!theState.hasReachedMax)
+                    : post(context, theState.values[index]);
               },
-              itemCount: state.values.length + 1);
+              itemCount: theState.values.length + 1);
         } else {
           return Center(
             child: DelayedCircularProgressIndicator(),
@@ -133,9 +132,16 @@ class _PostsListState extends State<PostsList> {
     );
   }
 
+  Widget simplePost(BuildContext context, PostModel postModel) {
+    return FlatButton(child: Text(postModel.documentID), onPressed: () =>
+        BlocProvider.of<PostListPagedBloc>(context).add(
+            DeletePostPaged(value: postModel)));
+  }
+
   Widget post(BuildContext context, PostModel postModel) {
     return BlocProvider<PostBloc>(
-        create: (context) => PostBloc(postModel, AccessBloc.memberFor(AccessBloc.getState(context)).documentID),
+        create: (context) => PostBloc(postModel,
+            AccessBloc.memberFor(AccessBloc.getState(context)).documentID),
         child: PostWidget(
           isRecursive: postModel.postPageId == widget.parentPageId,
         ));
@@ -169,7 +175,7 @@ class _PostsListState extends State<PostsList> {
   }
 
   void _onClick() {
-    _postBloc.add(NewPage());
+    _postBloc.add(PostListPagedFetched());
   }
 }
 

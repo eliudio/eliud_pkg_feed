@@ -33,19 +33,20 @@ class PostEntity {
   final int likes;
   final int dislikes;
   final List<String> readAccess;
+  final int archived;
 
-  PostEntity({this.authorId, this.timestamp, this.appId, this.postAppId, this.postPageId, this.pageParameters, this.description, this.likes, this.dislikes, this.readAccess, });
+  PostEntity({this.authorId, this.timestamp, this.appId, this.postAppId, this.postPageId, this.pageParameters, this.description, this.likes, this.dislikes, this.readAccess, this.archived, });
 
   PostEntity copyWith({Object timestamp, }) {
-    return PostEntity(authorId: authorId, timestamp : timestamp, appId: appId, postAppId: postAppId, postPageId: postPageId, pageParameters: pageParameters, description: description, likes: likes, dislikes: dislikes, readAccess: readAccess, );
+    return PostEntity(authorId: authorId, timestamp : timestamp, appId: appId, postAppId: postAppId, postPageId: postPageId, pageParameters: pageParameters, description: description, likes: likes, dislikes: dislikes, readAccess: readAccess, archived: archived, );
   }
-  List<Object> get props => [authorId, timestamp, appId, postAppId, postPageId, pageParameters, description, likes, dislikes, readAccess, ];
+  List<Object> get props => [authorId, timestamp, appId, postAppId, postPageId, pageParameters, description, likes, dislikes, readAccess, archived, ];
 
   @override
   String toString() {
     String readAccessCsv = (readAccess == null) ? '' : readAccess.join(', ');
 
-    return 'PostEntity{authorId: $authorId, timestamp: $timestamp, appId: $appId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, description: $description, likes: $likes, dislikes: $dislikes, readAccess: String[] { $readAccessCsv }}';
+    return 'PostEntity{authorId: $authorId, timestamp: $timestamp, appId: $appId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, description: $description, likes: $likes, dislikes: $dislikes, readAccess: String[] { $readAccessCsv }, archived: $archived}';
   }
 
   static PostEntity fromMap(Map map) {
@@ -66,6 +67,7 @@ class PostEntity {
       likes: int.tryParse(map['likes'].toString()), 
       dislikes: int.tryParse(map['dislikes'].toString()), 
       readAccess: map['readAccess'] == null ? null : List.from(map['readAccess']), 
+      archived: map['archived'], 
     );
   }
 
@@ -90,6 +92,8 @@ class PostEntity {
       else theDocument["dislikes"] = null;
     if (readAccess != null) theDocument["readAccess"] = readAccess.toList();
       else theDocument["readAccess"] = null;
+    if (archived != null) theDocument["archived"] = archived;
+      else theDocument["archived"] = null;
     return theDocument;
   }
 
