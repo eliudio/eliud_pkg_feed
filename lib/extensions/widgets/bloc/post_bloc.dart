@@ -71,52 +71,59 @@ class PostBloc extends Bloc<PostEvent, PostState> {
 
   Future<CommentsLoaded> _updateEmotion(
       PostLoaded theState, LikeType likePressed) async {
+    // We have firebase functions to update the post collection. One reason is performance, we shouldn't do this work on the client.
+    // Second reason is security: the client, except the owner, can update the post.
+    // We allow the firebase function to do it's thing in the background, async. In the meantime we determine the value here
+    // as well, although not storing it in the db, just in memory. It's all fast, and correct
+
     // the like ID = postId - memberId
     var likeKey = PostHelper.getLikeKey(
         theState.postModel.documentID, theState.memberId);
     var like =
         await postLikeRepository(appId: theState.postModel.appId).get(likeKey);
+    int likesExtra = 0;
+    int dislikesExtra = 0;
     if (like == null) {
-      await postLikeRepository(appId: theState.postModel.appId).add(
+      if (likePressed == LikeType.Like) {
+        likesExtra = 1;
+      } else if (likePressed == LikeType.Dislike) {
+        dislikesExtra = 1;
+      }
+      postLikeRepository(appId: theState.postModel.appId).add(
           PostLikeModel(
               documentID: likeKey,
               postId: theState.postModel.documentID,
               memberId: theState.memberId,
               appId: theState.postModel.appId,
               likeType: likePressed));
-/*
-      await postRepository(appId: theState.postModel.appId).changeValue(
-          theState.postModel.documentID, likeToFieldName[likePressed], 1);
-*/
     } else {
-      if (like.likeType == likePressed) {
-        // nothing to do, already this likeType
+      if (like.likeType != likePressed) {
+        if (likePressed == LikeType.Like) {
+          // changing a dislike into a like
+          likesExtra = 1;
+          dislikesExtra = -1;
+        } else if (likePressed == LikeType.Dislike) {
+          // changing a like into a dislike
+          dislikesExtra = 1;
+          likesExtra = -1;
+        }
+        postLikeRepository(appId: theState.postModel.appId).update(like.copyWith(likeType: likePressed));
       } else {
-/*
-        String toIncrease = likeToFieldName[likePressed];
-        String toDecrease = likeToFieldName[like.likeType];
-*/
-        // disliked before, now liking
-        await postLikeRepository(appId: theState.postModel.appId)
-            .update(like.copyWith(likeType: likePressed));
-/*
-        await postRepository(appId: theState.postModel.appId)
-            .changeValue(theState.postModel.documentID, toIncrease, 1);
-        await postRepository(appId: theState.postModel.appId)
-            .changeValue(theState.postModel.documentID, toDecrease, -1);
-*/
+        // an update, but nothing changed in terms of likeType
       }
     }
-    var updatedPostmodel = await postRepository(appId: theState.postModel.appId)
-        .get(theState.postModel.documentID);
+    var newPostModel = theState.postModel.copyWith(
+        likes: theState.postModel.likes == null ? likesExtra : theState.postModel.likes + likesExtra,
+        dislikes: theState.postModel.dislikes == null ? dislikesExtra : theState.postModel.dislikes + dislikesExtra
+    );
     if (theState is CommentsLoaded) {
       return CommentsLoaded(
-          postModel: updatedPostmodel,
+          postModel: newPostModel,
           memberId: theState.memberId,
           comments: theState.comments,
           thisMembersLikeType: likePressed);
     } else {
-      return _loadComments(updatedPostmodel, theState.memberId);
+      return _loadComments(newPostModel, theState.memberId);
     }
   }
 
