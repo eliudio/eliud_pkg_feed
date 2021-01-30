@@ -84,21 +84,27 @@ class PostBloc extends Bloc<PostEvent, PostState> {
               memberId: theState.memberId,
               appId: theState.postModel.appId,
               likeType: likePressed));
+/*
       await postRepository(appId: theState.postModel.appId).changeValue(
           theState.postModel.documentID, likeToFieldName[likePressed], 1);
+*/
     } else {
       if (like.likeType == likePressed) {
         // nothing to do, already this likeType
       } else {
+/*
         String toIncrease = likeToFieldName[likePressed];
         String toDecrease = likeToFieldName[like.likeType];
+*/
         // disliked before, now liking
         await postLikeRepository(appId: theState.postModel.appId)
             .update(like.copyWith(likeType: likePressed));
+/*
         await postRepository(appId: theState.postModel.appId)
             .changeValue(theState.postModel.documentID, toIncrease, 1);
         await postRepository(appId: theState.postModel.appId)
             .changeValue(theState.postModel.documentID, toDecrease, -1);
+*/
       }
     }
     var updatedPostmodel = await postRepository(appId: theState.postModel.appId)
