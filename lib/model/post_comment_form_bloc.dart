@@ -58,6 +58,7 @@ class PostCommentFormBloc extends Bloc<PostCommentFormEvent, PostCommentFormStat
         PostCommentFormLoaded loaded = PostCommentFormLoaded(value: PostCommentModel(
                                                documentID: "",
                                  postId: "",
+                                 postCommentId: "",
                                  memberId: "",
                                  appId: "",
                                  comment: "",
@@ -93,6 +94,12 @@ class PostCommentFormBloc extends Bloc<PostCommentFormEvent, PostCommentFormStat
       }
       if (event is ChangedPostCommentPostId) {
         newValue = currentState.value.copyWith(postId: event.value);
+        yield SubmittablePostCommentForm(value: newValue);
+
+        return;
+      }
+      if (event is ChangedPostCommentPostCommentId) {
+        newValue = currentState.value.copyWith(postCommentId: event.value);
         yield SubmittablePostCommentForm(value: newValue);
 
         return;

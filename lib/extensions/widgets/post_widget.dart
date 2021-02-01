@@ -1,3 +1,5 @@
+import 'package:comment_tree/widgets/comment_tree_widget.dart';
+import 'package:comment_tree/widgets/tree_theme_data.dart';
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/access/bloc/access_event.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
@@ -49,8 +51,8 @@ class PostWidget extends StatelessWidget {
             _postActionBtns(context, state.postModel, state.memberId,
                 state is CommentsLoaded ? state.thisMembersLikeType : null),
             _postLikes(state.postModel.likes, state.postModel.dislikes),
-            _postComments(context, state.postModel, state.memberId, state is CommentsLoaded ? state.comments : null),
-
+            _postComments(context, state.postModel, state.memberId,
+                state is CommentsLoaded ? state.comments : null),
           ],
         );
       } else {
@@ -76,10 +78,11 @@ class PostWidget extends StatelessWidget {
     return Row(children: widgets);
   }
 
-  PopupMenuButton _optionsPost(BuildContext context, PostModel postModel, String memberId) {
+  PopupMenuButton _optionsPost(
+      BuildContext context, PostModel postModel, String memberId) {
     return PopupMenuButton(
-      icon: Icon(Icons.more_horiz),
-      itemBuilder: (_) => <PopupMenuItem<int>>[
+        icon: Icon(Icons.more_horiz),
+        itemBuilder: (_) => <PopupMenuItem<int>>[
 /*
         TODO: Issue with deleting post:
         Deleting the posts in a feed is an issue. A block inside a list seems the issue.
@@ -89,10 +92,10 @@ class PostWidget extends StatelessWidget {
         new PopupMenuItem<int>(
             child: const Text('Delete post'), value: 0),
 */
-        new PopupMenuItem<int>(
-            child: const Text('Add comment'), value: 1),
-      ],
-      onSelected: (choice) {
+              new PopupMenuItem<int>(
+                  child: const Text('Add comment'), value: 1),
+            ],
+        onSelected: (choice) {
 /*
         if (choice == 0) {
           BlocProvider.of<PostListBloc>(context)
@@ -103,10 +106,11 @@ class PostWidget extends StatelessWidget {
 /*
         }
 */
-      });
+        });
   }
 
-  void allowToAddComment(BuildContext context, PostModel postModel, String memberId) {
+  void allowToAddComment(
+      BuildContext context, PostModel postModel, String memberId) {
     DialogStatefulWidgetHelper.openIt(
       context,
       RequestValueDialog(
@@ -123,7 +127,26 @@ class PostWidget extends StatelessWidget {
     );
   }
 
-  void allowToUpdateComment(BuildContext context, PostModel postModel, String memberId, PostCommentContainer postCommentContainer) {
+  void allowToAddCommentComment(BuildContext context,
+      PostCommentContainer postCommentContainer, String memberId) {
+    DialogStatefulWidgetHelper.openIt(
+      context,
+      RequestValueDialog(
+          title: 'Add comment to post',
+          yesButtonText: 'Add comment',
+          noButtonText: 'Discard',
+          hintText: 'Comment',
+          yesFunction: (comment) {
+            BlocProvider.of<PostBloc>(context)
+                .add(AddCommentCommentEvent(postCommentContainer, comment));
+            Navigator.pop(context);
+          },
+          noFunction: () => Navigator.pop(context)),
+    );
+  }
+
+  void allowToUpdateComment(BuildContext context, PostModel postModel,
+      String memberId, PostCommentContainer postCommentContainer) {
     DialogStatefulWidgetHelper.openIt(
       context,
       RequestValueDialog(
@@ -133,15 +156,16 @@ class PostWidget extends StatelessWidget {
           hintText: 'Comment',
           initialValue: postCommentContainer.comment,
           yesFunction: (comment) {
-            BlocProvider.of<PostBloc>(context)
-                .add(UpdateCommentEvent(postCommentContainer.postComment, comment));
+            BlocProvider.of<PostBloc>(context).add(
+                UpdateCommentEvent(postCommentContainer.postComment, comment));
             Navigator.pop(context);
           },
           noFunction: () => Navigator.pop(context)),
     );
   }
 
-  void allowToDeleteComment(BuildContext context, PostModel postModel, String memberId, PostCommentContainer postCommentContainer) {
+  void allowToDeleteComment(BuildContext context, PostModel postModel,
+      String memberId, PostCommentContainer postCommentContainer) {
     DialogStatefulWidgetHelper.openIt(
         context,
         YesNoDialog(
@@ -248,6 +272,7 @@ class PostWidget extends StatelessWidget {
     );
   }
 
+/*
   Widget _postComments(BuildContext context, PostModel postModel, String memberId, List<PostCommentContainer> comments) {
     if (comments == null) {
       return _divider();
@@ -263,7 +288,7 @@ class PostWidget extends StatelessWidget {
                   leading: AbstractPlatform.platform
                       .getImageFromURL(url: postComment.member.photoURL),
                   title:
-                      Text(postComment.dateTime + ": " + postComment.comment),
+                  Text(postComment.dateTime + ": " + postComment.comment),
                   trailing: _optionsPostComments(context, postModel,
                       memberId, postComment)
               );
@@ -273,25 +298,169 @@ class PostWidget extends StatelessWidget {
           });
     }
   }
+*/
+  Widget _postComments(BuildContext context, PostModel postModel,
+      String memberId, List<PostCommentContainer> comments) {
+    if (comments == null) {
+      return _divider();
+    } else {
+      return ListView.builder(
+          physics: ScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: comments.length + 1,
+          itemBuilder: (context, i) {
+            if (i < comments.length) {
+              var postComment = comments[i];
+              return getCommentTreeWidget(postComment);
+            } else {
+              return _divider();
+            }
+          });
+    }
+  }
 
-  PopupMenuButton _optionsPostComments(BuildContext context, PostModel postModel,
-      String memberId, PostCommentContainer postComment) {
+  Widget getCommentTreeWidget(PostCommentContainer postCommentContainer) {
+    return Container(
+        child: CommentTreeWidget<PostCommentContainer, PostCommentContainer>(
+      postCommentContainer,
+      postCommentContainer.postCommentContainer,
+      treeThemeData: TreeThemeData(lineColor: Colors.green[500], lineWidth: 3),
+      avatarRoot: (context, data) => PreferredSize(
+        child: CircleAvatar(
+          radius: 18,
+          backgroundColor: Colors.grey,
+          backgroundImage: AbstractPlatform.platform
+              .getImageProviderFromURL(data.member.photoURL),
+        ),
+        preferredSize: Size.fromRadius(18),
+      ),
+      avatarChild: (context, data) => PreferredSize(
+        child: CircleAvatar(
+          radius: 12,
+          backgroundColor: Colors.grey,
+          backgroundImage: AbstractPlatform.platform
+              .getImageProviderFromURL(data.member.photoURL),
+        ),
+        preferredSize: Size.fromRadius(12),
+      ),
+      contentChild: (context, data) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(
+                  vertical: 8, horizontal: 8
+              ),
+              decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(12)
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('${data.member.name}', style: Theme.of(context).textTheme.caption.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black
+                  ),),
+                  SizedBox(height: 4,),
+                  Text('${data.comment}', style: Theme.of(context).textTheme.caption.copyWith(
+                      fontWeight: FontWeight.w300,
+                      color: Colors.black
+                  ),),
+                ],
+              ),
+            ),
+            DefaultTextStyle(
+              style: Theme.of(context).textTheme.caption.copyWith(
+                  color: Colors.grey[700],
+                  fontWeight: FontWeight.bold
+              ),
+              child: Padding(
+                padding: EdgeInsets.only(top: 4),
+                child: Row(
+                  children: [
+                    SizedBox(width: 8,),
+                    Text('Like'),
+                    SizedBox(width: 24,),
+                    Text('Reply'),
+                  ],
+                ),
+              ),
+            )
+          ],
+        );      },
+          contentRoot: (context, data) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(
+                      vertical: 8, horizontal: 8
+                  ),
+                  decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(12)
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('${data.member.name}', style: Theme.of(context).textTheme.caption.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black
+                      ),),
+                      SizedBox(height: 4,),
+                      Text('${data.comment}', style: Theme.of(context).textTheme.caption.copyWith(
+                          fontWeight: FontWeight.w300,
+                          color: Colors.black
+                      ),),
+                    ],
+                  ),
+                ),
+                DefaultTextStyle(
+                  style: Theme.of(context).textTheme.caption.copyWith(
+                      color: Colors.grey[700],
+                      fontWeight: FontWeight.bold
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 4),
+                    child: Row(
+                      children: [
+                        SizedBox(width: 8,),
+                        Text('Like'),
+                        SizedBox(width: 24,),
+                        Text('Reply'),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            );
+          },
+        ),
+      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+    );
+  }
+
+  PopupMenuButton _optionsPostComments(BuildContext context,
+      PostModel postModel, String memberId, PostCommentContainer postComment) {
     return PopupMenuButton(
         icon: Icon(Icons.more_horiz),
         itemBuilder: (_) => <PopupMenuItem<int>>[
-          new PopupMenuItem<int>(
-              child: const Text('Update comment'), value: 0),
-          new PopupMenuItem<int>(
-              child: const Text('Delete comment'), value: 1),
-        ],
+              new PopupMenuItem<int>(
+                  child: const Text('Add comment'), value: 0),
+              new PopupMenuItem<int>(
+                  child: const Text('Update comment'), value: 1),
+              new PopupMenuItem<int>(
+                  child: const Text('Delete comment'), value: 2),
+            ],
         onSelected: (choice) {
-          if (choice == 0) {
+          if (choice == 0)
+            allowToAddCommentComment(context, postComment, memberId);
+          if (choice == 1)
             allowToUpdateComment(context, postModel, memberId, postComment);
-          } else {
+          if (choice == 2)
             allowToDeleteComment(context, postModel, memberId, postComment);
-          }
-        }
-    );
+        });
   }
 
   Widget _postActionBtns(BuildContext context, PostModel postModel,

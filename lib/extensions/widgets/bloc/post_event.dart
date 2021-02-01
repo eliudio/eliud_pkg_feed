@@ -1,4 +1,5 @@
 import 'package:eliud_core/model/member_model.dart';
+import 'package:eliud_pkg_feed/extensions/widgets/bloc/post_state.dart';
 import 'package:eliud_pkg_feed/model/post_comment_model.dart';
 import 'package:eliud_pkg_feed/model/post_like_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
@@ -47,6 +48,16 @@ class AddCommentEvent extends PostEvent {
 
   @override
   List<Object> get props => [ postModel, comment ];
+}
+
+class AddCommentCommentEvent extends PostEvent {
+  final PostCommentContainer postCommentContainer;
+  final String comment;
+
+  AddCommentCommentEvent(this.postCommentContainer, this.comment);
+
+  @override
+  List<Object> get props => [ postCommentContainer, comment ];
 }
 
 class DeleteCommentEvent extends PostEvent {

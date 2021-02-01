@@ -95,6 +95,22 @@ class PostIdPostCommentFormError extends PostCommentFormError {
 }
 
 
+class PostCommentIdPostCommentFormError extends PostCommentFormError { 
+  const PostCommentIdPostCommentFormError({ String message, PostCommentModel value }): super(message: message, value: value);
+
+  @override
+  List<Object> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''PostCommentIdPostCommentFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
 class MemberIdPostCommentFormError extends PostCommentFormError { 
   const MemberIdPostCommentFormError({ String message, PostCommentModel value }): super(message: message, value: value);
 

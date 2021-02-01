@@ -87,6 +87,18 @@ class ChangedPostCommentPostId extends PostCommentFormEvent {
   String toString() => 'ChangedPostCommentPostId{ value: $value }';
 }
 
+class ChangedPostCommentPostCommentId extends PostCommentFormEvent {
+  final String value;
+
+  ChangedPostCommentPostCommentId({this.value});
+
+  @override
+  List<Object> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedPostCommentPostCommentId{ value: $value }';
+}
+
 class ChangedPostCommentMemberId extends PostCommentFormEvent {
   final String value;
 

@@ -137,6 +137,7 @@ class _MyPostCommentFormState extends State<MyPostCommentForm> {
 
   final TextEditingController _documentIDController = TextEditingController();
   final TextEditingController _postIdController = TextEditingController();
+  final TextEditingController _postCommentIdController = TextEditingController();
   final TextEditingController _memberIdController = TextEditingController();
   final TextEditingController _appIdController = TextEditingController();
   final TextEditingController _commentController = TextEditingController();
@@ -150,6 +151,7 @@ class _MyPostCommentFormState extends State<MyPostCommentForm> {
     _myFormBloc = BlocProvider.of<PostCommentFormBloc>(context);
     _documentIDController.addListener(_onDocumentIDChanged);
     _postIdController.addListener(_onPostIdChanged);
+    _postCommentIdController.addListener(_onPostCommentIdChanged);
     _memberIdController.addListener(_onMemberIdChanged);
     _appIdController.addListener(_onAppIdChanged);
     _commentController.addListener(_onCommentChanged);
@@ -173,6 +175,10 @@ class _MyPostCommentFormState extends State<MyPostCommentForm> {
           _postIdController.text = state.value.postId.toString();
         else
           _postIdController.text = "";
+        if (state.value.postCommentId != null)
+          _postCommentIdController.text = state.value.postCommentId.toString();
+        else
+          _postCommentIdController.text = "";
         if (state.value.memberId != null)
           _memberIdController.text = state.value.memberId.toString();
         else
@@ -228,6 +234,24 @@ class _MyPostCommentFormState extends State<MyPostCommentForm> {
                   autovalidate: true,
                   validator: (_) {
                     return state is PostIdPostCommentFormError ? state.message : null;
+                  },
+                ),
+          );
+
+        children.add(
+
+                TextFormField(
+                style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor)),
+                  readOnly: _readOnly(accessState, state),
+                  controller: _postCommentIdController,
+                  decoration: InputDecoration(
+                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldTextColor))),                    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldFocusColor))),                    icon: Icon(Icons.vpn_key, color: RgbHelper.color(rgbo: app.formFieldHeaderColor)),
+                    labelText: 'Document ID of the comment (in case of a comment on comment)',
+                  ),
+                  keyboardType: TextInputType.text,
+                  autovalidate: true,
+                  validator: (_) {
+                    return state is PostCommentIdPostCommentFormError ? state.message : null;
                   },
                 ),
           );
@@ -318,6 +342,7 @@ class _MyPostCommentFormState extends State<MyPostCommentForm> {
                           UpdatePostCommentList(value: state.value.copyWith(
                               documentID: state.value.documentID, 
                               postId: state.value.postId, 
+                              postCommentId: state.value.postCommentId, 
                               memberId: state.value.memberId, 
                               timestamp: state.value.timestamp, 
                               appId: state.value.appId, 
@@ -328,6 +353,7 @@ class _MyPostCommentFormState extends State<MyPostCommentForm> {
                           AddPostCommentList(value: PostCommentModel(
                               documentID: state.value.documentID, 
                               postId: state.value.postId, 
+                              postCommentId: state.value.postCommentId, 
                               memberId: state.value.memberId, 
                               timestamp: state.value.timestamp, 
                               appId: state.value.appId, 
@@ -375,6 +401,11 @@ class _MyPostCommentFormState extends State<MyPostCommentForm> {
   }
 
 
+  void _onPostCommentIdChanged() {
+    _myFormBloc.add(ChangedPostCommentPostCommentId(value: _postCommentIdController.text));
+  }
+
+
   void _onMemberIdChanged() {
     _myFormBloc.add(ChangedPostCommentMemberId(value: _memberIdController.text));
   }
@@ -395,6 +426,7 @@ class _MyPostCommentFormState extends State<MyPostCommentForm> {
   void dispose() {
     _documentIDController.dispose();
     _postIdController.dispose();
+    _postCommentIdController.dispose();
     _memberIdController.dispose();
     _appIdController.dispose();
     _commentController.dispose();

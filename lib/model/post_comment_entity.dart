@@ -24,21 +24,22 @@ import 'package:eliud_pkg_feed/model/entity_export.dart';
 
 class PostCommentEntity {
   final String postId;
+  final String postCommentId;
   final String memberId;
   final Object timestamp;
   final String appId;
   final String comment;
 
-  PostCommentEntity({this.postId, this.memberId, this.timestamp, this.appId, this.comment, });
+  PostCommentEntity({this.postId, this.postCommentId, this.memberId, this.timestamp, this.appId, this.comment, });
 
   PostCommentEntity copyWith({Object timestamp, }) {
-    return PostCommentEntity(postId: postId, memberId: memberId, timestamp : timestamp, appId: appId, comment: comment, );
+    return PostCommentEntity(postId: postId, postCommentId: postCommentId, memberId: memberId, timestamp : timestamp, appId: appId, comment: comment, );
   }
-  List<Object> get props => [postId, memberId, timestamp, appId, comment, ];
+  List<Object> get props => [postId, postCommentId, memberId, timestamp, appId, comment, ];
 
   @override
   String toString() {
-    return 'PostCommentEntity{postId: $postId, memberId: $memberId, timestamp: $timestamp, appId: $appId, comment: $comment}';
+    return 'PostCommentEntity{postId: $postId, postCommentId: $postCommentId, memberId: $memberId, timestamp: $timestamp, appId: $appId, comment: $comment}';
   }
 
   static PostCommentEntity fromMap(Map map) {
@@ -46,6 +47,7 @@ class PostCommentEntity {
 
     return PostCommentEntity(
       postId: map['postId'], 
+      postCommentId: map['postCommentId'], 
       memberId: map['memberId'], 
       timestamp: postCommentRepository().timeStampToString(map['timestamp']), 
       appId: map['appId'], 
@@ -57,6 +59,8 @@ class PostCommentEntity {
     Map<String, Object> theDocument = HashMap();
     if (postId != null) theDocument["postId"] = postId;
       else theDocument["postId"] = null;
+    if (postCommentId != null) theDocument["postCommentId"] = postCommentId;
+      else theDocument["postCommentId"] = null;
     if (memberId != null) theDocument["memberId"] = memberId;
       else theDocument["memberId"] = null;
     theDocument["timestamp"] = timestamp;

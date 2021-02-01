@@ -31,11 +31,12 @@ class PostCommentContainer extends Equatable {
   final String dateTime;
   final MemberPublicInfoModel member;
   final String comment;
+  final List<PostCommentContainer> postCommentContainer;
 
-  PostCommentContainer({this.postComment, this.dateTime, this.member, this.comment});
+  PostCommentContainer({this.postComment, this.dateTime, this.member, this.comment, this.postCommentContainer});
 
   @override
-  List<Object> get props => [postComment, dateTime, member, comment];
+  List<Object> get props => [postComment, dateTime, member, comment, postCommentContainer];
 }
 
 // Eventually this should also be loaded paged, rather than all in 1 go.

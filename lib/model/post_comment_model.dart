@@ -42,6 +42,7 @@ import 'package:eliud_core/tools/random.dart';
 class PostCommentModel {
   String documentID;
   String postId;
+  String postCommentId;
   String memberId;
   String timestamp;
 
@@ -49,16 +50,16 @@ class PostCommentModel {
   String appId;
   String comment;
 
-  PostCommentModel({this.documentID, this.postId, this.memberId, this.timestamp, this.appId, this.comment, })  {
+  PostCommentModel({this.documentID, this.postId, this.postCommentId, this.memberId, this.timestamp, this.appId, this.comment, })  {
     assert(documentID != null);
   }
 
-  PostCommentModel copyWith({String documentID, String postId, String memberId, String timestamp, String appId, String comment, }) {
-    return PostCommentModel(documentID: documentID ?? this.documentID, postId: postId ?? this.postId, memberId: memberId ?? this.memberId, timestamp: timestamp ?? this.timestamp, appId: appId ?? this.appId, comment: comment ?? this.comment, );
+  PostCommentModel copyWith({String documentID, String postId, String postCommentId, String memberId, String timestamp, String appId, String comment, }) {
+    return PostCommentModel(documentID: documentID ?? this.documentID, postId: postId ?? this.postId, postCommentId: postCommentId ?? this.postCommentId, memberId: memberId ?? this.memberId, timestamp: timestamp ?? this.timestamp, appId: appId ?? this.appId, comment: comment ?? this.comment, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ postId.hashCode ^ memberId.hashCode ^ timestamp.hashCode ^ appId.hashCode ^ comment.hashCode;
+  int get hashCode => documentID.hashCode ^ postId.hashCode ^ postCommentId.hashCode ^ memberId.hashCode ^ timestamp.hashCode ^ appId.hashCode ^ comment.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -67,6 +68,7 @@ class PostCommentModel {
           runtimeType == other.runtimeType && 
           documentID == other.documentID &&
           postId == other.postId &&
+          postCommentId == other.postCommentId &&
           memberId == other.memberId &&
           timestamp == other.timestamp &&
           appId == other.appId &&
@@ -74,12 +76,13 @@ class PostCommentModel {
 
   @override
   String toString() {
-    return 'PostCommentModel{documentID: $documentID, postId: $postId, memberId: $memberId, timestamp: $timestamp, appId: $appId, comment: $comment}';
+    return 'PostCommentModel{documentID: $documentID, postId: $postId, postCommentId: $postCommentId, memberId: $memberId, timestamp: $timestamp, appId: $appId, comment: $comment}';
   }
 
   PostCommentEntity toEntity({String appId}) {
     return PostCommentEntity(
           postId: (postId != null) ? postId : null, 
+          postCommentId: (postCommentId != null) ? postCommentId : null, 
           memberId: (memberId != null) ? memberId : null, 
           timestamp: timestamp,           appId: (appId != null) ? appId : null, 
           comment: (comment != null) ? comment : null, 
@@ -91,6 +94,7 @@ class PostCommentModel {
     return PostCommentModel(
           documentID: documentID, 
           postId: entity.postId, 
+          postCommentId: entity.postCommentId, 
           memberId: entity.memberId, 
           timestamp: entity.timestamp, 
           appId: entity.appId, 
@@ -104,6 +108,7 @@ class PostCommentModel {
     return PostCommentModel(
           documentID: documentID, 
           postId: entity.postId, 
+          postCommentId: entity.postCommentId, 
           memberId: entity.memberId, 
           timestamp: entity.timestamp, 
           appId: entity.appId, 
