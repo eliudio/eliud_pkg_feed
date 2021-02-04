@@ -139,11 +139,13 @@ class _PostsListState extends State<PostsList> {
   }
 
   Widget post(BuildContext context, PostModel postModel) {
+    var member = AccessBloc.memberFor(AccessBloc.getState(context));
     return BlocProvider<PostBloc>(
         create: (context) => PostBloc(postModel,
-            AccessBloc.memberFor(AccessBloc.getState(context)).documentID),
+            member.documentID),
         child: PostWidget(
           isRecursive: postModel.postPageId == widget.parentPageId,
+          member: member,
         ));
   }
 
