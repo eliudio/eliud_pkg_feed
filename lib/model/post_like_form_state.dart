@@ -95,6 +95,22 @@ class PostIdPostLikeFormError extends PostLikeFormError {
 }
 
 
+class PostCommentIdPostLikeFormError extends PostLikeFormError { 
+  const PostCommentIdPostLikeFormError({ String message, PostLikeModel value }): super(message: message, value: value);
+
+  @override
+  List<Object> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''PostCommentIdPostLikeFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
 class MemberIdPostLikeFormError extends PostLikeFormError { 
   const MemberIdPostLikeFormError({ String message, PostLikeModel value }): super(message: message, value: value);
 

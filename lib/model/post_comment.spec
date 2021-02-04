@@ -65,6 +65,18 @@
       "displayName": "Comment",
       "fieldType": "String",
       "group": "general"
+    },
+    {
+      "fieldName": "likes",
+      "displayName": "Likes",
+      "fieldType": "int",
+      "group": "general"
+    },
+    {
+      "fieldName": "dislikes",
+      "displayName": "Dislikes",
+      "fieldType": "int",
+      "group": "general"
     }
   ],
   "groups": [

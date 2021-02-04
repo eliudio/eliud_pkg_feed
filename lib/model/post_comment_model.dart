@@ -49,17 +49,19 @@ class PostCommentModel {
   // This is the identifier of the app to which this feed belongs
   String appId;
   String comment;
+  int likes;
+  int dislikes;
 
-  PostCommentModel({this.documentID, this.postId, this.postCommentId, this.memberId, this.timestamp, this.appId, this.comment, })  {
+  PostCommentModel({this.documentID, this.postId, this.postCommentId, this.memberId, this.timestamp, this.appId, this.comment, this.likes, this.dislikes, })  {
     assert(documentID != null);
   }
 
-  PostCommentModel copyWith({String documentID, String postId, String postCommentId, String memberId, String timestamp, String appId, String comment, }) {
-    return PostCommentModel(documentID: documentID ?? this.documentID, postId: postId ?? this.postId, postCommentId: postCommentId ?? this.postCommentId, memberId: memberId ?? this.memberId, timestamp: timestamp ?? this.timestamp, appId: appId ?? this.appId, comment: comment ?? this.comment, );
+  PostCommentModel copyWith({String documentID, String postId, String postCommentId, String memberId, String timestamp, String appId, String comment, int likes, int dislikes, }) {
+    return PostCommentModel(documentID: documentID ?? this.documentID, postId: postId ?? this.postId, postCommentId: postCommentId ?? this.postCommentId, memberId: memberId ?? this.memberId, timestamp: timestamp ?? this.timestamp, appId: appId ?? this.appId, comment: comment ?? this.comment, likes: likes ?? this.likes, dislikes: dislikes ?? this.dislikes, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ postId.hashCode ^ postCommentId.hashCode ^ memberId.hashCode ^ timestamp.hashCode ^ appId.hashCode ^ comment.hashCode;
+  int get hashCode => documentID.hashCode ^ postId.hashCode ^ postCommentId.hashCode ^ memberId.hashCode ^ timestamp.hashCode ^ appId.hashCode ^ comment.hashCode ^ likes.hashCode ^ dislikes.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -72,11 +74,13 @@ class PostCommentModel {
           memberId == other.memberId &&
           timestamp == other.timestamp &&
           appId == other.appId &&
-          comment == other.comment;
+          comment == other.comment &&
+          likes == other.likes &&
+          dislikes == other.dislikes;
 
   @override
   String toString() {
-    return 'PostCommentModel{documentID: $documentID, postId: $postId, postCommentId: $postCommentId, memberId: $memberId, timestamp: $timestamp, appId: $appId, comment: $comment}';
+    return 'PostCommentModel{documentID: $documentID, postId: $postId, postCommentId: $postCommentId, memberId: $memberId, timestamp: $timestamp, appId: $appId, comment: $comment, likes: $likes, dislikes: $dislikes}';
   }
 
   PostCommentEntity toEntity({String appId}) {
@@ -86,6 +90,8 @@ class PostCommentModel {
           memberId: (memberId != null) ? memberId : null, 
           timestamp: timestamp,           appId: (appId != null) ? appId : null, 
           comment: (comment != null) ? comment : null, 
+          likes: (likes != null) ? likes : null, 
+          dislikes: (dislikes != null) ? dislikes : null, 
     );
   }
 
@@ -99,6 +105,8 @@ class PostCommentModel {
           timestamp: entity.timestamp, 
           appId: entity.appId, 
           comment: entity.comment, 
+          likes: entity.likes, 
+          dislikes: entity.dislikes, 
     );
   }
 
@@ -113,6 +121,8 @@ class PostCommentModel {
           timestamp: entity.timestamp, 
           appId: entity.appId, 
           comment: entity.comment, 
+          likes: entity.likes, 
+          dislikes: entity.dislikes, 
     );
   }
 

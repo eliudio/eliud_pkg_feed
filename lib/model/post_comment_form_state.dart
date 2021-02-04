@@ -175,6 +175,38 @@ class CommentPostCommentFormError extends PostCommentFormError {
 }
 
 
+class LikesPostCommentFormError extends PostCommentFormError { 
+  const LikesPostCommentFormError({ String message, PostCommentModel value }): super(message: message, value: value);
+
+  @override
+  List<Object> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''LikesPostCommentFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
+class DislikesPostCommentFormError extends PostCommentFormError { 
+  const DislikesPostCommentFormError({ String message, PostCommentModel value }): super(message: message, value: value);
+
+  @override
+  List<Object> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''DislikesPostCommentFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
 class PostCommentFormLoaded extends PostCommentFormInitialized { 
   const PostCommentFormLoaded({ PostCommentModel value }): super(value: value);
 

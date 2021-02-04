@@ -4,8 +4,11 @@ import 'package:eliud_pkg_follow/model/abstract_repository_singleton.dart';
 import 'package:flutter/cupertino.dart';
 
 class PostHelper {
-  static String getLikeKey(String postId, String memberId) {
-    return postId + '-' + memberId;
+  static String getLikeKey(String postId, String postCommentId, String memberId) {
+    if (postCommentId == null) {
+      return postId + '-' + memberId;
+    } else {
+      return postId + '-' + postCommentId + '-' + memberId;
+    }
   }
-
 }

@@ -147,3 +147,27 @@ class ChangedPostCommentComment extends PostCommentFormEvent {
   String toString() => 'ChangedPostCommentComment{ value: $value }';
 }
 
+class ChangedPostCommentLikes extends PostCommentFormEvent {
+  final String value;
+
+  ChangedPostCommentLikes({this.value});
+
+  @override
+  List<Object> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedPostCommentLikes{ value: $value }';
+}
+
+class ChangedPostCommentDislikes extends PostCommentFormEvent {
+  final String value;
+
+  ChangedPostCommentDislikes({this.value});
+
+  @override
+  List<Object> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedPostCommentDislikes{ value: $value }';
+}
+

@@ -141,6 +141,8 @@ class _MyPostCommentFormState extends State<MyPostCommentForm> {
   final TextEditingController _memberIdController = TextEditingController();
   final TextEditingController _appIdController = TextEditingController();
   final TextEditingController _commentController = TextEditingController();
+  final TextEditingController _likesController = TextEditingController();
+  final TextEditingController _dislikesController = TextEditingController();
 
 
   _MyPostCommentFormState(this.formAction);
@@ -155,6 +157,8 @@ class _MyPostCommentFormState extends State<MyPostCommentForm> {
     _memberIdController.addListener(_onMemberIdChanged);
     _appIdController.addListener(_onAppIdChanged);
     _commentController.addListener(_onCommentChanged);
+    _likesController.addListener(_onLikesChanged);
+    _dislikesController.addListener(_onDislikesChanged);
   }
 
   @override
@@ -191,6 +195,14 @@ class _MyPostCommentFormState extends State<MyPostCommentForm> {
           _commentController.text = state.value.comment.toString();
         else
           _commentController.text = "";
+        if (state.value.likes != null)
+          _likesController.text = state.value.likes.toString();
+        else
+          _likesController.text = "";
+        if (state.value.dislikes != null)
+          _dislikesController.text = state.value.dislikes.toString();
+        else
+          _dislikesController.text = "";
       }
       if (state is PostCommentFormInitialized) {
         List<Widget> children = List();
@@ -312,6 +324,42 @@ class _MyPostCommentFormState extends State<MyPostCommentForm> {
                 ),
           );
 
+        children.add(
+
+                TextFormField(
+                style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor)),
+                  readOnly: _readOnly(accessState, state),
+                  controller: _likesController,
+                  decoration: InputDecoration(
+                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldTextColor))),                    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldFocusColor))),                    icon: Icon(Icons.text_format, color: RgbHelper.color(rgbo: app.formFieldHeaderColor)),
+                    labelText: 'Likes',
+                  ),
+                  keyboardType: TextInputType.number,
+                  autovalidate: true,
+                  validator: (_) {
+                    return state is LikesPostCommentFormError ? state.message : null;
+                  },
+                ),
+          );
+
+        children.add(
+
+                TextFormField(
+                style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor)),
+                  readOnly: _readOnly(accessState, state),
+                  controller: _dislikesController,
+                  decoration: InputDecoration(
+                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldTextColor))),                    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldFocusColor))),                    icon: Icon(Icons.text_format, color: RgbHelper.color(rgbo: app.formFieldHeaderColor)),
+                    labelText: 'Dislikes',
+                  ),
+                  keyboardType: TextInputType.number,
+                  autovalidate: true,
+                  validator: (_) {
+                    return state is DislikesPostCommentFormError ? state.message : null;
+                  },
+                ),
+          );
+
 
         children.add(Container(height: 20.0));
         children.add(Divider(height: 1.0, thickness: 1.0, color: RgbHelper.color(rgbo: app.dividerColor)));
@@ -347,6 +395,8 @@ class _MyPostCommentFormState extends State<MyPostCommentForm> {
                               timestamp: state.value.timestamp, 
                               appId: state.value.appId, 
                               comment: state.value.comment, 
+                              likes: state.value.likes, 
+                              dislikes: state.value.dislikes, 
                         )));
                       } else {
                         BlocProvider.of<PostCommentListBloc>(context).add(
@@ -358,6 +408,8 @@ class _MyPostCommentFormState extends State<MyPostCommentForm> {
                               timestamp: state.value.timestamp, 
                               appId: state.value.appId, 
                               comment: state.value.comment, 
+                              likes: state.value.likes, 
+                              dislikes: state.value.dislikes, 
                           )));
                       }
                       if (widget.submitAction != null) {
@@ -421,6 +473,16 @@ class _MyPostCommentFormState extends State<MyPostCommentForm> {
   }
 
 
+  void _onLikesChanged() {
+    _myFormBloc.add(ChangedPostCommentLikes(value: _likesController.text));
+  }
+
+
+  void _onDislikesChanged() {
+    _myFormBloc.add(ChangedPostCommentDislikes(value: _dislikesController.text));
+  }
+
+
 
   @override
   void dispose() {
@@ -430,6 +492,8 @@ class _MyPostCommentFormState extends State<MyPostCommentForm> {
     _memberIdController.dispose();
     _appIdController.dispose();
     _commentController.dispose();
+    _likesController.dispose();
+    _dislikesController.dispose();
     super.dispose();
   }
 

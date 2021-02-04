@@ -54,6 +54,7 @@ LikeType toLikeType(int index) {
 class PostLikeModel {
   String documentID;
   String postId;
+  String postCommentId;
   String memberId;
   String timestamp;
 
@@ -61,16 +62,16 @@ class PostLikeModel {
   String appId;
   LikeType likeType;
 
-  PostLikeModel({this.documentID, this.postId, this.memberId, this.timestamp, this.appId, this.likeType, })  {
+  PostLikeModel({this.documentID, this.postId, this.postCommentId, this.memberId, this.timestamp, this.appId, this.likeType, })  {
     assert(documentID != null);
   }
 
-  PostLikeModel copyWith({String documentID, String postId, String memberId, String timestamp, String appId, LikeType likeType, }) {
-    return PostLikeModel(documentID: documentID ?? this.documentID, postId: postId ?? this.postId, memberId: memberId ?? this.memberId, timestamp: timestamp ?? this.timestamp, appId: appId ?? this.appId, likeType: likeType ?? this.likeType, );
+  PostLikeModel copyWith({String documentID, String postId, String postCommentId, String memberId, String timestamp, String appId, LikeType likeType, }) {
+    return PostLikeModel(documentID: documentID ?? this.documentID, postId: postId ?? this.postId, postCommentId: postCommentId ?? this.postCommentId, memberId: memberId ?? this.memberId, timestamp: timestamp ?? this.timestamp, appId: appId ?? this.appId, likeType: likeType ?? this.likeType, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ postId.hashCode ^ memberId.hashCode ^ timestamp.hashCode ^ appId.hashCode ^ likeType.hashCode;
+  int get hashCode => documentID.hashCode ^ postId.hashCode ^ postCommentId.hashCode ^ memberId.hashCode ^ timestamp.hashCode ^ appId.hashCode ^ likeType.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -79,6 +80,7 @@ class PostLikeModel {
           runtimeType == other.runtimeType && 
           documentID == other.documentID &&
           postId == other.postId &&
+          postCommentId == other.postCommentId &&
           memberId == other.memberId &&
           timestamp == other.timestamp &&
           appId == other.appId &&
@@ -86,12 +88,13 @@ class PostLikeModel {
 
   @override
   String toString() {
-    return 'PostLikeModel{documentID: $documentID, postId: $postId, memberId: $memberId, timestamp: $timestamp, appId: $appId, likeType: $likeType}';
+    return 'PostLikeModel{documentID: $documentID, postId: $postId, postCommentId: $postCommentId, memberId: $memberId, timestamp: $timestamp, appId: $appId, likeType: $likeType}';
   }
 
   PostLikeEntity toEntity({String appId}) {
     return PostLikeEntity(
           postId: (postId != null) ? postId : null, 
+          postCommentId: (postCommentId != null) ? postCommentId : null, 
           memberId: (memberId != null) ? memberId : null, 
           timestamp: timestamp,           appId: (appId != null) ? appId : null, 
           likeType: (likeType != null) ? likeType.index : null, 
@@ -103,6 +106,7 @@ class PostLikeModel {
     return PostLikeModel(
           documentID: documentID, 
           postId: entity.postId, 
+          postCommentId: entity.postCommentId, 
           memberId: entity.memberId, 
           timestamp: entity.timestamp, 
           appId: entity.appId, 
@@ -116,6 +120,7 @@ class PostLikeModel {
     return PostLikeModel(
           documentID: documentID, 
           postId: entity.postId, 
+          postCommentId: entity.postCommentId, 
           memberId: entity.memberId, 
           timestamp: entity.timestamp, 
           appId: entity.appId, 

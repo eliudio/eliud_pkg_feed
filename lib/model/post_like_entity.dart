@@ -24,21 +24,22 @@ import 'package:eliud_pkg_feed/model/entity_export.dart';
 
 class PostLikeEntity {
   final String postId;
+  final String postCommentId;
   final String memberId;
   final Object timestamp;
   final String appId;
   final int likeType;
 
-  PostLikeEntity({this.postId, this.memberId, this.timestamp, this.appId, this.likeType, });
+  PostLikeEntity({this.postId, this.postCommentId, this.memberId, this.timestamp, this.appId, this.likeType, });
 
   PostLikeEntity copyWith({Object timestamp, }) {
-    return PostLikeEntity(postId: postId, memberId: memberId, timestamp : timestamp, appId: appId, likeType: likeType, );
+    return PostLikeEntity(postId: postId, postCommentId: postCommentId, memberId: memberId, timestamp : timestamp, appId: appId, likeType: likeType, );
   }
-  List<Object> get props => [postId, memberId, timestamp, appId, likeType, ];
+  List<Object> get props => [postId, postCommentId, memberId, timestamp, appId, likeType, ];
 
   @override
   String toString() {
-    return 'PostLikeEntity{postId: $postId, memberId: $memberId, timestamp: $timestamp, appId: $appId, likeType: $likeType}';
+    return 'PostLikeEntity{postId: $postId, postCommentId: $postCommentId, memberId: $memberId, timestamp: $timestamp, appId: $appId, likeType: $likeType}';
   }
 
   static PostLikeEntity fromMap(Map map) {
@@ -46,6 +47,7 @@ class PostLikeEntity {
 
     return PostLikeEntity(
       postId: map['postId'], 
+      postCommentId: map['postCommentId'], 
       memberId: map['memberId'], 
       timestamp: postLikeRepository().timeStampToString(map['timestamp']), 
       appId: map['appId'], 
@@ -57,6 +59,8 @@ class PostLikeEntity {
     Map<String, Object> theDocument = HashMap();
     if (postId != null) theDocument["postId"] = postId;
       else theDocument["postId"] = null;
+    if (postCommentId != null) theDocument["postCommentId"] = postCommentId;
+      else theDocument["postCommentId"] = null;
     if (memberId != null) theDocument["memberId"] = memberId;
       else theDocument["memberId"] = null;
     theDocument["timestamp"] = timestamp;

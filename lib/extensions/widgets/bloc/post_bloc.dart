@@ -29,17 +29,20 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   Stream<PostState> mapEventToState(PostEvent event) async* {
     if (state is PostLoaded) {
       var theState = state as PostLoaded;
+      // Load
       if (event is LoadCommentsEvent) {
         yield await _loadComments(event.postModel, event.memberId);
 
-        // Post comments events
+      // Likes
       } else if (event is LikePostEvent) {
-        yield await _updateEmotion(theState, event.likeType);
+        yield await _updateEmotion(theState, null, event.likeType);
+      } else if (event is LikeCommentPostEvent) {
+        yield await _updateEmotion(theState, event.postCommentModel, event.likeType);
+      // Comments
       } else if (event is AddCommentEvent) {
         yield await _comment(theState, event.comment);
       } else if (event is AddCommentCommentEvent) {
-        yield await _commentComment(
-            theState, event.postCommentContainer, event.comment);
+        yield await _commentComment(theState, event.postCommentContainer, event.comment);
       } else if (event is DeleteCommentEvent) {
         yield await _deleteComment(theState, event.deleteThis);
       } else if (event is UpdateCommentEvent) {
@@ -91,7 +94,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   }
 
   Future<CommentsLoaded> _updateEmotion(
-      PostLoaded theState, LikeType likePressed) async {
+      PostLoaded theState, PostCommentModel postCommentModel, LikeType likePressed) async {
     // We have firebase functions to update the post collection. One reason is performance, we shouldn't do this work on the client.
     // Second reason is security: the client, except the owner, can update the post.
     // We allow the firebase function to do it's thing in the background, async. In the meantime we determine the value here
@@ -99,7 +102,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
 
     // the like ID = postId - memberId
     var likeKey =
-        PostHelper.getLikeKey(theState.postModel.documentID, theState.memberId);
+        PostHelper.getLikeKey(theState.postModel.documentID, postCommentModel != null ? postCommentModel.documentID : null, theState.memberId);
     var like =
         await postLikeRepository(appId: theState.postModel.appId).get(likeKey);
     int likesExtra = 0;
@@ -115,6 +118,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
           postId: theState.postModel.documentID,
           memberId: theState.memberId,
           appId: theState.postModel.appId,
+          postCommentId: postCommentModel == null ? null : postCommentModel.documentID,
           likeType: likePressed));
     } else {
       if (like.likeType != likePressed) {
@@ -130,16 +134,27 @@ class PostBloc extends Bloc<PostEvent, PostState> {
         postLikeRepository(appId: theState.postModel.appId)
             .update(like.copyWith(likeType: likePressed));
       } else {
-        // an update, but nothing changed in terms of likeType
+        if (likePressed == LikeType.Like) {
+          likesExtra = -1;
+        } else if (likePressed == LikeType.Dislike) {
+          dislikesExtra = -1;
+        }
+        // an update, but nothing changed in terms of likeType... it must mean we want to unlike
+        postLikeRepository(appId: theState.postModel.appId).delete(like);
       }
     }
-    var newPostModel = theState.postModel.copyWith(
-        likes: theState.postModel.likes == null
-            ? likesExtra
-            : theState.postModel.likes + likesExtra,
-        dislikes: theState.postModel.dislikes == null
-            ? dislikesExtra
-            : theState.postModel.dislikes + dislikesExtra);
+    var newPostModel;
+    if (postCommentModel == null) {
+      newPostModel = theState.postModel.copyWith(
+          likes: theState.postModel.likes == null
+              ? likesExtra
+              : theState.postModel.likes + likesExtra,
+          dislikes: theState.postModel.dislikes == null
+              ? dislikesExtra
+              : theState.postModel.dislikes + dislikesExtra);
+    } else {
+      newPostModel = theState.postModel;
+    }
     if (theState is CommentsLoaded) {
       return CommentsLoaded(
           postModel: newPostModel,
@@ -155,6 +170,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     PostModel postModel,
     List<PostCommentModel> sourceComments,
     String appId,
+    String memberId,
   ) async {
     if (sourceComments == null) return null;
     if (sourceComments.length == 0) return null;
@@ -175,7 +191,11 @@ class PostBloc extends Bloc<PostEvent, PostState> {
         postModel,
         sourceCommentComments,
         appId,
+        memberId,
       );
+
+      var likeKey = PostHelper.getLikeKey(postModel.documentID, comment.documentID, memberId);
+      var like = await postLikeRepository(appId: appId).get(likeKey);
 
       return PostCommentContainer(
         postComment: comment,
@@ -184,6 +204,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
             .get(comment.memberId),
         comment: comment.comment,
         postCommentContainer: commentComments,
+        thisMemberLikesThisComment: like != null,
       );
     }).toList());
     return comments;
@@ -191,7 +212,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
 
   Future<CommentsLoaded> _loadComments(
       PostModel postModel, String memberId) async {
-    var likeKey = PostHelper.getLikeKey(postModel.documentID, memberId);
+    var likeKey = PostHelper.getLikeKey(postModel.documentID, null, memberId);
     var like = await postLikeRepository(appId: postModel.appId).get(likeKey);
 
     List<PostCommentModel> sourceComments =
@@ -209,6 +230,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       postModel,
       sourceComments,
       postModel.appId,
+      memberId,
     );
     return CommentsLoaded(
         postModel: postModel,

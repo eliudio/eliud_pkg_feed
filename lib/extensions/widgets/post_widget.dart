@@ -14,6 +14,7 @@ import 'package:eliud_core/platform/platform.dart';
 import 'package:eliud_core/tools/widgets/dialog_helper.dart';
 import 'package:eliud_core/tools/widgets/request_value_dialog.dart';
 import 'package:eliud_core/tools/widgets/yes_no_dialog.dart';
+import 'package:eliud_pkg_feed/model/post_comment_model.dart';
 import 'package:eliud_pkg_feed/model/post_like_model.dart';
 import 'package:eliud_pkg_feed/model/post_list_bloc.dart';
 import 'package:eliud_pkg_feed/model/post_list_event.dart';
@@ -48,9 +49,13 @@ class PostWidget extends StatelessWidget {
             _heading(context, state.postModel, state.memberId),
             _postDetails(
                 state.memberId, state.postModel, originalAccessBloc, context),
+            _aBitSpace(),
+            _postLikes(state.postModel.likes, state.postModel.dislikes),
+            _aBitSpace(),
+            _dividerLight(),
             _postActionBtns(context, state.postModel, state.memberId,
                 state is CommentsLoaded ? state.thisMembersLikeType : null),
-            _postLikes(state.postModel.likes, state.postModel.dislikes),
+            _dividerLight(),
             _postComments(context, state.postModel, state.memberId,
                 state is CommentsLoaded ? state.comments : null),
           ],
@@ -61,8 +66,18 @@ class PostWidget extends StatelessWidget {
     });
   }
 
+  Widget _aBitSpace() {
+    return Container(
+      height: 10,
+    );
+  }
+
   Widget _divider() {
     return Divider(height: 10, thickness: 2, color: Colors.black);
+  }
+
+  Widget _dividerLight() {
+    return Divider(height: 1, thickness: 1, color: Colors.black);
   }
 
   Widget _heading(BuildContext context, PostModel postModel, String memberId) {
@@ -272,33 +287,6 @@ class PostWidget extends StatelessWidget {
     );
   }
 
-/*
-  Widget _postComments(BuildContext context, PostModel postModel, String memberId, List<PostCommentContainer> comments) {
-    if (comments == null) {
-      return _divider();
-    } else {
-      return ListView.builder(
-          physics: ScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: comments.length + 1,
-          itemBuilder: (context, i) {
-            if (i < comments.length) {
-              var postComment = comments[i];
-              return ListTile(
-                  leading: AbstractPlatform.platform
-                      .getImageFromURL(url: postComment.member.photoURL),
-                  title:
-                  Text(postComment.dateTime + ": " + postComment.comment),
-                  trailing: _optionsPostComments(context, postModel,
-                      memberId, postComment)
-              );
-            } else {
-              return _divider();
-            }
-          });
-    }
-  }
-*/
   Widget _postComments(BuildContext context, PostModel postModel,
       String memberId, List<PostCommentContainer> comments) {
     if (comments == null) {
@@ -311,7 +299,7 @@ class PostWidget extends StatelessWidget {
           itemBuilder: (context, i) {
             if (i < comments.length) {
               var postComment = comments[i];
-              return getCommentTreeWidget(postComment);
+              return getCommentTreeWidget(context, postModel, postComment);
             } else {
               return _divider();
             }
@@ -319,126 +307,162 @@ class PostWidget extends StatelessWidget {
     }
   }
 
-  Widget getCommentTreeWidget(PostCommentContainer postCommentContainer) {
-    return Container(
-        child: CommentTreeWidget<PostCommentContainer, PostCommentContainer>(
-      postCommentContainer,
-      postCommentContainer.postCommentContainer,
-      treeThemeData: TreeThemeData(lineColor: Colors.green[500], lineWidth: 3),
-      avatarRoot: (context, data) => PreferredSize(
-        child: CircleAvatar(
-          radius: 18,
-          backgroundColor: Colors.grey,
-          backgroundImage: AbstractPlatform.platform
-              .getImageProviderFromURL(data.member.photoURL),
-        ),
-        preferredSize: Size.fromRadius(18),
-      ),
-      avatarChild: (context, data) => PreferredSize(
-        child: CircleAvatar(
-          radius: 12,
-          backgroundColor: Colors.grey,
-          backgroundImage: AbstractPlatform.platform
-              .getImageProviderFromURL(data.member.photoURL),
-        ),
-        preferredSize: Size.fromRadius(12),
-      ),
-      contentChild: (context, data) {
-        return Column(
+  Widget _content(
+      BuildContext context, PostModel postModel, PostCommentContainer data) {
+    var header = Padding(
+        padding: const EdgeInsets.only(top: 0.0),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              padding: EdgeInsets.symmetric(
-                  vertical: 8, horizontal: 8
-              ),
-              decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(12)
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('${data.member.name}', style: Theme.of(context).textTheme.caption.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black
-                  ),),
-                  SizedBox(height: 4,),
-                  Text('${data.comment}', style: Theme.of(context).textTheme.caption.copyWith(
-                      fontWeight: FontWeight.w300,
-                      color: Colors.black
-                  ),),
-                ],
-              ),
-            ),
-            DefaultTextStyle(
-              style: Theme.of(context).textTheme.caption.copyWith(
-                  color: Colors.grey[700],
-                  fontWeight: FontWeight.bold
-              ),
-              child: Padding(
-                padding: EdgeInsets.only(top: 4),
-                child: Row(
-                  children: [
-                    SizedBox(width: 8,),
-                    Text('Like'),
-                    SizedBox(width: 24,),
-                    Text('Reply'),
-                  ],
-                ),
-              ),
-            )
-          ],
-        );      },
-          contentRoot: (context, data) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(
-                      vertical: 8, horizontal: 8
+            Padding(
+                padding: const EdgeInsets.only(top: 0.0),
+                child: IntrinsicHeight(
+                    child: Row(children: [
+                  CircleAvatar(
+                    radius: 12,
+                    backgroundColor: Colors.transparent,
+                    backgroundImage: AbstractPlatform.platform
+                        .getImageProviderFromURL(data.member.photoURL),
                   ),
-                  decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      borderRadius: BorderRadius.circular(12)
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('${data.member.name}', style: Theme.of(context).textTheme.caption.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black
-                      ),),
-                      SizedBox(height: 4,),
-                      Text('${data.comment}', style: Theme.of(context).textTheme.caption.copyWith(
-                          fontWeight: FontWeight.w300,
-                          color: Colors.black
-                      ),),
-                    ],
-                  ),
-                ),
-                DefaultTextStyle(
-                  style: Theme.of(context).textTheme.caption.copyWith(
-                      color: Colors.grey[700],
-                      fontWeight: FontWeight.bold
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 4),
-                    child: Row(
+/*                  Expanded(
+                      child: */Container(
+                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                    decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(12)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(width: 8,),
-                        Text('Like'),
-                        SizedBox(width: 24,),
-                        Text('Reply'),
+                        Text(
+                          '${data.member.name}',
+                          style: Theme.of(context).textTheme.caption.copyWith(
+                              fontWeight: FontWeight.w600, color: Colors.black),
+                        ),
+                        SizedBox(
+                          height: 4,
+                        ),
+                        Text(
+                          '${data.comment}',
+                          style: Theme.of(context).textTheme.caption.copyWith(
+                              fontWeight: FontWeight.w300, color: Colors.black),
+                        ),
+                        SizedBox(
+                          height: 4,
+                        ),
+                        Align(
+                            alignment: Alignment.bottomRight,
+                            child: Text(
+                              data.postComment.likes == null
+                                  ? 'no likes'
+                                  : '${data.postComment.likes} likes',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .caption
+                                  .copyWith(
+                                      fontWeight: FontWeight.w300,
+                                      color: Colors.black),
+                            )),
                       ],
                     ),
-                  ),
-                )
-              ],
-            );
-          },
+                  )/*)*/
+                ]))),
+            //Divider(height: 1, thickness: 1),
+            Row(children: [
+              SizedBox(
+                height: 0,
+                width: 18,
+              ),
+              ButtonTheme(
+                padding: EdgeInsets.symmetric(
+                    vertical: 0.0,
+                    horizontal: 8.0), //adds padding inside the button
+                materialTapTargetSize: MaterialTapTargetSize
+                    .shrinkWrap, //limits the touch area to the button area
+                minWidth: 0, //wraps child's width
+                height: 0, //wraps child's height
+                child: FlatButton(
+                    child: Text('Like',
+                        style: data.thisMemberLikesThisComment
+                            ? TextStyle(fontWeight: FontWeight.w900)
+                            : null),
+                    onPressed: () => _likeComment(context, postModel,
+                        data.postComment)), //your original button
+              ),
+              ButtonTheme(
+                  padding: EdgeInsets.symmetric(
+                      vertical: 0.0,
+                      horizontal: 8.0), //adds padding inside the button
+                  materialTapTargetSize: MaterialTapTargetSize
+                      .shrinkWrap, //limits the touch area to the button area
+                  minWidth: 0, //wraps child's width
+                  height: 0, //wraps child's height
+                  child: FlatButton(
+                      child: Text('Reply'),
+                      onPressed: () => allowToAddCommentComment(
+                          context, data, data.member.documentID))),
+            ]),
+          ],
+        ));
+    List<Widget> items = [
+      Container(
+        height: 10,
+      ),
+      header,
+    ];
+    List<Widget> children = [];
+    if (data.postCommentContainer != null) {
+      for (int i = 0; i < data.postCommentContainer.length; i++) {
+        children.add(_content(
+            context, postModel, data.postCommentContainer[i]));
+      }
+      if (children.length > 0)
+        items.add(Padding(
+          padding: const EdgeInsets.only(top: 0.0, left: 40),
+          child:ListView(
+          physics: ScrollPhysics(),
+          shrinkWrap: true,
+          children:children)));
+    }
+    return ListView(
+        physics: ScrollPhysics(),
+    shrinkWrap: true,
+    children:items);
+  }
+
+  Widget getCommentTreeWidget(BuildContext context, PostModel postModel,
+      PostCommentContainer postCommentContainer) {
+    return _content(context, postModel, postCommentContainer);
+/*
+    return Container(
+      child: CommentTreeWidget<PostCommentContainer, PostCommentContainer>(
+        postCommentContainer,
+        postCommentContainer.postCommentContainer != null ? postCommentContainer.postCommentContainer : [],
+        treeThemeData:
+            TreeThemeData(lineColor: Colors.green[500], lineWidth: 3),
+        avatarRoot: (context, data) => PreferredSize(
+          child: CircleAvatar(
+            radius: 18,
+            backgroundColor: Colors.transparent,
+            backgroundImage: AbstractPlatform.platform
+                .getImageProviderFromURL(data.member.photoURL),
+          ),
+          preferredSize: Size.fromRadius(18),
         ),
+        avatarChild: (context, data) => PreferredSize(
+          child: CircleAvatar(
+            radius: 12,
+            backgroundColor: Colors.transparent,
+            backgroundImage: AbstractPlatform.platform
+                .getImageProviderFromURL(data.member.photoURL),
+          ),
+          preferredSize: Size.fromRadius(12),
+        ),
+        contentChild: (context, data) => postCommentContainer.postCommentContainer != null ? _content(postModel, context, data, false) : null,
+        contentRoot: (context, data) => _content(postModel, context, data, true),
+      ),
       padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
     );
+*/
   }
 
   PopupMenuButton _optionsPostComments(BuildContext context,
@@ -467,6 +491,7 @@ class PostWidget extends StatelessWidget {
       String memberId, LikeType thisMemberLikeType) {
     return Row(
       children: <Widget>[
+        Spacer(),
         IconButton(
             icon: ImageIcon(
               AssetImage(
@@ -479,7 +504,7 @@ class PostWidget extends StatelessWidget {
             onPressed: () => _like(context, postModel),
             color: Colors.black),
 
-        Spacer(),
+        Spacer(flex: 3),
         IconButton(
             icon: ImageIcon(
               AssetImage(
@@ -491,7 +516,7 @@ class PostWidget extends StatelessWidget {
             ),
             onPressed: () => _dislike(context, postModel),
             color: Colors.black),
-        Spacer(),
+        Spacer(flex: 3),
         IconButton(
             icon: ImageIcon(
               AssetImage(
@@ -511,6 +536,7 @@ class PostWidget extends StatelessWidget {
             onPressed: null,
             color: Colors.black),
 */
+        Spacer(),
       ],
     );
   }
@@ -518,6 +544,12 @@ class PostWidget extends StatelessWidget {
   Future<void> _like(BuildContext context, PostModel postModel) async {
     BlocProvider.of<PostBloc>(context)
         .add(LikePostEvent(postModel, LikeType.Like));
+  }
+
+  Future<void> _likeComment(BuildContext context, PostModel postModel,
+      PostCommentModel postCommentModel) async {
+    BlocProvider.of<PostBloc>(context)
+        .add(LikeCommentPostEvent(postModel, postCommentModel, LikeType.Like));
   }
 
   void _dislike(BuildContext context, PostModel postModel) async {
@@ -537,3 +569,4 @@ class PostWidget extends StatelessWidget {
     );
   }
 }
+

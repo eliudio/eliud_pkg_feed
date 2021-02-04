@@ -35,6 +35,13 @@
       "group": "general"
     },
     {
+      "fieldName": "postCommentId",
+      "displayName": "Document ID of the comment (in case of a like on a comment)",
+      "fieldType": "String",
+      "iconName": "vpn_key",
+      "group": "general"
+    },
+    {
       "fieldName": "memberId",
       "displayName": "Member",
       "fieldType": "String",

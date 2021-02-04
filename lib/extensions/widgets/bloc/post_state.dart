@@ -31,9 +31,10 @@ class PostCommentContainer extends Equatable {
   final String dateTime;
   final MemberPublicInfoModel member;
   final String comment;
+  final bool thisMemberLikesThisComment;
   final List<PostCommentContainer> postCommentContainer;
 
-  PostCommentContainer({this.postComment, this.dateTime, this.member, this.comment, this.postCommentContainer});
+  PostCommentContainer({this.postComment, this.dateTime, this.member, this.comment, this.thisMemberLikesThisComment, this.postCommentContainer});
 
   @override
   List<Object> get props => [postComment, dateTime, member, comment, postCommentContainer];

@@ -62,6 +62,8 @@ class PostCommentFormBloc extends Bloc<PostCommentFormEvent, PostCommentFormStat
                                  memberId: "",
                                  appId: "",
                                  comment: "",
+                                 likes: 0,
+                                 dislikes: 0,
 
         ));
         yield loaded;
@@ -126,6 +128,28 @@ class PostCommentFormBloc extends Bloc<PostCommentFormEvent, PostCommentFormStat
         newValue = currentState.value.copyWith(comment: event.value);
         yield SubmittablePostCommentForm(value: newValue);
 
+        return;
+      }
+      if (event is ChangedPostCommentLikes) {
+        if (isInt(event.value)) {
+          newValue = currentState.value.copyWith(likes: int.parse(event.value));
+          yield SubmittablePostCommentForm(value: newValue);
+
+        } else {
+          newValue = currentState.value.copyWith(likes: 0);
+          yield LikesPostCommentFormError(message: "Value should be a number", value: newValue);
+        }
+        return;
+      }
+      if (event is ChangedPostCommentDislikes) {
+        if (isInt(event.value)) {
+          newValue = currentState.value.copyWith(dislikes: int.parse(event.value));
+          yield SubmittablePostCommentForm(value: newValue);
+
+        } else {
+          newValue = currentState.value.copyWith(dislikes: 0);
+          yield DislikesPostCommentFormError(message: "Value should be a number", value: newValue);
+        }
         return;
       }
     }

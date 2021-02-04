@@ -58,6 +58,7 @@ class PostLikeFormBloc extends Bloc<PostLikeFormEvent, PostLikeFormState> {
         PostLikeFormLoaded loaded = PostLikeFormLoaded(value: PostLikeModel(
                                                documentID: "",
                                  postId: "",
+                                 postCommentId: "",
                                  memberId: "",
                                  appId: "",
 
@@ -92,6 +93,12 @@ class PostLikeFormBloc extends Bloc<PostLikeFormEvent, PostLikeFormState> {
       }
       if (event is ChangedPostLikePostId) {
         newValue = currentState.value.copyWith(postId: event.value);
+        yield SubmittablePostLikeForm(value: newValue);
+
+        return;
+      }
+      if (event is ChangedPostLikePostCommentId) {
+        newValue = currentState.value.copyWith(postCommentId: event.value);
         yield SubmittablePostLikeForm(value: newValue);
 
         return;

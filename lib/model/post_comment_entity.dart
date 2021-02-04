@@ -29,17 +29,19 @@ class PostCommentEntity {
   final Object timestamp;
   final String appId;
   final String comment;
+  final int likes;
+  final int dislikes;
 
-  PostCommentEntity({this.postId, this.postCommentId, this.memberId, this.timestamp, this.appId, this.comment, });
+  PostCommentEntity({this.postId, this.postCommentId, this.memberId, this.timestamp, this.appId, this.comment, this.likes, this.dislikes, });
 
   PostCommentEntity copyWith({Object timestamp, }) {
-    return PostCommentEntity(postId: postId, postCommentId: postCommentId, memberId: memberId, timestamp : timestamp, appId: appId, comment: comment, );
+    return PostCommentEntity(postId: postId, postCommentId: postCommentId, memberId: memberId, timestamp : timestamp, appId: appId, comment: comment, likes: likes, dislikes: dislikes, );
   }
-  List<Object> get props => [postId, postCommentId, memberId, timestamp, appId, comment, ];
+  List<Object> get props => [postId, postCommentId, memberId, timestamp, appId, comment, likes, dislikes, ];
 
   @override
   String toString() {
-    return 'PostCommentEntity{postId: $postId, postCommentId: $postCommentId, memberId: $memberId, timestamp: $timestamp, appId: $appId, comment: $comment}';
+    return 'PostCommentEntity{postId: $postId, postCommentId: $postCommentId, memberId: $memberId, timestamp: $timestamp, appId: $appId, comment: $comment, likes: $likes, dislikes: $dislikes}';
   }
 
   static PostCommentEntity fromMap(Map map) {
@@ -52,6 +54,8 @@ class PostCommentEntity {
       timestamp: postCommentRepository().timeStampToString(map['timestamp']), 
       appId: map['appId'], 
       comment: map['comment'], 
+      likes: int.tryParse(map['likes'].toString()), 
+      dislikes: int.tryParse(map['dislikes'].toString()), 
     );
   }
 
@@ -68,6 +72,10 @@ class PostCommentEntity {
       else theDocument["appId"] = null;
     if (comment != null) theDocument["comment"] = comment;
       else theDocument["comment"] = null;
+    if (likes != null) theDocument["likes"] = likes;
+      else theDocument["likes"] = null;
+    if (dislikes != null) theDocument["dislikes"] = dislikes;
+      else theDocument["dislikes"] = null;
     return theDocument;
   }
 

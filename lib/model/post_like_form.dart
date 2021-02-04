@@ -137,6 +137,7 @@ class _MyPostLikeFormState extends State<MyPostLikeForm> {
 
   final TextEditingController _documentIDController = TextEditingController();
   final TextEditingController _postIdController = TextEditingController();
+  final TextEditingController _postCommentIdController = TextEditingController();
   final TextEditingController _memberIdController = TextEditingController();
   final TextEditingController _appIdController = TextEditingController();
   int _likeTypeSelectedRadioTile;
@@ -150,6 +151,7 @@ class _MyPostLikeFormState extends State<MyPostLikeForm> {
     _myFormBloc = BlocProvider.of<PostLikeFormBloc>(context);
     _documentIDController.addListener(_onDocumentIDChanged);
     _postIdController.addListener(_onPostIdChanged);
+    _postCommentIdController.addListener(_onPostCommentIdChanged);
     _memberIdController.addListener(_onMemberIdChanged);
     _appIdController.addListener(_onAppIdChanged);
     _likeTypeSelectedRadioTile = 0;
@@ -173,6 +175,10 @@ class _MyPostLikeFormState extends State<MyPostLikeForm> {
           _postIdController.text = state.value.postId.toString();
         else
           _postIdController.text = "";
+        if (state.value.postCommentId != null)
+          _postCommentIdController.text = state.value.postCommentId.toString();
+        else
+          _postCommentIdController.text = "";
         if (state.value.memberId != null)
           _memberIdController.text = state.value.memberId.toString();
         else
@@ -272,6 +278,24 @@ class _MyPostLikeFormState extends State<MyPostLikeForm> {
                 ),
           );
 
+        children.add(
+
+                TextFormField(
+                style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor)),
+                  readOnly: _readOnly(accessState, state),
+                  controller: _postCommentIdController,
+                  decoration: InputDecoration(
+                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldTextColor))),                    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldFocusColor))),                    icon: Icon(Icons.vpn_key, color: RgbHelper.color(rgbo: app.formFieldHeaderColor)),
+                    labelText: 'Document ID of the comment (in case of a like on a comment)',
+                  ),
+                  keyboardType: TextInputType.text,
+                  autovalidate: true,
+                  validator: (_) {
+                    return state is PostCommentIdPostLikeFormError ? state.message : null;
+                  },
+                ),
+          );
+
 
         children.add(
 
@@ -340,6 +364,7 @@ class _MyPostLikeFormState extends State<MyPostLikeForm> {
                           UpdatePostLikeList(value: state.value.copyWith(
                               documentID: state.value.documentID, 
                               postId: state.value.postId, 
+                              postCommentId: state.value.postCommentId, 
                               memberId: state.value.memberId, 
                               timestamp: state.value.timestamp, 
                               appId: state.value.appId, 
@@ -350,6 +375,7 @@ class _MyPostLikeFormState extends State<MyPostLikeForm> {
                           AddPostLikeList(value: PostLikeModel(
                               documentID: state.value.documentID, 
                               postId: state.value.postId, 
+                              postCommentId: state.value.postCommentId, 
                               memberId: state.value.memberId, 
                               timestamp: state.value.timestamp, 
                               appId: state.value.appId, 
@@ -397,6 +423,11 @@ class _MyPostLikeFormState extends State<MyPostLikeForm> {
   }
 
 
+  void _onPostCommentIdChanged() {
+    _myFormBloc.add(ChangedPostLikePostCommentId(value: _postCommentIdController.text));
+  }
+
+
   void _onMemberIdChanged() {
     _myFormBloc.add(ChangedPostLikeMemberId(value: _memberIdController.text));
   }
@@ -420,6 +451,7 @@ class _MyPostLikeFormState extends State<MyPostLikeForm> {
   void dispose() {
     _documentIDController.dispose();
     _postIdController.dispose();
+    _postCommentIdController.dispose();
     _memberIdController.dispose();
     _appIdController.dispose();
     super.dispose();

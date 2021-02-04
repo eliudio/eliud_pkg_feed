@@ -87,6 +87,18 @@ class ChangedPostLikePostId extends PostLikeFormEvent {
   String toString() => 'ChangedPostLikePostId{ value: $value }';
 }
 
+class ChangedPostLikePostCommentId extends PostLikeFormEvent {
+  final String value;
+
+  ChangedPostLikePostCommentId({this.value});
+
+  @override
+  List<Object> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedPostLikePostCommentId{ value: $value }';
+}
+
 class ChangedPostLikeMemberId extends PostLikeFormEvent {
   final String value;
 
