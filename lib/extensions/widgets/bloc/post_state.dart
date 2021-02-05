@@ -37,7 +37,12 @@ class PostCommentContainer extends Equatable {
   PostCommentContainer({this.postComment, this.dateTime, this.member, this.comment, this.thisMemberLikesThisComment, this.postCommentContainer});
 
   @override
-  List<Object> get props => [postComment, dateTime, member, comment, postCommentContainer];
+  List<Object> get props => [postComment, dateTime, member, comment, thisMemberLikesThisComment, postCommentContainer];
+
+  PostCommentContainer copyWith({PostCommentModel postComment, String dateTime, MemberPublicInfoModel member, String comment, bool thisMemberLikesThisComment, List<PostCommentContainer> postCommentContainer}) {
+    return PostCommentContainer(postComment: postComment ?? this.postComment, dateTime: dateTime ?? this.dateTime, member: member ?? this.member, comment : comment ?? this.comment, thisMemberLikesThisComment: thisMemberLikesThisComment ?? this.thisMemberLikesThisComment, postCommentContainer: postCommentContainer ?? this.postCommentContainer);
+  }
+
 }
 
 // Eventually this should also be loaded paged, rather than all in 1 go.
@@ -50,4 +55,10 @@ class CommentsLoaded extends PostLoaded {
 
   @override
   List<Object> get props => [memberId, postModel, comments];
+
+  CommentsLoaded copyWith({PostModel postModel, String memberId, List<PostCommentContainer> comments, LikeType thisMembersLikeType}) {
+    return CommentsLoaded(postModel: postModel ?? this.postModel, memberId: memberId ?? this. memberId, comments: comments ?? this.comments, thisMembersLikeType: thisMembersLikeType ?? this.thisMembersLikeType);
+  }
+
+
 }

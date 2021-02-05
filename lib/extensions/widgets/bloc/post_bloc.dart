@@ -37,7 +37,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       } else if (event is LikePostEvent) {
         yield await _updateEmotion(theState, null, event.likeType);
       } else if (event is LikeCommentPostEvent) {
-        yield await _updateEmotion(theState, event.postCommentModel, event.likeType);
+        yield await _updateEmotion(theState, event.postCommentContainer, event.likeType);
       // Comments
       } else if (event is AddCommentEvent) {
         yield await _comment(theState, event.comment);
@@ -94,7 +94,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   }
 
   Future<CommentsLoaded> _updateEmotion(
-      PostLoaded theState, PostCommentModel postCommentModel, LikeType likePressed) async {
+      PostLoaded theState, PostCommentContainer postCommentContainer, LikeType likePressed) async {
     // We have firebase functions to update the post collection. One reason is performance, we shouldn't do this work on the client.
     // Second reason is security: the client, except the owner, can update the post.
     // We allow the firebase function to do it's thing in the background, async. In the meantime we determine the value here
@@ -102,12 +102,14 @@ class PostBloc extends Bloc<PostEvent, PostState> {
 
     // the like ID = postId - memberId
     var likeKey =
-        PostHelper.getLikeKey(theState.postModel.documentID, postCommentModel != null ? postCommentModel.documentID : null, theState.memberId);
+        PostHelper.getLikeKey(theState.postModel.documentID, postCommentContainer != null ? postCommentContainer.postComment.documentID : null, theState.memberId);
     var like =
         await postLikeRepository(appId: theState.postModel.appId).get(likeKey);
     int likesExtra = 0;
     int dislikesExtra = 0;
+    var thisMembersLikeType;
     if (like == null) {
+      thisMembersLikeType = likePressed;
       if (likePressed == LikeType.Like) {
         likesExtra = 1;
       } else if (likePressed == LikeType.Dislike) {
@@ -118,10 +120,11 @@ class PostBloc extends Bloc<PostEvent, PostState> {
           postId: theState.postModel.documentID,
           memberId: theState.memberId,
           appId: theState.postModel.appId,
-          postCommentId: postCommentModel == null ? null : postCommentModel.documentID,
+          postCommentId: postCommentContainer == null ? null : postCommentContainer.postComment.documentID,
           likeType: likePressed));
     } else {
       if (like.likeType != likePressed) {
+        thisMembersLikeType = likePressed;
         if (likePressed == LikeType.Like) {
           // changing a dislike into a like
           likesExtra = 1;
@@ -144,26 +147,46 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       }
     }
     var newPostModel;
-    if (postCommentModel == null) {
-      newPostModel = theState.postModel.copyWith(
-          likes: theState.postModel.likes == null
-              ? likesExtra
-              : theState.postModel.likes + likesExtra,
-          dislikes: theState.postModel.dislikes == null
-              ? dislikesExtra
-              : theState.postModel.dislikes + dislikesExtra);
+    if (postCommentContainer == null) {
+      if (theState is CommentsLoaded) {
+        // update the state without having to retrieving it from the db
+        return theState.copyWith(
+            postModel: theState.postModel.copyWith(
+                likes: theState.postModel.likes == null
+                    ? likesExtra
+                    : theState.postModel.likes + likesExtra,
+                dislikes: theState.postModel.dislikes == null
+                    ? dislikesExtra
+                    : theState.postModel.dislikes + dislikesExtra),
+            thisMembersLikeType: thisMembersLikeType);
+      }
     } else {
-      newPostModel = theState.postModel;
+      // just implement for 1 element on top level
+      if (theState is CommentsLoaded) {
+/*
+        var newPostCommentContainer = postCommentContainer.copyWith(
+            thisMemberLikesThisComment: thisMembersLikeType == LikeType.Like
+        );
+
+*/
+        // update the state without having to retrieving it from the db
+        // search for the one to update, i.e. search for the one where documentId = postCommentContainer...documentId, for now we implement with specific test data: 1 comment only
+        var found = theState.comments[0];
+        var replaceWith = found.copyWith(
+            thisMemberLikesThisComment: thisMembersLikeType == LikeType.Like,
+            postComment: found.postComment.copyWith(
+              likes: found.postComment.likes == null ? likesExtra : found.postComment.likes + likesExtra,
+            ),
+        );
+        final List<PostCommentContainer> newComments = [
+          replaceWith
+        ];
+        return theState.copyWith(
+          comments: newComments,
+        );
+      }
     }
-    if (theState is CommentsLoaded) {
-      return CommentsLoaded(
-          postModel: newPostModel,
-          memberId: theState.memberId,
-          comments: theState.comments,
-          thisMembersLikeType: likePressed);
-    } else {
-      return _loadComments(newPostModel, theState.memberId);
-    }
+    return _loadComments(newPostModel, theState.memberId);
   }
 
   Future<List<PostCommentContainer>> mapComments(

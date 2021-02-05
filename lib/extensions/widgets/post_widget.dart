@@ -492,7 +492,7 @@ class _PostWidgetState extends State<PostWidget> {
                             ? TextStyle(fontWeight: FontWeight.w900)
                             : null),
                     onPressed: () => _likeComment(context, postModel,
-                        data.postComment)), //your original button
+                        data)), //your original button
               ),
               ButtonTheme(
                   padding: EdgeInsets.symmetric(
@@ -590,9 +590,9 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   Future<void> _likeComment(BuildContext context, PostModel postModel,
-      PostCommentModel postCommentModel) async {
+      PostCommentContainer postCommentContainer) async {
     BlocProvider.of<PostBloc>(context)
-        .add(LikeCommentPostEvent(postModel, postCommentModel, LikeType.Like));
+        .add(LikeCommentPostEvent(postModel, postCommentContainer, LikeType.Like));
   }
 
   void _dislike(BuildContext context, PostModel postModel) async {
