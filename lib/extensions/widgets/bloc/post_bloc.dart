@@ -33,16 +33,18 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       if (event is LoadCommentsEvent) {
         yield await _loadComments(event.postModel, event.memberId);
 
-      // Likes
+        // Likes
       } else if (event is LikePostEvent) {
         yield await _updateEmotion(theState, null, event.likeType);
       } else if (event is LikeCommentPostEvent) {
-        yield await _updateEmotion(theState, event.postCommentContainer, event.likeType);
-      // Comments
+        yield await _updateEmotion(
+            theState, event.postCommentContainer, event.likeType);
+        // Comments
       } else if (event is AddCommentEvent) {
         yield await _comment(theState, event.comment);
       } else if (event is AddCommentCommentEvent) {
-        yield await _commentComment(theState, event.postCommentContainer, event.comment);
+        yield await _commentComment(
+            theState, event.postCommentContainer, event.comment);
       } else if (event is DeleteCommentEvent) {
         yield await _deleteComment(theState, event.deleteThis);
       } else if (event is UpdateCommentEvent) {
@@ -51,6 +53,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     }
   }
 
+  // ********************************* create a comment ****************************
   Future<CommentsLoaded> _comment(PostLoaded theState, String comment) async {
     await postCommentRepository(appId: theState.postModel.appId)
         .add(PostCommentModel(
@@ -79,32 +82,100 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     return _loadComments(theState.postModel, theState.memberId);
   }
 
+  // ********************************* delete a comment ****************************
   Future<CommentsLoaded> _deleteComment(
       PostLoaded theState, PostCommentModel deleteThis) async {
-    await postCommentRepository(appId: theState.postModel.appId)
+    postCommentRepository(appId: theState.postModel.appId)
         .delete(deleteThis);
-    return _loadComments(theState.postModel, theState.memberId);
+    if (theState is CommentsLoaded) {
+      return theState.copyWith(
+          comments: _copyCommentsAndDeleteOne(
+              theState.comments, deleteThis.documentID));
+    } else {
+      return _loadComments(theState.postModel, theState.memberId);
+    }
   }
 
+  List<PostCommentContainer> _copyCommentsAndDeleteOne(
+      List<PostCommentContainer> toCopy,
+      String postCommentDocumentID,
+      ) {
+    if (toCopy == null) return null;
+    if (toCopy.length == 0) return [];
+
+    final List<PostCommentContainer> newComments = [];
+    for (int i = 0; i < toCopy.length; i++) {
+      if (toCopy[i].postComment.documentID != postCommentDocumentID) {
+        newComments.add(toCopy[i].copyWith(
+            postCommentContainer: _copyCommentsAndDeleteOne(
+                toCopy[i].postCommentContainer,
+                postCommentDocumentID)));
+      }
+    }
+    return newComments;
+  }
+
+  // ********************************* update a comment ****************************
   Future<CommentsLoaded> _updateComment(
       PostLoaded theState, PostCommentModel updateThis, String newValue) async {
-    await postCommentRepository(appId: theState.postModel.appId)
+    postCommentRepository(appId: theState.postModel.appId)
         .update(updateThis.copyWith(comment: newValue));
-    return _loadComments(theState.postModel, theState.memberId);
+
+    if (theState is CommentsLoaded) {
+      return theState.copyWith(
+          comments: _copyCommentsAndUpdateComment(
+              theState.comments, updateThis.documentID, newValue));
+    } else {
+      return _loadComments(theState.postModel, theState.memberId);
+    }
   }
 
-  Future<CommentsLoaded> _updateEmotion(
-      PostLoaded theState, PostCommentContainer postCommentContainer, LikeType likePressed) async {
+  List<PostCommentContainer> _copyCommentsAndUpdateComment(
+      List<PostCommentContainer> toCopy,
+      String postCommentDocumentID,
+      String comment) {
+    if (toCopy == null) return null;
+    if (toCopy.length == 0) return [];
+
+    final List<PostCommentContainer> newComments = [];
+    for (int i = 0; i < toCopy.length; i++) {
+      var newValue;
+      if (toCopy[i].postComment.documentID == postCommentDocumentID) {
+        newValue = toCopy[i].copyWith(
+            comment: comment,
+            postCommentContainer: _copyCommentsAndUpdateComment(
+                toCopy[i].postCommentContainer,
+                postCommentDocumentID,
+                comment));
+      } else {
+        newValue = toCopy[i].copyWith(
+            postCommentContainer: _copyCommentsAndUpdateComment(
+                toCopy[i].postCommentContainer,
+                postCommentDocumentID,
+                comment));
+      }
+      newComments.add(newValue);
+    }
+    return newComments;
+  }
+
+  // ********************************* update a like ****************************
+  Future<CommentsLoaded> _updateEmotion(PostLoaded theState,
+      PostCommentContainer postCommentContainer, LikeType likePressed) async {
     // We have firebase functions to update the post collection. One reason is performance, we shouldn't do this work on the client.
     // Second reason is security: the client, except the owner, can update the post.
     // We allow the firebase function to do it's thing in the background, async. In the meantime we determine the value here
     // as well, although not storing it in the db, just in memory. It's all fast, and correct
 
     // the like ID = postId - memberId
-    var likeKey =
-        PostHelper.getLikeKey(theState.postModel.documentID, postCommentContainer != null ? postCommentContainer.postComment.documentID : null, theState.memberId);
+    var likeKey = PostHelper.getLikeKey(
+        theState.postModel.documentID,
+        postCommentContainer != null
+            ? postCommentContainer.postComment.documentID
+            : null,
+        theState.memberId);
     var like =
-        await postLikeRepository(appId: theState.postModel.appId).get(likeKey);
+    await postLikeRepository(appId: theState.postModel.appId).get(likeKey);
     int likesExtra = 0;
     int dislikesExtra = 0;
     var thisMembersLikeType;
@@ -120,7 +191,9 @@ class PostBloc extends Bloc<PostEvent, PostState> {
           postId: theState.postModel.documentID,
           memberId: theState.memberId,
           appId: theState.postModel.appId,
-          postCommentId: postCommentContainer == null ? null : postCommentContainer.postComment.documentID,
+          postCommentId: postCommentContainer == null
+              ? null
+              : postCommentContainer.postComment.documentID,
           likeType: likePressed));
     } else {
       if (like.likeType != likePressed) {
@@ -163,32 +236,56 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     } else {
       // just implement for 1 element on top level
       if (theState is CommentsLoaded) {
-/*
-        var newPostCommentContainer = postCommentContainer.copyWith(
-            thisMemberLikesThisComment: thisMembersLikeType == LikeType.Like
-        );
-
-*/
         // update the state without having to retrieving it from the db
-        // search for the one to update, i.e. search for the one where documentId = postCommentContainer...documentId, for now we implement with specific test data: 1 comment only
-        var found = theState.comments[0];
-        var replaceWith = found.copyWith(
-            thisMemberLikesThisComment: thisMembersLikeType == LikeType.Like,
-            postComment: found.postComment.copyWith(
-              likes: found.postComment.likes == null ? likesExtra : found.postComment.likes + likesExtra,
-            ),
-        );
-        final List<PostCommentContainer> newComments = [
-          replaceWith
-        ];
         return theState.copyWith(
-          comments: newComments,
-        );
+            comments: _copyCommentsAndUpdateALike(
+                theState.comments,
+                postCommentContainer.postComment.documentID,
+                thisMembersLikeType == LikeType.Like,
+                likesExtra));
       }
     }
     return _loadComments(newPostModel, theState.memberId);
   }
 
+  List<PostCommentContainer> _copyCommentsAndUpdateALike(
+      List<PostCommentContainer> toCopy,
+      String postCommentDocumentID,
+      bool thisMemberLikesThisComment,
+      int likesExtra) {
+    if (toCopy == null) return null;
+    if (toCopy.length == 0) return [];
+
+    final List<PostCommentContainer> newComments = [];
+    for (int i = 0; i < toCopy.length; i++) {
+      var newValue;
+      if (toCopy[i].postComment.documentID == postCommentDocumentID) {
+        newValue = toCopy[i].copyWith(
+            thisMemberLikesThisComment: thisMemberLikesThisComment,
+            postComment: toCopy[i].postComment.copyWith(
+                  likes: toCopy[i].postComment.likes == null
+                      ? likesExtra
+                      : toCopy[i].postComment.likes + likesExtra,
+                ),
+            postCommentContainer: _copyCommentsAndUpdateALike(
+                toCopy[i].postCommentContainer,
+                postCommentDocumentID,
+                thisMemberLikesThisComment,
+                likesExtra));
+      } else {
+        newValue = toCopy[i].copyWith(
+            postCommentContainer: _copyCommentsAndUpdateALike(
+                toCopy[i].postCommentContainer,
+                postCommentDocumentID,
+                thisMemberLikesThisComment,
+                likesExtra));
+      }
+      newComments.add(newValue);
+    }
+    return newComments;
+  }
+
+  // ********************************* retrieve and map comments ****************************
   Future<List<PostCommentContainer>> mapComments(
     PostModel postModel,
     List<PostCommentModel> sourceComments,
@@ -217,7 +314,8 @@ class PostBloc extends Bloc<PostEvent, PostState> {
         memberId,
       );
 
-      var likeKey = PostHelper.getLikeKey(postModel.documentID, comment.documentID, memberId);
+      var likeKey = PostHelper.getLikeKey(
+          postModel.documentID, comment.documentID, memberId);
       var like = await postLikeRepository(appId: appId).get(likeKey);
 
       return PostCommentContainer(
