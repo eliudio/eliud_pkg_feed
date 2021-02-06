@@ -53,40 +53,95 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     }
   }
 
+  /* As a general rule, when updating data, be it adding a like, dislike, comment, ... we update the data in memory
+     and allow the repository update happen in the background. As a matter of fact, there are firebase functions
+     doing the counting of the likes async in the background anyway, so this is not only a performance optimisation,
+     it is even a necessity even for some parts of the data, and hence making it a general approach is best.
+   */
+
   // ********************************* create a comment ****************************
   Future<CommentsLoaded> _comment(PostLoaded theState, String comment) async {
-    await postCommentRepository(appId: theState.postModel.appId)
-        .add(PostCommentModel(
+    var toAdd = PostCommentModel(
       documentID: newRandomKey(),
       postId: theState.postModel.documentID,
       memberId: theState.memberId,
       appId: theState.postModel.appId,
       comment: comment,
-    ));
+    );
+    postCommentRepository(appId: theState.postModel.appId).add(toAdd);
 
-    return _loadComments(theState.postModel, theState.memberId);
+    if (theState is CommentsLoaded) {
+      PostCommentContainer container =
+          await construct(theState.postModel.appId, toAdd, null, false);
+      final List<PostCommentContainer> newComments = [];
+      newComments.add(container);
+      var toCopy = theState.comments;
+      if ((toCopy != null) && (toCopy.length > 0)) {
+        for (int i = 0; i < toCopy.length; i++) {
+          newComments.add(toCopy[i].copyWith());
+        }
+      }
+      return theState.copyWith(comments: newComments);
+    } else {
+      return _loadComments(theState.postModel, theState.memberId);
+    }
   }
 
+// ********************************* create a comment on comment ****************************
   Future<CommentsLoaded> _commentComment(PostLoaded theState,
       PostCommentContainer postCommentContainer, String comment) async {
-    await postCommentRepository(appId: theState.postModel.appId)
-        .add(PostCommentModel(
+    var addThis = PostCommentModel(
       documentID: newRandomKey(),
       postId: theState.postModel.documentID,
       postCommentId: postCommentContainer.postComment.documentID,
       memberId: theState.memberId,
       appId: theState.postModel.appId,
       comment: comment,
-    ));
+    );
 
-    return _loadComments(theState.postModel, theState.memberId);
+    postCommentRepository(appId: theState.postModel.appId).add(addThis);
+
+    if (theState is CommentsLoaded) {
+      return theState.copyWith(
+          comments: await _copyCommentCommentsAndAddOne(
+              theState.comments, addThis));
+    } else {
+      return _loadComments(theState.postModel, theState.memberId);
+    }
+
   }
 
-  // ********************************* delete a comment ****************************
+  Future<List<PostCommentContainer>> _copyCommentCommentsAndAddOne(
+      List<PostCommentContainer> toCopy,
+      PostCommentModel toAdd,
+      ) async {
+    if (toCopy == null) return null;
+    if (toCopy.length == 0) return [];
+
+    final List<PostCommentContainer> newComments = [];
+    for (int i = 0; i < toCopy.length; i++) {
+      var theCopy = await _copyCommentCommentsAndAddOne(
+          toCopy[i].postCommentContainer, toAdd);
+      if (toCopy[i].postComment.documentID == toAdd.postCommentId) {
+        // is this the comment the parent of the item to be added then add it at the front
+        PostCommentContainer container =
+            await construct(toAdd.appId, toAdd, null, false);
+        if (theCopy != null) {
+          theCopy.insert(0, container);
+        } else {
+          theCopy = [ container ];
+        }
+      }
+      newComments.add(toCopy[i].copyWith(
+          postCommentContainer: theCopy));
+    }
+    return newComments;
+  }
+
+// ********************************* delete a comment ****************************
   Future<CommentsLoaded> _deleteComment(
       PostLoaded theState, PostCommentModel deleteThis) async {
-    postCommentRepository(appId: theState.postModel.appId)
-        .delete(deleteThis);
+    postCommentRepository(appId: theState.postModel.appId).delete(deleteThis);
     if (theState is CommentsLoaded) {
       return theState.copyWith(
           comments: _copyCommentsAndDeleteOne(
@@ -97,9 +152,9 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   }
 
   List<PostCommentContainer> _copyCommentsAndDeleteOne(
-      List<PostCommentContainer> toCopy,
-      String postCommentDocumentID,
-      ) {
+    List<PostCommentContainer> toCopy,
+    String postCommentDocumentID,
+  ) {
     if (toCopy == null) return null;
     if (toCopy.length == 0) return [];
 
@@ -108,14 +163,13 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       if (toCopy[i].postComment.documentID != postCommentDocumentID) {
         newComments.add(toCopy[i].copyWith(
             postCommentContainer: _copyCommentsAndDeleteOne(
-                toCopy[i].postCommentContainer,
-                postCommentDocumentID)));
+                toCopy[i].postCommentContainer, postCommentDocumentID)));
       }
     }
     return newComments;
   }
 
-  // ********************************* update a comment ****************************
+// ********************************* update a comment ****************************
   Future<CommentsLoaded> _updateComment(
       PostLoaded theState, PostCommentModel updateThis, String newValue) async {
     postCommentRepository(appId: theState.postModel.appId)
@@ -159,7 +213,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     return newComments;
   }
 
-  // ********************************* update a like ****************************
+// ********************************* update a like ****************************
   Future<CommentsLoaded> _updateEmotion(PostLoaded theState,
       PostCommentContainer postCommentContainer, LikeType likePressed) async {
     // We have firebase functions to update the post collection. One reason is performance, we shouldn't do this work on the client.
@@ -175,7 +229,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
             : null,
         theState.memberId);
     var like =
-    await postLikeRepository(appId: theState.postModel.appId).get(likeKey);
+        await postLikeRepository(appId: theState.postModel.appId).get(likeKey);
     int likesExtra = 0;
     int dislikesExtra = 0;
     var thisMembersLikeType;
@@ -285,7 +339,23 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     return newComments;
   }
 
-  // ********************************* retrieve and map comments ****************************
+// ********************************* retrieve and map comments ****************************
+  Future<PostCommentContainer> construct(
+      String appId,
+      PostCommentModel comment,
+      List<PostCommentContainer> commentComments,
+      bool thisMemberLikesThisComment) async {
+    return PostCommentContainer(
+      postComment: comment,
+      dateTime: comment.timestamp,
+      member:
+          await memberPublicInfoRepository(appId: appId).get(comment.memberId),
+      comment: comment.comment,
+      postCommentContainer: commentComments,
+      thisMemberLikesThisComment: thisMemberLikesThisComment,
+    );
+  }
+
   Future<List<PostCommentContainer>> mapComments(
     PostModel postModel,
     List<PostCommentModel> sourceComments,
@@ -318,15 +388,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
           postModel.documentID, comment.documentID, memberId);
       var like = await postLikeRepository(appId: appId).get(likeKey);
 
-      return PostCommentContainer(
-        postComment: comment,
-        dateTime: comment.timestamp,
-        member: await memberPublicInfoRepository(appId: appId)
-            .get(comment.memberId),
-        comment: comment.comment,
-        postCommentContainer: commentComments,
-        thisMemberLikesThisComment: like != null,
-      );
+      return construct(appId, comment, commentComments, like != null);
     }).toList());
     return comments;
   }
