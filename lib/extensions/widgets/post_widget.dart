@@ -1,5 +1,3 @@
-import 'package:comment_tree/widgets/comment_tree_widget.dart';
-import 'package:comment_tree/widgets/tree_theme_data.dart';
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/access/bloc/access_event.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
@@ -15,11 +13,10 @@ import 'package:eliud_core/platform/platform.dart';
 import 'package:eliud_core/tools/widgets/dialog_helper.dart';
 import 'package:eliud_core/tools/widgets/request_value_dialog.dart';
 import 'package:eliud_core/tools/widgets/yes_no_dialog.dart';
-import 'package:eliud_pkg_feed/model/post_comment_model.dart';
 import 'package:eliud_pkg_feed/model/post_like_model.dart';
-import 'package:eliud_pkg_feed/model/post_list_bloc.dart';
-import 'package:eliud_pkg_feed/model/post_list_event.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
+import 'package:eliud_pkg_storage/model/member_image_model.dart';
+import 'package:eliud_pkg_storage/platform/storage_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'bloc/post_bloc.dart';
@@ -129,6 +126,7 @@ class _PostWidgetState extends State<PostWidget> {
             alignment: Alignment.center, height: 30, child: _textField()),
       ),
       Container(width: 8),
+      _mediaButtons(context, postModel),
       Container(
           height: 30,
           child: RaisedButton(
@@ -139,6 +137,27 @@ class _PostWidgetState extends State<PostWidget> {
               child: Text('Ok'),
               onPressed: () => _addComment(postModel))),
     ]);
+  }
+
+  void photoAvailable(PostModel postModel, MemberImageModel memberImageModel, ) {
+    // todo
+    print("Add the photo to the comment");
+  }
+
+  PopupMenuButton _mediaButtons(
+      BuildContext context, PostModel postModel) {
+    return PopupMenuButton(
+      color: Colors.red,
+      icon: Icon(Icons.add, ),
+      itemBuilder: (_) => <PopupMenuItem<int>>[
+        new PopupMenuItem<int>(
+            child: const Text('Add photo'), value: 0),
+      ],
+      onSelected: (choice) {
+        if (choice == 0) {
+          AbstractStoragePlatform.platform.takePicture(context, (value) => photoAvailable(postModel, value));
+        }
+      });
   }
 
   void _addComment(PostModel postModel) {

@@ -21,6 +21,9 @@ dependencies:
   eliud_pkg_membership:
     path: ../eliud_pkg_membership
 
+  eliud_pkg_storage:
+    path: ../eliud_pkg_storage
+
 dev_dependencies:
   build_runner: "1.10.2"
 

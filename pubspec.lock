@@ -197,13 +197,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
-  comment_tree:
-    dependency: "direct main"
-    description:
-      name: comment_tree
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.2"
   convert:
     dependency: transitive
     description:
@@ -292,6 +285,13 @@ packages:
     dependency: transitive
     description:
       path: "../eliud_pkg_notifications"
+      relative: true
+    source: path
+    version: "0.0.1"
+  eliud_pkg_storage:
+    dependency: "direct main"
+    description:
+      path: "../eliud_pkg_storage"
       relative: true
     source: path
     version: "0.0.1"
