@@ -155,7 +155,7 @@ class _PostWidgetState extends State<PostWidget> {
       ],
       onSelected: (choice) {
         if (choice == 0) {
-          AbstractStoragePlatform.platform.takePicture(context, (value) => photoAvailable(postModel, value));
+          AbstractStoragePlatform.platform.takePicture(context, postModel.appId, (value) => photoAvailable(postModel, value), widget.member.documentID, postModel.readAccess);
         }
       });
   }
