@@ -13,6 +13,7 @@
 
 */
 
+import 'package:collection/collection.dart';
 import 'package:eliud_core/core/global_data.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
@@ -20,15 +21,19 @@ import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_membership/model/repository_export.dart';
 import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_storage/model/repository_export.dart';
+import 'package:eliud_pkg_storage/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/repository_export.dart';
 import 'package:eliud_core/model/model_export.dart';
 import 'package:eliud_pkg_membership/model/model_export.dart';
+import 'package:eliud_pkg_storage/model/model_export.dart';
 import '../tools/bespoke_models.dart';
 import 'package:eliud_pkg_feed/model/model_export.dart';
 import 'package:eliud_core/model/entity_export.dart';
 import 'package:eliud_pkg_membership/model/entity_export.dart';
+import 'package:eliud_pkg_storage/model/entity_export.dart';
 import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_feed/model/entity_export.dart';
 
@@ -51,17 +56,18 @@ class PostCommentModel {
   String comment;
   int likes;
   int dislikes;
+  List<MemberImageModel> memberImages;
 
-  PostCommentModel({this.documentID, this.postId, this.postCommentId, this.memberId, this.timestamp, this.appId, this.comment, this.likes, this.dislikes, })  {
+  PostCommentModel({this.documentID, this.postId, this.postCommentId, this.memberId, this.timestamp, this.appId, this.comment, this.likes, this.dislikes, this.memberImages, })  {
     assert(documentID != null);
   }
 
-  PostCommentModel copyWith({String documentID, String postId, String postCommentId, String memberId, String timestamp, String appId, String comment, int likes, int dislikes, }) {
-    return PostCommentModel(documentID: documentID ?? this.documentID, postId: postId ?? this.postId, postCommentId: postCommentId ?? this.postCommentId, memberId: memberId ?? this.memberId, timestamp: timestamp ?? this.timestamp, appId: appId ?? this.appId, comment: comment ?? this.comment, likes: likes ?? this.likes, dislikes: dislikes ?? this.dislikes, );
+  PostCommentModel copyWith({String documentID, String postId, String postCommentId, String memberId, String timestamp, String appId, String comment, int likes, int dislikes, List<MemberImageModel> memberImages, }) {
+    return PostCommentModel(documentID: documentID ?? this.documentID, postId: postId ?? this.postId, postCommentId: postCommentId ?? this.postCommentId, memberId: memberId ?? this.memberId, timestamp: timestamp ?? this.timestamp, appId: appId ?? this.appId, comment: comment ?? this.comment, likes: likes ?? this.likes, dislikes: dislikes ?? this.dislikes, memberImages: memberImages ?? this.memberImages, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ postId.hashCode ^ postCommentId.hashCode ^ memberId.hashCode ^ timestamp.hashCode ^ appId.hashCode ^ comment.hashCode ^ likes.hashCode ^ dislikes.hashCode;
+  int get hashCode => documentID.hashCode ^ postId.hashCode ^ postCommentId.hashCode ^ memberId.hashCode ^ timestamp.hashCode ^ appId.hashCode ^ comment.hashCode ^ likes.hashCode ^ dislikes.hashCode ^ memberImages.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -76,11 +82,14 @@ class PostCommentModel {
           appId == other.appId &&
           comment == other.comment &&
           likes == other.likes &&
-          dislikes == other.dislikes;
+          dislikes == other.dislikes &&
+          ListEquality().equals(memberImages, other.memberImages);
 
   @override
   String toString() {
-    return 'PostCommentModel{documentID: $documentID, postId: $postId, postCommentId: $postCommentId, memberId: $memberId, timestamp: $timestamp, appId: $appId, comment: $comment, likes: $likes, dislikes: $dislikes}';
+    String memberImagesCsv = (memberImages == null) ? '' : memberImages.join(', ');
+
+    return 'PostCommentModel{documentID: $documentID, postId: $postId, postCommentId: $postCommentId, memberId: $memberId, timestamp: $timestamp, appId: $appId, comment: $comment, likes: $likes, dislikes: $dislikes, memberImages: MemberImage[] { $memberImagesCsv }}';
   }
 
   PostCommentEntity toEntity({String appId}) {
@@ -92,6 +101,9 @@ class PostCommentModel {
           comment: (comment != null) ? comment : null, 
           likes: (likes != null) ? likes : null, 
           dislikes: (dislikes != null) ? dislikes : null, 
+          memberImages: (memberImages != null) ? memberImages
+            .map((item) => item.toEntity(appId: appId))
+            .toList() : null, 
     );
   }
 
@@ -107,6 +119,11 @@ class PostCommentModel {
           comment: entity.comment, 
           likes: entity.likes, 
           dislikes: entity.dislikes, 
+          memberImages: 
+            entity.memberImages == null ? null :
+            entity.memberImages
+            .map((item) => MemberImageModel.fromEntity(newRandomKey(), item))
+            .toList(), 
     );
   }
 
@@ -123,6 +140,10 @@ class PostCommentModel {
           comment: entity.comment, 
           likes: entity.likes, 
           dislikes: entity.dislikes, 
+          memberImages: 
+            entity. memberImages == null ? null : new List<MemberImageModel>.from(await Future.wait(entity. memberImages
+            .map((item) => MemberImageModel.fromEntityPlus(newRandomKey(), item, appId: appId))
+            .toList())), 
     );
   }
 

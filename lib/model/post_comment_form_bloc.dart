@@ -29,15 +29,19 @@ import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_membership/model/repository_export.dart';
 import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_storage/model/repository_export.dart';
+import 'package:eliud_pkg_storage/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/repository_export.dart';
 import 'package:eliud_core/model/model_export.dart';
 import 'package:eliud_pkg_membership/model/model_export.dart';
+import 'package:eliud_pkg_storage/model/model_export.dart';
 import '../tools/bespoke_models.dart';
 import 'package:eliud_pkg_feed/model/model_export.dart';
 import 'package:eliud_core/model/entity_export.dart';
 import 'package:eliud_pkg_membership/model/entity_export.dart';
+import 'package:eliud_pkg_storage/model/entity_export.dart';
 import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_feed/model/entity_export.dart';
 
@@ -64,6 +68,7 @@ class PostCommentFormBloc extends Bloc<PostCommentFormEvent, PostCommentFormStat
                                  comment: "",
                                  likes: 0,
                                  dislikes: 0,
+                                 memberImages: [],
 
         ));
         yield loaded;
@@ -150,6 +155,12 @@ class PostCommentFormBloc extends Bloc<PostCommentFormEvent, PostCommentFormStat
           newValue = currentState.value.copyWith(dislikes: 0);
           yield DislikesPostCommentFormError(message: "Value should be a number", value: newValue);
         }
+        return;
+      }
+      if (event is ChangedPostCommentMemberImages) {
+        newValue = currentState.value.copyWith(memberImages: event.value);
+        yield SubmittablePostCommentForm(value: newValue);
+
         return;
       }
     }

@@ -43,18 +43,23 @@ import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_membership/model/repository_export.dart';
 import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_storage/model/repository_export.dart';
+import 'package:eliud_pkg_storage/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/repository_export.dart';
 import 'package:eliud_core/model/embedded_component.dart';
 import 'package:eliud_pkg_membership/model/embedded_component.dart';
+import 'package:eliud_pkg_storage/model/embedded_component.dart';
 import 'package:eliud_pkg_feed/model/embedded_component.dart';
 import 'package:eliud_core/model/model_export.dart';
 import 'package:eliud_pkg_membership/model/model_export.dart';
+import 'package:eliud_pkg_storage/model/model_export.dart';
 import '../tools/bespoke_models.dart';
 import 'package:eliud_pkg_feed/model/model_export.dart';
 import 'package:eliud_core/model/entity_export.dart';
 import 'package:eliud_pkg_membership/model/entity_export.dart';
+import 'package:eliud_pkg_storage/model/entity_export.dart';
 import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_feed/model/entity_export.dart';
 
@@ -413,6 +418,27 @@ class _MyPostFormState extends State<MyPostForm> {
         children.add(Divider(height: 1.0, thickness: 1.0, color: RgbHelper.color(rgbo: app.dividerColor)));
 
 
+         children.add(Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                  child: Text('Images',
+                      style: TextStyle(
+                          color: RgbHelper.color(rgbo: app.formGroupTitleColor), fontWeight: FontWeight.bold)),
+                ));
+
+        children.add(
+
+                new Container(
+                    height: (fullScreenHeight(context) / 2.5), 
+                    child: memberImagesList(context, state.value.memberImages, _onMemberImagesChanged)
+                )
+          );
+
+
+        children.add(Container(height: 20.0));
+        children.add(Divider(height: 1.0, thickness: 1.0, color: RgbHelper.color(rgbo: app.dividerColor)));
+
+
         if ((formAction != FormAction.ShowData) && (formAction != FormAction.ShowPreloadedData))
           children.add(RaisedButton(
                   color: RgbHelper.color(rgbo: app.formSubmitButtonColor),
@@ -435,6 +461,7 @@ class _MyPostFormState extends State<MyPostForm> {
                               dislikes: state.value.dislikes, 
                               readAccess: state.value.readAccess, 
                               archived: state.value.archived, 
+                              memberImages: state.value.memberImages, 
                         )));
                       } else {
                         BlocProvider.of<PostListBloc>(context).add(
@@ -451,6 +478,7 @@ class _MyPostFormState extends State<MyPostForm> {
                               dislikes: state.value.dislikes, 
                               readAccess: state.value.readAccess, 
                               archived: state.value.archived, 
+                              memberImages: state.value.memberImages, 
                           )));
                       }
                       if (widget.submitAction != null) {
@@ -538,6 +566,12 @@ class _MyPostFormState extends State<MyPostForm> {
       _archivedSelectedRadioTile = val;
     });
     _myFormBloc.add(ChangedPostArchived(value: toPostArchiveStatus(val)));
+  }
+
+
+  void _onMemberImagesChanged(value) {
+    _myFormBloc.add(ChangedPostMemberImages(value: value));
+    setState(() {});
   }
 
 

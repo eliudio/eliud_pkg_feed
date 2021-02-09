@@ -29,15 +29,19 @@ import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_membership/model/repository_export.dart';
 import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_storage/model/repository_export.dart';
+import 'package:eliud_pkg_storage/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/repository_export.dart';
 import 'package:eliud_core/model/model_export.dart';
 import 'package:eliud_pkg_membership/model/model_export.dart';
+import 'package:eliud_pkg_storage/model/model_export.dart';
 import '../tools/bespoke_models.dart';
 import 'package:eliud_pkg_feed/model/model_export.dart';
 import 'package:eliud_core/model/entity_export.dart';
 import 'package:eliud_pkg_membership/model/entity_export.dart';
+import 'package:eliud_pkg_storage/model/entity_export.dart';
 import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_feed/model/entity_export.dart';
 
@@ -65,6 +69,7 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
                                  dislikes: 0,
                                  readAccess: [],
                                  archived: PostArchiveStatus.Active, 
+                                 memberImages: [],
 
         ));
         yield loaded;
@@ -112,6 +117,7 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
                                  dislikes: currentState.value.dislikes,
                                  readAccess: currentState.value.readAccess,
                                  archived: currentState.value.archived,
+                                 memberImages: currentState.value.memberImages,
           );
         yield SubmittablePostForm(value: newValue);
 
@@ -177,6 +183,12 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
       }
       if (event is ChangedPostArchived) {
         newValue = currentState.value.copyWith(archived: event.value);
+        yield SubmittablePostForm(value: newValue);
+
+        return;
+      }
+      if (event is ChangedPostMemberImages) {
+        newValue = currentState.value.copyWith(memberImages: event.value);
         yield SubmittablePostForm(value: newValue);
 
         return;

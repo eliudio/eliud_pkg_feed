@@ -19,6 +19,7 @@ import 'package:eliud_core/tools/common_tools.dart';
 import 'abstract_repository_singleton.dart';
 import 'package:eliud_core/model/entity_export.dart';
 import 'package:eliud_pkg_membership/model/entity_export.dart';
+import 'package:eliud_pkg_storage/model/entity_export.dart';
 import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_feed/model/entity_export.dart';
 
@@ -34,19 +35,21 @@ class PostEntity {
   final int dislikes;
   final List<String> readAccess;
   final int archived;
+  final List<MemberImageEntity> memberImages;
 
-  PostEntity({this.authorId, this.timestamp, this.appId, this.postAppId, this.postPageId, this.pageParameters, this.description, this.likes, this.dislikes, this.readAccess, this.archived, });
+  PostEntity({this.authorId, this.timestamp, this.appId, this.postAppId, this.postPageId, this.pageParameters, this.description, this.likes, this.dislikes, this.readAccess, this.archived, this.memberImages, });
 
   PostEntity copyWith({Object timestamp, }) {
-    return PostEntity(authorId: authorId, timestamp : timestamp, appId: appId, postAppId: postAppId, postPageId: postPageId, pageParameters: pageParameters, description: description, likes: likes, dislikes: dislikes, readAccess: readAccess, archived: archived, );
+    return PostEntity(authorId: authorId, timestamp : timestamp, appId: appId, postAppId: postAppId, postPageId: postPageId, pageParameters: pageParameters, description: description, likes: likes, dislikes: dislikes, readAccess: readAccess, archived: archived, memberImages: memberImages, );
   }
-  List<Object> get props => [authorId, timestamp, appId, postAppId, postPageId, pageParameters, description, likes, dislikes, readAccess, archived, ];
+  List<Object> get props => [authorId, timestamp, appId, postAppId, postPageId, pageParameters, description, likes, dislikes, readAccess, archived, memberImages, ];
 
   @override
   String toString() {
     String readAccessCsv = (readAccess == null) ? '' : readAccess.join(', ');
+    String memberImagesCsv = (memberImages == null) ? '' : memberImages.join(', ');
 
-    return 'PostEntity{authorId: $authorId, timestamp: $timestamp, appId: $appId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, description: $description, likes: $likes, dislikes: $dislikes, readAccess: String[] { $readAccessCsv }, archived: $archived}';
+    return 'PostEntity{authorId: $authorId, timestamp: $timestamp, appId: $appId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, description: $description, likes: $likes, dislikes: $dislikes, readAccess: String[] { $readAccessCsv }, archived: $archived, memberImages: MemberImage[] { $memberImagesCsv }}';
   }
 
   static PostEntity fromMap(Map map) {
@@ -56,6 +59,15 @@ class PostEntity {
     pageParametersFromMap = map['pageParameters'];
     if (pageParametersFromMap != null)
       pageParametersFromMap = map['pageParameters'];
+    var memberImagesFromMap;
+    memberImagesFromMap = map['memberImages'];
+    var memberImagesList;
+    if (memberImagesFromMap != null)
+      memberImagesList = (map['memberImages'] as List<dynamic>)
+        .map((dynamic item) =>
+        MemberImageEntity.fromMap(item as Map))
+        .toList();
+
     return PostEntity(
       authorId: map['authorId'], 
       timestamp: postRepository().timeStampToString(map['timestamp']), 
@@ -68,10 +80,15 @@ class PostEntity {
       dislikes: int.tryParse(map['dislikes'].toString()), 
       readAccess: map['readAccess'] == null ? null : List.from(map['readAccess']), 
       archived: map['archived'], 
+      memberImages: memberImagesList, 
     );
   }
 
   Map<String, Object> toDocument() {
+    final List<Map<String, dynamic>> memberImagesListMap = memberImages != null 
+        ? memberImages.map((item) => item.toDocument()).toList()
+        : null;
+
     Map<String, Object> theDocument = HashMap();
     if (authorId != null) theDocument["authorId"] = authorId;
       else theDocument["authorId"] = null;
@@ -94,6 +111,8 @@ class PostEntity {
       else theDocument["readAccess"] = null;
     if (archived != null) theDocument["archived"] = archived;
       else theDocument["archived"] = null;
+    if (memberImages != null) theDocument["memberImages"] = memberImagesListMap;
+      else theDocument["memberImages"] = null;
     return theDocument;
   }
 

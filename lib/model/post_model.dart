@@ -21,15 +21,19 @@ import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_membership/model/repository_export.dart';
 import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_storage/model/repository_export.dart';
+import 'package:eliud_pkg_storage/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/repository_export.dart';
 import 'package:eliud_core/model/model_export.dart';
 import 'package:eliud_pkg_membership/model/model_export.dart';
+import 'package:eliud_pkg_storage/model/model_export.dart';
 import '../tools/bespoke_models.dart';
 import 'package:eliud_pkg_feed/model/model_export.dart';
 import 'package:eliud_core/model/entity_export.dart';
 import 'package:eliud_pkg_membership/model/entity_export.dart';
+import 'package:eliud_pkg_storage/model/entity_export.dart';
 import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_feed/model/entity_export.dart';
 
@@ -71,17 +75,18 @@ class PostModel {
   int dislikes;
   List<String> readAccess;
   PostArchiveStatus archived;
+  List<MemberImageModel> memberImages;
 
-  PostModel({this.documentID, this.author, this.timestamp, this.appId, this.postAppId, this.postPageId, this.pageParameters, this.description, this.likes, this.dislikes, this.readAccess, this.archived, })  {
+  PostModel({this.documentID, this.author, this.timestamp, this.appId, this.postAppId, this.postPageId, this.pageParameters, this.description, this.likes, this.dislikes, this.readAccess, this.archived, this.memberImages, })  {
     assert(documentID != null);
   }
 
-  PostModel copyWith({String documentID, MemberPublicInfoModel author, String timestamp, String appId, String postAppId, String postPageId, Map<String, Object> pageParameters, String description, int likes, int dislikes, List<String> readAccess, PostArchiveStatus archived, }) {
-    return PostModel(documentID: documentID ?? this.documentID, author: author ?? this.author, timestamp: timestamp ?? this.timestamp, appId: appId ?? this.appId, postAppId: postAppId ?? this.postAppId, postPageId: postPageId ?? this.postPageId, pageParameters: pageParameters ?? this.pageParameters, description: description ?? this.description, likes: likes ?? this.likes, dislikes: dislikes ?? this.dislikes, readAccess: readAccess ?? this.readAccess, archived: archived ?? this.archived, );
+  PostModel copyWith({String documentID, MemberPublicInfoModel author, String timestamp, String appId, String postAppId, String postPageId, Map<String, Object> pageParameters, String description, int likes, int dislikes, List<String> readAccess, PostArchiveStatus archived, List<MemberImageModel> memberImages, }) {
+    return PostModel(documentID: documentID ?? this.documentID, author: author ?? this.author, timestamp: timestamp ?? this.timestamp, appId: appId ?? this.appId, postAppId: postAppId ?? this.postAppId, postPageId: postPageId ?? this.postPageId, pageParameters: pageParameters ?? this.pageParameters, description: description ?? this.description, likes: likes ?? this.likes, dislikes: dislikes ?? this.dislikes, readAccess: readAccess ?? this.readAccess, archived: archived ?? this.archived, memberImages: memberImages ?? this.memberImages, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ author.hashCode ^ timestamp.hashCode ^ appId.hashCode ^ postAppId.hashCode ^ postPageId.hashCode ^ pageParameters.hashCode ^ description.hashCode ^ likes.hashCode ^ dislikes.hashCode ^ readAccess.hashCode ^ archived.hashCode;
+  int get hashCode => documentID.hashCode ^ author.hashCode ^ timestamp.hashCode ^ appId.hashCode ^ postAppId.hashCode ^ postPageId.hashCode ^ pageParameters.hashCode ^ description.hashCode ^ likes.hashCode ^ dislikes.hashCode ^ readAccess.hashCode ^ archived.hashCode ^ memberImages.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -99,13 +104,15 @@ class PostModel {
           likes == other.likes &&
           dislikes == other.dislikes &&
           ListEquality().equals(readAccess, other.readAccess) &&
-          archived == other.archived;
+          archived == other.archived &&
+          ListEquality().equals(memberImages, other.memberImages);
 
   @override
   String toString() {
     String readAccessCsv = (readAccess == null) ? '' : readAccess.join(', ');
+    String memberImagesCsv = (memberImages == null) ? '' : memberImages.join(', ');
 
-    return 'PostModel{documentID: $documentID, author: $author, timestamp: $timestamp, appId: $appId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, description: $description, likes: $likes, dislikes: $dislikes, readAccess: String[] { $readAccessCsv }, archived: $archived}';
+    return 'PostModel{documentID: $documentID, author: $author, timestamp: $timestamp, appId: $appId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, description: $description, likes: $likes, dislikes: $dislikes, readAccess: String[] { $readAccessCsv }, archived: $archived, memberImages: MemberImage[] { $memberImagesCsv }}';
   }
 
   PostEntity toEntity({String appId}) {
@@ -119,6 +126,9 @@ class PostModel {
           dislikes: (dislikes != null) ? dislikes : null, 
           readAccess: (readAccess != null) ? readAccess : null, 
           archived: (archived != null) ? archived.index : null, 
+          memberImages: (memberImages != null) ? memberImages
+            .map((item) => item.toEntity(appId: appId))
+            .toList() : null, 
     );
   }
 
@@ -136,6 +146,11 @@ class PostModel {
           dislikes: entity.dislikes, 
           readAccess: entity.readAccess, 
           archived: toPostArchiveStatus(entity.archived), 
+          memberImages: 
+            entity.memberImages == null ? null :
+            entity.memberImages
+            .map((item) => MemberImageModel.fromEntity(newRandomKey(), item))
+            .toList(), 
     );
   }
 
@@ -164,6 +179,10 @@ class PostModel {
           dislikes: entity.dislikes, 
           readAccess: entity.readAccess, 
           archived: toPostArchiveStatus(entity.archived), 
+          memberImages: 
+            entity. memberImages == null ? null : new List<MemberImageModel>.from(await Future.wait(entity. memberImages
+            .map((item) => MemberImageModel.fromEntityPlus(newRandomKey(), item, appId: appId))
+            .toList())), 
     );
   }
 

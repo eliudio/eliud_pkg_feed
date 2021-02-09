@@ -77,6 +77,13 @@
       "displayName": "Dislikes",
       "fieldType": "int",
       "group": "general"
+    },
+    {
+      "fieldName": "memberImages",
+      "fieldType": "MemberImage",
+      "displayName": "Images",
+      "group": "images",
+      "arrayType": "Array"
     }
   ],
   "groups": [
@@ -87,11 +94,15 @@
     {
         "group": "member",
         "description": "Member"
+    },
+    {
+        "group": "images",
+        "description": "Images"
     }
  ],
   "listFields": {
     "title": "timestamp.toString()",
     "subTitle": "documentID"
   },
-  "depends": ["eliud_core", "eliud_pkg_membership"]
+  "depends": ["eliud_core", "eliud_pkg_membership", "eliud_pkg_storage"]
 }
