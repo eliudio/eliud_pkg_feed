@@ -32,32 +32,32 @@ class PostCommentEntity {
   final String comment;
   final int likes;
   final int dislikes;
-  final List<MemberImageEntity> memberImages;
+  final List<MemberMediumEntity> memberMedia;
 
-  PostCommentEntity({this.postId, this.postCommentId, this.memberId, this.timestamp, this.appId, this.comment, this.likes, this.dislikes, this.memberImages, });
+  PostCommentEntity({this.postId, this.postCommentId, this.memberId, this.timestamp, this.appId, this.comment, this.likes, this.dislikes, this.memberMedia, });
 
   PostCommentEntity copyWith({Object timestamp, }) {
-    return PostCommentEntity(postId: postId, postCommentId: postCommentId, memberId: memberId, timestamp : timestamp, appId: appId, comment: comment, likes: likes, dislikes: dislikes, memberImages: memberImages, );
+    return PostCommentEntity(postId: postId, postCommentId: postCommentId, memberId: memberId, timestamp : timestamp, appId: appId, comment: comment, likes: likes, dislikes: dislikes, memberMedia: memberMedia, );
   }
-  List<Object> get props => [postId, postCommentId, memberId, timestamp, appId, comment, likes, dislikes, memberImages, ];
+  List<Object> get props => [postId, postCommentId, memberId, timestamp, appId, comment, likes, dislikes, memberMedia, ];
 
   @override
   String toString() {
-    String memberImagesCsv = (memberImages == null) ? '' : memberImages.join(', ');
+    String memberMediaCsv = (memberMedia == null) ? '' : memberMedia.join(', ');
 
-    return 'PostCommentEntity{postId: $postId, postCommentId: $postCommentId, memberId: $memberId, timestamp: $timestamp, appId: $appId, comment: $comment, likes: $likes, dislikes: $dislikes, memberImages: MemberImage[] { $memberImagesCsv }}';
+    return 'PostCommentEntity{postId: $postId, postCommentId: $postCommentId, memberId: $memberId, timestamp: $timestamp, appId: $appId, comment: $comment, likes: $likes, dislikes: $dislikes, memberMedia: MemberMedium[] { $memberMediaCsv }}';
   }
 
   static PostCommentEntity fromMap(Map map) {
     if (map == null) return null;
 
-    var memberImagesFromMap;
-    memberImagesFromMap = map['memberImages'];
-    var memberImagesList;
-    if (memberImagesFromMap != null)
-      memberImagesList = (map['memberImages'] as List<dynamic>)
+    var memberMediaFromMap;
+    memberMediaFromMap = map['memberMedia'];
+    var memberMediaList;
+    if (memberMediaFromMap != null)
+      memberMediaList = (map['memberMedia'] as List<dynamic>)
         .map((dynamic item) =>
-        MemberImageEntity.fromMap(item as Map))
+        MemberMediumEntity.fromMap(item as Map))
         .toList();
 
     return PostCommentEntity(
@@ -69,13 +69,13 @@ class PostCommentEntity {
       comment: map['comment'], 
       likes: int.tryParse(map['likes'].toString()), 
       dislikes: int.tryParse(map['dislikes'].toString()), 
-      memberImages: memberImagesList, 
+      memberMedia: memberMediaList, 
     );
   }
 
   Map<String, Object> toDocument() {
-    final List<Map<String, dynamic>> memberImagesListMap = memberImages != null 
-        ? memberImages.map((item) => item.toDocument()).toList()
+    final List<Map<String, dynamic>> memberMediaListMap = memberMedia != null 
+        ? memberMedia.map((item) => item.toDocument()).toList()
         : null;
 
     Map<String, Object> theDocument = HashMap();
@@ -94,8 +94,8 @@ class PostCommentEntity {
       else theDocument["likes"] = null;
     if (dislikes != null) theDocument["dislikes"] = dislikes;
       else theDocument["dislikes"] = null;
-    if (memberImages != null) theDocument["memberImages"] = memberImagesListMap;
-      else theDocument["memberImages"] = null;
+    if (memberMedia != null) theDocument["memberMedia"] = memberMediaListMap;
+      else theDocument["memberMedia"] = null;
     return theDocument;
   }
 

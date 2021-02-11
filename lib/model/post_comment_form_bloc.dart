@@ -68,7 +68,7 @@ class PostCommentFormBloc extends Bloc<PostCommentFormEvent, PostCommentFormStat
                                  comment: "",
                                  likes: 0,
                                  dislikes: 0,
-                                 memberImages: [],
+                                 memberMedia: [],
 
         ));
         yield loaded;
@@ -157,8 +157,8 @@ class PostCommentFormBloc extends Bloc<PostCommentFormEvent, PostCommentFormStat
         }
         return;
       }
-      if (event is ChangedPostCommentMemberImages) {
-        newValue = currentState.value.copyWith(memberImages: event.value);
+      if (event is ChangedPostCommentMemberMedia) {
+        newValue = currentState.value.copyWith(memberMedia: event.value);
         yield SubmittablePostCommentForm(value: newValue);
 
         return;

@@ -207,15 +207,15 @@ class DislikesPostCommentFormError extends PostCommentFormError {
 }
 
 
-class MemberImagesPostCommentFormError extends PostCommentFormError { 
-  const MemberImagesPostCommentFormError({ String message, PostCommentModel value }): super(message: message, value: value);
+class MemberMediaPostCommentFormError extends PostCommentFormError { 
+  const MemberMediaPostCommentFormError({ String message, PostCommentModel value }): super(message: message, value: value);
 
   @override
   List<Object> get props => [ message, value ];
 
   @override
   String toString() {
-    return '''MemberImagesPostCommentFormError {
+    return '''MemberMediaPostCommentFormError {
       value: $value,
       message: $message,
     }''';

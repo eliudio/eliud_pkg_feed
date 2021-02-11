@@ -79,10 +79,10 @@
       "group": "general"
     },
     {
-      "fieldName": "memberImages",
-      "fieldType": "MemberImage",
-      "displayName": "Images",
-      "group": "images",
+      "fieldName": "memberMedia",
+      "fieldType": "MemberMedium",
+      "displayName": "Media",
+      "group": "media",
       "arrayType": "Array"
     }
   ],
@@ -96,8 +96,8 @@
         "description": "Member"
     },
     {
-        "group": "images",
-        "description": "Images"
+        "group": "media",
+        "description": "Media"
     }
  ],
   "listFields": {

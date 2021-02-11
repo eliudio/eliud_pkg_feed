@@ -175,15 +175,15 @@ class ChangedPostCommentDislikes extends PostCommentFormEvent {
   String toString() => 'ChangedPostCommentDislikes{ value: $value }';
 }
 
-class ChangedPostCommentMemberImages extends PostCommentFormEvent {
-  final List<MemberImageModel> value;
+class ChangedPostCommentMemberMedia extends PostCommentFormEvent {
+  final List<MemberMediumModel> value;
 
-  ChangedPostCommentMemberImages({this.value});
+  ChangedPostCommentMemberMedia({this.value});
 
   @override
   List<Object> get props => [ value ];
 
   @override
-  String toString() => 'ChangedPostCommentMemberImages{ value: $value }';
+  String toString() => 'ChangedPostCommentMemberMedia{ value: $value }';
 }
 

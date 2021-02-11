@@ -15,7 +15,7 @@ import 'package:eliud_core/tools/widgets/request_value_dialog.dart';
 import 'package:eliud_core/tools/widgets/yes_no_dialog.dart';
 import 'package:eliud_pkg_feed/model/post_like_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
-import 'package:eliud_pkg_storage/model/member_image_model.dart';
+import 'package:eliud_pkg_storage/model/member_medium_model.dart';
 import 'package:eliud_pkg_storage/platform/storage_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -139,7 +139,7 @@ class _PostWidgetState extends State<PostWidget> {
     ]);
   }
 
-  void photoAvailable(PostModel postModel, MemberImageModel memberImageModel, ) {
+  void photoAvailable(PostModel postModel, MemberMediumModel memberImageModel, ) {
     // todo
     print("Add the photo to the comment");
   }
@@ -151,11 +151,11 @@ class _PostWidgetState extends State<PostWidget> {
       icon: Icon(Icons.add, ),
       itemBuilder: (_) => <PopupMenuItem<int>>[
         new PopupMenuItem<int>(
-            child: const Text('Add photo'), value: 0),
+            child: const Text('Take photo or video'), value: 0),
       ],
       onSelected: (choice) {
         if (choice == 0) {
-          AbstractStoragePlatform.platform.takePicture(context, postModel.appId, (value) => photoAvailable(postModel, value), widget.member.documentID, postModel.readAccess);
+          AbstractStoragePlatform.platform.takeMedium(context, postModel.appId, (value) => photoAvailable(postModel, value), widget.member.documentID, postModel.readAccess);
         }
       });
   }

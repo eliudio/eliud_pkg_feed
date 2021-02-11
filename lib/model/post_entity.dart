@@ -35,21 +35,21 @@ class PostEntity {
   final int dislikes;
   final List<String> readAccess;
   final int archived;
-  final List<MemberImageEntity> memberImages;
+  final List<MemberMediumEntity> memberMedia;
 
-  PostEntity({this.authorId, this.timestamp, this.appId, this.postAppId, this.postPageId, this.pageParameters, this.description, this.likes, this.dislikes, this.readAccess, this.archived, this.memberImages, });
+  PostEntity({this.authorId, this.timestamp, this.appId, this.postAppId, this.postPageId, this.pageParameters, this.description, this.likes, this.dislikes, this.readAccess, this.archived, this.memberMedia, });
 
   PostEntity copyWith({Object timestamp, }) {
-    return PostEntity(authorId: authorId, timestamp : timestamp, appId: appId, postAppId: postAppId, postPageId: postPageId, pageParameters: pageParameters, description: description, likes: likes, dislikes: dislikes, readAccess: readAccess, archived: archived, memberImages: memberImages, );
+    return PostEntity(authorId: authorId, timestamp : timestamp, appId: appId, postAppId: postAppId, postPageId: postPageId, pageParameters: pageParameters, description: description, likes: likes, dislikes: dislikes, readAccess: readAccess, archived: archived, memberMedia: memberMedia, );
   }
-  List<Object> get props => [authorId, timestamp, appId, postAppId, postPageId, pageParameters, description, likes, dislikes, readAccess, archived, memberImages, ];
+  List<Object> get props => [authorId, timestamp, appId, postAppId, postPageId, pageParameters, description, likes, dislikes, readAccess, archived, memberMedia, ];
 
   @override
   String toString() {
     String readAccessCsv = (readAccess == null) ? '' : readAccess.join(', ');
-    String memberImagesCsv = (memberImages == null) ? '' : memberImages.join(', ');
+    String memberMediaCsv = (memberMedia == null) ? '' : memberMedia.join(', ');
 
-    return 'PostEntity{authorId: $authorId, timestamp: $timestamp, appId: $appId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, description: $description, likes: $likes, dislikes: $dislikes, readAccess: String[] { $readAccessCsv }, archived: $archived, memberImages: MemberImage[] { $memberImagesCsv }}';
+    return 'PostEntity{authorId: $authorId, timestamp: $timestamp, appId: $appId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, description: $description, likes: $likes, dislikes: $dislikes, readAccess: String[] { $readAccessCsv }, archived: $archived, memberMedia: MemberMedium[] { $memberMediaCsv }}';
   }
 
   static PostEntity fromMap(Map map) {
@@ -59,13 +59,13 @@ class PostEntity {
     pageParametersFromMap = map['pageParameters'];
     if (pageParametersFromMap != null)
       pageParametersFromMap = map['pageParameters'];
-    var memberImagesFromMap;
-    memberImagesFromMap = map['memberImages'];
-    var memberImagesList;
-    if (memberImagesFromMap != null)
-      memberImagesList = (map['memberImages'] as List<dynamic>)
+    var memberMediaFromMap;
+    memberMediaFromMap = map['memberMedia'];
+    var memberMediaList;
+    if (memberMediaFromMap != null)
+      memberMediaList = (map['memberMedia'] as List<dynamic>)
         .map((dynamic item) =>
-        MemberImageEntity.fromMap(item as Map))
+        MemberMediumEntity.fromMap(item as Map))
         .toList();
 
     return PostEntity(
@@ -80,13 +80,13 @@ class PostEntity {
       dislikes: int.tryParse(map['dislikes'].toString()), 
       readAccess: map['readAccess'] == null ? null : List.from(map['readAccess']), 
       archived: map['archived'], 
-      memberImages: memberImagesList, 
+      memberMedia: memberMediaList, 
     );
   }
 
   Map<String, Object> toDocument() {
-    final List<Map<String, dynamic>> memberImagesListMap = memberImages != null 
-        ? memberImages.map((item) => item.toDocument()).toList()
+    final List<Map<String, dynamic>> memberMediaListMap = memberMedia != null 
+        ? memberMedia.map((item) => item.toDocument()).toList()
         : null;
 
     Map<String, Object> theDocument = HashMap();
@@ -111,8 +111,8 @@ class PostEntity {
       else theDocument["readAccess"] = null;
     if (archived != null) theDocument["archived"] = archived;
       else theDocument["archived"] = null;
-    if (memberImages != null) theDocument["memberImages"] = memberImagesListMap;
-      else theDocument["memberImages"] = null;
+    if (memberMedia != null) theDocument["memberMedia"] = memberMediaListMap;
+      else theDocument["memberMedia"] = null;
     return theDocument;
   }
 

@@ -139,15 +139,15 @@ class PostCommentCache implements PostCommentRepository {
 
   static Future<PostCommentModel> refreshRelations(PostCommentModel model) async {
 
-    List<MemberImageModel> memberImagesHolder;
-    if (model.memberImages != null) {
-      memberImagesHolder = List<MemberImageModel>.from(await Future.wait(await model.memberImages.map((element) async {
-        return await MemberImageCache.refreshRelations(element);
+    List<MemberMediumModel> memberMediaHolder;
+    if (model.memberMedia != null) {
+      memberMediaHolder = List<MemberMediumModel>.from(await Future.wait(await model.memberMedia.map((element) async {
+        return await MemberMediumCache.refreshRelations(element);
       }))).toList();
     }
 
     return model.copyWith(
-        memberImages: memberImagesHolder,
+        memberMedia: memberMediaHolder,
 
 
     );

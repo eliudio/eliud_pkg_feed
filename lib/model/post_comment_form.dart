@@ -386,7 +386,7 @@ class _MyPostCommentFormState extends State<MyPostCommentForm> {
          children.add(Container(
                   alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                  child: Text('Images',
+                  child: Text('Media',
                       style: TextStyle(
                           color: RgbHelper.color(rgbo: app.formGroupTitleColor), fontWeight: FontWeight.bold)),
                 ));
@@ -395,7 +395,7 @@ class _MyPostCommentFormState extends State<MyPostCommentForm> {
 
                 new Container(
                     height: (fullScreenHeight(context) / 2.5), 
-                    child: memberImagesList(context, state.value.memberImages, _onMemberImagesChanged)
+                    child: memberMediumsList(context, state.value.memberMedia, _onMemberMediaChanged)
                 )
           );
 
@@ -423,7 +423,7 @@ class _MyPostCommentFormState extends State<MyPostCommentForm> {
                               comment: state.value.comment, 
                               likes: state.value.likes, 
                               dislikes: state.value.dislikes, 
-                              memberImages: state.value.memberImages, 
+                              memberMedia: state.value.memberMedia, 
                         )));
                       } else {
                         BlocProvider.of<PostCommentListBloc>(context).add(
@@ -437,7 +437,7 @@ class _MyPostCommentFormState extends State<MyPostCommentForm> {
                               comment: state.value.comment, 
                               likes: state.value.likes, 
                               dislikes: state.value.dislikes, 
-                              memberImages: state.value.memberImages, 
+                              memberMedia: state.value.memberMedia, 
                           )));
                       }
                       if (widget.submitAction != null) {
@@ -511,8 +511,8 @@ class _MyPostCommentFormState extends State<MyPostCommentForm> {
   }
 
 
-  void _onMemberImagesChanged(value) {
-    _myFormBloc.add(ChangedPostCommentMemberImages(value: value));
+  void _onMemberMediaChanged(value) {
+    _myFormBloc.add(ChangedPostCommentMemberMedia(value: value));
     setState(() {});
   }
 

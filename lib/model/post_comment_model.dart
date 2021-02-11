@@ -56,18 +56,18 @@ class PostCommentModel {
   String comment;
   int likes;
   int dislikes;
-  List<MemberImageModel> memberImages;
+  List<MemberMediumModel> memberMedia;
 
-  PostCommentModel({this.documentID, this.postId, this.postCommentId, this.memberId, this.timestamp, this.appId, this.comment, this.likes, this.dislikes, this.memberImages, })  {
+  PostCommentModel({this.documentID, this.postId, this.postCommentId, this.memberId, this.timestamp, this.appId, this.comment, this.likes, this.dislikes, this.memberMedia, })  {
     assert(documentID != null);
   }
 
-  PostCommentModel copyWith({String documentID, String postId, String postCommentId, String memberId, String timestamp, String appId, String comment, int likes, int dislikes, List<MemberImageModel> memberImages, }) {
-    return PostCommentModel(documentID: documentID ?? this.documentID, postId: postId ?? this.postId, postCommentId: postCommentId ?? this.postCommentId, memberId: memberId ?? this.memberId, timestamp: timestamp ?? this.timestamp, appId: appId ?? this.appId, comment: comment ?? this.comment, likes: likes ?? this.likes, dislikes: dislikes ?? this.dislikes, memberImages: memberImages ?? this.memberImages, );
+  PostCommentModel copyWith({String documentID, String postId, String postCommentId, String memberId, String timestamp, String appId, String comment, int likes, int dislikes, List<MemberMediumModel> memberMedia, }) {
+    return PostCommentModel(documentID: documentID ?? this.documentID, postId: postId ?? this.postId, postCommentId: postCommentId ?? this.postCommentId, memberId: memberId ?? this.memberId, timestamp: timestamp ?? this.timestamp, appId: appId ?? this.appId, comment: comment ?? this.comment, likes: likes ?? this.likes, dislikes: dislikes ?? this.dislikes, memberMedia: memberMedia ?? this.memberMedia, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ postId.hashCode ^ postCommentId.hashCode ^ memberId.hashCode ^ timestamp.hashCode ^ appId.hashCode ^ comment.hashCode ^ likes.hashCode ^ dislikes.hashCode ^ memberImages.hashCode;
+  int get hashCode => documentID.hashCode ^ postId.hashCode ^ postCommentId.hashCode ^ memberId.hashCode ^ timestamp.hashCode ^ appId.hashCode ^ comment.hashCode ^ likes.hashCode ^ dislikes.hashCode ^ memberMedia.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -83,13 +83,13 @@ class PostCommentModel {
           comment == other.comment &&
           likes == other.likes &&
           dislikes == other.dislikes &&
-          ListEquality().equals(memberImages, other.memberImages);
+          ListEquality().equals(memberMedia, other.memberMedia);
 
   @override
   String toString() {
-    String memberImagesCsv = (memberImages == null) ? '' : memberImages.join(', ');
+    String memberMediaCsv = (memberMedia == null) ? '' : memberMedia.join(', ');
 
-    return 'PostCommentModel{documentID: $documentID, postId: $postId, postCommentId: $postCommentId, memberId: $memberId, timestamp: $timestamp, appId: $appId, comment: $comment, likes: $likes, dislikes: $dislikes, memberImages: MemberImage[] { $memberImagesCsv }}';
+    return 'PostCommentModel{documentID: $documentID, postId: $postId, postCommentId: $postCommentId, memberId: $memberId, timestamp: $timestamp, appId: $appId, comment: $comment, likes: $likes, dislikes: $dislikes, memberMedia: MemberMedium[] { $memberMediaCsv }}';
   }
 
   PostCommentEntity toEntity({String appId}) {
@@ -101,7 +101,7 @@ class PostCommentModel {
           comment: (comment != null) ? comment : null, 
           likes: (likes != null) ? likes : null, 
           dislikes: (dislikes != null) ? dislikes : null, 
-          memberImages: (memberImages != null) ? memberImages
+          memberMedia: (memberMedia != null) ? memberMedia
             .map((item) => item.toEntity(appId: appId))
             .toList() : null, 
     );
@@ -119,10 +119,10 @@ class PostCommentModel {
           comment: entity.comment, 
           likes: entity.likes, 
           dislikes: entity.dislikes, 
-          memberImages: 
-            entity.memberImages == null ? null :
-            entity.memberImages
-            .map((item) => MemberImageModel.fromEntity(newRandomKey(), item))
+          memberMedia: 
+            entity.memberMedia == null ? null :
+            entity.memberMedia
+            .map((item) => MemberMediumModel.fromEntity(newRandomKey(), item))
             .toList(), 
     );
   }
@@ -140,9 +140,9 @@ class PostCommentModel {
           comment: entity.comment, 
           likes: entity.likes, 
           dislikes: entity.dislikes, 
-          memberImages: 
-            entity. memberImages == null ? null : new List<MemberImageModel>.from(await Future.wait(entity. memberImages
-            .map((item) => MemberImageModel.fromEntityPlus(newRandomKey(), item, appId: appId))
+          memberMedia: 
+            entity. memberMedia == null ? null : new List<MemberMediumModel>.from(await Future.wait(entity. memberMedia
+            .map((item) => MemberMediumModel.fromEntityPlus(newRandomKey(), item, appId: appId))
             .toList())), 
     );
   }

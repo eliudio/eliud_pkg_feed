@@ -211,15 +211,15 @@ class ChangedPostArchived extends PostFormEvent {
   String toString() => 'ChangedPostArchived{ value: $value }';
 }
 
-class ChangedPostMemberImages extends PostFormEvent {
-  final List<MemberImageModel> value;
+class ChangedPostMemberMedia extends PostFormEvent {
+  final List<MemberMediumModel> value;
 
-  ChangedPostMemberImages({this.value});
+  ChangedPostMemberMedia({this.value});
 
   @override
   List<Object> get props => [ value ];
 
   @override
-  String toString() => 'ChangedPostMemberImages{ value: $value }';
+  String toString() => 'ChangedPostMemberMedia{ value: $value }';
 }
 

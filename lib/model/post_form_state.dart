@@ -255,15 +255,15 @@ class ArchivedPostFormError extends PostFormError {
 }
 
 
-class MemberImagesPostFormError extends PostFormError { 
-  const MemberImagesPostFormError({ String message, PostModel value }): super(message: message, value: value);
+class MemberMediaPostFormError extends PostFormError { 
+  const MemberMediaPostFormError({ String message, PostModel value }): super(message: message, value: value);
 
   @override
   List<Object> get props => [ message, value ];
 
   @override
   String toString() {
-    return '''MemberImagesPostFormError {
+    return '''MemberMediaPostFormError {
       value: $value,
       message: $message,
     }''';

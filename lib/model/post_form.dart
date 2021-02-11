@@ -421,7 +421,7 @@ class _MyPostFormState extends State<MyPostForm> {
          children.add(Container(
                   alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                  child: Text('Images',
+                  child: Text('Media',
                       style: TextStyle(
                           color: RgbHelper.color(rgbo: app.formGroupTitleColor), fontWeight: FontWeight.bold)),
                 ));
@@ -430,7 +430,7 @@ class _MyPostFormState extends State<MyPostForm> {
 
                 new Container(
                     height: (fullScreenHeight(context) / 2.5), 
-                    child: memberImagesList(context, state.value.memberImages, _onMemberImagesChanged)
+                    child: memberMediumsList(context, state.value.memberMedia, _onMemberMediaChanged)
                 )
           );
 
@@ -461,7 +461,7 @@ class _MyPostFormState extends State<MyPostForm> {
                               dislikes: state.value.dislikes, 
                               readAccess: state.value.readAccess, 
                               archived: state.value.archived, 
-                              memberImages: state.value.memberImages, 
+                              memberMedia: state.value.memberMedia, 
                         )));
                       } else {
                         BlocProvider.of<PostListBloc>(context).add(
@@ -478,7 +478,7 @@ class _MyPostFormState extends State<MyPostForm> {
                               dislikes: state.value.dislikes, 
                               readAccess: state.value.readAccess, 
                               archived: state.value.archived, 
-                              memberImages: state.value.memberImages, 
+                              memberMedia: state.value.memberMedia, 
                           )));
                       }
                       if (widget.submitAction != null) {
@@ -569,8 +569,8 @@ class _MyPostFormState extends State<MyPostForm> {
   }
 
 
-  void _onMemberImagesChanged(value) {
-    _myFormBloc.add(ChangedPostMemberImages(value: value));
+  void _onMemberMediaChanged(value) {
+    _myFormBloc.add(ChangedPostMemberMedia(value: value));
     setState(() {});
   }
 
