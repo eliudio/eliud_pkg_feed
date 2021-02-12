@@ -211,6 +211,18 @@ class ChangedPostArchived extends PostFormEvent {
   String toString() => 'ChangedPostArchived{ value: $value }';
 }
 
+class ChangedPostExternalLink extends PostFormEvent {
+  final String value;
+
+  ChangedPostExternalLink({this.value});
+
+  @override
+  List<Object> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedPostExternalLink{ value: $value }';
+}
+
 class ChangedPostMemberMedia extends PostFormEvent {
   final List<MemberMediumModel> value;
 

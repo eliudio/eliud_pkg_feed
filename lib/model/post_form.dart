@@ -149,6 +149,7 @@ class _MyPostFormState extends State<MyPostForm> {
   final TextEditingController _likesController = TextEditingController();
   final TextEditingController _dislikesController = TextEditingController();
   int _archivedSelectedRadioTile;
+  final TextEditingController _externalLinkController = TextEditingController();
 
 
   _MyPostFormState(this.formAction);
@@ -165,6 +166,7 @@ class _MyPostFormState extends State<MyPostForm> {
     _likesController.addListener(_onLikesChanged);
     _dislikesController.addListener(_onDislikesChanged);
     _archivedSelectedRadioTile = 0;
+    _externalLinkController.addListener(_onExternalLinkChanged);
   }
 
   @override
@@ -213,6 +215,10 @@ class _MyPostFormState extends State<MyPostForm> {
           _archivedSelectedRadioTile = state.value.archived.index;
         else
           _archivedSelectedRadioTile = 0;
+        if (state.value.externalLink != null)
+          _externalLinkController.text = state.value.externalLink.toString();
+        else
+          _externalLinkController.text = "";
       }
       if (state is PostFormInitialized) {
         List<Widget> children = List();
@@ -395,6 +401,24 @@ class _MyPostFormState extends State<MyPostForm> {
                 ),
           );
 
+        children.add(
+
+                TextFormField(
+                style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor)),
+                  readOnly: _readOnly(accessState, state),
+                  controller: _externalLinkController,
+                  decoration: InputDecoration(
+                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldTextColor))),                    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldFocusColor))),                    icon: Icon(Icons.text_format, color: RgbHelper.color(rgbo: app.formFieldHeaderColor)),
+                    labelText: 'externalLink',
+                  ),
+                  keyboardType: TextInputType.text,
+                  autovalidate: true,
+                  validator: (_) {
+                    return state is ExternalLinkPostFormError ? state.message : null;
+                  },
+                ),
+          );
+
 
         children.add(Container(height: 20.0));
         children.add(Divider(height: 1.0, thickness: 1.0, color: RgbHelper.color(rgbo: app.dividerColor)));
@@ -461,6 +485,7 @@ class _MyPostFormState extends State<MyPostForm> {
                               dislikes: state.value.dislikes, 
                               readAccess: state.value.readAccess, 
                               archived: state.value.archived, 
+                              externalLink: state.value.externalLink, 
                               memberMedia: state.value.memberMedia, 
                         )));
                       } else {
@@ -478,6 +503,7 @@ class _MyPostFormState extends State<MyPostForm> {
                               dislikes: state.value.dislikes, 
                               readAccess: state.value.readAccess, 
                               archived: state.value.archived, 
+                              externalLink: state.value.externalLink, 
                               memberMedia: state.value.memberMedia, 
                           )));
                       }
@@ -569,6 +595,11 @@ class _MyPostFormState extends State<MyPostForm> {
   }
 
 
+  void _onExternalLinkChanged() {
+    _myFormBloc.add(ChangedPostExternalLink(value: _externalLinkController.text));
+  }
+
+
   void _onMemberMediaChanged(value) {
     _myFormBloc.add(ChangedPostMemberMedia(value: value));
     setState(() {});
@@ -585,6 +616,7 @@ class _MyPostFormState extends State<MyPostForm> {
     _descriptionController.dispose();
     _likesController.dispose();
     _dislikesController.dispose();
+    _externalLinkController.dispose();
     super.dispose();
   }
 

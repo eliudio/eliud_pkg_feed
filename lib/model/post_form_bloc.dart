@@ -69,6 +69,7 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
                                  dislikes: 0,
                                  readAccess: [],
                                  archived: PostArchiveStatus.Active, 
+                                 externalLink: "",
                                  memberMedia: [],
 
         ));
@@ -117,6 +118,7 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
                                  dislikes: currentState.value.dislikes,
                                  readAccess: currentState.value.readAccess,
                                  archived: currentState.value.archived,
+                                 externalLink: currentState.value.externalLink,
                                  memberMedia: currentState.value.memberMedia,
           );
         yield SubmittablePostForm(value: newValue);
@@ -183,6 +185,12 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
       }
       if (event is ChangedPostArchived) {
         newValue = currentState.value.copyWith(archived: event.value);
+        yield SubmittablePostForm(value: newValue);
+
+        return;
+      }
+      if (event is ChangedPostExternalLink) {
+        newValue = currentState.value.copyWith(externalLink: event.value);
         yield SubmittablePostForm(value: newValue);
 
         return;

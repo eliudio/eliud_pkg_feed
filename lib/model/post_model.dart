@@ -75,18 +75,19 @@ class PostModel {
   int dislikes;
   List<String> readAccess;
   PostArchiveStatus archived;
+  String externalLink;
   List<MemberMediumModel> memberMedia;
 
-  PostModel({this.documentID, this.author, this.timestamp, this.appId, this.postAppId, this.postPageId, this.pageParameters, this.description, this.likes, this.dislikes, this.readAccess, this.archived, this.memberMedia, })  {
+  PostModel({this.documentID, this.author, this.timestamp, this.appId, this.postAppId, this.postPageId, this.pageParameters, this.description, this.likes, this.dislikes, this.readAccess, this.archived, this.externalLink, this.memberMedia, })  {
     assert(documentID != null);
   }
 
-  PostModel copyWith({String documentID, MemberPublicInfoModel author, String timestamp, String appId, String postAppId, String postPageId, Map<String, Object> pageParameters, String description, int likes, int dislikes, List<String> readAccess, PostArchiveStatus archived, List<MemberMediumModel> memberMedia, }) {
-    return PostModel(documentID: documentID ?? this.documentID, author: author ?? this.author, timestamp: timestamp ?? this.timestamp, appId: appId ?? this.appId, postAppId: postAppId ?? this.postAppId, postPageId: postPageId ?? this.postPageId, pageParameters: pageParameters ?? this.pageParameters, description: description ?? this.description, likes: likes ?? this.likes, dislikes: dislikes ?? this.dislikes, readAccess: readAccess ?? this.readAccess, archived: archived ?? this.archived, memberMedia: memberMedia ?? this.memberMedia, );
+  PostModel copyWith({String documentID, MemberPublicInfoModel author, String timestamp, String appId, String postAppId, String postPageId, Map<String, Object> pageParameters, String description, int likes, int dislikes, List<String> readAccess, PostArchiveStatus archived, String externalLink, List<MemberMediumModel> memberMedia, }) {
+    return PostModel(documentID: documentID ?? this.documentID, author: author ?? this.author, timestamp: timestamp ?? this.timestamp, appId: appId ?? this.appId, postAppId: postAppId ?? this.postAppId, postPageId: postPageId ?? this.postPageId, pageParameters: pageParameters ?? this.pageParameters, description: description ?? this.description, likes: likes ?? this.likes, dislikes: dislikes ?? this.dislikes, readAccess: readAccess ?? this.readAccess, archived: archived ?? this.archived, externalLink: externalLink ?? this.externalLink, memberMedia: memberMedia ?? this.memberMedia, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ author.hashCode ^ timestamp.hashCode ^ appId.hashCode ^ postAppId.hashCode ^ postPageId.hashCode ^ pageParameters.hashCode ^ description.hashCode ^ likes.hashCode ^ dislikes.hashCode ^ readAccess.hashCode ^ archived.hashCode ^ memberMedia.hashCode;
+  int get hashCode => documentID.hashCode ^ author.hashCode ^ timestamp.hashCode ^ appId.hashCode ^ postAppId.hashCode ^ postPageId.hashCode ^ pageParameters.hashCode ^ description.hashCode ^ likes.hashCode ^ dislikes.hashCode ^ readAccess.hashCode ^ archived.hashCode ^ externalLink.hashCode ^ memberMedia.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -105,6 +106,7 @@ class PostModel {
           dislikes == other.dislikes &&
           ListEquality().equals(readAccess, other.readAccess) &&
           archived == other.archived &&
+          externalLink == other.externalLink &&
           ListEquality().equals(memberMedia, other.memberMedia);
 
   @override
@@ -112,7 +114,7 @@ class PostModel {
     String readAccessCsv = (readAccess == null) ? '' : readAccess.join(', ');
     String memberMediaCsv = (memberMedia == null) ? '' : memberMedia.join(', ');
 
-    return 'PostModel{documentID: $documentID, author: $author, timestamp: $timestamp, appId: $appId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, description: $description, likes: $likes, dislikes: $dislikes, readAccess: String[] { $readAccessCsv }, archived: $archived, memberMedia: MemberMedium[] { $memberMediaCsv }}';
+    return 'PostModel{documentID: $documentID, author: $author, timestamp: $timestamp, appId: $appId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, description: $description, likes: $likes, dislikes: $dislikes, readAccess: String[] { $readAccessCsv }, archived: $archived, externalLink: $externalLink, memberMedia: MemberMedium[] { $memberMediaCsv }}';
   }
 
   PostEntity toEntity({String appId}) {
@@ -126,6 +128,7 @@ class PostModel {
           dislikes: (dislikes != null) ? dislikes : null, 
           readAccess: (readAccess != null) ? readAccess : null, 
           archived: (archived != null) ? archived.index : null, 
+          externalLink: (externalLink != null) ? externalLink : null, 
           memberMedia: (memberMedia != null) ? memberMedia
             .map((item) => item.toEntity(appId: appId))
             .toList() : null, 
@@ -146,6 +149,7 @@ class PostModel {
           dislikes: entity.dislikes, 
           readAccess: entity.readAccess, 
           archived: toPostArchiveStatus(entity.archived), 
+          externalLink: entity.externalLink, 
           memberMedia: 
             entity.memberMedia == null ? null :
             entity.memberMedia
@@ -179,6 +183,7 @@ class PostModel {
           dislikes: entity.dislikes, 
           readAccess: entity.readAccess, 
           archived: toPostArchiveStatus(entity.archived), 
+          externalLink: entity.externalLink, 
           memberMedia: 
             entity. memberMedia == null ? null : new List<MemberMediumModel>.from(await Future.wait(entity. memberMedia
             .map((item) => MemberMediumModel.fromEntityPlus(newRandomKey(), item, appId: appId))

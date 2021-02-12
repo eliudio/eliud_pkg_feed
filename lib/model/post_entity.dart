@@ -35,21 +35,22 @@ class PostEntity {
   final int dislikes;
   final List<String> readAccess;
   final int archived;
+  final String externalLink;
   final List<MemberMediumEntity> memberMedia;
 
-  PostEntity({this.authorId, this.timestamp, this.appId, this.postAppId, this.postPageId, this.pageParameters, this.description, this.likes, this.dislikes, this.readAccess, this.archived, this.memberMedia, });
+  PostEntity({this.authorId, this.timestamp, this.appId, this.postAppId, this.postPageId, this.pageParameters, this.description, this.likes, this.dislikes, this.readAccess, this.archived, this.externalLink, this.memberMedia, });
 
   PostEntity copyWith({Object timestamp, }) {
-    return PostEntity(authorId: authorId, timestamp : timestamp, appId: appId, postAppId: postAppId, postPageId: postPageId, pageParameters: pageParameters, description: description, likes: likes, dislikes: dislikes, readAccess: readAccess, archived: archived, memberMedia: memberMedia, );
+    return PostEntity(authorId: authorId, timestamp : timestamp, appId: appId, postAppId: postAppId, postPageId: postPageId, pageParameters: pageParameters, description: description, likes: likes, dislikes: dislikes, readAccess: readAccess, archived: archived, externalLink: externalLink, memberMedia: memberMedia, );
   }
-  List<Object> get props => [authorId, timestamp, appId, postAppId, postPageId, pageParameters, description, likes, dislikes, readAccess, archived, memberMedia, ];
+  List<Object> get props => [authorId, timestamp, appId, postAppId, postPageId, pageParameters, description, likes, dislikes, readAccess, archived, externalLink, memberMedia, ];
 
   @override
   String toString() {
     String readAccessCsv = (readAccess == null) ? '' : readAccess.join(', ');
     String memberMediaCsv = (memberMedia == null) ? '' : memberMedia.join(', ');
 
-    return 'PostEntity{authorId: $authorId, timestamp: $timestamp, appId: $appId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, description: $description, likes: $likes, dislikes: $dislikes, readAccess: String[] { $readAccessCsv }, archived: $archived, memberMedia: MemberMedium[] { $memberMediaCsv }}';
+    return 'PostEntity{authorId: $authorId, timestamp: $timestamp, appId: $appId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, description: $description, likes: $likes, dislikes: $dislikes, readAccess: String[] { $readAccessCsv }, archived: $archived, externalLink: $externalLink, memberMedia: MemberMedium[] { $memberMediaCsv }}';
   }
 
   static PostEntity fromMap(Map map) {
@@ -80,6 +81,7 @@ class PostEntity {
       dislikes: int.tryParse(map['dislikes'].toString()), 
       readAccess: map['readAccess'] == null ? null : List.from(map['readAccess']), 
       archived: map['archived'], 
+      externalLink: map['externalLink'], 
       memberMedia: memberMediaList, 
     );
   }
@@ -111,6 +113,8 @@ class PostEntity {
       else theDocument["readAccess"] = null;
     if (archived != null) theDocument["archived"] = archived;
       else theDocument["archived"] = null;
+    if (externalLink != null) theDocument["externalLink"] = externalLink;
+      else theDocument["externalLink"] = null;
     if (memberMedia != null) theDocument["memberMedia"] = memberMediaListMap;
       else theDocument["memberMedia"] = null;
     return theDocument;

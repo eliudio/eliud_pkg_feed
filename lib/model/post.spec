@@ -105,6 +105,11 @@
       "enumValues" : [ "Active", "Archived" ]
     },
     {
+      "fieldName": "externalLink",
+      "fieldType": "String",
+      "group": "general"
+    },
+    {
       "fieldName": "memberMedia",
       "fieldType": "MemberMedium",
       "displayName": "Media",

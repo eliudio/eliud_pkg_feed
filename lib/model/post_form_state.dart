@@ -255,6 +255,22 @@ class ArchivedPostFormError extends PostFormError {
 }
 
 
+class ExternalLinkPostFormError extends PostFormError { 
+  const ExternalLinkPostFormError({ String message, PostModel value }): super(message: message, value: value);
+
+  @override
+  List<Object> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''ExternalLinkPostFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
 class MemberMediaPostFormError extends PostFormError { 
   const MemberMediaPostFormError({ String message, PostModel value }): super(message: message, value: value);
 

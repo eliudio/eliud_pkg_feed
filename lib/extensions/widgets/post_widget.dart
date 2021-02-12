@@ -1,3 +1,4 @@
+import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/access/bloc/access_event.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
@@ -22,6 +23,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'bloc/post_bloc.dart';
 import 'bloc/post_event.dart';
 import 'bloc/post_state.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class PostWidget extends StatefulWidget {
   final bool isRecursive;
@@ -85,8 +87,8 @@ class _PostWidgetState extends State<PostWidget> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _heading(context, state.postModel, state.memberId),
-                        _postDetails(state.memberId, state.postModel,
-                            originalAccessBloc, context),
+                        _description(state.postModel),
+                        _contents(context, state, originalAccessBloc),
                         _aBitSpace(),
                         _postLikes(
                             state.postModel.likes, state.postModel.dislikes),
@@ -114,6 +116,103 @@ class _PostWidgetState extends State<PostWidget> {
     });
   }
 
+  Widget _description(PostModel postModel) {
+    if (postModel.description != null) {
+      return Text(postModel.description);
+    } else {
+      return Container(height: 0,);
+    }
+  }
+
+  Widget _contents(
+      BuildContext context, PostLoaded state, AccessBloc originalAccessBloc) {
+    // add externalLink
+    // add phots and video (media)
+    // add details
+    List<Tab> tabs = [];
+    List<Widget> tabBarViewContents = [];
+
+    if (state.postModel.postPageId != null) {
+      tabs.add(Tab(
+        icon: Icon(Icons.source),
+      ));
+      tabBarViewContents.add(
+        _postDetails(state.memberId, state.postModel,
+            originalAccessBloc, context),
+      );
+    }
+
+    if (state.postModel.memberMedia != null) {
+      tabs.add(Tab(
+        icon: Icon(Icons.image),
+      ));
+
+      var view = new StaggeredGridView.countBuilder(
+        crossAxisCount: 4,
+        itemCount: 8,
+        itemBuilder: (BuildContext context, int index) => new Container(
+            color: Colors.green,
+            child: new Center(
+              child: new CircleAvatar(
+                backgroundColor: Colors.white,
+                child: new Text('$index'),
+              ),
+            )),
+        staggeredTileBuilder: (int index) =>
+        new StaggeredTile.count(2, index.isEven ? 2 : 1),
+        mainAxisSpacing: 4.0,
+        crossAxisSpacing: 4.0,
+      );
+
+/*
+      tabBarViewContents.add(
+          AbstractPlatform.platform
+              .getImageFromURL(url: state.postModel.memberMedia[0].url)
+      );
+*/
+      tabBarViewContents.add(
+        view
+      );
+    }
+
+    if (state.postModel.externalLink != null) {
+      tabs.add(Tab(
+        icon: Icon(Icons.link),
+      ));
+      tabBarViewContents.add(
+          Text("Link")
+      );
+    }
+
+    if (tabs.length == 0) {
+      return Text("No contents");
+    } else {
+      return new Container(
+          width: 1000,
+          height: 500,
+          child: DefaultTabController(
+            length: tabs.length,
+            child: Column(
+              children: <Widget>[
+                ButtonsTabBar(
+                  backgroundColor: Colors.red,
+                  unselectedBackgroundColor: Colors.grey[300],
+                  unselectedLabelStyle: TextStyle(color: Colors.black),
+                  labelStyle:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  tabs: tabs,
+                ),
+                Expanded(
+                  child: TabBarView(
+                      children: tabBarViewContents
+                  ),
+                ),
+              ],
+            ),
+          ));
+    }
+  }
+
   Widget _enterComment(PostModel postModel) {
     var avatar =
         AbstractPlatform.platform.getImageFromURL(url: widget.member.photoURL);
@@ -139,25 +238,34 @@ class _PostWidgetState extends State<PostWidget> {
     ]);
   }
 
-  void photoAvailable(PostModel postModel, MemberMediumModel memberImageModel, ) {
+  void photoAvailable(
+    PostModel postModel,
+    MemberMediumModel memberImageModel,
+  ) {
     // todo
     print("Add the photo to the comment");
   }
 
-  PopupMenuButton _mediaButtons(
-      BuildContext context, PostModel postModel) {
+  PopupMenuButton _mediaButtons(BuildContext context, PostModel postModel) {
     return PopupMenuButton(
-      color: Colors.red,
-      icon: Icon(Icons.add, ),
-      itemBuilder: (_) => <PopupMenuItem<int>>[
-        new PopupMenuItem<int>(
-            child: const Text('Take photo or video'), value: 0),
-      ],
-      onSelected: (choice) {
-        if (choice == 0) {
-          AbstractStoragePlatform.platform.takeMedium(context, postModel.appId, (value) => photoAvailable(postModel, value), widget.member.documentID, postModel.readAccess);
-        }
-      });
+        color: Colors.red,
+        icon: Icon(
+          Icons.add,
+        ),
+        itemBuilder: (_) => <PopupMenuItem<int>>[
+              new PopupMenuItem<int>(
+                  child: const Text('Take photo or video'), value: 0),
+            ],
+        onSelected: (choice) {
+          if (choice == 0) {
+            AbstractStoragePlatform.platform.takeMedium(
+                context,
+                postModel.appId,
+                (value) => photoAvailable(postModel, value),
+                widget.member.documentID,
+                postModel.readAccess);
+          }
+        });
   }
 
   void _addComment(PostModel postModel) {
@@ -436,46 +544,45 @@ class _PostWidgetState extends State<PostWidget> {
       Container(width: 8),
       Expanded(
           child: Container(
-            constraints: BoxConstraints(minWidth: 150),
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-            decoration: BoxDecoration(
-                color: Colors.grey,
-                borderRadius: BorderRadius.circular(12)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '${data.member.name}',
-                  style: Theme.of(context).textTheme.caption.copyWith(
-                      fontWeight: FontWeight.w600, color: Colors.black),
-                ),
-                SizedBox(
-                  height: 4,
-                ),
-                Text(
-                  '${data.comment}',
+        constraints: BoxConstraints(minWidth: 150),
+        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+        decoration: BoxDecoration(
+            color: Colors.grey, borderRadius: BorderRadius.circular(12)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${data.member.name}',
+              style: Theme.of(context)
+                  .textTheme
+                  .caption
+                  .copyWith(fontWeight: FontWeight.w600, color: Colors.black),
+            ),
+            SizedBox(
+              height: 4,
+            ),
+            Text(
+              '${data.comment}',
+              style: Theme.of(context)
+                  .textTheme
+                  .caption
+                  .copyWith(fontWeight: FontWeight.w300, color: Colors.black),
+            ),
+            SizedBox(
+              height: 4,
+            ),
+            Align(
+                alignment: Alignment.bottomRight,
+                child: Text(
+                  data.postComment.likes == null
+                      ? 'no likes'
+                      : '${data.postComment.likes} likes',
                   style: Theme.of(context).textTheme.caption.copyWith(
                       fontWeight: FontWeight.w300, color: Colors.black),
-                ),
-                SizedBox(
-                  height: 4,
-                ),
-                Align(
-                    alignment: Alignment.bottomRight,
-                    child: Text(
-                      data.postComment.likes == null
-                          ? 'no likes'
-                          : '${data.postComment.likes} likes',
-                      style: Theme.of(context)
-                          .textTheme
-                          .caption
-                          .copyWith(
-                          fontWeight: FontWeight.w300,
-                          color: Colors.black),
-                    )),
-              ],
-            ),
-          )),
+                )),
+          ],
+        ),
+      )),
     ];
     if (widget.member.documentID == data.member.documentID) {
       rowChildren.add(_optionsPostComments(
@@ -489,8 +596,7 @@ class _PostWidgetState extends State<PostWidget> {
           children: [
             Padding(
                 padding: const EdgeInsets.only(top: 0.0),
-                child: IntrinsicHeight(
-                    child: Row(children: rowChildren))),
+                child: IntrinsicHeight(child: Row(children: rowChildren))),
             //Divider(height: 1, thickness: 1),
             Row(children: [
               SizedBox(
@@ -510,8 +616,8 @@ class _PostWidgetState extends State<PostWidget> {
                         style: data.thisMemberLikesThisComment
                             ? TextStyle(fontWeight: FontWeight.w900)
                             : null),
-                    onPressed: () => _likeComment(context, postModel,
-                        data)), //your original button
+                    onPressed: () => _likeComment(
+                        context, postModel, data)), //your original button
               ),
               ButtonTheme(
                   padding: EdgeInsets.symmetric(
@@ -610,8 +716,8 @@ class _PostWidgetState extends State<PostWidget> {
 
   Future<void> _likeComment(BuildContext context, PostModel postModel,
       PostCommentContainer postCommentContainer) async {
-    BlocProvider.of<PostBloc>(context)
-        .add(LikeCommentPostEvent(postModel, postCommentContainer, LikeType.Like));
+    BlocProvider.of<PostBloc>(context).add(
+        LikeCommentPostEvent(postModel, postCommentContainer, LikeType.Like));
   }
 
   void _dislike(BuildContext context, PostModel postModel) async {
