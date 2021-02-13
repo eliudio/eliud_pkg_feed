@@ -15,11 +15,8 @@ import 'package:eliud_core/tools/action/action_model.dart';
 import 'package:eliud_core/tools/widgets/dialog_helper.dart';
 import 'package:eliud_core/tools/widgets/request_value_dialog.dart';
 import 'package:eliud_core/tools/widgets/yes_no_dialog.dart';
-import 'package:eliud_pkg_album/tools/grid/spannable_extent_count_page.dart';
 import 'package:eliud_pkg_album/tools/grid/photo_page.dart';
 import 'package:eliud_pkg_album/tools/grid/photo_view.dart';
-import 'package:eliud_pkg_album/tools/grid/staggered_extent_extent_page.dart';
-import 'package:eliud_pkg_album/tools/grid/spannable_extent_extent_page.dart';
 import 'package:eliud_pkg_feed/model/post_like_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:eliud_pkg_storage/model/member_medium_model.dart';
@@ -29,7 +26,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'bloc/post_bloc.dart';
 import 'bloc/post_event.dart';
 import 'bloc/post_state.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 
 class PostWidget extends StatefulWidget {
@@ -171,11 +167,7 @@ class _PostWidgetState extends State<PostWidget> {
 */
 
     if (state.postModel.memberMedia != null) {
-      singleWidget = mediaWidget = PhotoPage();
-/*
-          AbstractPlatform.platform
-              .getImageFromURL(url: state.postModel.memberMedia[0].url)
-*/
+      singleWidget = mediaWidget = PhotoPage(memberMedia: state.postModel.memberMedia,);
     }
 
 /*
