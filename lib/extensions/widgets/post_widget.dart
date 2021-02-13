@@ -11,6 +11,7 @@ import 'package:eliud_core/model/page_component_bloc.dart';
 import 'package:eliud_core/model/page_component_event.dart';
 import 'package:eliud_core/model/page_component_state.dart';
 import 'package:eliud_core/platform/platform.dart';
+import 'package:eliud_core/tools/action/action_model.dart';
 import 'package:eliud_core/tools/widgets/dialog_helper.dart';
 import 'package:eliud_core/tools/widgets/request_value_dialog.dart';
 import 'package:eliud_core/tools/widgets/yes_no_dialog.dart';
@@ -27,6 +28,7 @@ import 'bloc/post_bloc.dart';
 import 'bloc/post_event.dart';
 import 'bloc/post_state.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 
 class PostWidget extends StatefulWidget {
   final bool isRecursive;
@@ -60,8 +62,25 @@ class _PostWidgetState extends State<PostWidget> {
     super.dispose();
   }
 
+  bool isPortrait;
+
   @override
   Widget build(BuildContext context) {
+    bool isCurrentPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    if ((isPortrait != null) && (isPortrait != isCurrentPortrait)) {
+      // If we're rebuilding as a result of a change of orientation, then we need to refresh the page.
+      // The reason for this is because it seems that the StaggeredGridView doesn't behave correct when changing orientation.
+      // This seems to happen because the StaggeredGridView sits in a list. These guys had the same problem and the solution does not  work
+      // https://github.com/letsar/flutter_staggered_grid_view/issues/79
+      // So, as a result, I bruteforce refresh the page
+      // This is not ideal, but it's the best we can do for now
+      eliudrouter.Router.bruteRefreshPage(context);
+    }
+    isPortrait = isCurrentPortrait;
+    return buildIt(context);
+  }
+
+  Widget buildIt(BuildContext context) {
     return BlocBuilder<PostBloc, PostState>(builder: (context, state) {
       if (state is PostLoaded) {
         if (size == null) size = MediaQuery.of(context).size;
@@ -110,7 +129,7 @@ class _PostWidgetState extends State<PostWidget> {
                         _aBitSpace(),
                         _dividerLight(),
                         _aBitSpace(),
-                        _enterComment(state.postModel),
+                        _enterComment(context, state.postModel),
                         _aBitSpace(),
                         _postComments(context, state.postModel, state.memberId,
                             state is CommentsLoaded ? state.comments : null),
@@ -130,6 +149,7 @@ class _PostWidgetState extends State<PostWidget> {
     }
   }
 
+  Widget mediaWidget;
 
   Widget _contents(
       BuildContext context, PostLoaded state, AccessBloc originalAccessBloc) {
@@ -286,7 +306,7 @@ class _PostWidgetState extends State<PostWidget> {
     }
   }
 
-  Widget _enterComment(PostModel postModel) {
+  Widget _enterComment(BuildContext context, PostModel postModel) {
     var avatar =
     AbstractPlatform.platform.getImageFromURL(url: widget.member.photoURL);
     return Row(children: [
@@ -307,7 +327,7 @@ class _PostWidgetState extends State<PostWidget> {
                 borderRadius: BorderRadius.circular(8.0),
               ),
               child: Text('Ok'),
-              onPressed: () => _addComment(postModel))),
+              onPressed: () => _addComment(context, postModel))),
     ]);
   }
 
@@ -341,10 +361,12 @@ class _PostWidgetState extends State<PostWidget> {
         });
   }
 
-  void _addComment(PostModel postModel) {
-    BlocProvider.of<PostBloc>(context)
-        .add(AddCommentEvent(postModel, _commentController.text));
-    _commentController.clear();
+  void _addComment(BuildContext context, PostModel postModel) {
+    if ((_commentController.text != null) && (_commentController.text.length > 0)) {
+      BlocProvider.of<PostBloc>(context)
+          .add(AddCommentEvent(postModel, _commentController.text));
+      _commentController.clear();
+    }
   }
 
   Widget _textField() {
