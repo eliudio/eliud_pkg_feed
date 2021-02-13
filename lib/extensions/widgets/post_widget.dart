@@ -14,6 +14,7 @@ import 'package:eliud_core/platform/platform.dart';
 import 'package:eliud_core/tools/widgets/dialog_helper.dart';
 import 'package:eliud_core/tools/widgets/request_value_dialog.dart';
 import 'package:eliud_core/tools/widgets/yes_no_dialog.dart';
+import 'package:eliud_pkg_album/tools/grid/spannable_extent_count_page.dart';
 import 'package:eliud_pkg_album/tools/grid/staggered_extent_extent_page.dart';
 import 'package:eliud_pkg_album/tools/grid/spannable_extent_extent_page.dart';
 import 'package:eliud_pkg_feed/model/post_like_model.dart';
@@ -89,8 +90,11 @@ class _PostWidgetState extends State<PostWidget> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _heading(context, state.postModel, state.memberId),
+                        _aBitSpace(),
                         _description(state.postModel),
+                        _aBitSpace(),
                         _contents(context, state, originalAccessBloc),
+                        _dividerLight(),
                         _aBitSpace(),
                         _postLikes(
                             state.postModel.likes, state.postModel.dislikes),
@@ -126,7 +130,88 @@ class _PostWidgetState extends State<PostWidget> {
     }
   }
 
+
   Widget _contents(
+      BuildContext context, PostLoaded state, AccessBloc originalAccessBloc) {
+    List<Tab> tabs = [];
+    List<Widget> tabBarViewContents = [];
+
+    Widget singleWidget;
+    Widget postWidget;
+    Widget mediaWidget;
+    Widget linkWidget;
+
+/*
+    if (state.postModel.postPageId != null) {
+      singleWidget = postWidget = _postDetails(state.memberId, state.postModel,
+          originalAccessBloc, context);
+    }
+*/
+
+    if (state.postModel.memberMedia != null) {
+      singleWidget = mediaWidget =
+          SpannableExtentCountPage();
+/*
+          AbstractPlatform.platform
+              .getImageFromURL(url: state.postModel.memberMedia[0].url)
+*/
+    }
+
+/*
+    // delaying the implementation of the externalLink, until I can test the webview for flutterweb
+    if (state.postModel.externalLink != null) {
+      singleWidget = linkWidget = WebView(
+        initialUrl: state.postModel.externalLink,
+        javascriptMode: JavascriptMode.unrestricted,
+      );
+    }
+
+*/
+    if (postWidget != null) {
+      tabs.add(Tab(icon: Icon(Icons.source, color: Colors.black,),));
+      tabBarViewContents.add(postWidget);
+    }
+
+    if (mediaWidget != null) {
+      tabs.add(Tab(icon: Icon(Icons.image, color: Colors.black),));
+      tabBarViewContents.add(mediaWidget);
+    }
+
+    if (linkWidget != null) {
+      tabs.add(Tab(icon: Icon(Icons.link, color: Colors.black),));
+      tabBarViewContents.add(linkWidget);
+    }
+
+    if (tabs.length == 0) {
+      return Text("No contents");
+    } if (tabs.length == 1) {
+      return singleWidget;
+    } else {
+      return Container(height: 500, child: DefaultTabController(
+        length: tabs.length,
+        child: Column(
+          children: <Widget>[
+            new Row(
+              children: <Widget>[
+                new Expanded(
+                    child: TabBar(
+                        tabs: tabs
+                    )
+                ),
+              ],
+            ),
+            Expanded(
+              child: TabBarView(
+                  children: tabBarViewContents
+              ),
+            ),
+          ],
+        ),
+      ));
+    }
+  }
+
+  Widget _contentsOld(
       BuildContext context, PostLoaded state, AccessBloc originalAccessBloc) {
     // add externalLink
     // add phots and video (media)
@@ -134,6 +219,7 @@ class _PostWidgetState extends State<PostWidget> {
     List<Tab> tabs = [];
     List<Widget> tabBarViewContents = [];
 
+/*
     if (state.postModel.postPageId != null) {
       tabs.add(Tab(
         icon: Icon(Icons.source),
@@ -143,6 +229,7 @@ class _PostWidgetState extends State<PostWidget> {
             originalAccessBloc, context),
       );
     }
+*/
 
     if (state.postModel.memberMedia != null) {
       tabs.add(Tab(
