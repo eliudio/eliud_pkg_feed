@@ -16,6 +16,8 @@ import 'package:eliud_core/tools/widgets/dialog_helper.dart';
 import 'package:eliud_core/tools/widgets/request_value_dialog.dart';
 import 'package:eliud_core/tools/widgets/yes_no_dialog.dart';
 import 'package:eliud_pkg_album/tools/grid/spannable_extent_count_page.dart';
+import 'package:eliud_pkg_album/tools/grid/photo_page.dart';
+import 'package:eliud_pkg_album/tools/grid/photo_view.dart';
 import 'package:eliud_pkg_album/tools/grid/staggered_extent_extent_page.dart';
 import 'package:eliud_pkg_album/tools/grid/spannable_extent_extent_page.dart';
 import 'package:eliud_pkg_feed/model/post_like_model.dart';
@@ -169,8 +171,7 @@ class _PostWidgetState extends State<PostWidget> {
 */
 
     if (state.postModel.memberMedia != null) {
-      singleWidget = mediaWidget =
-          SpannableExtentCountPage();
+      singleWidget = mediaWidget = PhotoPage();
 /*
           AbstractPlatform.platform
               .getImageFromURL(url: state.postModel.memberMedia[0].url)
@@ -228,81 +229,6 @@ class _PostWidgetState extends State<PostWidget> {
           ],
         ),
       ));
-    }
-  }
-
-  Widget _contentsOld(
-      BuildContext context, PostLoaded state, AccessBloc originalAccessBloc) {
-    // add externalLink
-    // add phots and video (media)
-    // add details
-    List<Tab> tabs = [];
-    List<Widget> tabBarViewContents = [];
-
-/*
-    if (state.postModel.postPageId != null) {
-      tabs.add(Tab(
-        icon: Icon(Icons.source),
-      ));
-      tabBarViewContents.add(
-        _postDetails(state.memberId, state.postModel,
-            originalAccessBloc, context),
-      );
-    }
-*/
-
-    if (state.postModel.memberMedia != null) {
-      tabs.add(Tab(
-        icon: Icon(Icons.image),
-      ));
-
-/*
-      tabBarViewContents.add(
-          AbstractPlatform.platform
-              .getImageFromURL(url: state.postModel.memberMedia[0].url)
-      );
-*/
-      tabBarViewContents.add(
-        SpannableExtentExtentPage()
-//          StaggeredExtentExtentPage()
-      );
-    }
-
-    if (state.postModel.externalLink != null) {
-      tabs.add(Tab(
-        icon: Icon(Icons.link),
-      ));
-      tabBarViewContents.add(
-          Text("Link")
-      );
-    }
-
-    if (tabs.length == 0) {
-      return Text("No contents");
-    } else {
-      return new Container(
-          width: 1000,
-          height: 500,
-          child: DefaultTabController(
-            length: tabs.length,
-            child: Column(
-              children: <Widget>[
-                ButtonsTabBar(
-                  backgroundColor: Colors.red,
-                  unselectedBackgroundColor: Colors.grey[300],
-                  unselectedLabelStyle: TextStyle(color: Colors.black),
-                  labelStyle:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                  tabs: tabs,
-                ),
-                Expanded(
-                  child: TabBarView(
-                      children: tabBarViewContents
-                  ),
-                ),
-              ],
-            ),
-          ));
     }
   }
 
