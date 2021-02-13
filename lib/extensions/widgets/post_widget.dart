@@ -14,6 +14,8 @@ import 'package:eliud_core/platform/platform.dart';
 import 'package:eliud_core/tools/widgets/dialog_helper.dart';
 import 'package:eliud_core/tools/widgets/request_value_dialog.dart';
 import 'package:eliud_core/tools/widgets/yes_no_dialog.dart';
+import 'package:eliud_pkg_album/tools/grid/staggered_extent_extent_page.dart';
+import 'package:eliud_pkg_album/tools/grid/spannable_extent_extent_page.dart';
 import 'package:eliud_pkg_feed/model/post_like_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:eliud_pkg_storage/model/member_medium_model.dart';
@@ -39,9 +41,9 @@ class PostWidget extends StatefulWidget {
 
 class _PostWidgetState extends State<PostWidget> {
   static TextStyle textStyleSmall =
-      TextStyle(fontSize: 8, fontWeight: FontWeight.bold);
+  TextStyle(fontSize: 8, fontWeight: FontWeight.bold);
   static TextStyle textStyle =
-      TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
+  TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
   final TextEditingController _commentController = TextEditingController();
 
   Size size;
@@ -147,23 +149,6 @@ class _PostWidgetState extends State<PostWidget> {
         icon: Icon(Icons.image),
       ));
 
-      var view = new StaggeredGridView.countBuilder(
-        crossAxisCount: 4,
-        itemCount: 8,
-        itemBuilder: (BuildContext context, int index) => new Container(
-            color: Colors.green,
-            child: new Center(
-              child: new CircleAvatar(
-                backgroundColor: Colors.white,
-                child: new Text('$index'),
-              ),
-            )),
-        staggeredTileBuilder: (int index) =>
-        new StaggeredTile.count(2, index.isEven ? 2 : 1),
-        mainAxisSpacing: 4.0,
-        crossAxisSpacing: 4.0,
-      );
-
 /*
       tabBarViewContents.add(
           AbstractPlatform.platform
@@ -171,7 +156,8 @@ class _PostWidgetState extends State<PostWidget> {
       );
 */
       tabBarViewContents.add(
-        view
+        SpannableExtentExtentPage()
+//          StaggeredExtentExtentPage()
       );
     }
 
@@ -215,7 +201,7 @@ class _PostWidgetState extends State<PostWidget> {
 
   Widget _enterComment(PostModel postModel) {
     var avatar =
-        AbstractPlatform.platform.getImageFromURL(url: widget.member.photoURL);
+    AbstractPlatform.platform.getImageFromURL(url: widget.member.photoURL);
     return Row(children: [
       Container(
           height: 40, width: 40, child: avatar == null ? Container() : avatar),
@@ -239,9 +225,9 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   void photoAvailable(
-    PostModel postModel,
-    MemberMediumModel memberImageModel,
-  ) {
+      PostModel postModel,
+      MemberMediumModel memberImageModel,
+      ) {
     // todo
     print("Add the photo to the comment");
   }
@@ -253,15 +239,15 @@ class _PostWidgetState extends State<PostWidget> {
           Icons.add,
         ),
         itemBuilder: (_) => <PopupMenuItem<int>>[
-              new PopupMenuItem<int>(
-                  child: const Text('Take photo or video'), value: 0),
-            ],
+          new PopupMenuItem<int>(
+              child: const Text('Take photo or video'), value: 0),
+        ],
         onSelected: (choice) {
           if (choice == 0) {
             AbstractStoragePlatform.platform.takeMedium(
                 context,
                 postModel.appId,
-                (value) => photoAvailable(postModel, value),
+                    (value) => photoAvailable(postModel, value),
                 widget.member.documentID,
                 postModel.readAccess);
           }
@@ -333,7 +319,7 @@ class _PostWidgetState extends State<PostWidget> {
     }
 
     var row =
-        Row(crossAxisAlignment: CrossAxisAlignment.start, children: children);
+    Row(crossAxisAlignment: CrossAxisAlignment.start, children: children);
 
     return row;
   }
@@ -343,9 +329,9 @@ class _PostWidgetState extends State<PostWidget> {
     return PopupMenuButton(
         icon: Icon(Icons.more_horiz),
         itemBuilder: (_) => <PopupMenuItem<int>>[
-              new PopupMenuItem<int>(
-                  child: const Text('Delete post'), value: 0),
-            ],
+          new PopupMenuItem<int>(
+              child: const Text('Delete post'), value: 0),
+        ],
         onSelected: (choice) {
           if (choice == 0) {
 //        TODO: Issue with deleting post:
@@ -443,26 +429,26 @@ class _PostWidgetState extends State<PostWidget> {
     var blocProviders = <BlocProvider>[];
     blocProviders.add(BlocProvider<AccessBloc>(
         create: (context) =>
-            AccessBloc(null)..add(InitApp(appId, asPlaystore))));
+        AccessBloc(null)..add(InitApp(appId, asPlaystore))));
     return MultiBlocProvider(
         providers: blocProviders,
         child: Container(
             child: widget.isRecursive
                 ? Text(
-                    "This link is a reference to this feed. I'm showing recursive pages.")
+                "This link is a reference to this feed. I'm showing recursive pages.")
                 : BlocBuilder<AccessBloc, AccessState>(
-                    builder: (context, accessState) {
-                    if (accessState is AppLoaded) {
-                      return Container(
-                          height: 300,
-                          child: _body(context, originalAccessBloc, accessState,
-                              appId, pageId, parameters));
-                    } else {
-                      return Center(
-                        child: DelayedCircularProgressIndicator(),
-                      );
-                    }
-                  })));
+                builder: (context, accessState) {
+                  if (accessState is AppLoaded) {
+                    return Container(
+                        height: 300,
+                        child: _body(context, originalAccessBloc, accessState,
+                            appId, pageId, parameters));
+                  } else {
+                    return Center(
+                      child: DelayedCircularProgressIndicator(),
+                    );
+                  }
+                })));
   }
 
   Widget _body(
@@ -484,26 +470,26 @@ class _PostWidgetState extends State<PostWidget> {
             ],
             child: BlocBuilder<PageComponentBloc, PageComponentState>(
                 builder: (context, state) {
-              if (state is PageComponentLoaded) {
-                if (state.value == null) {
-                  return AlertWidget(
-                      title: 'Error', content: 'No page defined');
-                } else {
-                  var helper = PageBodyHelper();
-                  var components = helper.getComponents(
-                      state.value.bodyComponents, parameters);
-                  return helper.theBody(context, accessState,
-                      backgroundDecoration: state.value.background,
-                      components: components,
-                      layout: fromPageLayout(state.value.layout),
-                      gridView: state.value.gridView);
-                }
-              } else {
-                return Center(
-                  child: DelayedCircularProgressIndicator(),
-                );
-              }
-            })),
+                  if (state is PageComponentLoaded) {
+                    if (state.value == null) {
+                      return AlertWidget(
+                          title: 'Error', content: 'No page defined');
+                    } else {
+                      var helper = PageBodyHelper();
+                      var components = helper.getComponents(
+                          state.value.bodyComponents, parameters);
+                      return helper.theBody(context, accessState,
+                          backgroundDecoration: state.value.background,
+                          components: components,
+                          layout: fromPageLayout(state.value.layout),
+                          gridView: state.value.gridView);
+                    }
+                  } else {
+                    return Center(
+                      child: DelayedCircularProgressIndicator(),
+                    );
+                  }
+                })),
         InkWell(
             onTap: () {
               originalAccessBloc
@@ -544,45 +530,45 @@ class _PostWidgetState extends State<PostWidget> {
       Container(width: 8),
       Expanded(
           child: Container(
-        constraints: BoxConstraints(minWidth: 150),
-        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-        decoration: BoxDecoration(
-            color: Colors.grey, borderRadius: BorderRadius.circular(12)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '${data.member.name}',
-              style: Theme.of(context)
-                  .textTheme
-                  .caption
-                  .copyWith(fontWeight: FontWeight.w600, color: Colors.black),
+            constraints: BoxConstraints(minWidth: 150),
+            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+            decoration: BoxDecoration(
+                color: Colors.grey, borderRadius: BorderRadius.circular(12)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${data.member.name}',
+                  style: Theme.of(context)
+                      .textTheme
+                      .caption
+                      .copyWith(fontWeight: FontWeight.w600, color: Colors.black),
+                ),
+                SizedBox(
+                  height: 4,
+                ),
+                Text(
+                  '${data.comment}',
+                  style: Theme.of(context)
+                      .textTheme
+                      .caption
+                      .copyWith(fontWeight: FontWeight.w300, color: Colors.black),
+                ),
+                SizedBox(
+                  height: 4,
+                ),
+                Align(
+                    alignment: Alignment.bottomRight,
+                    child: Text(
+                      data.postComment.likes == null
+                          ? 'no likes'
+                          : '${data.postComment.likes} likes',
+                      style: Theme.of(context).textTheme.caption.copyWith(
+                          fontWeight: FontWeight.w300, color: Colors.black),
+                    )),
+              ],
             ),
-            SizedBox(
-              height: 4,
-            ),
-            Text(
-              '${data.comment}',
-              style: Theme.of(context)
-                  .textTheme
-                  .caption
-                  .copyWith(fontWeight: FontWeight.w300, color: Colors.black),
-            ),
-            SizedBox(
-              height: 4,
-            ),
-            Align(
-                alignment: Alignment.bottomRight,
-                child: Text(
-                  data.postComment.likes == null
-                      ? 'no likes'
-                      : '${data.postComment.likes} likes',
-                  style: Theme.of(context).textTheme.caption.copyWith(
-                      fontWeight: FontWeight.w300, color: Colors.black),
-                )),
-          ],
-        ),
-      )),
+          )),
     ];
     if (widget.member.documentID == data.member.documentID) {
       rowChildren.add(_optionsPostComments(
@@ -663,11 +649,11 @@ class _PostWidgetState extends State<PostWidget> {
     return PopupMenuButton(
         icon: Icon(Icons.more_horiz),
         itemBuilder: (_) => <PopupMenuItem<int>>[
-              new PopupMenuItem<int>(
-                  child: const Text('Update comment'), value: 0),
-              new PopupMenuItem<int>(
-                  child: const Text('Delete comment'), value: 1),
-            ],
+          new PopupMenuItem<int>(
+              child: const Text('Update comment'), value: 0),
+          new PopupMenuItem<int>(
+              child: const Text('Delete comment'), value: 1),
+        ],
         onSelected: (choice) {
           if (choice == 0)
             allowToUpdateComment(context, postModel, memberId, postComment);
@@ -685,7 +671,7 @@ class _PostWidgetState extends State<PostWidget> {
             icon: ImageIcon(
               AssetImage(
                   (thisMemberLikeType == null) ||
-                          (thisMemberLikeType != LikeType.Like)
+                      (thisMemberLikeType != LikeType.Like)
                       ? "assets/images/basicons.xyz/ThumbsUp.png"
                       : "assets/images/basicons.xyz/ThumbsUpSelected.png",
                   package: "eliud_pkg_feed"),
@@ -697,7 +683,7 @@ class _PostWidgetState extends State<PostWidget> {
             icon: ImageIcon(
               AssetImage(
                   (thisMemberLikeType == null) ||
-                          (thisMemberLikeType != LikeType.Dislike)
+                      (thisMemberLikeType != LikeType.Dislike)
                       ? "assets/images/basicons.xyz/ThumbsDown.png"
                       : "assets/images/basicons.xyz/ThumbsDownSelected.png",
                   package: "eliud_pkg_feed"),
