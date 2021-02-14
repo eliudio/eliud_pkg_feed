@@ -15,12 +15,13 @@ import 'package:eliud_core/tools/action/action_model.dart';
 import 'package:eliud_core/tools/widgets/dialog_helper.dart';
 import 'package:eliud_core/tools/widgets/request_value_dialog.dart';
 import 'package:eliud_core/tools/widgets/yes_no_dialog.dart';
-import 'package:eliud_pkg_album/tools/grid/photo_page.dart';
-import 'package:eliud_pkg_album/tools/grid/photo_view.dart';
+import 'package:eliud_pkg_album/tools/grid/photos_page.dart';
+import 'package:eliud_pkg_album/tools/grid/videos_page.dart';
 import 'package:eliud_pkg_feed/model/post_like_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:eliud_pkg_storage/model/member_medium_model.dart';
 import 'package:eliud_pkg_storage/platform/storage_platform.dart';
+import 'package:eliud_pkg_storage/tools/filter_member_media.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'bloc/post_bloc.dart';
@@ -147,8 +148,6 @@ class _PostWidgetState extends State<PostWidget> {
     }
   }
 
-  Widget mediaWidget;
-
   Widget _contents(
       BuildContext context, PostLoaded state, AccessBloc originalAccessBloc) {
     List<Tab> tabs = [];
@@ -156,18 +155,31 @@ class _PostWidgetState extends State<PostWidget> {
 
     Widget singleWidget;
     Widget postWidget;
-    Widget mediaWidget;
+    Widget photosWidget;
+    Widget videosWidget;
     Widget linkWidget;
 
-/*
     if (state.postModel.postPageId != null) {
       singleWidget = postWidget = _postDetails(state.memberId, state.postModel,
           originalAccessBloc, context);
     }
-*/
 
     if (state.postModel.memberMedia != null) {
-      singleWidget = mediaWidget = PhotoPage(memberMedia: state.postModel.memberMedia,);
+      // Photos
+      var filterMemberMedia = FilterMemberMedia(state.postModel.memberMedia);
+
+      var photos = filterMemberMedia.getPhotos();
+      var videos = filterMemberMedia.getVideos();
+
+      if (photos != null) {
+        singleWidget = photosWidget =
+            PhotosPage(memberMedia: photos,);
+      }
+
+      if (photos != null) {
+        singleWidget = videosWidget =
+            VideosPage(memberMedia: videos,);
+      }
     }
 
 /*
@@ -180,19 +192,24 @@ class _PostWidgetState extends State<PostWidget> {
     }
 
 */
-    if (postWidget != null) {
-      tabs.add(Tab(icon: Icon(Icons.source, color: Colors.black,),));
-      tabBarViewContents.add(postWidget);
+    if (photosWidget != null) {
+      tabs.add(Tab(icon: Icon(Icons.image, color: Colors.black),));
+      tabBarViewContents.add(photosWidget);
     }
 
-    if (mediaWidget != null) {
-      tabs.add(Tab(icon: Icon(Icons.image, color: Colors.black),));
-      tabBarViewContents.add(mediaWidget);
+    if (videosWidget != null) {
+      tabs.add(Tab(icon: Icon(Icons.movie, color: Colors.black),));
+      tabBarViewContents.add(videosWidget);
     }
 
     if (linkWidget != null) {
       tabs.add(Tab(icon: Icon(Icons.link, color: Colors.black),));
       tabBarViewContents.add(linkWidget);
+    }
+
+    if (postWidget != null) {
+      tabs.add(Tab(icon: Icon(Icons.source, color: Colors.black,),));
+      tabBarViewContents.add(postWidget);
     }
 
     if (tabs.length == 0) {
