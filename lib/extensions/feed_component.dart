@@ -10,18 +10,17 @@ import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_event.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_state.dart';
-import 'package:eliud_pkg_feed/extensions/widgets/bloc/post_bloc.dart';
-import 'package:eliud_pkg_feed/extensions/widgets/post_widget.dart';
-import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/feed_component.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
 import 'package:eliud_pkg_feed/model/feed_repository.dart';
-import 'package:eliud_pkg_feed/model/post_list_bloc.dart';
-import 'package:eliud_pkg_feed/model/post_list_event.dart';
-import 'package:eliud_pkg_feed/model/post_list_state.dart';
-import 'package:eliud_pkg_feed/model/post_model.dart';
+import 'package:eliud_pkg_post/extensions/bloc/post_bloc.dart';
+import 'package:eliud_pkg_post/extensions/post_widget.dart';
+import 'package:eliud_pkg_post/model/abstract_repository_singleton.dart'
+    as posts;
+import 'package:eliud_pkg_post/model/post_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 
 class FeedComponentConstructorDefault implements ComponentConstructor {
   FeedComponentConstructorDefault();
@@ -55,6 +54,8 @@ class FeedComponent extends AbstractFeedComponent {
           EliudQuery()
               .withCondition(EliudQueryCondition('archived',
                   isEqualTo: PostArchiveStatus.Active.index))
+              .withCondition(EliudQueryCondition('feedId',
+                  isEqualTo: feedModel.documentID))
               // We could limit the posts retrieve by making adding the condition: 'authorId' whereIn FollowerHelper.following(me, state.app.documentID)
               // However, combining this query with arrayContainsAny in 1 query is not possible currently in the app.
               // For now we lay the responsibility with the one posting the post, i.e. that the readAccess includes the person.
@@ -76,7 +77,9 @@ class FeedComponent extends AbstractFeedComponent {
   Widget _postPagedBloc(String parentPageId, BuildContext context,
       FeedModel feedModel, EliudQuery eliudQuery) {
     return BlocProvider(
-      create: (_) => PostListPagedBloc(eliudQuery, postRepository: postRepository(appId: feedModel.appId))..add(PostListPagedFetched()),
+      create: (_) => PostListPagedBloc(eliudQuery,
+          postRepository: posts.postRepository(appId: feedModel.appId))
+        ..add(PostListPagedFetched()),
       child: PostsList(parentPageId: parentPageId),
     );
   }
@@ -133,16 +136,16 @@ class _PostsListState extends State<PostsList> {
   }
 
   Widget simplePost(BuildContext context, PostModel postModel) {
-    return FlatButton(child: Text(postModel.documentID), onPressed: () =>
-        BlocProvider.of<PostListPagedBloc>(context).add(
-            DeletePostPaged(value: postModel)));
+    return FlatButton(
+        child: Text(postModel.documentID),
+        onPressed: () => BlocProvider.of<PostListPagedBloc>(context)
+            .add(DeletePostPaged(value: postModel)));
   }
 
   Widget post(BuildContext context, PostModel postModel) {
     var member = AccessBloc.memberFor(AccessBloc.getState(context));
     return BlocProvider<PostBloc>(
-        create: (context) => PostBloc(postModel,
-            member.documentID),
+        create: (context) => PostBloc(postModel, member.documentID),
         child: PostWidget(
           isRecursive: postModel.postPageId == widget.parentPageId,
           member: member,

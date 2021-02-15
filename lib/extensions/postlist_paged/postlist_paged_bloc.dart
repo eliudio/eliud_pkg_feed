@@ -6,8 +6,8 @@ import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_event.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_state.dart';
-import 'package:eliud_pkg_feed/model/post_model.dart';
-import 'package:eliud_pkg_feed/model/post_repository.dart';
+import 'package:eliud_pkg_post/model/post_model.dart';
+import 'package:eliud_pkg_post/model/post_repository.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 

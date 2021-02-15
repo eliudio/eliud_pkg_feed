@@ -14,6 +14,3 @@
 */
 
 export '../model/feed_model.dart';
-export '../model/post_model.dart';
-export '../model/post_comment_model.dart';
-export '../model/post_like_model.dart';

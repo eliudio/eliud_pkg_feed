@@ -30,6 +30,9 @@ dependencies:
   eliud_pkg_album:
     path: ../eliud_pkg_album
 
+  eliud_pkg_post:
+    path: ../eliud_pkg_post
+
 dev_dependencies:
   build_runner: "1.10.2"
 

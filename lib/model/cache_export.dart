@@ -14,6 +14,3 @@
 */
 
 export '../model/feed_cache.dart';
-export '../model/post_cache.dart';
-export '../model/post_comment_cache.dart';
-export '../model/post_like_cache.dart';

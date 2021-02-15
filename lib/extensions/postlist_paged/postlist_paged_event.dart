@@ -1,4 +1,4 @@
-import 'package:eliud_pkg_feed/model/post_model.dart';
+import 'package:eliud_pkg_post/model/post_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class PostPagedEvent extends Equatable {

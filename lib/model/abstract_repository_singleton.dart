@@ -14,25 +14,16 @@
 */
 
 import '../model/feed_repository.dart';
-import '../model/post_repository.dart';
-import '../model/post_comment_repository.dart';
-import '../model/post_like_repository.dart';
 import 'package:eliud_core/core/access/bloc/user_repository.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
 
 FeedRepository feedRepository({ String appId }) => AbstractRepositorySingleton.singleton.feedRepository(appId);
-PostRepository postRepository({ String appId }) => AbstractRepositorySingleton.singleton.postRepository(appId);
-PostCommentRepository postCommentRepository({ String appId }) => AbstractRepositorySingleton.singleton.postCommentRepository(appId);
-PostLikeRepository postLikeRepository({ String appId }) => AbstractRepositorySingleton.singleton.postLikeRepository(appId);
 
 abstract class AbstractRepositorySingleton {
   static AbstractRepositorySingleton singleton;
 
   FeedRepository feedRepository(String appId);
-  PostRepository postRepository(String appId);
-  PostCommentRepository postCommentRepository(String appId);
-  PostLikeRepository postLikeRepository(String appId);
 
   void flush(String appId) {
   }

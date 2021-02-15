@@ -7,10 +7,11 @@ import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_core/tools/widgets/dialog_helper.dart';
 import 'package:eliud_core/tools/widgets/dialog_with_options.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:eliud_pkg_feed/tools/action/post_action_model.dart';
 import 'package:eliud_pkg_follow/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_post/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_post/model/post_model.dart';
 import 'package:flutter/material.dart';
 
 class PostActionHandler extends PackageActionHandler {

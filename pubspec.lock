@@ -323,6 +323,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  eliud_pkg_post:
+    dependency: "direct main"
+    description:
+      path: "../eliud_pkg_post"
+      relative: true
+    source: path
+    version: "0.0.1"
   eliud_pkg_storage:
     dependency: "direct main"
     description:
@@ -461,6 +468,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.4.2"
+  flutter_carousel_slider:
+    dependency: transitive
+    description:
+      name: flutter_carousel_slider
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.6"
   flutter_colorpicker:
     dependency: transitive
     description:
@@ -942,6 +956,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.1+2"
+  transparent_image:
+    dependency: transitive
+    description:
+      name: transparent_image
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   tuple:
     dependency: transitive
     description:
