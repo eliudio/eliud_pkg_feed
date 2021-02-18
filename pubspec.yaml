@@ -24,9 +24,6 @@ dependencies:
   eliud_pkg_membership:
     path: ../eliud_pkg_membership
 
-  eliud_pkg_storage:
-    path: ../eliud_pkg_storage
-
   eliud_pkg_album:
     path: ../eliud_pkg_album
 
