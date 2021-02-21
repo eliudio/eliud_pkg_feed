@@ -1,15 +1,12 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
-import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_event.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_state.dart';
 import 'package:eliud_pkg_post/model/post_model.dart';
 import 'package:eliud_pkg_post/model/post_repository.dart';
 import 'package:meta/meta.dart';
-import 'package:rxdart/rxdart.dart';
 
 const _postLimit = 5;
 
@@ -29,7 +26,7 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
     TransitionFunction<PostPagedEvent, PostListPagedState> transitionFn,
   ) {
     return super.transformEvents(
-      events.debounceTime(const Duration(milliseconds: 500)),
+      events,
       transitionFn,
     );
   }
