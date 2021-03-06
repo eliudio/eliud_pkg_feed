@@ -36,4 +36,7 @@ abstract class FeedPackage extends Package {
     // Register a mapper for an extra action: the mapper for the WorkflowAction
     ActionModelRegistry.registry().addMapper(PostActionEntity.label, PostActionMapper());
   }
+
+  @override
+  List<MemberCollectionInfo> getMemberCollectionInfo() => AbstractRepositorySingleton.collections;
 }

@@ -136,7 +136,7 @@ class _PostsListState extends State<PostsList> {
   }
 
   Widget simplePost(BuildContext context, PostModel postModel) {
-    return FlatButton(
+    return TextButton(
         child: Text(postModel.documentID),
         onPressed: () => BlocProvider.of<PostListPagedBloc>(context)
             .add(DeletePostPaged(value: postModel)));
