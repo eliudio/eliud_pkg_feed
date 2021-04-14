@@ -36,18 +36,18 @@ import 'package:eliud_core/tools/random.dart';
 
 
 class FeedModel {
-  String documentID;
+  String? documentID;
 
   // This is the identifier of the app to which this feed belongs
-  String appId;
-  String description;
-  ConditionsSimpleModel conditions;
+  String? appId;
+  String? description;
+  ConditionsSimpleModel? conditions;
 
   FeedModel({this.documentID, this.appId, this.description, this.conditions, })  {
     assert(documentID != null);
   }
 
-  FeedModel copyWith({String documentID, String appId, String description, ConditionsSimpleModel conditions, }) {
+  FeedModel copyWith({String? documentID, String? appId, String? description, ConditionsSimpleModel? conditions, }) {
     return FeedModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, conditions: conditions ?? this.conditions, );
   }
 
@@ -69,15 +69,15 @@ class FeedModel {
     return 'FeedModel{documentID: $documentID, appId: $appId, description: $description, conditions: $conditions}';
   }
 
-  FeedEntity toEntity({String appId}) {
+  FeedEntity toEntity({String? appId}) {
     return FeedEntity(
           appId: (appId != null) ? appId : null, 
           description: (description != null) ? description : null, 
-          conditions: (conditions != null) ? conditions.toEntity(appId: appId) : null, 
+          conditions: (conditions != null) ? conditions!.toEntity(appId: appId) : null, 
     );
   }
 
-  static FeedModel fromEntity(String documentID, FeedEntity entity) {
+  static FeedModel? fromEntity(String documentID, FeedEntity? entity) {
     if (entity == null) return null;
     return FeedModel(
           documentID: documentID, 
@@ -88,7 +88,7 @@ class FeedModel {
     );
   }
 
-  static Future<FeedModel> fromEntityPlus(String documentID, FeedEntity entity, { String appId}) async {
+  static Future<FeedModel?> fromEntityPlus(String documentID, FeedEntity? entity, { String? appId}) async {
     if (entity == null) return null;
 
     return FeedModel(

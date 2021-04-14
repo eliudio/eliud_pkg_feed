@@ -53,7 +53,7 @@ class AdminApp extends AdminAppInstallerBase {
 
 
   PageModel _feedsPages() {
-    List<BodyComponentModel> components = List();
+    List<BodyComponentModel> components = [];
     components.add(BodyComponentModel(
       documentID: "internalWidget-feeds", componentName: "eliud_pkg_feed_internalWidgets", componentId: "feeds"));
     PageModel page = PageModel(
@@ -78,7 +78,7 @@ class AdminApp extends AdminAppInstallerBase {
 
   Future<void> _setupAdminPages() {
 
-    return pageRepository(appId: appId).add(_feedsPages())
+    return pageRepository(appId: appId)!.add(_feedsPages())
 
     ;
   }
@@ -94,7 +94,7 @@ class AdminApp extends AdminAppInstallerBase {
 class AdminMenu extends AdminAppMenuInstallerBase {
 
   Future<MenuDefModel> menu(String appId) async {
-    List<MenuItemModel> menuItems = List<MenuItemModel>();
+    var menuItems = <MenuItemModel>[];
 
     menuItems.add(
       MenuItemModel(
@@ -113,7 +113,7 @@ class AdminMenu extends AdminAppMenuInstallerBase {
       name: "eliud_pkg_feed",
       menuItems: menuItems
     );
-    await menuDefRepository(appId: appId).add(menu);
+    await menuDefRepository(appId: appId)!.add(menu);
     return menu;
   }
 }

@@ -21,7 +21,7 @@ abstract class FeedComponentEvent extends Equatable {
 }
 
 class FetchFeedComponent extends FeedComponentEvent {
-  final String id;
+  final String? id;
 
   FetchFeedComponent({ this.id });
 }

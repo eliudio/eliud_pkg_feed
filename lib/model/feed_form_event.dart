@@ -34,7 +34,7 @@ abstract class FeedFormEvent extends Equatable {
   const FeedFormEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class InitialiseNewFeedFormEvent extends FeedFormEvent {
@@ -42,66 +42,66 @@ class InitialiseNewFeedFormEvent extends FeedFormEvent {
 
 
 class InitialiseFeedFormEvent extends FeedFormEvent {
-  final FeedModel value;
+  final FeedModel? value;
 
   @override
-  List<Object> get props => [ value ];
+  List<Object?> get props => [ value ];
 
   InitialiseFeedFormEvent({this.value});
 }
 
 class InitialiseFeedFormNoLoadEvent extends FeedFormEvent {
-  final FeedModel value;
+  final FeedModel? value;
 
   @override
-  List<Object> get props => [ value ];
+  List<Object?> get props => [ value ];
 
   InitialiseFeedFormNoLoadEvent({this.value});
 }
 
 class ChangedFeedDocumentID extends FeedFormEvent {
-  final String value;
+  final String? value;
 
   ChangedFeedDocumentID({this.value});
 
   @override
-  List<Object> get props => [ value ];
+  List<Object?> get props => [ value ];
 
   @override
   String toString() => 'ChangedFeedDocumentID{ value: $value }';
 }
 
 class ChangedFeedAppId extends FeedFormEvent {
-  final String value;
+  final String? value;
 
   ChangedFeedAppId({this.value});
 
   @override
-  List<Object> get props => [ value ];
+  List<Object?> get props => [ value ];
 
   @override
   String toString() => 'ChangedFeedAppId{ value: $value }';
 }
 
 class ChangedFeedDescription extends FeedFormEvent {
-  final String value;
+  final String? value;
 
   ChangedFeedDescription({this.value});
 
   @override
-  List<Object> get props => [ value ];
+  List<Object?> get props => [ value ];
 
   @override
   String toString() => 'ChangedFeedDescription{ value: $value }';
 }
 
 class ChangedFeedConditions extends FeedFormEvent {
-  final ConditionsSimpleModel value;
+  final ConditionsSimpleModel? value;
 
   ChangedFeedConditions({this.value});
 
   @override
-  List<Object> get props => [ value ];
+  List<Object?> get props => [ value ];
 
   @override
   String toString() => 'ChangedFeedConditions{ value: $value }';

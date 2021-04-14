@@ -22,13 +22,13 @@ abstract class FeedFormState extends Equatable {
   const FeedFormState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 // Startup: menu has not been initialised yet and so we should show a "loading indicator" or something
 class FeedFormUninitialized extends FeedFormState {
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 
   @override
   String toString() {
@@ -38,22 +38,22 @@ class FeedFormUninitialized extends FeedFormState {
 
 // FeedModel has been initialised and hence FeedModel is available
 class FeedFormInitialized extends FeedFormState {
-  final FeedModel value;
+  final FeedModel? value;
 
   @override
-  List<Object> get props => [ value ];
+  List<Object?> get props => [ value ];
 
   const FeedFormInitialized({ this.value });
 }
 
 // Menu has been initialised and hence a menu is available
 abstract class FeedFormError extends FeedFormInitialized {
-  final String message;
+  final String? message;
 
   @override
-  List<Object> get props => [ message, value ];
+  List<Object?> get props => [ message, value ];
 
-  const FeedFormError({this.message, FeedModel value }) : super(value: value);
+  const FeedFormError({this.message, FeedModel? value }) : super(value: value);
 
   @override
   String toString() {
@@ -64,10 +64,10 @@ abstract class FeedFormError extends FeedFormInitialized {
   }
 }
 class DocumentIDFeedFormError extends FeedFormError { 
-  const DocumentIDFeedFormError({ String message, FeedModel value }): super(message: message, value: value);
+  const DocumentIDFeedFormError({ String? message, FeedModel? value }): super(message: message, value: value);
 
   @override
-  List<Object> get props => [ message, value ];
+  List<Object?> get props => [ message, value ];
 
   @override
   String toString() {
@@ -80,10 +80,10 @@ class DocumentIDFeedFormError extends FeedFormError {
 
 
 class AppIdFeedFormError extends FeedFormError { 
-  const AppIdFeedFormError({ String message, FeedModel value }): super(message: message, value: value);
+  const AppIdFeedFormError({ String? message, FeedModel? value }): super(message: message, value: value);
 
   @override
-  List<Object> get props => [ message, value ];
+  List<Object?> get props => [ message, value ];
 
   @override
   String toString() {
@@ -96,10 +96,10 @@ class AppIdFeedFormError extends FeedFormError {
 
 
 class DescriptionFeedFormError extends FeedFormError { 
-  const DescriptionFeedFormError({ String message, FeedModel value }): super(message: message, value: value);
+  const DescriptionFeedFormError({ String? message, FeedModel? value }): super(message: message, value: value);
 
   @override
-  List<Object> get props => [ message, value ];
+  List<Object?> get props => [ message, value ];
 
   @override
   String toString() {
@@ -112,10 +112,10 @@ class DescriptionFeedFormError extends FeedFormError {
 
 
 class ConditionsFeedFormError extends FeedFormError { 
-  const ConditionsFeedFormError({ String message, FeedModel value }): super(message: message, value: value);
+  const ConditionsFeedFormError({ String? message, FeedModel? value }): super(message: message, value: value);
 
   @override
-  List<Object> get props => [ message, value ];
+  List<Object?> get props => [ message, value ];
 
   @override
   String toString() {
@@ -128,10 +128,10 @@ class ConditionsFeedFormError extends FeedFormError {
 
 
 class FeedFormLoaded extends FeedFormInitialized { 
-  const FeedFormLoaded({ FeedModel value }): super(value: value);
+  const FeedFormLoaded({ FeedModel? value }): super(value: value);
 
   @override
-  List<Object> get props => [ value ];
+  List<Object?> get props => [ value ];
 
   @override
   String toString() {
@@ -143,10 +143,10 @@ class FeedFormLoaded extends FeedFormInitialized {
 
 
 class SubmittableFeedForm extends FeedFormInitialized { 
-  const SubmittableFeedForm({ FeedModel value }): super(value: value);
+  const SubmittableFeedForm({ FeedModel? value }): super(value: value);
 
   @override
-  List<Object> get props => [ value ];
+  List<Object?> get props => [ value ];
 
   @override
   String toString() {

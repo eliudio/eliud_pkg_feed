@@ -33,29 +33,29 @@ import 'dart:async';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
-typedef FeedModelTrigger(List<FeedModel> list);
-typedef FeedChanged(FeedModel value);
+typedef FeedModelTrigger(List<FeedModel?> list);
+typedef FeedChanged(FeedModel? value);
 
 abstract class FeedRepository {
   Future<FeedModel> add(FeedModel value);
   Future<void> delete(FeedModel value);
-  Future<FeedModel> get(String id, { Function(Exception) onError });
+  Future<FeedModel?> get(String? id, { Function(Exception)? onError });
   Future<FeedModel> update(FeedModel value);
 
-  Stream<List<FeedModel>> values({String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel, EliudQuery eliudQuery });
-  Stream<List<FeedModel>> valuesWithDetails({String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel, EliudQuery eliudQuery });
-  Future<List<FeedModel>> valuesList({String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel, EliudQuery eliudQuery });
-  Future<List<FeedModel>> valuesListWithDetails({String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel, EliudQuery eliudQuery });
+  Stream<List<FeedModel?>> values({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery });
+  Stream<List<FeedModel?>> valuesWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery });
+  Future<List<FeedModel?>> valuesList({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery });
+  Future<List<FeedModel?>> valuesListWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery });
 
-  StreamSubscription<List<FeedModel>> listen(FeedModelTrigger trigger, {String orderBy, bool descending, Object startAfter, int limit, int privilegeLevel, EliudQuery eliudQuery });
-  StreamSubscription<List<FeedModel>> listenWithDetails(FeedModelTrigger trigger, {String orderBy, bool descending, Object startAfter, int limit, int privilegeLevel, EliudQuery eliudQuery });
-  StreamSubscription<FeedModel> listenTo(String documentId, FeedChanged changed);
+  StreamSubscription<List<FeedModel?>> listen(FeedModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
+  StreamSubscription<List<FeedModel?>> listenWithDetails(FeedModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
+  StreamSubscription<FeedModel?> listenTo(String documentId, FeedChanged changed);
   void flush();
   
-  String timeStampToString(dynamic timeStamp);
+  String? timeStampToString(dynamic timeStamp);
 
   dynamic getSubCollection(String documentId, String name);
-  Future<FeedModel> changeValue(String documentId, String fieldName, num changeByThisValue);
+  Future<FeedModel?> changeValue(String documentId, String fieldName, num changeByThisValue);
 
   Future<void> deleteAll();
 }

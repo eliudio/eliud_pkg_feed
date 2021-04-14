@@ -20,13 +20,13 @@ abstract class FeedComponentState extends Equatable {
   const FeedComponentState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class FeedComponentUninitialized extends FeedComponentState {}
 
 class FeedComponentError extends FeedComponentState {
-  final String message;
+  final String? message;
   FeedComponentError({ this.message });
 }
 
@@ -35,16 +35,16 @@ class FeedComponentPermissionDenied extends FeedComponentState {
 }
 
 class FeedComponentLoaded extends FeedComponentState {
-  final FeedModel value;
+  final FeedModel? value;
 
   const FeedComponentLoaded({ this.value });
 
-  FeedComponentLoaded copyWith({ FeedModel copyThis }) {
+  FeedComponentLoaded copyWith({ FeedModel? copyThis }) {
     return FeedComponentLoaded(value: copyThis ?? this.value);
   }
 
   @override
-  List<Object> get props => [value];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'FeedComponentLoaded { value: $value }';

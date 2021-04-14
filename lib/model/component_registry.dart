@@ -26,11 +26,11 @@ import 'package:eliud_pkg_feed/model/internal_component.dart';
 class ComponentRegistry {
 
   void init() {
-    Registry.registry().addInternalComponents('eliud_pkg_feed', ["feeds", ]);
+    Registry.registry()!.addInternalComponents('eliud_pkg_feed', ["feeds", ]);
 
-    Registry.registry().register(componentName: "eliud_pkg_feed_internalWidgets", componentConstructor: ListComponentFactory());
-    Registry.registry().addDropDownSupporter("feeds", DropdownButtonComponentFactory());
-    Registry.registry().register(componentName: "feeds", componentConstructor: FeedComponentConstructorDefault());
+    Registry.registry()!.register(componentName: "eliud_pkg_feed_internalWidgets", componentConstructor: ListComponentFactory());
+    Registry.registry()!.addDropDownSupporter("feeds", DropdownButtonComponentFactory());
+    Registry.registry()!.register(componentName: "feeds", componentConstructor: FeedComponentConstructorDefault());
 
   }
 }

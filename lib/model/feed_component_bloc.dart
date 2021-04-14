@@ -23,7 +23,7 @@ import 'package:eliud_pkg_feed/model/feed_repository.dart';
 import 'package:flutter/services.dart';
 
 class FeedComponentBloc extends Bloc<FeedComponentEvent, FeedComponentState> {
-  final FeedRepository feedRepository;
+  final FeedRepository? feedRepository;
 
   FeedComponentBloc({ this.feedRepository }): super(FeedComponentUninitialized());
   @override
@@ -33,9 +33,9 @@ class FeedComponentBloc extends Bloc<FeedComponentEvent, FeedComponentState> {
       try {
         if (currentState is FeedComponentUninitialized) {
           bool permissionDenied = false;
-          final model = await feedRepository.get(event.id, onError: (error) {
+          final model = await feedRepository!.get(event.id, onError: (error) {
             // Unfortunatly the below is currently the only way we know how to identify if a document is read protected
-            if ((error is PlatformException) &&  (error.message.startsWith("PERMISSION_DENIED"))) {
+            if ((error is PlatformException) &&  (error.message!.startsWith("PERMISSION_DENIED"))) {
               permissionDenied = true;
             }
           });
@@ -45,7 +45,7 @@ class FeedComponentBloc extends Bloc<FeedComponentEvent, FeedComponentState> {
             if (model != null) {
               yield FeedComponentLoaded(value: model);
             } else {
-              String id = event.id;
+              String? id = event.id;
               yield FeedComponentError(
                   message: "Feed with id = '$id' not found");
             }

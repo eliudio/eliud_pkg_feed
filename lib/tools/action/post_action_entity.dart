@@ -5,17 +5,17 @@ import 'package:eliud_core/tools/action/action_entity.dart';
 
 class PostActionEntity extends ActionEntity {
   static const String label = "Post";
-  final String feedId;
+  final String? feedId;
 
-  const PostActionEntity({String appId, ConditionsEntity conditions, this.feedId}) : super(appId, conditions: conditions, actionType : label);
+  const PostActionEntity({String? appId, ConditionsEntity? conditions, this.feedId}) : super(appId, conditions: conditions, actionType : label);
 
-  Map<String, Object> toDocument() {
-    Map<String, Object> theDocument = HashMap();
+  Map<String, Object?> toDocument() {
+    Map<String, Object?> theDocument = HashMap();
     theDocument["appID"] = appID;
     theDocument["actionType"] = actionType;
     if (feedId != null) theDocument["feedId"] = feedId;
     else theDocument["feedId"] = null;
-    theDocument['conditions'] = conditions == null ? null : conditions.toDocument();
+    theDocument['conditions'] = conditions == null ? null : conditions!.toDocument();
 
     return theDocument;
   }

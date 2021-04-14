@@ -48,50 +48,50 @@ class FeedFirestore implements FeedRepository {
     return FeedCollection.doc(value.documentID).update(value.toEntity(appId: appId).toDocument()).then((_) => value);
   }
 
-  FeedModel _populateDoc(DocumentSnapshot value) {
+  FeedModel? _populateDoc(DocumentSnapshot value) {
     return FeedModel.fromEntity(value.id, FeedEntity.fromMap(value.data()));
   }
 
-  Future<FeedModel> _populateDocPlus(DocumentSnapshot value) async {
+  Future<FeedModel?> _populateDocPlus(DocumentSnapshot value) async {
     return FeedModel.fromEntityPlus(value.id, FeedEntity.fromMap(value.data()), appId: appId);  }
 
-  Future<FeedModel> get(String id, {Function(Exception) onError}) {
-    return FeedCollection.doc(id).get().then((doc) {
+  Future<FeedModel?> get(String? id, {Function(Exception)? onError}) {
+    return FeedCollection.doc(id).get().then((doc) async {
       if (doc.data() != null)
-        return _populateDocPlus(doc);
+        return await _populateDocPlus(doc);
       else
         return null;
     }).catchError((Object e) {
       if (onError != null) {
-        onError(e);
+        onError(e as Exception);
       }
     });
   }
 
-  StreamSubscription<List<FeedModel>> listen(FeedModelTrigger trigger, {String orderBy, bool descending, Object startAfter, int limit, int privilegeLevel, EliudQuery eliudQuery}) {
-    Stream<List<FeedModel>> stream;
-//    stream = getQuery(FeedCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId).snapshots().map((data) {
+  StreamSubscription<List<FeedModel?>> listen(FeedModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery}) {
+    Stream<List<FeedModel?>> stream;
+//    stream = getQuery(FeedCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots().map((data) {
 //    The above line is replaced by the below line. The reason is because the same collection can not be subscribed to twice
 //    The reason we're subscribing twice to the same list, is because the close on bloc isn't called. This needs to be fixed.
 //    See https://github.com/felangel/bloc/issues/2073.
 //    In the meantime:
-      stream = getQuery(appRepository().getSubCollection(appId, 'feed'), orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId).snapshots().map((data) {
-      Iterable<FeedModel> feeds  = data.docs.map((doc) {
-        FeedModel value = _populateDoc(doc);
+      stream = getQuery(appRepository()!.getSubCollection(appId, 'feed'), orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots().map((data) {
+      Iterable<FeedModel?> feeds  = data.docs.map((doc) {
+        FeedModel? value = _populateDoc(doc);
         return value;
       }).toList();
-      return feeds;
+      return feeds as List<FeedModel?>;
     });
     return stream.listen((listOfFeedModels) {
       trigger(listOfFeedModels);
     });
   }
 
-  StreamSubscription<List<FeedModel>> listenWithDetails(FeedModelTrigger trigger, {String orderBy, bool descending, Object startAfter, int limit, int privilegeLevel, EliudQuery eliudQuery}) {
-    Stream<List<FeedModel>> stream;
+  StreamSubscription<List<FeedModel?>> listenWithDetails(FeedModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery}) {
+    Stream<List<FeedModel?>> stream;
 //  stream = getQuery(FeedCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId).snapshots()
 //  see comment listen(...) above
-    stream = getQuery(appRepository().getSubCollection(appId, 'feed'), orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId).snapshots()
+    stream = getQuery(appRepository()!.getSubCollection(appId, 'feed'), orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots()
         .asyncMap((data) async {
       return await Future.wait(data.docs.map((doc) =>  _populateDocPlus(doc)).toList());
     });
@@ -102,7 +102,7 @@ class FeedFirestore implements FeedRepository {
   }
 
   @override
-  StreamSubscription<FeedModel> listenTo(String documentId, FeedChanged changed) {
+  StreamSubscription<FeedModel?> listenTo(String documentId, FeedChanged changed) {
     var stream = FeedCollection.doc(documentId)
         .snapshots()
         .asyncMap((data) {
@@ -113,9 +113,9 @@ class FeedFirestore implements FeedRepository {
     });
   }
 
-  Stream<List<FeedModel>> values({String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel, EliudQuery eliudQuery }) {
-    DocumentSnapshot lastDoc;
-    Stream<List<FeedModel>> _values = getQuery(FeedCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter, limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId).snapshots().map((snapshot) {
+  Stream<List<FeedModel?>> values({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {
+    DocumentSnapshot? lastDoc;
+    Stream<List<FeedModel?>> _values = getQuery(FeedCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?, limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots().map((snapshot) {
       return snapshot.docs.map((doc) {
         lastDoc = doc;
         return _populateDoc(doc);
@@ -124,9 +124,9 @@ class FeedFirestore implements FeedRepository {
     return _values;
   }
 
-  Stream<List<FeedModel>> valuesWithDetails({String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel, EliudQuery eliudQuery }) {
-    DocumentSnapshot lastDoc;
-    Stream<List<FeedModel>> _values = getQuery(FeedCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter, limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId).snapshots().asyncMap((snapshot) {
+  Stream<List<FeedModel?>> valuesWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {
+    DocumentSnapshot? lastDoc;
+    Stream<List<FeedModel?>> _values = getQuery(FeedCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?, limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots().asyncMap((snapshot) {
       return Future.wait(snapshot.docs.map((doc) {
         lastDoc = doc;
         return _populateDocPlus(doc);
@@ -136,9 +136,9 @@ class FeedFirestore implements FeedRepository {
     return _values;
   }
 
-  Future<List<FeedModel>> valuesList({String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel, EliudQuery eliudQuery }) async {
-    DocumentSnapshot lastDoc;
-    List<FeedModel> _values = await getQuery(FeedCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId).get().then((value) {
+  Future<List<FeedModel?>> valuesList({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) async {
+    DocumentSnapshot? lastDoc;
+    List<FeedModel?> _values = await getQuery(FeedCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.get().then((value) {
       var list = value.docs;
       return list.map((doc) { 
         lastDoc = doc;
@@ -149,9 +149,9 @@ class FeedFirestore implements FeedRepository {
     return _values;
   }
 
-  Future<List<FeedModel>> valuesListWithDetails({String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel, EliudQuery eliudQuery }) async {
-    DocumentSnapshot lastDoc;
-    List<FeedModel> _values = await getQuery(FeedCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId).get().then((value) {
+  Future<List<FeedModel?>> valuesListWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) async {
+    DocumentSnapshot? lastDoc;
+    List<FeedModel?> _values = await getQuery(FeedCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.get().then((value) {
       var list = value.docs;
       return Future.wait(list.map((doc) {
         lastDoc = doc;
@@ -176,11 +176,11 @@ class FeedFirestore implements FeedRepository {
     return FeedCollection.doc(documentId).collection(name);
   }
 
-  String timeStampToString(dynamic timeStamp) {
+  String? timeStampToString(dynamic timeStamp) {
     return firestoreTimeStampToString(timeStamp);
   } 
 
-  Future<FeedModel> changeValue(String documentId, String fieldName, num changeByThisValue) {
+  Future<FeedModel?> changeValue(String documentId, String fieldName, num changeByThisValue) {
     var change = FieldValue.increment(changeByThisValue);
     return FeedCollection.doc(documentId).update({fieldName: change}).then((v) => get(documentId));
   }

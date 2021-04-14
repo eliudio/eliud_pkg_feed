@@ -24,8 +24,8 @@ import '../model/feed_cache.dart';
 class RepositorySingleton extends AbstractRepositorySingleton {
     var _feedRepository = HashMap<String, FeedRepository>();
 
-    FeedRepository feedRepository(String appId) {
-      if (_feedRepository[appId] == null) _feedRepository[appId] = FeedCache(FeedFirestore(appRepository().getSubCollection(appId, 'feed'), appId));
+    FeedRepository? feedRepository(String? appId) {
+      if ((appId != null) && (_feedRepository[appId] == null)) _feedRepository[appId] = FeedCache(FeedFirestore(appRepository()!.getSubCollection(appId, 'feed'), appId));
       return _feedRepository[appId];
     }
 

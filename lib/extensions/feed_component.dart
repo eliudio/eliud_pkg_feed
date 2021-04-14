@@ -25,15 +25,15 @@ import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 class FeedComponentConstructorDefault implements ComponentConstructor {
   FeedComponentConstructorDefault();
 
-  Widget createNew({String id, Map<String, Object> parameters}) {
+  Widget createNew({String? id, Map<String, Object>? parameters}) {
     return FeedComponent(id: id);
   }
 }
 
 class FeedComponent extends AbstractFeedComponent {
-  String parentPageId;
+  String? parentPageId;
 
-  FeedComponent({String id}) : super(feedID: id);
+  FeedComponent({String? id}) : super(feedID: id);
 
   @override
   Widget alertWidget({title = String, content = String}) {
@@ -41,8 +41,8 @@ class FeedComponent extends AbstractFeedComponent {
   }
 
   @override
-  Widget yourWidget(BuildContext context, FeedModel feedModel) {
-    var modalRoute = ModalRoute.of(context);
+  Widget yourWidget(BuildContext context, FeedModel? feedModel) {
+    var modalRoute = ModalRoute.of(context) as ModalRoute<Object>;
     var settings = modalRoute.settings;
     parentPageId = settings.name;
     AccessState state = AccessBloc.getState(context);
@@ -55,13 +55,13 @@ class FeedComponent extends AbstractFeedComponent {
               .withCondition(EliudQueryCondition('archived',
                   isEqualTo: PostArchiveStatus.Active.index))
               .withCondition(EliudQueryCondition('feedId',
-                  isEqualTo: feedModel.documentID))
+                  isEqualTo: feedModel!.documentID))
               // We could limit the posts retrieve by making adding the condition: 'authorId' whereIn FollowerHelper.following(me, state.app.documentID)
               // However, combining this query with arrayContainsAny in 1 query is not possible currently in the app.
               // For now we lay the responsibility with the one posting the post, i.e. that the readAccess includes the person.
               // More comments, see firestore.rules > match /post/{id} > allow create
               .withCondition(EliudQueryCondition('readAccess',
-                  arrayContainsAny: [state.getMember().documentID, 'PUBLIC'])));
+                  arrayContainsAny: [state.getMember()!.documentID, 'PUBLIC'])));
     } else if (state is AppLoaded) {
       return _postPagedBloc(
           parentPageId,
@@ -74,11 +74,11 @@ class FeedComponent extends AbstractFeedComponent {
     }
   }
 
-  Widget _postPagedBloc(String parentPageId, BuildContext context,
-      FeedModel feedModel, EliudQuery eliudQuery) {
+  Widget _postPagedBloc(String? parentPageId, BuildContext context,
+      FeedModel? feedModel, EliudQuery eliudQuery) {
     return BlocProvider(
       create: (_) => PostListPagedBloc(eliudQuery,
-          postRepository: posts.postRepository(appId: feedModel.appId))
+          postRepository: posts.postRepository(appId: feedModel!.appId)!)
         ..add(PostListPagedFetched()),
       child: PostsList(parentPageId: parentPageId),
     );
@@ -87,22 +87,22 @@ class FeedComponent extends AbstractFeedComponent {
   @override
   FeedRepository getFeedRepository(BuildContext context) {
     return AbstractRepositorySingleton.singleton
-        .feedRepository(AccessBloc.appId(context));
+        .feedRepository(AccessBloc.appId(context))!;
   }
 }
 
 class PostsList extends StatefulWidget {
-  final String parentPageId;
+  final String? parentPageId;
 
-  const PostsList({Key key, this.parentPageId}) : super(key: key);
+  const PostsList({Key? key, this.parentPageId}) : super(key: key);
 
   @override
   _PostsListState createState() => _PostsListState();
 }
 
 class _PostsListState extends State<PostsList> {
-  PostListPagedBloc _postBloc;
-  AppModel _app;
+  late PostListPagedBloc _postBloc;
+  AppModel? _app;
 
   @override
   void initState() {
@@ -123,7 +123,7 @@ class _PostsListState extends State<PostsList> {
               itemBuilder: (BuildContext context, int index) {
                 return index >= theState.values.length
                     ? _buttonNextPage(!theState.hasReachedMax)
-                    : post(context, theState.values[index]);
+                    : post(context, theState.values[index]!);
               },
               itemCount: theState.values.length + 1);
         } else {
@@ -137,7 +137,7 @@ class _PostsListState extends State<PostsList> {
 
   Widget simplePost(BuildContext context, PostModel postModel) {
     return TextButton(
-        child: Text(postModel.documentID),
+        child: Text(postModel.documentID!),
         onPressed: () => BlocProvider.of<PostListPagedBloc>(context)
             .add(DeletePostPaged(value: postModel)));
   }
@@ -145,7 +145,7 @@ class _PostsListState extends State<PostsList> {
   Widget post(BuildContext context, PostModel postModel) {
     var member = AccessBloc.memberFor(AccessBloc.getState(context));
     return BlocProvider<PostBloc>(
-        create: (context) => PostBloc(postModel, member.documentID),
+        create: (context) => PostBloc(postModel, member!.documentID!),
         child: PostWidget(
           isRecursive: postModel.postPageId == widget.parentPageId,
           member: member,
@@ -155,7 +155,7 @@ class _PostsListState extends State<PostsList> {
   Widget _buttonNextPage(bool mightHaveMore) {
     if (mightHaveMore) {
       return MyButton(
-        buttonColor: _app.formSubmitButtonColor,
+        buttonColor: _app!.formSubmitButtonColor,
         onClickFunction: _onClick,
       );
     } else {
@@ -187,10 +187,10 @@ class _PostsListState extends State<PostsList> {
 typedef OnClickFunction();
 
 class MyButton extends StatefulWidget {
-  final RgbModel buttonColor;
-  final OnClickFunction onClickFunction;
+  final RgbModel? buttonColor;
+  final OnClickFunction? onClickFunction;
 
-  const MyButton({Key key, this.buttonColor, this.onClickFunction})
+  const MyButton({Key? key, this.buttonColor, this.onClickFunction})
       : super(key: key);
 
   @override
@@ -198,7 +198,7 @@ class MyButton extends StatefulWidget {
 }
 
 class _MyButtonState extends State<MyButton> {
-  bool clicked;
+  late bool clicked;
 
   @override
   void initState() {
@@ -215,7 +215,7 @@ class _MyButtonState extends State<MyButton> {
             setState(() {
               clicked = true;
             });
-            widget.onClickFunction();
+            widget.onClickFunction!();
           },
           child: Text('More...'));
     } else {
@@ -225,7 +225,7 @@ class _MyButtonState extends State<MyButton> {
             setState(() {
               clicked = true;
             });
-            widget.onClickFunction();
+            widget.onClickFunction!();
           },
           child: Center(
               child: SizedBox(

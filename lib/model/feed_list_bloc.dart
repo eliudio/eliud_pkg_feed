@@ -27,53 +27,59 @@ const _feedLimit = 5;
 
 class FeedListBloc extends Bloc<FeedListEvent, FeedListState> {
   final FeedRepository _feedRepository;
-  StreamSubscription _feedsListSubscription;
-  final EliudQuery eliudQuery;
+  StreamSubscription? _feedsListSubscription;
+  final EliudQuery? eliudQuery;
   int pages = 1;
-  final bool paged;
-  final String orderBy;
-  final bool descending;
-  final bool detailed;
+  final bool? paged;
+  final String? orderBy;
+  final bool? descending;
+  final bool? detailed;
 
-  FeedListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, @required FeedRepository feedRepository})
+  FeedListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required FeedRepository feedRepository})
       : assert(feedRepository != null),
         _feedRepository = feedRepository,
         super(FeedListLoading());
 
   Stream<FeedListState> _mapLoadFeedListToState() async* {
-    int amountNow =  (state is FeedListLoaded) ? (state as FeedListLoaded).values.length : 0;
+    int amountNow =  (state is FeedListLoaded) ? (state as FeedListLoaded).values!.length : 0;
     _feedsListSubscription?.cancel();
     _feedsListSubscription = _feedRepository.listen(
           (list) => add(FeedListUpdated(value: list, mightHaveMore: amountNow != list.length)),
       orderBy: orderBy,
       descending: descending,
       eliudQuery: eliudQuery,
-      limit: ((paged != null) && (paged)) ? pages * _feedLimit : null
+      limit: ((paged != null) && paged!) ? pages * _feedLimit : null
     );
   }
 
   Stream<FeedListState> _mapLoadFeedListWithDetailsToState() async* {
-    int amountNow =  (state is FeedListLoaded) ? (state as FeedListLoaded).values.length : 0;
+    int amountNow =  (state is FeedListLoaded) ? (state as FeedListLoaded).values!.length : 0;
     _feedsListSubscription?.cancel();
     _feedsListSubscription = _feedRepository.listenWithDetails(
             (list) => add(FeedListUpdated(value: list, mightHaveMore: amountNow != list.length)),
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,
-        limit: ((paged != null) && (paged)) ? pages * _feedLimit : null
+        limit: ((paged != null) && paged!) ? pages * _feedLimit : null
     );
   }
 
   Stream<FeedListState> _mapAddFeedListToState(AddFeedList event) async* {
-    _feedRepository.add(event.value);
+    var value = event.value;
+    if (value != null) 
+      _feedRepository.add(value);
   }
 
   Stream<FeedListState> _mapUpdateFeedListToState(UpdateFeedList event) async* {
-    _feedRepository.update(event.value);
+    var value = event.value;
+    if (value != null) 
+      _feedRepository.update(value);
   }
 
   Stream<FeedListState> _mapDeleteFeedListToState(DeleteFeedList event) async* {
-    _feedRepository.delete(event.value);
+    var value = event.value;
+    if (value != null) 
+      _feedRepository.delete(value);
   }
 
   Stream<FeedListState> _mapFeedListUpdatedToState(
@@ -84,7 +90,7 @@ class FeedListBloc extends Bloc<FeedListEvent, FeedListState> {
   @override
   Stream<FeedListState> mapEventToState(FeedListEvent event) async* {
     if (event is LoadFeedList) {
-      if ((detailed == null) || (!detailed)) {
+      if ((detailed == null) || (!detailed!)) {
         yield* _mapLoadFeedListToState();
       } else {
         yield* _mapLoadFeedListWithDetailsToState();

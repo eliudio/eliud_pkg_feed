@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 
 abstract class PostPagedEvent extends Equatable {
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class PostListPagedFetched extends PostPagedEvent {
@@ -11,10 +11,10 @@ class PostListPagedFetched extends PostPagedEvent {
 }
 
 class DeletePostPaged extends PostPagedEvent {
-  final PostModel value;
+  final PostModel? value;
 
   DeletePostPaged({ this.value });
 
   @override
-  List<Object> get props => [ value ];
+  List<Object?> get props => [ value ];
 }

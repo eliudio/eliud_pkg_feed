@@ -16,13 +16,13 @@ import 'package:eliud_pkg_feed/model/component_registry.dart';
 
 abstract class FeedPackage extends Package {
   @override
-  BlocProvider createMainBloc(NavigatorBloc navigatorBloc, AccessBloc accessBloc) => null;
+  BlocProvider? createMainBloc(NavigatorBloc navigatorBloc, AccessBloc accessBloc) => null;
 
   @override
-  Future<bool> isConditionOk(String packageCondition, AppModel app, MemberModel member, bool isOwner, bool isBlocked, PrivilegeLevel privilegeLevel) async => null;
+  Future<bool?> isConditionOk(String packageCondition, AppModel app, MemberModel? member, bool isOwner, bool? isBlocked, PrivilegeLevel? privilegeLevel) async => null;
 
   @override
-  List<String> retrieveAllPackageConditions() => null;
+  List<String>? retrieveAllPackageConditions() => null;
 
   @override
   void init() {
@@ -34,7 +34,7 @@ abstract class FeedPackage extends Package {
     eliud_router.Router.register(PostActionHandler());
 
     // Register a mapper for an extra action: the mapper for the WorkflowAction
-    ActionModelRegistry.registry().addMapper(PostActionEntity.label, PostActionMapper());
+    ActionModelRegistry.registry()!.addMapper(PostActionEntity.label, PostActionMapper());
   }
 
   @override

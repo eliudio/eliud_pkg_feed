@@ -20,19 +20,19 @@ abstract class FeedListState extends Equatable {
   const FeedListState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class FeedListLoading extends FeedListState {}
 
 class FeedListLoaded extends FeedListState {
-  final List<FeedModel> values;
-  final bool mightHaveMore;
+  final List<FeedModel?>? values;
+  final bool? mightHaveMore;
 
   const FeedListLoaded({this.mightHaveMore, this.values = const []});
 
   @override
-  List<Object> get props => [ values, mightHaveMore ];
+  List<Object?> get props => [ values, mightHaveMore ];
 
   @override
   String toString() => 'FeedListLoaded { values: $values }';

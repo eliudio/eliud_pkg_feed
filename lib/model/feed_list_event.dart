@@ -19,7 +19,7 @@ import 'package:eliud_pkg_feed/model/feed_model.dart';
 abstract class FeedListEvent extends Equatable {
   const FeedListEvent();
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class LoadFeedList extends FeedListEvent {}
@@ -27,49 +27,49 @@ class LoadFeedList extends FeedListEvent {}
 class NewPage extends FeedListEvent {}
 
 class AddFeedList extends FeedListEvent {
-  final FeedModel value;
+  final FeedModel? value;
 
   const AddFeedList({ this.value });
 
   @override
-  List<Object> get props => [ value ];
+  List<Object?> get props => [ value ];
 
   @override
   String toString() => 'AddFeedList{ value: $value }';
 }
 
 class UpdateFeedList extends FeedListEvent {
-  final FeedModel value;
+  final FeedModel? value;
 
   const UpdateFeedList({ this.value });
 
   @override
-  List<Object> get props => [ value ];
+  List<Object?> get props => [ value ];
 
   @override
   String toString() => 'UpdateFeedList{ value: $value }';
 }
 
 class DeleteFeedList extends FeedListEvent {
-  final FeedModel value;
+  final FeedModel? value;
 
   const DeleteFeedList({ this.value });
 
   @override
-  List<Object> get props => [ value ];
+  List<Object?> get props => [ value ];
 
   @override
   String toString() => 'DeleteFeedList{ value: $value }';
 }
 
 class FeedListUpdated extends FeedListEvent {
-  final List<FeedModel> value;
-  final bool mightHaveMore;
+  final List<FeedModel?>? value;
+  final bool? mightHaveMore;
 
   const FeedListUpdated({ this.value, this.mightHaveMore });
 
   @override
-  List<Object> get props => [ value, mightHaveMore ];
+  List<Object?> get props => [ value, mightHaveMore ];
 
   @override
   String toString() => 'FeedListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';

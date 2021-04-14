@@ -42,8 +42,8 @@ import 'package:eliud_pkg_feed/model/feed_form_state.dart';
 import 'package:eliud_pkg_feed/model/feed_repository.dart';
 
 class FeedFormBloc extends Bloc<FeedFormEvent, FeedFormState> {
-  final FormAction formAction;
-  final String appId;
+  final FormAction? formAction;
+  final String? appId;
 
   FeedFormBloc(this.appId, { this.formAction }): super(FeedFormUninitialized());
   @override
@@ -65,20 +65,20 @@ class FeedFormBloc extends Bloc<FeedFormEvent, FeedFormState> {
 
       if (event is InitialiseFeedFormEvent) {
         // Need to re-retrieve the document from the repository so that I get all associated types
-        FeedFormLoaded loaded = FeedFormLoaded(value: await feedRepository(appId: appId).get(event.value.documentID));
+        FeedFormLoaded loaded = FeedFormLoaded(value: await feedRepository(appId: appId)!.get(event!.value!.documentID));
         yield loaded;
         return;
       } else if (event is InitialiseFeedFormNoLoadEvent) {
-        FeedFormLoaded loaded = FeedFormLoaded(value: event.value);
+        FeedFormLoaded loaded = FeedFormLoaded(value: event!.value);
         yield loaded;
         return;
       }
     } else if (currentState is FeedFormInitialized) {
-      FeedModel newValue = null;
+      FeedModel? newValue = null;
       if (event is ChangedFeedDocumentID) {
-        newValue = currentState.value.copyWith(documentID: event.value);
+        newValue = currentState.value!.copyWith(documentID: event!.value);
         if (formAction == FormAction.AddAction) {
-          yield* _isDocumentIDValid(event.value, newValue).asStream();
+          yield* _isDocumentIDValid(event!.value, newValue).asStream();
         } else {
           yield SubmittableFeedForm(value: newValue);
         }
@@ -86,19 +86,19 @@ class FeedFormBloc extends Bloc<FeedFormEvent, FeedFormState> {
         return;
       }
       if (event is ChangedFeedAppId) {
-        newValue = currentState.value.copyWith(appId: event.value);
+        newValue = currentState.value!.copyWith(appId: event!.value);
         yield SubmittableFeedForm(value: newValue);
 
         return;
       }
       if (event is ChangedFeedDescription) {
-        newValue = currentState.value.copyWith(description: event.value);
+        newValue = currentState.value!.copyWith(description: event!.value);
         yield SubmittableFeedForm(value: newValue);
 
         return;
       }
       if (event is ChangedFeedConditions) {
-        newValue = currentState.value.copyWith(conditions: event.value);
+        newValue = currentState.value!.copyWith(conditions: event!.value);
         yield SubmittableFeedForm(value: newValue);
 
         return;
@@ -109,10 +109,10 @@ class FeedFormBloc extends Bloc<FeedFormEvent, FeedFormState> {
 
   DocumentIDFeedFormError error(String message, FeedModel newValue) => DocumentIDFeedFormError(message: message, value: newValue);
 
-  Future<FeedFormState> _isDocumentIDValid(String value, FeedModel newValue) async {
+  Future<FeedFormState> _isDocumentIDValid(String? value, FeedModel newValue) async {
     if (value == null) return Future.value(error("Provide value for documentID", newValue));
     if (value.length == 0) return Future.value(error("Provide value for documentID", newValue));
-    Future<FeedModel> findDocument = feedRepository(appId: appId).get(value);
+    Future<FeedModel?> findDocument = feedRepository(appId: appId)!.get(value);
     return await findDocument.then((documentFound) {
       if (documentFound == null) {
         return SubmittableFeedForm(value: newValue);

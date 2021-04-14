@@ -25,7 +25,7 @@ import 'package:eliud_pkg_feed/model/feed_component_state.dart';
 
 abstract class AbstractFeedComponent extends StatelessWidget {
   static String componentName = "feeds";
-  final String feedID;
+  final String? feedID;
 
   AbstractFeedComponent({this.feedID});
 
@@ -63,7 +63,7 @@ abstract class AbstractFeedComponent extends StatelessWidget {
     });
   }
 
-  Widget yourWidget(BuildContext context, FeedModel value);
+  Widget yourWidget(BuildContext context, FeedModel? value);
   Widget alertWidget({ title: String, content: String});
   FeedRepository getFeedRepository(BuildContext context);
 }

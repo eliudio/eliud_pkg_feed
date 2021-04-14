@@ -12,15 +12,15 @@ class PostListPagedState extends Equatable {
   });
 
   final PostListPagedStatus status;
-  final List<PostModel> values;
+  final List<PostModel?> values;
   final bool hasReachedMax;
-  final Object lastRowFetched;
+  final Object? lastRowFetched;
 
   PostListPagedState copyWith({
-    PostListPagedStatus status,
-    List<PostModel> values,
-    bool hasReachedMax,
-    Object lastRowFetched,
+    PostListPagedStatus? status,
+    List<PostModel?>? values,
+    bool? hasReachedMax,
+    Object? lastRowFetched,
   }) {
     return PostListPagedState(
       status: status ?? this.status,
@@ -31,5 +31,5 @@ class PostListPagedState extends Equatable {
   }
 
   @override
-  List<Object> get props => [status, values, hasReachedMax, lastRowFetched];
+  List<Object?> get props => [status, values, hasReachedMax, lastRowFetched];
 }
