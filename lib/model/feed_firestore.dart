@@ -55,17 +55,18 @@ class FeedFirestore implements FeedRepository {
   Future<FeedModel?> _populateDocPlus(DocumentSnapshot value) async {
     return FeedModel.fromEntityPlus(value.id, FeedEntity.fromMap(value.data()), appId: appId);  }
 
-  Future<FeedModel?> get(String? id, {Function(Exception)? onError}) {
-    return FeedCollection.doc(id).get().then((doc) async {
-      if (doc.data() != null)
-        return await _populateDocPlus(doc);
-      else
-        return null;
-    }).catchError((Object e) {
+  Future<FeedModel?> get(String? id, {Function(Exception)? onError}) async {
+    try {
+      var collection = FeedCollection.doc(id);
+      var doc = await collection.get();
+      return await _populateDocPlus(doc);
+    } on Exception catch(e) {
+      print("Error whilst retrieving Feed with id $id");
+      print("Exceptoin: $e");
       if (onError != null) {
-        onError(e as Exception);
+        onError(e);
       }
-    });
+    };
   }
 
   StreamSubscription<List<FeedModel?>> listen(FeedModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery}) {
