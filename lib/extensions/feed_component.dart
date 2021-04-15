@@ -26,7 +26,7 @@ import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 class FeedComponentConstructorDefault implements ComponentConstructor {
   FeedComponentConstructorDefault();
 
-  Widget createNew({String? id, Map<String, Object>? parameters}) {
+  Widget createNew({String? id, Map<String, dynamic>? parameters}) {
     return FeedComponent(id: id);
   }
 }

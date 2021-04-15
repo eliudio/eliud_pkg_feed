@@ -18,7 +18,7 @@ import 'package:flutter/material.dart';
 class PostActionHandler extends PackageActionHandler {
   @override
   Future<void> navigateTo(BuildContext context, ActionModel action,
-      {Map<String, Object>? parameters}) async {
+      {Map<String, dynamic>? parameters}) async {
     if (action is PostActionModel) {
       var accessState = AccessBloc.getState(context);
       if (accessState is LoggedIn) {
@@ -77,7 +77,7 @@ class PostActionHandler extends PackageActionHandler {
       postAppId: action.feed!.appId,
       postPageId: pageId,
       archived: PostArchiveStatus.Active,
-      pageParameters: parameters as Map<String, Object>?,
+      pageParameters: parameters as Map<String, dynamic>?,
       description: "Post added by Add To Post button",
       readAccess: readAccess as List<String>?,
     ));
