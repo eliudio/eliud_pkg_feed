@@ -7,6 +7,7 @@ import 'package:eliud_core/model/rgb_model.dart';
 import 'package:eliud_core/tools/component_constructor.dart';
 import 'package:eliud_core/tools/etc.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
+import 'package:eliud_core/tools/router_builders.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_event.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_state.dart';
@@ -42,8 +43,9 @@ class FeedComponent extends AbstractFeedComponent {
 
   @override
   Widget yourWidget(BuildContext context, FeedModel? feedModel) {
-    var modalRoute = ModalRoute.of(context) as ModalRoute<Object>;
+    var modalRoute = ModalRoute.of(context) as ModalRoute;
     var settings = modalRoute.settings;
+    if (settings == null) return Text("no feed specified");
     parentPageId = settings.name;
     AccessState state = AccessBloc.getState(context);
     if (state is LoggedIn) {

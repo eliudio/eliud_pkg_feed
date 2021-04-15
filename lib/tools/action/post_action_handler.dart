@@ -64,7 +64,7 @@ class PostActionHandler extends PackageActionHandler {
 
   Future<void> executePostIt(BuildContext context, PostActionModel action,
       List<String?> readAccess, LoggedIn accessState) async {
-    var modalRoute = ModalRoute.of(context) as ModalRoute<Object>;
+    var modalRoute = ModalRoute.of(context) as ModalRoute;
     var settings = modalRoute.settings;
     var pageId = settings.name;
     var parameters = settings.arguments;
