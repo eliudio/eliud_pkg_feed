@@ -146,12 +146,16 @@ class _PostsListState extends State<PostsList> {
 
   Widget post(BuildContext context, PostModel postModel) {
     var member = AccessBloc.memberFor(AccessBloc.getState(context));
-    return BlocProvider<PostBloc>(
-        create: (context) => PostBloc(postModel, member!.documentID!),
-        child: PostWidget(
-          isRecursive: postModel.postPageId == widget.parentPageId,
-          member: member,
-        ));
+    if (member == null) {
+      return Text("Not logged in");
+    } else {
+      return BlocProvider<PostBloc>(
+          create: (context) => PostBloc(postModel, member!.documentID!),
+          child: PostWidget(
+            isRecursive: postModel.postPageId == widget.parentPageId,
+            member: member,
+          ));
+    }
   }
 
   Widget _buttonNextPage(bool mightHaveMore) {
