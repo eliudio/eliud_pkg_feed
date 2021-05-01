@@ -150,7 +150,7 @@ class _PostsListState extends State<PostsList> {
       return Text("Not logged in");
     } else {
       return BlocProvider<PostBloc>(
-          create: (context) => PostBloc(postModel, member!.documentID!),
+          create: (context) => PostBloc(postModel, member.documentID!),
           child: PostWidget(
             isRecursive: postModel.postPageId == widget.parentPageId,
             member: member,
