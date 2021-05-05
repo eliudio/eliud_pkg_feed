@@ -15,6 +15,9 @@ import 'package:eliud_pkg_post/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_post/model/post_model.dart';
 import 'package:flutter/material.dart';
 
+/*
+ * Post the current page to the feed of the current user, for the user or for the user and his followers
+ */
 class PostActionHandler extends PackageActionHandler {
   @override
   Future<void> navigateTo(BuildContext context, ActionModel action,
@@ -66,17 +69,29 @@ class PostActionHandler extends PackageActionHandler {
       List<String> readAccess, LoggedIn accessState) async {
     var modalRoute = ModalRoute.of(context) as ModalRoute;
     var settings = modalRoute.settings;
-    var pageId = settings.name;
+    var postAppId = action.feed!.appId;
+    if (postAppId == null) {
+      print("No app selected");
+      return;
+    }
+    var fullPostPageId = settings.name!;
+    if (fullPostPageId == null) {
+      print("No page selected");
+      return;
+    }
+    var postPageId = settings.name!.substring(postAppId!.length + 1);
     var parameters = settings.arguments;
     // What is the current page?
     // Can we actually add the current page? (page should have an indicator if it's allowed to be added)
 
     postRepository(appId: action.appID)!.add(PostModel(
       documentID: newRandomKey(),
-      author: await memberPublicInfoRepository(appId: action.appID)!.get(accessState.member.documentID),
+      author: await memberPublicInfoRepository(appId: action.appID)!.get(
+          accessState.member.documentID),
       appId: action.appID,
-      postAppId: action.feed!.appId,
-      postPageId: pageId,
+      postAppId: postAppId,
+      feedId: action.feed!.documentID,
+      postPageId: postPageId,
       archived: PostArchiveStatus.Active,
       pageParameters: parameters as Map<String, dynamic>?,
       description: "Post added by Add To Post button",
