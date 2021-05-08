@@ -42,6 +42,7 @@ class AlbumComponent extends AbstractAlbumComponent {
       member: member,
       postModel: postModel,
       accessBloc: accessBloc,
+      parentPageId: null,
     );
   }
 

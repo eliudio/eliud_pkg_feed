@@ -63,29 +63,32 @@ class AddCommentEvent extends PostEvent {
 }
 
 class AddCommentCommentEvent extends PostEvent {
+  final PostModel postModel;
   final PostCommentContainer postCommentContainer;
   final String comment;
 
-  AddCommentCommentEvent(this.postCommentContainer, this.comment);
+  AddCommentCommentEvent(this.postModel, this.postCommentContainer, this.comment);
 
   @override
   List<Object> get props => [ postCommentContainer, comment ];
 }
 
 class DeleteCommentEvent extends PostEvent {
+  final PostModel postModel;
   final PostCommentModel deleteThis;
 
-  DeleteCommentEvent(this.deleteThis);
+  DeleteCommentEvent(this.postModel, this.deleteThis);
 
   @override
   List<Object> get props => [ deleteThis ];
 }
 
 class UpdateCommentEvent extends PostEvent {
+  final PostModel postModel;
   final PostCommentModel updateThis;
   final String newValue;
 
-  UpdateCommentEvent(this.updateThis, this.newValue);
+  UpdateCommentEvent(this.postModel, this.updateThis, this.newValue);
 
   @override
   List<Object> get props => [ updateThis, newValue ];

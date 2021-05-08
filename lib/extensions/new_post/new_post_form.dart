@@ -6,31 +6,32 @@ import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_bloc.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
+import 'package:eliud_pkg_feed/tools/grid/photos_page.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 
-import 'bloc/post_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../postlist_paged/postlist_paged_event.dart';
 
-class NewPostWidget extends StatefulWidget {
+class NewPostForm extends StatefulWidget {
   final String appId;
   final String feedId;
   final MemberModel? member;
   final MemberPublicInfoModel memberPublicInfoModel;
-  final PostModel? postModel;
+//  final PostModel? postModel;
   final AccessBloc? accessBloc;
 
-  const NewPostWidget(this.appId, this.feedId, this.memberPublicInfoModel, {Key? key, this.member, this.postModel, this.accessBloc})
+  const NewPostForm(this.appId, this.feedId, this.memberPublicInfoModel,
+      {Key? key, this.member, this.accessBloc})
       : super(key: key);
 
   @override
-  _NewPostWidgetWidgetState createState() {
-    return _NewPostWidgetWidgetState();
+  _NewPostFormState createState() {
+    return _NewPostFormState();
   }
 }
 
-class _NewPostWidgetWidgetState extends State<NewPostWidget> {
+class _NewPostFormState extends State<NewPostForm> {
   final TextEditingController _commentController = TextEditingController();
   PostModel? newPost;
 
@@ -38,14 +39,17 @@ class _NewPostWidgetWidgetState extends State<NewPostWidget> {
   void initState() {
     super.initState();
     newPost = PostModel(
-        documentID: newRandomKey(),
-        author: widget.memberPublicInfoModel,
-    appId: widget.appId,
-    feedId: widget.feedId,
-    archived: PostArchiveStatus.Active,
-    pageParameters: null,
-    description: "Post added by Add To Post button",
-    readAccess: ['PUBLIC', ],
+      documentID: newRandomKey(),
+      author: widget.memberPublicInfoModel,
+      appId: widget.appId,
+      feedId: widget.feedId,
+      memberMedia: [],
+      archived: PostArchiveStatus.Active,
+      pageParameters: null,
+      description: "Post added by Add To Post button",
+      readAccess: [
+        'PUBLIC',
+      ],
     );
   }
 
@@ -60,7 +64,7 @@ class _NewPostWidgetWidgetState extends State<NewPostWidget> {
         (_commentController.text.length > 0)) {
       postModel = postModel!.copyWith(description: _commentController.text);
       BlocProvider.of<PostListPagedBloc>(context)
-          .add(AddPostPaged(value: postModel!));
+          .add(AddPostPaged(value: postModel));
       _commentController.clear();
     }
   }
@@ -101,35 +105,40 @@ class _NewPostWidgetWidgetState extends State<NewPostWidget> {
           image: member.photoURL!,
         );
       }
-      return PostHelper.getFormattedPost([Row(children: [
-        Container(
-            height: 60,
-            width: 60,
-            child: avatar == null ? Container() : avatar),
-        Container(width: 8),
-        Flexible(
-          child: Container(
-              alignment: Alignment.center, height: 30, child: _textField()),
-        ),
-        Container(width: 8),
-        PostHelper.mediaButtons(context, newPost, member!.documentID!),
-        Container(
-            height: 30,
-            child: RaisedButton(
-                color: Colors.grey,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Text('Ok'),
-                onPressed: () => _addPost(context, newPost))),
-      ])]);
+      List<Widget>  rows = [];
+      rows.add(
+        Row(children: [
+          Container(
+              height: 60,
+              width: 60,
+              child: avatar == null ? Container() : avatar),
+          Container(width: 8),
+          Flexible(
+            child: Container(
+                alignment: Alignment.center, height: 30, child: _textField()),
+          ),
+          Container(width: 8),
+          PostHelper.mediaButtons(context, newPost, member.documentID!),
+          Container(
+              height: 30,
+              child: RaisedButton(
+                  color: Colors.grey,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Text('Ok'),
+                  onPressed: () => _addPost(context, newPost))),
+        ])
+      );
+      if ((newPost!.memberMedia!.length > 0)) {
+        var memberMedia = newPost!.memberMedia!.map((postMediumModel) => postMediumModel.memberMedium!).toList();
+        rows.add(
+            PhotosPage(memberMedia: memberMedia)
+        );
+      }
+      return PostHelper.getFormattedPost(rows);
     } else {
       return Text("Not logged in");
     }
-  }
-
-
-  void photoAvailable(postModel, value) {
-    // add the photo to the post
   }
 }

@@ -1,28 +1,19 @@
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
-import 'package:eliud_core/core/access/bloc/access_state.dart';
-import 'package:eliud_core/core/widgets/alert_widget.dart';
 import 'package:eliud_core/core/widgets/progress_indicator.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/model/rgb_model.dart';
-import 'package:eliud_core/tools/component_constructor.dart';
 import 'package:eliud_core/tools/etc.dart';
-import 'package:eliud_core/tools/query/query_tools.dart';
+import 'new_post/new_post_form.dart';
 import 'post/bloc/post_bloc.dart';
 import 'postlist_paged/postlist_paged_bloc.dart';
 import 'postlist_paged/postlist_paged_event.dart';
 import 'postlist_paged/postlist_paged_state.dart';
-import 'package:eliud_pkg_feed/model/feed_component.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
-import 'package:eliud_pkg_feed/model/feed_repository.dart';
-import 'post/new_post_widget.dart';
 import 'post/post_widget.dart';
-import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart'
-    as posts;
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 
 class PagedPostsList extends StatefulWidget {
   final String? parentPageId;
@@ -46,6 +37,10 @@ class _PagedPostsListState extends State<PagedPostsList> {
     _app = AccessBloc.app(context);
   }
 
+  Widget _newPostForm() {
+    return NewPostForm(_app!.documentID!, widget.feedModel.documentID!, widget.memberPublicInfoModel);
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<PostListPagedBloc, PostListPagedState>(
@@ -57,7 +52,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
               physics: ScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
                 if (index >= theState.values.length+1) return _buttonNextPage(!theState.hasReachedMax);
-                if (index == 0) return NewPostWidget(_app!.documentID!, widget.feedModel!.documentID!, widget.memberPublicInfoModel);
+                if (index == 0) _newPostForm();
                 return post(context, theState.values[index-1]!);
               },
               itemCount: theState.values.length + 2);
@@ -85,7 +80,8 @@ class _PagedPostsListState extends State<PagedPostsList> {
       return BlocProvider<PostBloc>(
           create: (context) => PostBloc(postModel, member.documentID!),
           child: PostWidget(
-            isRecursive: postModel.postPageId == widget.parentPageId,
+            postModel: postModel,
+            parentPageId: widget.parentPageId!,
             member: member,
           ));
     }

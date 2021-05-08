@@ -20,8 +20,9 @@ class PostContentsWidget extends StatefulWidget {
   final MemberModel? member;
   final PostModel? postModel;
   final AccessBloc? accessBloc;
+  final String? parentPageId;
 
-  const PostContentsWidget({Key? key, this.member, this.postModel, this.accessBloc}) : super(key: key);
+  const PostContentsWidget({Key? key, this.member, this.postModel, this.accessBloc, this.parentPageId}) : super(key: key);
 
   @override
   _PostContentsWidgetState createState() {
@@ -140,6 +141,7 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
   Widget _postDetails(String? memberId, PostModel? postModel,
       AccessBloc? originalAccessBloc, BuildContext? context) {
     if (postModel == null) return Text("Can't construct post details without postModel");
+    if ((postModel.appId == postModel.postAppId) && (postModel.postPageId == widget.parentPageId)) return Text("Not showing recursive posts");
     String? appId = postModel.postAppId;
     String? pageId = postModel.postPageId;
     var parameters = postModel.pageParameters;

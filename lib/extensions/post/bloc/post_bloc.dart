@@ -15,13 +15,15 @@ import 'package:eliud_pkg_feed/tools/post_helper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PostBloc extends Bloc<PostEvent, PostState> {
+  final String memberId;
+
   static Map<LikeType, String> likeToFieldName = {
     LikeType.Like: 'likes',
     LikeType.Dislike: 'dislikes',
   };
 
-  PostBloc(PostModel postModel, String memberId)
-      : super(PostLoaded(postModel: postModel, memberId: memberId)) {
+  PostBloc(PostModel postModel, this.memberId)
+      : super(PostLoaded()) {
     add(LoadCommentsEvent(postModel, memberId));
   }
 
@@ -31,7 +33,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       var theState = state as PostLoaded;
       // Load
       if (event is LoadCommentsEvent) {
-        var loadState = await _loadComments(event.postModel, event.memberId);
+        var loadState = await _loadComments(event.postModel.documentID!, event.postModel.appId!, );
         if (loadState == null)
           yield ErrorPostState("Couldn'lt load comments");
         else
@@ -39,40 +41,40 @@ class PostBloc extends Bloc<PostEvent, PostState> {
         // Likes
       } else if (event is LikePostEvent) {
         var updateEmotionState =
-            await _updateEmotion(theState, null, event.likeType);
+            await _updateEmotion(theState, null, event.likeType, event.postModel, event.postModel.appId!);
         if (updateEmotionState == null)
           yield ErrorPostState("Couldn't update emotion state");
         else
           yield updateEmotionState;
       } else if (event is LikeCommentPostEvent) {
         var updateEmotionState = await _updateEmotion(
-            theState, event.postCommentContainer, event.likeType);
+            theState, event.postCommentContainer, event.likeType, event.postModel, event.postModel.appId!);
         if (updateEmotionState == null)
           yield ErrorPostState("Couldn't update emotion state (like)");
         else
           yield updateEmotionState;
       } else if (event is AddCommentEvent) {
-        var commentState = await _comment(theState, event.comment);
+        var commentState = await _comment(theState, event.comment, event.postModel.documentID!, event.postModel.appId!);
         if (commentState == null)
           yield ErrorPostState("Couldn't add comment");
         else
           yield commentState;
       } else if (event is AddCommentCommentEvent) {
         var addCommentCommentState = await _commentComment(
-            theState, event.postCommentContainer, event.comment);
+            theState, event.postCommentContainer, event.comment, event.postModel.documentID!, event.postModel.appId!);
         if (addCommentCommentState == null)
           yield ErrorPostState("Couldn't comment on comment");
         else
           yield addCommentCommentState;
       } else if (event is DeleteCommentEvent) {
-        var deleteState = await _deleteComment(theState, event.deleteThis);
+        var deleteState = await _deleteComment(theState, event.deleteThis, event.postModel.documentID!, event.postModel.appId!);
         if (deleteState == null)
           yield ErrorPostState("Couldn't delete comment");
         else
           yield deleteState;
       } else if (event is UpdateCommentEvent) {
         var commentState =
-            await _updateComment(theState, event.updateThis, event.newValue);
+            await _updateComment(theState, event.updateThis, event.newValue, event.postModel.documentID!, event.postModel.appId!);
         if (commentState == null)
           yield ErrorPostState("Couldn't update comment");
         else
@@ -88,19 +90,19 @@ class PostBloc extends Bloc<PostEvent, PostState> {
    */
 
   // ********************************* create a comment ****************************
-  Future<CommentsLoaded?> _comment(PostLoaded theState, String comment) async {
+  Future<CommentsLoaded?> _comment(PostLoaded theState, String comment, String postId, String appId) async {
     var toAdd = PostCommentModel(
       documentID: newRandomKey(),
-      postId: theState.postModel!.documentID,
-      memberId: theState.memberId,
-      appId: theState.postModel!.appId,
+      postId: postId,
+      memberId: memberId,
+      appId: appId,
       comment: comment,
     );
-    await postCommentRepository(appId: theState.postModel!.appId)!.add(toAdd);
+    await postCommentRepository(appId: appId)!.add(toAdd);
 
     if (theState is CommentsLoaded) {
       PostCommentContainer? container =
-          await construct(theState.postModel!.appId, toAdd, null, false);
+          await construct(postId, toAdd, null, false);
       if (container != null) {
         final List<PostCommentContainer> newComments = [];
         newComments.add(container);
@@ -115,30 +117,30 @@ class PostBloc extends Bloc<PostEvent, PostState> {
         return theState.copyWith(comments: newComments);
       }
     } else {
-      return _loadComments(theState.postModel, theState.memberId);
+      return _loadComments(postId, appId);
     }
   }
 
 // ********************************* create a comment on comment ****************************
   Future<CommentsLoaded?> _commentComment(PostLoaded theState,
-      PostCommentContainer postCommentContainer, String comment) async {
+      PostCommentContainer postCommentContainer, String comment, String postId, String appId) async {
     var addThis = PostCommentModel(
       documentID: newRandomKey(),
-      postId: theState.postModel!.documentID,
+      postId: postId,
       postCommentId: postCommentContainer.postComment!.documentID,
-      memberId: theState.memberId,
-      appId: theState.postModel!.appId,
+      memberId: memberId,
+      appId: appId,
       comment: comment,
     );
 
-    await postCommentRepository(appId: theState.postModel!.appId)!.add(addThis);
+    await postCommentRepository(appId: appId)!.add(addThis);
 
     if (theState is CommentsLoaded) {
       return theState.copyWith(
           comments:
               await _copyCommentCommentsAndAddOne(theState.comments, addThis));
     } else {
-      return _loadComments(theState.postModel, theState.memberId);
+      return _loadComments(postId, appId);
     }
   }
 
@@ -179,14 +181,14 @@ class PostBloc extends Bloc<PostEvent, PostState> {
 
 // ********************************* delete a comment ****************************
   Future<CommentsLoaded?> _deleteComment(
-      PostLoaded theState, PostCommentModel deleteThis) async {
-    postCommentRepository(appId: theState.postModel!.appId)!.delete(deleteThis);
+      PostLoaded theState, PostCommentModel deleteThis, String postId, String appId) async {
+    postCommentRepository(appId: appId)!.delete(deleteThis);
     if (theState is CommentsLoaded) {
       return theState.copyWith(
           comments: _copyCommentsAndDeleteOne(
               theState.comments, deleteThis.documentID));
     } else {
-      return _loadComments(theState.postModel, theState.memberId);
+      return _loadComments(postId, appId, );
     }
   }
 
@@ -214,8 +216,8 @@ class PostBloc extends Bloc<PostEvent, PostState> {
 
 // ********************************* update a comment ****************************
   Future<CommentsLoaded?> _updateComment(PostLoaded theState,
-      PostCommentModel updateThis, String? newValue) async {
-    postCommentRepository(appId: theState.postModel!.appId)!
+      PostCommentModel updateThis, String? newValue, String postId, String appId) async {
+    postCommentRepository(appId: appId)!
         .update(updateThis.copyWith(comment: newValue));
 
     if (theState is CommentsLoaded) {
@@ -223,7 +225,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
           comments: _copyCommentsAndUpdateComment(
               theState.comments, updateThis.documentID, newValue));
     } else {
-      return _loadComments(theState.postModel, theState.memberId);
+      return _loadComments(postId, appId, );
     }
   }
 
@@ -266,7 +268,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
 
 // ********************************* update a like ****************************
   Future<CommentsLoaded?> _updateEmotion(PostLoaded theState,
-      PostCommentContainer? postCommentContainer, LikeType? likePressed) async {
+      PostCommentContainer? postCommentContainer, LikeType? likePressed, PostModel postModel, String appId) async {
     // We have firebase functions to update the post collection. One reason is performance, we shouldn't do this work on the client.
     // Second reason is security: the client, except the owner, can update the post.
     // We allow the firebase function to do it's thing in the background, async. In the meantime we determine the value here
@@ -274,12 +276,12 @@ class PostBloc extends Bloc<PostEvent, PostState> {
 
     // the like ID = postId - memberId
     var likeKey = PostHelper.getLikeKey(
-        theState.postModel!.documentID,
+        postModel.documentID,
         postCommentContainer != null
             ? postCommentContainer.postComment!.documentID
             : null,
-        theState.memberId);
-    var like = await postLikeRepository(appId: theState.postModel!.appId)!
+        memberId);
+    var like = await postLikeRepository(appId: postModel.appId)!
         .get(likeKey);
     int likesExtra = 0;
     int dislikesExtra = 0;
@@ -291,11 +293,11 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       } else if (likePressed == LikeType.Dislike) {
         dislikesExtra = 1;
       }
-      postLikeRepository(appId: theState.postModel!.appId)!.add(PostLikeModel(
+      postLikeRepository(appId: appId)!.add(PostLikeModel(
           documentID: likeKey,
-          postId: theState.postModel!.documentID,
-          memberId: theState.memberId,
-          appId: theState.postModel!.appId,
+          postId: postModel.documentID,
+          memberId: memberId,
+          appId: appId,
           postCommentId: postCommentContainer == null
               ? null
               : postCommentContainer.postComment!.documentID,
@@ -312,7 +314,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
           dislikesExtra = 1;
           likesExtra = -1;
         }
-        postLikeRepository(appId: theState.postModel!.appId)!
+        postLikeRepository(appId: appId)!
             .update(like.copyWith(likeType: likePressed));
       } else {
         if (likePressed == LikeType.Like) {
@@ -321,7 +323,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
           dislikesExtra = -1;
         }
         // an update, but nothing changed in terms of likeType... it must mean we want to unlike
-        await postLikeRepository(appId: theState.postModel!.appId)!.delete(like);
+        await postLikeRepository(appId: appId)!.delete(like);
       }
     }
     var newPostModel;
@@ -329,13 +331,13 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       if (theState is CommentsLoaded) {
         // update the state without having to retrieving it from the db
         return theState.copyWith(
-            postModel: theState.postModel!.copyWith(
-                likes: theState.postModel!.likes == null
+            postModel: postModel.copyWith(
+                likes: postModel.likes == null
                     ? likesExtra
-                    : theState.postModel!.likes! + likesExtra,
-                dislikes: theState.postModel!.dislikes == null
+                    : postModel.likes! + likesExtra,
+                dislikes: postModel!.dislikes == null
                     ? dislikesExtra
-                    : theState.postModel!.dislikes! + dislikesExtra),
+                    : postModel.dislikes! + dislikesExtra),
             thisMembersLikeType: thisMembersLikeType);
       }
     } else {
@@ -350,7 +352,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
                 likesExtra));
       }
     }
-    return _loadComments(newPostModel, theState.memberId);
+    return _loadComments(postModel.documentID!, appId);
   }
 
   List<PostCommentContainer>? _copyCommentsAndUpdateALike(
@@ -412,14 +414,13 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   }
 
   Future<List<PostCommentContainer>?> mapComments(
-    PostModel? postModel,
+    String postId,
     List<PostCommentModel?>? sourceComments,
     String? appId,
-    String? memberId,
   ) async {
     if (sourceComments == null) return null;
     if (sourceComments.length == 0) return null;
-    if (postModel == null) return null;
+    if (postId == null) return null;
 
     List<PostCommentContainer> comments = [];
     for (int i = 0; i < sourceComments.length; i++) {
@@ -431,18 +432,17 @@ class PostBloc extends Bloc<PostEvent, PostState> {
                 descending: true,
                 eliudQuery: EliudQuery()
                     .withCondition(EliudQueryCondition('postId',
-                        isEqualTo: postModel.documentID))
+                        isEqualTo: postId))
                     .withCondition(EliudQueryCondition('postCommentId',
                         isEqualTo: comment.documentID)));
         List<PostCommentContainer>? commentComments = await mapComments(
-          postModel,
+          postId,
           sourceCommentComments,
           appId,
-          memberId,
         );
 
         var likeKey = PostHelper.getLikeKey(
-            postModel.documentID, comment.documentID, memberId);
+            postId, comment.documentID, memberId);
         var like = await postLikeRepository(appId: appId)!.get(likeKey);
 
         var postCommentContainer =
@@ -455,34 +455,28 @@ class PostBloc extends Bloc<PostEvent, PostState> {
 
     return comments;
   }
-
-  Future<CommentsLoaded?> _loadComments(
-      PostModel? postModel, String? memberId) async {
-    if (postModel == null) return null;
-    if (memberId == null) return null;
-    var likeKey = PostHelper.getLikeKey(postModel.documentID, null, memberId);
-    var like = await postLikeRepository(appId: postModel.appId)!.get(likeKey);
+  Future<CommentsLoaded?> _loadComments(String postId, String appId) async {
+    if (postId == null) return null;
+    var likeKey = PostHelper.getLikeKey(postId, null, memberId);
+    var like = await postLikeRepository(appId: appId)!.get(likeKey);
 
     List<PostCommentModel?>? sourceComments =
-        await postCommentRepository(appId: postModel.appId)!.valuesList(
+        await postCommentRepository(appId: appId)!.valuesList(
             orderBy: 'timestamp',
             descending: true,
             eliudQuery: EliudQuery()
                 .withCondition(EliudQueryCondition('postId',
-                    isEqualTo: postModel.documentID))
+                    isEqualTo: postId))
                 .withCondition(EliudQueryCondition(
                   'postCommentId',
                   isNull: true,
                 )));
     List<PostCommentContainer?>? comments = await mapComments(
-      postModel,
+      postId,
       sourceComments,
-      postModel.appId,
-      memberId,
+      appId,
     );
     return CommentsLoaded(
-        postModel: postModel,
-        memberId: memberId,
         comments: comments,
         thisMembersLikeType: like == null ? null : like.likeType);
   }

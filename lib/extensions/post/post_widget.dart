@@ -1,10 +1,7 @@
 import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
-import 'package:eliud_core/core/widgets/progress_indicator.dart';
-import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/model/member_model.dart';
-import 'package:eliud_core/platform/storage_platform.dart';
 import 'package:eliud_core/tools/widgets/dialog_helper.dart';
 import 'package:eliud_core/tools/widgets/request_value_dialog.dart';
 import 'package:eliud_core/tools/widgets/yes_no_dialog.dart';
@@ -19,10 +16,11 @@ import 'bloc/post_state.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 
 class PostWidget extends StatefulWidget {
-  final bool? isRecursive;
   final MemberModel? member;
+  final PostModel postModel;
+  final String parentPageId;
 
-  const PostWidget({Key? key, this.isRecursive, this.member}) : super(key: key);
+  const PostWidget({Key? key, required this.postModel, this.member, required this.parentPageId}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -70,56 +68,43 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   Widget buildIt(BuildContext context) {
-    return BlocBuilder<PostBloc, PostState>(builder: (context, state) {
-      if (state == null) return Text("Not state");
-      if (state is ErrorPostState) return Text(state.message);
-      if (state is PostLoaded) {
-        if (size == null) size = MediaQuery.of(context).size;
-        var originalAccessBloc = BlocProvider.of<AccessBloc>(context);
+    var postModel = widget.postModel;
+    var memberId = widget.member!.documentID;
+    if (size == null) size = MediaQuery.of(context).size;
+    var originalAccessBloc = BlocProvider.of<AccessBloc>(context);
 
-        return (widget.isRecursive != null) && widget.isRecursive!
-            ? Text("Recursive post")
-            : PostHelper.getFormattedPost( [
-                            _heading(context, state.postModel, state.memberId),
-                            _aBitSpace(),
-                            _description(state.postModel),
-                            _aBitSpace(),
-                            PostContentsWidget(
-                              member: widget.member,
-                              postModel: state.postModel,
-                              accessBloc: originalAccessBloc,
-                            ),
-                            _dividerLight(),
-                            _aBitSpace(),
-                            _postLikes(state.postModel!.likes,
-                                state.postModel!.dislikes),
-                            _aBitSpace(),
-                            _dividerLight(),
-                            _postActionBtns(
-                                context,
-                                state.postModel,
-                                state.memberId,
-                                state is CommentsLoaded
-                                    ? state.thisMembersLikeType
-                                    : null),
-                            _aBitSpace(),
-                            _dividerLight(),
-                            _aBitSpace(),
-                            _enterComment(context, state.postModel),
-                            _aBitSpace(),
-                            _postComments(
-                                context,
-                                state.postModel,
-                                state.memberId,
-                                state is CommentsLoaded
-                                    ? state.comments
-                                    : null),
-                          ],
-                        );
-      } else {
-        return DelayedCircularProgressIndicator();
-      }
-    });
+    return PostHelper.getFormattedPost( [
+                        _heading(context, widget.postModel, memberId),
+                        _aBitSpace(),
+                        _description(postModel),
+                        _aBitSpace(),
+                        PostContentsWidget(
+                          member: widget.member,
+                          postModel: postModel,
+                          accessBloc: originalAccessBloc,
+                          parentPageId: widget.parentPageId,
+                        ),
+                        _dividerLight(),
+                        _aBitSpace(),
+                        _postLikes(postModel.likes,
+                            postModel.dislikes),
+                        _aBitSpace(),
+                        _dividerLight(),
+                        _postActionBtns(
+                            context,
+                            postModel,
+                            memberId),
+                        _aBitSpace(),
+                        _dividerLight(),
+                        _aBitSpace(),
+                        _enterComment(context, postModel),
+                        _aBitSpace(),
+                        _postComments(
+                            context,
+                            postModel,
+                            memberId),
+                      ],
+                    );
   }
 
   Widget _description(PostModel? postModel) {
@@ -315,7 +300,7 @@ class _PostWidgetState extends State<PostWidget> {
           yesFunction: (comment) {
             if (comment != null) {
               BlocProvider.of<PostBloc>(context)
-                  .add(AddCommentCommentEvent(postCommentContainer, comment));
+                  .add(AddCommentCommentEvent(widget.postModel, postCommentContainer, comment));
             }
             Navigator.pop(context);
           },
@@ -335,7 +320,7 @@ class _PostWidgetState extends State<PostWidget> {
           initialValue: postCommentContainer!.comment,
           yesFunction: (comment) {
             BlocProvider.of<PostBloc>(context).add(
-                UpdateCommentEvent(postCommentContainer.postComment!, comment!));
+                UpdateCommentEvent(widget.postModel, postCommentContainer.postComment!, comment!));
             Navigator.pop(context);
           },
           noFunction: () => Navigator.pop(context)),
@@ -351,24 +336,31 @@ class _PostWidgetState extends State<PostWidget> {
           yesFunction: () async {
             Navigator.pop(context);
             BlocProvider.of<PostBloc>(context)
-                .add(DeleteCommentEvent(postCommentContainer!.postComment!));
+                .add(DeleteCommentEvent(widget.postModel, postCommentContainer!.postComment!));
           },
           noFunction: () => Navigator.pop(context),
         ));
   }
 
   Widget _postComments(BuildContext context, PostModel? postModel,
-      String? memberId, List<PostCommentContainer?>? comments) {
-    if (comments == null) return Container();
-    return ListView.builder(
-        physics: ScrollPhysics(),
-        shrinkWrap: true,
-        itemCount: comments.length + 1,
-        itemBuilder: (context, i) {
-          if (i == 0) return _dividerLight();
-          var postComment = comments[i - 1];
-          return getCommentTreeWidget(context, postModel, postComment);
-        });
+      String? memberId) {
+    return BlocBuilder<PostBloc, PostState>(builder: (context, postState) {
+      if (postState is CommentsLoaded) {
+        List<PostCommentContainer?>? comments = postState.comments;
+        if (comments == null) return Container();
+        return ListView.builder(
+            physics: ScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: comments.length + 1,
+            itemBuilder: (context, i) {
+              if (i == 0) return _dividerLight();
+              var postComment = comments[i - 1];
+              return getCommentTreeWidget(context, postModel, postComment);
+            });
+      } else {
+        return Text("Comments loading...");
+      }
+    });
   }
 
   Widget getCommentTreeWidget(
@@ -536,36 +528,42 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   Widget _postActionBtns(BuildContext context, PostModel? postModel,
-      String? memberId, LikeType? thisMemberLikeType) {
-    return Row(
-      children: <Widget>[
-        Spacer(),
-        IconButton(
-            icon: ImageIcon(
-              AssetImage(
-                  (thisMemberLikeType == null) ||
-                          (thisMemberLikeType != LikeType.Like)
-                      ? "assets/images/basicons.xyz/ThumbsUp.png"
-                      : "assets/images/basicons.xyz/ThumbsUpSelected.png",
-                  package: "eliud_pkg_feed"),
-            ),
-            onPressed: () => _like(context, postModel),
-            color: Colors.black),
-        Spacer(flex: 3),
-        IconButton(
-            icon: ImageIcon(
-              AssetImage(
-                  (thisMemberLikeType == null) ||
-                          (thisMemberLikeType != LikeType.Dislike)
-                      ? "assets/images/basicons.xyz/ThumbsDown.png"
-                      : "assets/images/basicons.xyz/ThumbsDownSelected.png",
-                  package: "eliud_pkg_feed"),
-            ),
-            onPressed: () => _dislike(context, postModel),
-            color: Colors.black),
-        Spacer(),
-      ],
-    );
+      String? memberId, ) {
+    return BlocBuilder<PostBloc, PostState>(builder: (context, postState) {
+      LikeType? thisMemberLikeType;
+      if (postState is CommentsLoaded) {
+        thisMemberLikeType = postState is CommentsLoaded ? postState.thisMembersLikeType : null;
+      }
+      return Row(
+        children: <Widget>[
+          Spacer(),
+          IconButton(
+              icon: ImageIcon(
+                AssetImage(
+                    (thisMemberLikeType == null) ||
+                        (thisMemberLikeType != LikeType.Like)
+                        ? "assets/images/basicons.xyz/ThumbsUp.png"
+                        : "assets/images/basicons.xyz/ThumbsUpSelected.png",
+                    package: "eliud_pkg_feed"),
+              ),
+              onPressed: () => _like(context, postModel),
+              color: Colors.black),
+          Spacer(flex: 3),
+          IconButton(
+              icon: ImageIcon(
+                AssetImage(
+                    (thisMemberLikeType == null) ||
+                        (thisMemberLikeType != LikeType.Dislike)
+                        ? "assets/images/basicons.xyz/ThumbsDown.png"
+                        : "assets/images/basicons.xyz/ThumbsDownSelected.png",
+                    package: "eliud_pkg_feed"),
+              ),
+              onPressed: () => _dislike(context, postModel),
+              color: Colors.black),
+          Spacer(),
+        ],
+      );
+    });
   }
 
   Future<void> _like(BuildContext context, PostModel? postModel) async {

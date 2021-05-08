@@ -26,13 +26,10 @@ class ErrorPostState extends PostState {
 }
 
 class PostLoaded extends PostState {
-  final PostModel? postModel;
-  final String? memberId;
-
-  PostLoaded({this.memberId, this.postModel});
+  PostLoaded();
 
   @override
-  List<Object?> get props => [memberId, postModel];
+  List<Object?> get props => [];
 }
 
 class PostCommentContainer extends Equatable {
@@ -62,13 +59,13 @@ class CommentsLoaded extends PostLoaded {
   final List<PostCommentContainer?>? comments;
   final LikeType? thisMembersLikeType;
 
-  CommentsLoaded({PostModel? postModel, String? memberId, this.comments, this.thisMembersLikeType}): super(memberId: memberId, postModel: postModel);
+  CommentsLoaded({this.comments, this.thisMembersLikeType});
 
   @override
-  List<Object?> get props => [memberId, postModel, comments];
+  List<Object?> get props => [comments];
 
   CommentsLoaded copyWith({PostModel? postModel, String? memberId, List<PostCommentContainer>? comments, LikeType? thisMembersLikeType}) {
-    return CommentsLoaded(postModel: postModel ?? this.postModel, memberId: memberId ?? this. memberId, comments: comments ?? this.comments, thisMembersLikeType: thisMembersLikeType ?? this.thisMembersLikeType);
+    return CommentsLoaded(comments: comments ?? this.comments, thisMembersLikeType: thisMembersLikeType ?? this.thisMembersLikeType);
   }
 
 
