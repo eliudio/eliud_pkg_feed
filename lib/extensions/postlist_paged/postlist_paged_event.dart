@@ -18,3 +18,12 @@ class DeletePostPaged extends PostPagedEvent {
   @override
   List<Object?> get props => [ value ];
 }
+
+class AddPostPaged extends PostPagedEvent {
+  final PostModel? value;
+
+  AddPostPaged({ this.value });
+
+  @override
+  List<Object?> get props => [ value ];
+}

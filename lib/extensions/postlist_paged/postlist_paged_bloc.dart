@@ -37,6 +37,8 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
       var value = await _mapPostFetchedToState(state);
       if (value != null)
         yield value;
+    } else if (event is AddPostPaged) {
+
     } else if (event is DeletePostPaged) {
       await _mapDeletePost(event);
       // wetodo  might require to copy this in a new list, not sure

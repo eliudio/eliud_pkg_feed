@@ -3,6 +3,7 @@ import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/widgets/alert_widget.dart';
 import 'package:eliud_core/core/widgets/progress_indicator.dart';
 import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/model/rgb_model.dart';
 import 'package:eliud_core/tools/component_constructor.dart';
 import 'package:eliud_core/tools/etc.dart';
@@ -15,6 +16,7 @@ import 'package:eliud_pkg_feed/model/feed_component.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
 import 'package:eliud_pkg_feed/model/feed_repository.dart';
 import 'package:eliud_pkg_post/extensions/bloc/post_bloc.dart';
+import 'package:eliud_pkg_post/extensions/new_post_widget.dart';
 import 'package:eliud_pkg_post/extensions/post_widget.dart';
 import 'package:eliud_pkg_post/model/abstract_repository_singleton.dart'
     as posts;
@@ -35,6 +37,11 @@ class FeedComponent extends AbstractFeedComponent {
   String? parentPageId;
 
   FeedComponent({String? id}) : super(feedID: id);
+
+  @override
+  void initState() {
+
+  }
 
   @override
   Widget alertWidget({title = String, content = String}) {
@@ -78,12 +85,21 @@ class FeedComponent extends AbstractFeedComponent {
 
   Widget _postPagedBloc(String? parentPageId, BuildContext context,
       FeedModel? feedModel, EliudQuery eliudQuery) {
-    return BlocProvider(
-      create: (_) => PostListPagedBloc(eliudQuery,
-          postRepository: posts.postRepository(appId: feedModel!.appId)!)
-        ..add(PostListPagedFetched()),
-      child: PostsList(parentPageId: parentPageId),
-    );
+    var app = AccessBloc.app(context);
+    var state = AccessBloc.getState(context);
+    var memberPublicInfoModel = AccessBloc.memberPublicInfoModel(state);
+    if (memberPublicInfoModel == null) {
+      return Text("No member public info for member");
+    } else {
+      return BlocProvider(
+        create: (_) =>
+        PostListPagedBloc(eliudQuery,
+            postRepository: posts.postRepository(appId: feedModel!.appId)!)
+          ..add(PostListPagedFetched()),
+        child: PostsList(
+            feedModel!, memberPublicInfoModel, parentPageId: parentPageId),
+      );
+    }
   }
 
   @override
@@ -95,8 +111,10 @@ class FeedComponent extends AbstractFeedComponent {
 
 class PostsList extends StatefulWidget {
   final String? parentPageId;
+  final FeedModel feedModel;
+  final MemberPublicInfoModel memberPublicInfoModel;
 
-  const PostsList({Key? key, this.parentPageId}) : super(key: key);
+  const PostsList(this.feedModel, this.memberPublicInfoModel, {Key? key, this.parentPageId}) : super(key: key);
 
   @override
   _PostsListState createState() => _PostsListState();
@@ -123,11 +141,11 @@ class _PostsListState extends State<PostsList> {
               shrinkWrap: true,
               physics: ScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
-                return index >= theState.values.length
-                    ? _buttonNextPage(!theState.hasReachedMax)
-                    : post(context, theState.values[index]!);
+                if (index >= theState.values.length+1) return _buttonNextPage(!theState.hasReachedMax);
+                if (index == 0) return NewPostWidget(_app!.documentID!, widget.feedModel!.documentID!, widget.memberPublicInfoModel);
+                return post(context, theState.values[index-1]!);
               },
-              itemCount: theState.values.length + 1);
+              itemCount: theState.values.length + 2);
         } else {
           return Center(
             child: DelayedCircularProgressIndicator(),
