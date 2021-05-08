@@ -18,6 +18,7 @@ import '../model/internal_component.dart';
 import 'package:eliud_core/tools/registry.dart';
 
 import '../extensions/feed_component.dart';
+import '../extensions/album_component.dart';
 import 'package:eliud_pkg_feed/model/internal_component.dart';
 
 
@@ -26,11 +27,13 @@ import 'package:eliud_pkg_feed/model/internal_component.dart';
 class ComponentRegistry {
 
   void init() {
-    Registry.registry()!.addInternalComponents('eliud_pkg_feed', ["feeds", ]);
+    Registry.registry()!.addInternalComponents('eliud_pkg_feed', ["feeds", "albums", "posts", "postComments", "postLikes", ]);
 
     Registry.registry()!.register(componentName: "eliud_pkg_feed_internalWidgets", componentConstructor: ListComponentFactory());
     Registry.registry()!.addDropDownSupporter("feeds", DropdownButtonComponentFactory());
     Registry.registry()!.register(componentName: "feeds", componentConstructor: FeedComponentConstructorDefault());
+    Registry.registry()!.addDropDownSupporter("albums", DropdownButtonComponentFactory());
+    Registry.registry()!.register(componentName: "albums", componentConstructor: AlbumComponentConstructorDefault());
 
   }
 }

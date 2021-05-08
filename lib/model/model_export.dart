@@ -14,3 +14,8 @@
 */
 
 export '../model/feed_model.dart';
+export '../model/album_model.dart';
+export '../model/post_model.dart';
+export '../model/post_comment_model.dart';
+export '../model/post_like_model.dart';
+export '../model/post_medium_model.dart';

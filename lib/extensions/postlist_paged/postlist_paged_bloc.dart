@@ -4,8 +4,8 @@ import 'package:bloc/bloc.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_event.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_state.dart';
-import 'package:eliud_pkg_post/model/post_model.dart';
-import 'package:eliud_pkg_post/model/post_repository.dart';
+import 'package:eliud_pkg_feed/model/post_model.dart';
+import 'package:eliud_pkg_feed/model/post_repository.dart';
 import 'package:meta/meta.dart';
 
 const _postLimit = 5;
@@ -38,10 +38,15 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
       if (value != null)
         yield value;
     } else if (event is AddPostPaged) {
-
+      await _mapAddPost(event);
+      List<PostModel?> newListOfValues = [];
+      newListOfValues.add(event.value!);
+      newListOfValues.addAll(state.values);
+      yield state.copyWith(values: newListOfValues);
     } else if (event is DeletePostPaged) {
       await _mapDeletePost(event);
-      // wetodo  might require to copy this in a new list, not sure
+
+      // We delete the entry and add it whilst limitting interaction with repository
       var newListOfValues = state.values.map((v) => v).toList();
       newListOfValues.remove(event.value);
       final extraValues = await _fetchPosts(lastRowFetched: state.lastRowFetched, limit: 1);
@@ -63,6 +68,10 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
 
   Future<void> _mapDeletePost(DeletePostPaged event) async {
     await _postRepository.update(event.value!.copyWith(archived: PostArchiveStatus.Archived));
+  }
+
+  Future<void> _mapAddPost(AddPostPaged event) async {
+    await _postRepository.add(event.value!);
   }
 
   Future<PostListPagedState?> _mapPostFetchedToState(PostListPagedState state) async {
