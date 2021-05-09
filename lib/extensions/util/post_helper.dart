@@ -5,7 +5,7 @@ import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:flutter/material.dart';
 
-typedef PhotoAvailableTrigger(PostModel postModel, String path);
+typedef MediumAvailableTrigger(PostModel postModel, String path);
 
 class PostHelper {
   static Widget getFormattedPost(List<Widget> children) {
@@ -34,7 +34,7 @@ class PostHelper {
                         ))));
   }
 
-  static PopupMenuButton mediaButtons(BuildContext context, PostModel? postModel, String memberID, PhotoAvailableTrigger photoAvailableTrigger) {
+  static PopupMenuButton mediaButtons(BuildContext context, PostModel? postModel, String memberID, MediumAvailableTrigger mediumAvailableTrigger) {
     return PopupMenuButton(
         color: Colors.red,
         icon: Icon(
@@ -49,9 +49,8 @@ class PostHelper {
             AbstractStoragePlatform.platform!.takeMedium(
                 context,
                 postModel!.appId!,
-                    (value) => photoAvailableTrigger(postModel, value),
-                memberID,
-                postModel.readAccess);
+                    (value) => mediumAvailableTrigger(postModel, value),
+                memberID,);
           }
         });
   }

@@ -13,6 +13,7 @@
 
 */
 
+import 'feed_post_model_details.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:eliud_pkg_feed/model/model_export.dart';
@@ -28,25 +29,6 @@ abstract class FeedPostFormEvent extends Equatable {
 class InitialiseNewFeedPostFormEvent extends FeedPostFormEvent {
 }
 
-
-class InitialiseFeedPostFormEvent extends FeedPostFormEvent {
-  final PostModel? value;
-
-  @override
-  List<Object?> get props => [ value ];
-
-  InitialiseFeedPostFormEvent({this.value});
-}
-
-class InitialiseFeedPostFormNoLoadEvent extends FeedPostFormEvent {
-  final PostModel? value;
-
-  @override
-  List<Object?> get props => [ value ];
-
-  InitialiseFeedPostFormNoLoadEvent({this.value});
-}
-
 class ChangedFeedPostDescription extends FeedPostFormEvent {
   final String? value;
 
@@ -59,27 +41,15 @@ class ChangedFeedPostDescription extends FeedPostFormEvent {
   String toString() => 'ChangedPostDescription{ value: $value }';
 }
 
-class ChangedFeedPostLikes extends FeedPostFormEvent {
-  final String? value;
-
-  ChangedFeedPostLikes({this.value});
-
-  @override
-  List<Object?> get props => [ value ];
-
-  @override
-  String toString() => 'ChangedPostLikes{ value: $value }';
-}
-
 class ChangedFeedPostMemberMedia extends FeedPostFormEvent {
-  final List<PostMediumModel>? value;
+  final List<String>? paths;
 
-  ChangedFeedPostMemberMedia({this.value});
-
-  @override
-  List<Object?> get props => [ value ];
+  ChangedFeedPostMemberMedia({this.paths});
 
   @override
-  String toString() => 'ChangedPostMemberMedia{ value: $value }';
+  List<Object?> get props => [ paths ];
+
+  @override
+  String toString() => 'ChangedFeedPostMemberMedia{ value: $paths }';
 }
 

@@ -13,16 +13,20 @@
 
 */
 
+import 'dart:io';
+
 import 'package:eliud_core/core/widgets/progress_indicator.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
+import 'package:eliud_core/platform/storage_platform.dart';
 import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_core/tools/screen_size.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_event.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
+import 'package:eliud_pkg_feed/tools/grid/photos_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
@@ -32,10 +36,13 @@ import 'package:eliud_pkg_feed/model/model_export.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:eliud_pkg_feed/model/post_form_bloc.dart';
 import 'package:eliud_pkg_feed/model/post_form_state.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 import 'bloc/feed_post_form_bloc.dart';
 import 'bloc/feed_post_form_event.dart';
+import 'bloc/feed_post_form_state.dart';
+import 'bloc/feed_post_model_details.dart';
 
 class FeedPostForm extends StatelessWidget {
   final String feedId;
@@ -75,7 +82,17 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
     _descriptionController.addListener(_onDescriptionChanged);
   }
 
-  void _addPost(BuildContext context, PostModel? postModel) {
+  void _addPost(
+      BuildContext context, FeedPostModelDetails feedPostModelDetails) {
+    // Here we need to tell the form block OR the list bloc to upload the PostModelDetail
+    // then We need to use something like this to upload the media...
+    /*var memberImageModel = await UploadFile.createThumbnailUploadVideoFile(widget.appId!, path, widget.memberId!, widget.readAccess!);
+    media.add(
+        PostMediumModel(documentID: newRandomKey(), memberMedium: memberImageModel)
+    );
+    _myFormBloc.add(ChangedFeedPostMemberMedia(value: media));
+
+    then we need to create the post itself, perhaps something like this
     if ((_descriptionController.text != null) &&
         (_descriptionController.text.length > 0)) {
       postModel = postModel!.copyWith(description: _descriptionController.text);
@@ -84,6 +101,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
           .add(AddPostPaged(value: postModel));
       _descriptionController.clear();
     }
+    */
   }
 
   @override
@@ -93,19 +111,21 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
       var pubMember = theState.memberPublicInfoModel;
       var app = AccessBloc.app(context);
       if (app == null) return Text('No app available');
-      return BlocBuilder<PostFormBloc, PostFormState>(
+      return BlocBuilder<FeedPostFormBloc, FeedPostFormState>(
           builder: (context, state) {
-        if (state is PostFormLoaded) {
-          if (state.value!.description != null) {
-            _descriptionController.text = state.value!.description.toString();
+        if (state is FeedPostFormLoaded) {
+          if (state.postModelDetails.description != null) {
+            _descriptionController.text =
+                state.postModelDetails.description.toString();
           } else {
             _descriptionController.text = "";
           }
         }
-        if (state is PostFormInitialized) {
+        if (state is FeedPostFormInitialized) {
           List<Widget> rows = [];
           rows.add(_row1(app, pubMember, state));
-          if ((state.value!.memberMedia != null) && (state.value!.memberMedia!.isNotEmpty))
+          if ((state.postModelDetails.mediaPaths != null) &&
+              (state.postModelDetails.mediaPaths.isNotEmpty))
             rows.add(_row2(state));
           return PostHelper.getFormattedPost(rows);
         } else {
@@ -117,8 +137,8 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
     }
   }
 
-  Widget _row1(
-      AppModel app, MemberPublicInfoModel member, PostFormInitialized state) {
+  Widget _row1(AppModel app, MemberPublicInfoModel member,
+      FeedPostFormInitialized state) {
     var avatar;
     if (member.photoURL == null) {
       avatar = Text("No avatar for this author");
@@ -134,10 +154,12 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
       Container(width: 8),
       Flexible(
         child: Container(
-            alignment: Alignment.center, height: 30, child: _textField(app, state)),
+            alignment: Alignment.center,
+            height: 30,
+            child: _textField(app, state)),
       ),
       Container(width: 8),
-      PostHelper.mediaButtons(context, state.value, member.documentID!, _photoAvailable),
+      _mediaButtons(context, app, state, member.documentID!),
       Container(width: 8),
       Container(
           height: 30,
@@ -147,38 +169,87 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
                 borderRadius: BorderRadius.circular(8.0),
               ),
               child: Text('Ok'),
-              onPressed: () => _addPost(
-                  context,
-                  PostModel(
-                    documentID: newRandomKey(),
-                    author: member,
-                    timestamp: "Just now",
-                    appId: app.documentID,
-                    feedId: widget.feedId,
-                    postAppId: null,
-                    postPageId: null,
-                    pageParameters: null,
-                    description: state.value!.description,
-                    likes: 0,
-                    dislikes: 0,
-                    readAccess: [ 'PUBLIC', member.documentID! ],
-                    archived: state.value!.archived,
-                    externalLink: state.value!.externalLink,
-                    memberMedia: state.value!.memberMedia,
-                  )))),
+              onPressed: () => _addPost(context, state.postModelDetails))),
     ]);
   }
 
-  Widget _row2(PostFormInitialized state) {
-    return Row(children: [
-      Container(
-          height: (fullScreenHeight(context) / 2.5),
-          child: postMediumsList(
-              context, state.value!.memberMedia, _onMemberMediaChanged))
-    ]);
+  PopupMenuButton _mediaButtons(BuildContext context, AppModel app,
+      FeedPostFormInitialized state, String memberId) {
+    return PopupMenuButton(
+        color: Colors.red,
+        icon: Icon(
+          Icons.add,
+        ),
+        itemBuilder: (_) => <PopupMenuItem<int>>[
+              new PopupMenuItem<int>(
+                  child: const Text('Take photo or video'), value: 0),
+            ],
+        onSelected: (choice) {
+          if (choice == 0) {
+            AbstractStoragePlatform.platform!
+                .takeMedium(context, app.documentID, (newPath) {
+              var listOfPaths = state.postModelDetails.mediaPaths;
+              listOfPaths.add(newPath);
+              _myFormBloc.add(ChangedFeedPostMemberMedia(paths: listOfPaths));
+            }, memberId);
+          }
+        });
   }
 
-  Widget _textField(AppModel app, PostFormInitialized state,) {
+  @override
+  Widget staggered(List<String> mediaPaths) {
+    List<Widget> widgets = [];
+    for (int i = 0; i < mediaPaths!.length; i++) {
+      var image = Image.file(File(mediaPaths![i]));
+      widgets.add(GridTile(
+          child: GestureDetector(
+        onTap: () {
+          // popup allowing to delete
+        },
+        // The custom button
+        child: image,
+      )));
+    }
+    /*
+    return Container(height: 200, child: GridView.extent(maxCrossAxisExtent: 200,
+        shrinkWrap: true,
+        physics: ScrollPhysics(),
+        //childAspectRatio: gridView.childAspectRatio!,
+        padding: EdgeInsets.all(10),
+        scrollDirection: Axis.horizontal,
+        mainAxisSpacing: 4.0,
+        crossAxisSpacing: 4.0,
+        children: widgets));
+*/
+    return Container(
+        color: Colors.white,
+        padding: EdgeInsets.all(10),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 15.0),
+                child: Wrap(
+                  spacing: 20.0,
+                  alignment: WrapAlignment.spaceEvenly,
+                  children: widgets,
+                ),
+              )
+            ],
+          ),
+        ));
+  }
+  
+  Widget _row2(FeedPostFormInitialized state) {
+    return Row(children: [staggered(state.postModelDetails.mediaPaths)]);
+  }
+
+  Widget _textField(
+    AppModel app,
+    FeedPostFormInitialized state,
+  ) {
     return TextFormField(
       readOnly: false,
       controller: _descriptionController,
@@ -190,37 +261,19 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
 //        contentPadding: EdgeInsets.all(8),
       ),
       validator: (_) {
-        return state is DescriptionPostFormError ? state.message : null;
+        return state is DescriptionFeedPostFormError ? state.message : null;
       },
     );
   }
 
   void _onDescriptionChanged() {
-    _myFormBloc.add(ChangedFeedPostDescription(value: _descriptionController.text));
-  }
-
-  void _onMemberMediaChanged(value) {
-    _myFormBloc.add(ChangedFeedPostMemberMedia(value: value));
-    setState(() {});
+    _myFormBloc
+        .add(ChangedFeedPostDescription(value: _descriptionController.text));
   }
 
   @override
   void dispose() {
     _descriptionController.dispose();
     super.dispose();
-  }
-
-  void _photoAvailable(
-      PostModel postModel,
-      String path,
-      ) {
-    var media = postModel.memberMedia;
-    if (media == null) media = [];
-    /*var memberImageModel = await UploadFile.createThumbnailUploadVideoFile(widget.appId!, path, widget.memberId!, widget.readAccess!);
-    media.add(
-        PostMediumModel(documentID: newRandomKey(), memberMedium: memberImageModel)
-    );
-    _myFormBloc.add(ChangedFeedPostMemberMedia(value: media));
-    */
   }
 }

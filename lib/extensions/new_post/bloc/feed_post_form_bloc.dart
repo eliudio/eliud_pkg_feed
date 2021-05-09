@@ -45,65 +45,35 @@ import 'package:eliud_pkg_feed/model/post_repository.dart';
 
 import 'feed_post_form_event.dart';
 import 'feed_post_form_state.dart';
+import 'feed_post_model_details.dart';
 
 class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
   final FormAction? formAction;
   final String? appId;
 
-  FeedPostFormBloc(this.appId, { this.formAction }): super(FeedPostFormUninitialized());
+  FeedPostFormBloc(this.appId, {this.formAction})
+      : super(FeedPostFormUninitialized());
   @override
   Stream<FeedPostFormState> mapEventToState(FeedPostFormEvent event) async* {
     final currentState = state;
     if (currentState is FeedPostFormUninitialized) {
-      if (event is InitialiseNewPostFormEvent) {
-        FeedPostFormLoaded loaded = FeedPostFormLoaded(value: PostModel(
-                                               documentID: "",
-                                 appId: "",
-                                 feedId: "",
-                                 postAppId: "",
-                                 postPageId: "",
-                                 description: "",
-                                 likes: 0,
-                                 dislikes: 0,
-                                 readAccess: [],
-                                 archived: PostArchiveStatus.Active, 
-                                 externalLink: "",
-                                 memberMedia: [],
-
+      if (event is InitialiseNewFeedPostFormEvent) {
+        FeedPostFormLoaded loaded = FeedPostFormLoaded(
+            postModelDetails: FeedPostModelDetails(
+          description: "",
+          mediaPaths: [],
         ));
-        yield loaded;
-        return;
-
-      }
-
-
-      if (event is InitialiseFeedPostFormEvent) {
-        // Need to re-retrieve the document from the repository so that I get all associated types
-        FeedPostFormLoaded loaded = FeedPostFormLoaded(value: await postRepository(appId: appId)!.get(event.value!.documentID));
-        yield loaded;
-        return;
-      } else if (event is InitialiseFeedPostFormNoLoadEvent) {
-        FeedPostFormLoaded loaded = FeedPostFormLoaded(value: event.value);
         yield loaded;
         return;
       }
     } else if (currentState is FeedPostFormInitialized) {
-      PostModel? newValue = null;
-
       if (event is ChangedFeedPostDescription) {
-        newValue = currentState.value!.copyWith(description: event.value);
-        yield SubmittableFeedPostForm(value: newValue);
-
-        return;
-      }
-
-      if (event is ChangedFeedPostMemberMedia) {
-        newValue = currentState.value!.copyWith(memberMedia: event.value);
-        yield SubmittableFeedPostForm(value: newValue);
-
-        return;
+        var newValue = currentState.postModelDetails.copyWith(description: event.value);
+        yield SubmittableFeedPostForm(postModelDetails: newValue);
+      } else if (event is ChangedFeedPostMemberMedia) {
+        var newValue = currentState.postModelDetails.copyWith(mediaPaths: event.paths);
+        yield SubmittableFeedPostForm(postModelDetails: newValue);
       }
     }
   }
 }
-

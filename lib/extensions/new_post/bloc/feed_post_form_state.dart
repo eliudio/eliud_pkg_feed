@@ -17,6 +17,8 @@ import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
+import 'feed_post_model_details.dart';
+
 @immutable
 abstract class FeedPostFormState extends Equatable {
   const FeedPostFormState();
@@ -36,14 +38,13 @@ class FeedPostFormUninitialized extends FeedPostFormState {
   }
 }
 
-// PostModel has been initialised and hence PostModel is available
 class FeedPostFormInitialized extends FeedPostFormState {
-  final PostModel? value;
+  final FeedPostModelDetails postModelDetails;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [ postModelDetails ];
 
-  const FeedPostFormInitialized({ this.value });
+  const FeedPostFormInitialized({ required this.postModelDetails });
 }
 
 // Menu has been initialised and hence a menu is available
@@ -51,93 +52,64 @@ abstract class FeedPostFormError extends FeedPostFormInitialized {
   final String? message;
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [ message, postModelDetails ];
 
-  const FeedPostFormError({this.message, PostModel? value }) : super(value: value);
-
-  @override
-  String toString() {
-    return '''PostFormError {
-      value: $value,
-      message: $message,
-    }''';
-  }
-}
-class DocumentIDPostFormError extends FeedPostFormError {
-  const DocumentIDPostFormError({ String? message, PostModel? value }): super(message: message, value: value);
-
-  @override
-  List<Object?> get props => [ message, value ];
+  const FeedPostFormError({this.message, required FeedPostModelDetails postModelDetails }) : super(postModelDetails: postModelDetails);
 
   @override
   String toString() {
-    return '''DocumentIDPostFormError {
-      value: $value,
+    return '''FeedPostFormError {
+      value: $postModelDetails,
       message: $message,
     }''';
   }
 }
 
-
-
-class FeedDescriptionPostFormError extends FeedPostFormError {
-  const FeedDescriptionPostFormError({ String? message, PostModel? value }): super(message: message, value: value);
+class DescriptionFeedPostFormError extends FeedPostFormError {
+  const DescriptionFeedPostFormError({ String? message, required FeedPostModelDetails postModelDetails}): super(message: message, postModelDetails: postModelDetails);
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [ message, postModelDetails ];
 
   @override
   String toString() {
-    return '''DescriptionPostFormError {
-      value: $value,
+    return '''DescriptionFeedPostFormError {
+      value: $postModelDetails,
       message: $message,
     }''';
   }
 }
-
-class FeedMemberMediaPostFormError extends FeedPostFormError {
-  const FeedMemberMediaPostFormError({ String? message, PostModel? value }): super(message: message, value: value);
-
-  @override
-  List<Object?> get props => [ message, value ];
-
-  @override
-  String toString() {
-    return '''MemberMediaPostFormError {
-      value: $value,
-      message: $message,
-    }''';
-  }
-}
-
 
 class FeedPostFormLoaded extends FeedPostFormInitialized {
-  const FeedPostFormLoaded({ PostModel? value }): super(value: value);
+  const FeedPostFormLoaded({ required FeedPostModelDetails postModelDetails }): super(postModelDetails: postModelDetails);
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [ postModelDetails ];
 
   @override
   String toString() {
-    return '''PostFormLoaded {
-      value: $value,
+    return '''FeedPostFormLoaded {
+      value: $postModelDetails,
     }''';
   }
 }
 
 
 class SubmittableFeedPostForm extends FeedPostFormInitialized {
-  const SubmittableFeedPostForm({ PostModel? value }): super(value: value);
+  const SubmittableFeedPostForm({ required FeedPostModelDetails postModelDetails }): super(postModelDetails: postModelDetails);
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [ postModelDetails ];
 
   @override
   String toString() {
     return '''SubmittableFeedPostForm {
-      value: $value,
+      value: $postModelDetails,
     }''';
   }
 }
 
-
+// TODO:
+//class UploadingFeedPostForm extends FeedPostFormInitialized {
+//  final List<double> progress;
+//}
