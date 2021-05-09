@@ -201,8 +201,10 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
     List<Widget> widgets = [];
     for (int i = 0; i < mediaPaths!.length; i++) {
       var image = Image.file(File(mediaPaths![i]));
-      widgets.add(GridTile(
-          child: GestureDetector(
+      widgets.add(Container(
+        constraints:
+        BoxConstraints(maxWidth: 200, maxHeight: 200),
+        child: GestureDetector(
         onTap: () {
           // popup allowing to delete
         },
@@ -210,7 +212,6 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         child: image,
       )));
     }
-    /*
     return Container(height: 200, child: GridView.extent(maxCrossAxisExtent: 200,
         shrinkWrap: true,
         physics: ScrollPhysics(),
@@ -220,28 +221,8 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         mainAxisSpacing: 4.0,
         crossAxisSpacing: 4.0,
         children: widgets));
-*/
-    return Container(
-        color: Colors.white,
-        padding: EdgeInsets.all(10),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 15.0),
-                child: Wrap(
-                  spacing: 20.0,
-                  alignment: WrapAlignment.spaceEvenly,
-                  children: widgets,
-                ),
-              )
-            ],
-          ),
-        ));
   }
-  
+
   Widget _row2(FeedPostFormInitialized state) {
     return Row(children: [staggered(state.postModelDetails.mediaPaths)]);
   }
