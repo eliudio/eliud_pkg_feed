@@ -4,7 +4,7 @@ import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/model/rgb_model.dart';
 import 'package:eliud_core/tools/etc.dart';
-import 'new_post/new_post_form.dart';
+import 'new_post/feed_post_form.dart';
 import 'post/bloc/post_bloc.dart';
 import 'postlist_paged/postlist_paged_bloc.dart';
 import 'postlist_paged/postlist_paged_event.dart';
@@ -38,7 +38,8 @@ class _PagedPostsListState extends State<PagedPostsList> {
   }
 
   Widget _newPostForm() {
-    return NewPostForm(_app!.documentID!, widget.feedModel.documentID!, widget.memberPublicInfoModel);
+    return FeedPostForm(feedId: widget.feedModel.documentID!);
+//    return NewPostForm(_app!.documentID!, widget.feedModel.documentID!, widget.memberPublicInfoModel);
   }
 
   @override
@@ -52,7 +53,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
               physics: ScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
                 if (index >= theState.values.length+1) return _buttonNextPage(!theState.hasReachedMax);
-                if (index == 0) _newPostForm();
+                if (index == 0) return _newPostForm();
                 return post(context, theState.values[index-1]!);
               },
               itemCount: theState.values.length + 2);

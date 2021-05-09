@@ -105,7 +105,7 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
     }
 
     if (tabs.length == 0) {
-      return Text("No contents");
+      return Container(height:0);
     }
 
     if (tabs.length == 1) {
