@@ -201,29 +201,33 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
     List<Widget> widgets = [];
     for (int i = 0; i < mediaPaths!.length; i++) {
       var image = Image.file(File(mediaPaths![i]));
-      widgets.add(Container(
-        padding: const EdgeInsets.all(8),
-        child: GestureDetector(
-        onTap: () {
-          // popup allowing to delete
-        },
-        // The custom button
-        child: image,
-      )));
+
+      widgets.add(PopupMenuButton(
+          color: Colors.red,
+          child: image,
+          itemBuilder: (_) => [
+                new PopupMenuItem<int>(child: const Text('Delete'), value: 0),
+              ],
+          onSelected: (choice) {
+            if (choice == 0) {
+              mediaPaths.removeAt(i);
+              _myFormBloc.add(ChangedFeedPostMemberMedia(paths: mediaPaths));
+            }
+          }));
     }
-    return Container(height: 300, child: CustomScrollView(
-      scrollDirection: Axis.horizontal,
-      primary: false,
-      slivers: <Widget>[
-        SliverPadding(
-          padding: const EdgeInsets.all(20),
-          sliver: SliverGrid.extent(
-            maxCrossAxisExtent: 300,
-            children: widgets
-          ),
-        ),
-      ],
-    ));
+    return Container(
+        height: 300,
+        child: CustomScrollView(
+          scrollDirection: Axis.horizontal,
+          primary: false,
+          slivers: <Widget>[
+            SliverPadding(
+              padding: const EdgeInsets.all(20),
+              sliver:
+                  SliverGrid.extent(maxCrossAxisExtent: 300, children: widgets, mainAxisSpacing: 5),
+            ),
+          ],
+        ));
   }
 
   Widget _row2(FeedPostFormInitialized state) {

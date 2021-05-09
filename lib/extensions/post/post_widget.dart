@@ -56,22 +56,6 @@ class _PostWidgetState extends State<PostWidget> {
 
   @override
   Widget build(BuildContext context) {
-    bool isCurrentPortrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
-    if ((isPortrait != null) && (isPortrait != isCurrentPortrait)) {
-      // If we're rebuilding as a result of a change of orientation, then we need to refresh the page.
-      // The reason for this is because it seems that the StaggeredGridView doesn't behave correct when changing orientation.
-      // This seems to happen because the StaggeredGridView sits in a list. These guys had the same problem and the solution does not  work
-      // https://github.com/letsar/flutter_staggered_grid_view/issues/79
-      // So, as a result, I bruteforce refresh the page
-      // This is not ideal, but it's the best we can do for now
-      eliudrouter.Router.bruteRefreshPage(context);
-    }
-    isPortrait = isCurrentPortrait;
-    return buildIt(context);
-  }
-
-  Widget buildIt(BuildContext context) {
     var postModel = widget.postModel;
     var memberId = widget.member!.documentID;
     if (size == null) size = MediaQuery.of(context).size;
