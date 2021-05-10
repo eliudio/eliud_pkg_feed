@@ -588,9 +588,10 @@ class _PostWidgetState extends State<PostWidget> {
 
   Future<void> _photoAvailable(
       PostModel postModel,
-      String path,
+      MediumAndItsThumbnailData mediumAndItsThumbnailData
       ) async {
-    var memberImageModel = await UploadFile.createThumbnailUploadVideoFile(widget.postModel.appId!, path, widget.member!.documentID!, widget.postModel.readAccess!);
+//    throw Exception("Needs proper implementation.");
+    var memberImageModel = await UploadFile.uploadMediumAndItsThumbnailData(widget.postModel.appId!, mediumAndItsThumbnailData, widget.member!.documentID!, widget.postModel.readAccess!);
     postModel.memberMedia!.add(
         PostMediumModel(documentID: newRandomKey(), memberMedium: memberImageModel)
     );

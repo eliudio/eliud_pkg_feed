@@ -60,8 +60,8 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
       if (event is InitialiseNewFeedPostFormEvent) {
         FeedPostFormLoaded loaded = FeedPostFormLoaded(
             postModelDetails: FeedPostModelDetails(
-          description: "",
-          mediaPaths: [],
+            description: "",
+            mediumAndItsThumbnailDatas: [],
         ));
         yield loaded;
         return;
@@ -71,7 +71,7 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
         var newValue = currentState.postModelDetails.copyWith(description: event.value);
         yield SubmittableFeedPostForm(postModelDetails: newValue);
       } else if (event is ChangedFeedPostMemberMedia) {
-        var newValue = currentState.postModelDetails.copyWith(mediaPaths: event.paths);
+        var newValue = currentState.postModelDetails.copyWith(mediumAndItsThumbnailDatas: event.mediumAndItsThumbnailDatas);
         yield SubmittableFeedPostForm(postModelDetails: newValue);
       }
     }

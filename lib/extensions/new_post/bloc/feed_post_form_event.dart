@@ -13,6 +13,8 @@
 
 */
 
+import 'package:eliud_core/tools/storage/firestore_helper.dart';
+
 import 'feed_post_model_details.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
@@ -42,14 +44,14 @@ class ChangedFeedPostDescription extends FeedPostFormEvent {
 }
 
 class ChangedFeedPostMemberMedia extends FeedPostFormEvent {
-  final List<String>? paths;
+  final List<MediumAndItsThumbnailData> mediumAndItsThumbnailDatas;
 
-  ChangedFeedPostMemberMedia({this.paths});
-
-  @override
-  List<Object?> get props => [ paths ];
+  ChangedFeedPostMemberMedia({required this.mediumAndItsThumbnailDatas});
 
   @override
-  String toString() => 'ChangedFeedPostMemberMedia{ value: $paths }';
+  List<Object?> get props => [ mediumAndItsThumbnailDatas ];
+
+  @override
+  String toString() => 'ChangedFeedPostMemberMedia{ value: $mediumAndItsThumbnailDatas }';
 }
 

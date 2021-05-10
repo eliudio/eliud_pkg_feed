@@ -23,6 +23,7 @@ import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/platform/storage_platform.dart';
 import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_core/tools/screen_size.dart';
+import 'package:eliud_core/tools/storage/firestore_helper.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_event.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
@@ -124,8 +125,8 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         if (state is FeedPostFormInitialized) {
           List<Widget> rows = [];
           rows.add(_row1(app, pubMember, state));
-          if ((state.postModelDetails.mediaPaths != null) &&
-              (state.postModelDetails.mediaPaths.isNotEmpty))
+          if ((state.postModelDetails.mediumAndItsThumbnailDatas != null) &&
+              (state.postModelDetails.mediumAndItsThumbnailDatas.isNotEmpty))
             rows.add(_row2(state));
           return PostHelper.getFormattedPost(rows);
         } else {
@@ -187,20 +188,20 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         onSelected: (choice) {
           if (choice == 0) {
             AbstractStoragePlatform.platform!
-                .takeMedium(context, app.documentID, (newPath) {
-              var listOfPaths = state.postModelDetails.mediaPaths;
-              listOfPaths.add(newPath);
-              _myFormBloc.add(ChangedFeedPostMemberMedia(paths: listOfPaths));
+                .takeMedium(context, app.documentID, (mediumAndItsThumbnailData) {
+              var mediumAndItsThumbnailDatas = state.postModelDetails.mediumAndItsThumbnailDatas;
+              mediumAndItsThumbnailDatas.add(mediumAndItsThumbnailData);
+              _myFormBloc.add(ChangedFeedPostMemberMedia(mediumAndItsThumbnailDatas: mediumAndItsThumbnailDatas));
             }, memberId);
           }
         });
   }
 
   @override
-  Widget staggered(List<String> mediaPaths) {
+  Widget staggered(List<MediumAndItsThumbnailData> mediumAndItsThumbnailDatas) {
     List<Widget> widgets = [];
-    for (int i = 0; i < mediaPaths!.length; i++) {
-      var image = Image.file(File(mediaPaths![i]));
+    for (int i = 0; i < mediumAndItsThumbnailDatas!.length; i++) {
+      var image = Image.file(File(mediumAndItsThumbnailDatas![i].thumbNailData!.filePath!));
 
       widgets.add(PopupMenuButton(
           color: Colors.red,
@@ -210,8 +211,8 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
               ],
           onSelected: (choice) {
             if (choice == 0) {
-              mediaPaths.removeAt(i);
-              _myFormBloc.add(ChangedFeedPostMemberMedia(paths: mediaPaths));
+              mediumAndItsThumbnailDatas.removeAt(i);
+              _myFormBloc.add(ChangedFeedPostMemberMedia(mediumAndItsThumbnailDatas: mediumAndItsThumbnailDatas));
             }
           }));
     }
@@ -231,7 +232,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
   }
 
   Widget _row2(FeedPostFormInitialized state) {
-    return staggered(state.postModelDetails.mediaPaths);
+    return staggered(state.postModelDetails.mediumAndItsThumbnailDatas);
   }
 
   Widget _textField(

@@ -13,17 +13,19 @@
 
 */
 
+import 'package:eliud_core/model/member_medium_model.dart';
+import 'package:eliud_core/tools/storage/firestore_helper.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 class FeedPostModelDetails {
   final String description;
-  final List<String> mediaPaths;
+  final List<MediumAndItsThumbnailData> mediumAndItsThumbnailDatas;
 
-  FeedPostModelDetails({required this.description, required this.mediaPaths});
+  FeedPostModelDetails({required this.description, required this.mediumAndItsThumbnailDatas});
 
-  FeedPostModelDetails copyWith({String? description,  List<String>? mediaPaths, }) {
-    return FeedPostModelDetails(description: description ?? this.description, mediaPaths: mediaPaths ?? this.mediaPaths, );
+  FeedPostModelDetails copyWith({String? description,  List<MediumAndItsThumbnailData>? mediumAndItsThumbnailDatas, }) {
+    return FeedPostModelDetails(description: description ?? this.description, mediumAndItsThumbnailDatas: mediumAndItsThumbnailDatas ?? this.mediumAndItsThumbnailDatas, );
   }
 }
