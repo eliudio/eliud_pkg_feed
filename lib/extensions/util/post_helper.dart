@@ -43,15 +43,22 @@ class PostHelper {
         ),
         itemBuilder: (_) => <PopupMenuItem<int>>[
           new PopupMenuItem<int>(
-              child: const Text('Take photo or video'), value: 0),
+              child: const Text('Take photo'), value: 0),
         ],
         onSelected: (choice) {
           if (choice == 0) {
-            AbstractStoragePlatform.platform!.takeMedium(
+            AbstractStoragePlatform.platform!.takePhoto(
                 context,
                 postModel!.appId!,
                     (mediumAndItsThumbnailData) => mediumAvailableTrigger(postModel, mediumAndItsThumbnailData),
                 memberID,);
+          }
+          if (choice == 1) {
+            AbstractStoragePlatform.platform!.uploadPhoto(
+              context,
+              postModel!.appId!,
+                  (mediumAndItsThumbnailData) => mediumAvailableTrigger(postModel, mediumAndItsThumbnailData),
+              memberID,);
           }
         });
   }

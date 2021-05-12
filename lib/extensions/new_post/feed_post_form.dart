@@ -182,13 +182,23 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
           Icons.add,
         ),
         itemBuilder: (_) => <PopupMenuItem<int>>[
-              new PopupMenuItem<int>(
-                  child: const Text('Take photo or video'), value: 0),
+          new PopupMenuItem<int>(
+              child: const Text('Take photo'), value: 0),
+          new PopupMenuItem<int>(
+              child: const Text('Upload photo'), value: 1),
             ],
         onSelected: (choice) {
           if (choice == 0) {
             AbstractStoragePlatform.platform!
-                .takeMedium(context, app.documentID, (mediumAndItsThumbnailData) {
+                .takePhoto(context, app.documentID, (mediumAndItsThumbnailData) {
+              var mediumAndItsThumbnailDatas = state.postModelDetails.mediumAndItsThumbnailDatas;
+              mediumAndItsThumbnailDatas.add(mediumAndItsThumbnailData);
+              _myFormBloc.add(ChangedFeedPostMemberMedia(mediumAndItsThumbnailDatas: mediumAndItsThumbnailDatas));
+            }, memberId);
+          }
+          if (choice == 1) {
+            AbstractStoragePlatform.platform!
+                .uploadPhoto(context, app.documentID, (mediumAndItsThumbnailData) {
               var mediumAndItsThumbnailDatas = state.postModelDetails.mediumAndItsThumbnailDatas;
               mediumAndItsThumbnailDatas.add(mediumAndItsThumbnailData);
               _myFormBloc.add(ChangedFeedPostMemberMedia(mediumAndItsThumbnailDatas: mediumAndItsThumbnailDatas));
