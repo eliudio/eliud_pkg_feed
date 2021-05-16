@@ -21,11 +21,12 @@ import 'package:meta/meta.dart';
 
 class FeedPostModelDetails {
   final String description;
-  final List<MediumAndItsThumbnailData> mediumAndItsThumbnailDatas;
+  final List<PhotoWithThumbnail> photoWithThumbnails;
+  final List<VideoWithThumbnail> videoWithThumbnails;
 
-  FeedPostModelDetails({required this.description, required this.mediumAndItsThumbnailDatas});
+  FeedPostModelDetails({required this.description, required this.photoWithThumbnails, required this.videoWithThumbnails});
 
-  FeedPostModelDetails copyWith({String? description,  List<MediumAndItsThumbnailData>? mediumAndItsThumbnailDatas, }) {
-    return FeedPostModelDetails(description: description ?? this.description, mediumAndItsThumbnailDatas: mediumAndItsThumbnailDatas ?? this.mediumAndItsThumbnailDatas, );
+  FeedPostModelDetails copyWith({String? description, List<PhotoWithThumbnail>? photoWithThumbnails, List<VideoWithThumbnail>? videoWithThumbnails}) {
+    return FeedPostModelDetails(description: description ?? this.description, photoWithThumbnails: photoWithThumbnails ?? this.photoWithThumbnails, videoWithThumbnails: videoWithThumbnails ?? this.videoWithThumbnails, );
   }
 }

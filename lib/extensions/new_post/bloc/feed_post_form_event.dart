@@ -43,15 +43,27 @@ class ChangedFeedPostDescription extends FeedPostFormEvent {
   String toString() => 'ChangedPostDescription{ value: $value }';
 }
 
-class ChangedFeedPostMemberMedia extends FeedPostFormEvent {
-  final List<MediumAndItsThumbnailData> mediumAndItsThumbnailDatas;
+class ChangedFeedPhotos extends FeedPostFormEvent {
+  final List<PhotoWithThumbnail> photoWithThumbnails;
 
-  ChangedFeedPostMemberMedia({required this.mediumAndItsThumbnailDatas});
-
-  @override
-  List<Object?> get props => [ mediumAndItsThumbnailDatas ];
+  ChangedFeedPhotos({required this.photoWithThumbnails});
 
   @override
-  String toString() => 'ChangedFeedPostMemberMedia{ value: $mediumAndItsThumbnailDatas }';
+  List<Object?> get props => [ photoWithThumbnails ];
+
+  @override
+  String toString() => 'ChangedFeedPhotos{ photoWithThumbnails: $photoWithThumbnails }';
+}
+
+class ChangedFeedVideos extends FeedPostFormEvent {
+  final List<VideoWithThumbnail> videoWithThumbnails;
+
+  ChangedFeedVideos({required this.videoWithThumbnails});
+
+  @override
+  List<Object?> get props => [ videoWithThumbnails ];
+
+  @override
+  String toString() => 'ChangedFeedVideos{ videoWithThumbnails: $videoWithThumbnails }';
 }
 

@@ -61,7 +61,8 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
         FeedPostFormLoaded loaded = FeedPostFormLoaded(
             postModelDetails: FeedPostModelDetails(
             description: "",
-            mediumAndItsThumbnailDatas: [],
+            photoWithThumbnails: [],
+            videoWithThumbnails: [],
         ));
         yield loaded;
         return;
@@ -70,8 +71,11 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
       if (event is ChangedFeedPostDescription) {
         var newValue = currentState.postModelDetails.copyWith(description: event.value);
         yield SubmittableFeedPostForm(postModelDetails: newValue);
-      } else if (event is ChangedFeedPostMemberMedia) {
-        var newValue = currentState.postModelDetails.copyWith(mediumAndItsThumbnailDatas: event.mediumAndItsThumbnailDatas);
+      } else if (event is ChangedFeedPhotos) {
+        var newValue = currentState.postModelDetails.copyWith(photoWithThumbnails: event.photoWithThumbnails);
+        yield SubmittableFeedPostForm(postModelDetails: newValue);
+      } else if (event is ChangedFeedVideos) {
+        var newValue = currentState.postModelDetails.copyWith(videoWithThumbnails: event.videoWithThumbnails);
         yield SubmittableFeedPostForm(postModelDetails: newValue);
       }
     }

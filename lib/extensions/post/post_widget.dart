@@ -129,7 +129,7 @@ class _PostWidgetState extends State<PostWidget> {
               alignment: Alignment.center, height: 30, child: _textField()),
         ),
         Container(width: 8),
-        PostHelper.mediaButtons(context, postModel, widget.member!.documentID!, _photoAvailable),
+        PostHelper.mediaButtons(context, postModel, widget.member!.documentID!, _photoAvailable, _videoAvailable),
         Container(
             height: 30,
             child: RaisedButton(
@@ -585,15 +585,23 @@ class _PostWidgetState extends State<PostWidget> {
     );
   }
 
-
   Future<void> _photoAvailable(
       PostModel postModel,
-      MediumAndItsThumbnailData mediumAndItsThumbnailData
+      PhotoWithThumbnail photoWithThumbnail
       ) async {
-//    throw Exception("Needs proper implementation.");
+    throw Exception("Needs proper implementation.");
+/*
     var memberImageModel = await UploadFile.uploadMediumAndItsThumbnailData(widget.postModel.appId!, mediumAndItsThumbnailData, widget.member!.documentID!, widget.postModel.readAccess!);
     postModel.memberMedia!.add(
         PostMediumModel(documentID: newRandomKey(), memberMedium: memberImageModel)
     );
+*/
+  }
+
+  Future<void> _videoAvailable(
+      PostModel postModel,
+      VideoWithThumbnail videoWithThumbnail
+      ) async {
+    throw Exception("Needs proper implementation.");
   }
 }

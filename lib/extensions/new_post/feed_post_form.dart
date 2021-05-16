@@ -125,9 +125,12 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         if (state is FeedPostFormInitialized) {
           List<Widget> rows = [];
           rows.add(_row1(app, pubMember, state));
-          if ((state.postModelDetails.mediumAndItsThumbnailDatas != null) &&
-              (state.postModelDetails.mediumAndItsThumbnailDatas.isNotEmpty))
+          if ((state.postModelDetails.photoWithThumbnails != null) &&
+              (state.postModelDetails.photoWithThumbnails.isNotEmpty))
             rows.add(_row2(state));
+          if ((state.postModelDetails.videoWithThumbnails != null) &&
+              (state.postModelDetails.videoWithThumbnails.isNotEmpty))
+            rows.add(_row3(state));
           return PostHelper.getFormattedPost(rows);
         } else {
           return Center(child: DelayedCircularProgressIndicator());
@@ -190,28 +193,36 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         onSelected: (choice) {
           if (choice == 0) {
             AbstractStoragePlatform.platform!
-                .takePhoto(context, app.documentID, (mediumAndItsThumbnailData) {
-              var mediumAndItsThumbnailDatas = state.postModelDetails.mediumAndItsThumbnailDatas;
-              mediumAndItsThumbnailDatas.add(mediumAndItsThumbnailData);
-              _myFormBloc.add(ChangedFeedPostMemberMedia(mediumAndItsThumbnailDatas: mediumAndItsThumbnailDatas));
+                .takePhoto(context, app.documentID!, (photoWithThumbnail) {
+              var photoWithDetails = state.postModelDetails.photoWithThumbnails;
+              photoWithDetails.add(photoWithThumbnail);
+              _myFormBloc.add(ChangedFeedPhotos(photoWithThumbnails: photoWithDetails));
             }, memberId);
           }
           if (choice == 1) {
             AbstractStoragePlatform.platform!
-                .uploadPhoto(context, app.documentID, (mediumAndItsThumbnailData) {
-              var mediumAndItsThumbnailDatas = state.postModelDetails.mediumAndItsThumbnailDatas;
-              mediumAndItsThumbnailDatas.add(mediumAndItsThumbnailData);
-              _myFormBloc.add(ChangedFeedPostMemberMedia(mediumAndItsThumbnailDatas: mediumAndItsThumbnailDatas));
+                .uploadPhoto(context, app.documentID!, (photoWithThumbnail) {
+              var photoWithDetails = state.postModelDetails.photoWithThumbnails;
+              photoWithDetails.add(photoWithThumbnail);
+              _myFormBloc.add(ChangedFeedPhotos(photoWithThumbnails: photoWithDetails));
             }, memberId);
           }
         });
   }
 
   @override
-  Widget staggered(List<MediumAndItsThumbnailData> mediumAndItsThumbnailDatas) {
+  Widget staggered(List<MediumBase> media) {
     List<Widget> widgets = [];
-    for (int i = 0; i < mediumAndItsThumbnailDatas!.length; i++) {
-      var image = Image.file(File(mediumAndItsThumbnailDatas![i].thumbNailData!.filePath!));
+    for (int i = 0; i < media!.length; i++) {
+      var medium = media[i];
+      var image;
+      if (medium is PhotoWithThumbnail) {
+        image = Image.memory(medium.thumbNailData.data);
+      } else if (medium is VideoWithThumbnail){
+        image = Image.memory(medium.thumbNailData.data);
+      } else {
+        image = Icons.error;
+      }
 
       widgets.add(PopupMenuButton(
           color: Colors.red,
@@ -221,8 +232,12 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
               ],
           onSelected: (choice) {
             if (choice == 0) {
-              mediumAndItsThumbnailDatas.removeAt(i);
-              _myFormBloc.add(ChangedFeedPostMemberMedia(mediumAndItsThumbnailDatas: mediumAndItsThumbnailDatas));
+              media.removeAt(i);
+              if (medium is PhotoWithThumbnail) {
+                _myFormBloc.add(ChangedFeedPhotos(photoWithThumbnails: media as List<PhotoWithThumbnail>));
+              } else if (medium is VideoWithThumbnail){
+                _myFormBloc.add(ChangedFeedVideos(videoWithThumbnails: media as List<VideoWithThumbnail>));
+              }
             }
           }));
     }
@@ -242,7 +257,11 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
   }
 
   Widget _row2(FeedPostFormInitialized state) {
-    return staggered(state.postModelDetails.mediumAndItsThumbnailDatas);
+    return staggered(state.postModelDetails.photoWithThumbnails);
+  }
+
+  Widget _row3(FeedPostFormInitialized state) {
+    return staggered(state.postModelDetails.videoWithThumbnails);
   }
 
   Widget _textField(
