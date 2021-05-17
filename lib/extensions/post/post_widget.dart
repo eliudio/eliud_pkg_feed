@@ -1,5 +1,6 @@
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/tools/random.dart';
+import 'package:eliud_core/tools/storage/medium_base.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
 import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -13,7 +14,6 @@ import 'package:eliud_pkg_feed/model/post_like_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:eliud_core/tools/storage/firestore_helper.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 import 'bloc/post_bloc.dart';
 import 'bloc/post_event.dart';
@@ -129,7 +129,7 @@ class _PostWidgetState extends State<PostWidget> {
               alignment: Alignment.center, height: 30, child: _textField()),
         ),
         Container(width: 8),
-        PostHelper.mediaButtons(context, postModel, widget.member!.documentID!, _photoAvailable, _videoAvailable),
+        PostHelper.mediaButtons(context, _photoAvailable, _videoAvailable),
         Container(
             height: 30,
             child: RaisedButton(
@@ -586,7 +586,6 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   Future<void> _photoAvailable(
-      PostModel postModel,
       PhotoWithThumbnail photoWithThumbnail
       ) async {
     throw Exception("Needs proper implementation.");
@@ -599,7 +598,6 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   Future<void> _videoAvailable(
-      PostModel postModel,
       VideoWithThumbnail videoWithThumbnail
       ) async {
     throw Exception("Needs proper implementation.");

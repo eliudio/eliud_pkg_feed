@@ -13,7 +13,7 @@
 
 */
 
-import 'package:eliud_core/tools/storage/firestore_helper.dart';
+import 'package:eliud_core/tools/storage/medium_base.dart';
 
 import 'feed_post_model_details.dart';
 import 'package:equatable/equatable.dart';

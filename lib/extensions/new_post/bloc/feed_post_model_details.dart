@@ -14,7 +14,7 @@
 */
 
 import 'package:eliud_core/model/member_medium_model.dart';
-import 'package:eliud_core/tools/storage/firestore_helper.dart';
+import 'package:eliud_core/tools/storage/medium_base.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';

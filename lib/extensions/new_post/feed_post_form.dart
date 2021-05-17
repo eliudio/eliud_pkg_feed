@@ -13,31 +13,18 @@
 
 */
 
-import 'dart:io';
 
 import 'package:eliud_core/core/widgets/progress_indicator.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
-import 'package:eliud_core/platform/storage_platform.dart';
-import 'package:eliud_core/tools/random.dart';
-import 'package:eliud_core/tools/screen_size.dart';
-import 'package:eliud_core/tools/storage/firestore_helper.dart';
-import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_bloc.dart';
-import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_event.dart';
+import 'package:eliud_core/tools/storage/medium_base.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
-import 'package:eliud_pkg_feed/tools/grid/photos_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
-import 'package:eliud_pkg_feed/model/embedded_component.dart';
 import 'package:eliud_core/tools/enums.dart';
-import 'package:eliud_pkg_feed/model/model_export.dart';
-import 'package:eliud_pkg_feed/model/post_model.dart';
-import 'package:eliud_pkg_feed/model/post_form_bloc.dart';
-import 'package:eliud_pkg_feed/model/post_form_state.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 import 'bloc/feed_post_form_bloc.dart';
@@ -179,41 +166,21 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
 
   PopupMenuButton _mediaButtons(BuildContext context, AppModel app,
       FeedPostFormInitialized state, String memberId) {
-    return PopupMenuButton(
-        color: Colors.red,
-        icon: Icon(
-          Icons.add,
-        ),
-        itemBuilder: (_) => <PopupMenuItem<int>>[
-          new PopupMenuItem<int>(
-              child: const Text('Take photo'), value: 0),
-          new PopupMenuItem<int>(
-              child: const Text('Upload photo'), value: 1),
-            ],
-        onSelected: (choice) {
-          if (choice == 0) {
-            AbstractStoragePlatform.platform!
-                .takePhoto(context, app.documentID!, (photoWithThumbnail) {
-              var photoWithDetails = state.postModelDetails.photoWithThumbnails;
-              photoWithDetails.add(photoWithThumbnail);
-              _myFormBloc.add(ChangedFeedPhotos(photoWithThumbnails: photoWithDetails));
-            }, memberId);
-          }
-          if (choice == 1) {
-            AbstractStoragePlatform.platform!
-                .uploadPhoto(context, app.documentID!, (photoWithThumbnail) {
-              var photoWithDetails = state.postModelDetails.photoWithThumbnails;
-              photoWithDetails.add(photoWithThumbnail);
-              _myFormBloc.add(ChangedFeedPhotos(photoWithThumbnails: photoWithDetails));
-            }, memberId);
-          }
-        });
+    return PostHelper.mediaButtons(context, (photoWithThumbnail) {
+      var photoWithDetails = state.postModelDetails.photoWithThumbnails;
+      photoWithDetails.add(photoWithThumbnail);
+      _myFormBloc.add(ChangedFeedPhotos(photoWithThumbnails: photoWithDetails));
+    }, (videoWithThumbnail) {
+      var videoWithThumbnails = state.postModelDetails.videoWithThumbnails;
+      videoWithThumbnails.add(videoWithThumbnail);
+      _myFormBloc.add(ChangedFeedVideos(videoWithThumbnails: videoWithThumbnails));
+    });
   }
 
   @override
   Widget staggered(List<MediumBase> media) {
     List<Widget> widgets = [];
-    for (int i = 0; i < media!.length; i++) {
+    for (int i = 0; i < media.length; i++) {
       var medium = media[i];
       var image;
       if (medium is PhotoWithThumbnail) {
