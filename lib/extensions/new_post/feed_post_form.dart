@@ -21,6 +21,7 @@ import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/tools/storage/medium_base.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
+import 'package:eliud_pkg_feed/platform/medium_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
@@ -177,33 +178,48 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
     });
   }
 
+  static int POPUP_MENU_DELETE_VALUE = 0;
+  static int POPUP_MENU_VIEW = 1;
+
   @override
   Widget staggered(List<MediumBase> media) {
     List<Widget> widgets = [];
     for (int i = 0; i < media.length; i++) {
       var medium = media[i];
-      var image;
+      var image, name;
       if (medium is PhotoWithThumbnail) {
         image = Image.memory(medium.thumbNailData.data);
+        name = medium.photoData.baseName;
       } else if (medium is VideoWithThumbnail){
         image = Image.memory(medium.thumbNailData.data);
+        name = medium.videoData.baseName;
       } else {
         image = Icons.error;
+        name = '?';
       }
 
       widgets.add(PopupMenuButton(
           color: Colors.red,
+          tooltip: name,
           child: image,
           itemBuilder: (_) => [
-                new PopupMenuItem<int>(child: const Text('Delete'), value: 0),
-              ],
+            new PopupMenuItem<int>(child: const Text('View'), value: POPUP_MENU_VIEW),
+            new PopupMenuItem<int>(child: const Text('Delete'), value: POPUP_MENU_DELETE_VALUE),
+          ],
           onSelected: (choice) {
-            if (choice == 0) {
+            if (choice == POPUP_MENU_DELETE_VALUE) {
               media.removeAt(i);
               if (medium is PhotoWithThumbnail) {
                 _myFormBloc.add(ChangedFeedPhotos(photoWithThumbnails: media as List<PhotoWithThumbnail>));
               } else if (medium is VideoWithThumbnail){
                 _myFormBloc.add(ChangedFeedVideos(videoWithThumbnails: media as List<VideoWithThumbnail>));
+              }
+            }
+            if (choice == POPUP_MENU_VIEW) {
+              if (medium is PhotoWithThumbnail) {
+                AbstractMediumPlatform.platform!.showPhotos(context, media as List<PhotoWithThumbnail>, i);
+              } else if (medium is VideoWithThumbnail){
+                AbstractMediumPlatform.platform!.showVideo(context, medium);
               }
             }
           }));

@@ -1,21 +1,60 @@
+import 'dart:typed_data';
+
 import 'package:eliud_core/core/widgets/progress_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:flutter_carousel_slider/carousel_slider_indicators.dart';
 import 'package:flutter_carousel_slider/carousel_slider_transforms.dart';
-import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart' as pv;
-import 'package:transparent_image/transparent_image.dart';
+
+abstract class SlideImageProvider {
+  ImageProvider getImageProvide(int index);
+  int count();
+}
+
+class UrlSlideImageProvider extends SlideImageProvider {
+  final List<String> urls;
+
+  UrlSlideImageProvider(this.urls);
+
+  @override
+  ImageProvider<Object> getImageProvide(int index) {
+    return NetworkImage(urls[index]);
+  }
+
+  @override
+  int count() => urls.length;
+}
+
+class Uint8ListSlideImageProvider extends SlideImageProvider {
+  final List<Uint8List> data;
+
+  Uint8ListSlideImageProvider(this.data);
+
+  @override
+  ImageProvider<Object> getImageProvide(int index) {
+    return Image.memory(data[index]).image;
+  }
+
+  @override
+  int count() => data.length;
+}
 
 class AlbumSlider extends StatefulWidget {
   final String? title;
-  final List<String?>? urls;
+  final SlideImageProvider slideImageProvider;
   final int? initialPage;
   final bool? withCloseButton;
   final bool? withNextPrevButton;
 
-  AlbumSlider({Key? key, this.title, this.urls, this.initialPage, this.withCloseButton = true, this.withNextPrevButton = true})
+  AlbumSlider(
+      {Key? key,
+      this.title,
+      required this.slideImageProvider,
+      this.initialPage,
+      this.withCloseButton = true,
+      this.withNextPrevButton = true})
       : super(key: key);
 
   @override
@@ -26,7 +65,7 @@ class _AlbumSliderState extends State<AlbumSlider> {
   bool _isPlaying = false;
 
   CarouselSliderController? _sliderController;
-  
+
   @override
   void initState() {
     super.initState();
@@ -46,13 +85,13 @@ class _AlbumSliderState extends State<AlbumSlider> {
                 child: Container(
                     height: MediaQuery.of(context).size.height - height,
                     child: pv.PhotoView(
-                        imageProvider: NetworkImage(widget.urls![index]!),
-                        backgroundDecoration: BoxDecoration(color: Colors.transparent)
-                    ))),
+                        imageProvider:
+                            widget.slideImageProvider.getImageProvide(index),
+                        backgroundDecoration:
+                            BoxDecoration(color: Colors.transparent)))),
           ],
         );
       },
-//      slideTransform: ParallaxTransform(clipAmount: 400),
       slideTransform: BackgroundToForegroundTransform(),
       slideIndicator: SequentialFillIndicator(
         padding: EdgeInsets.only(bottom: 0),
@@ -60,7 +99,7 @@ class _AlbumSliderState extends State<AlbumSlider> {
         indicatorBackgroundColor: Colors.white,
         enableAnimation: true,
       ),
-      itemCount: widget.urls!.length,
+      itemCount: widget.slideImageProvider.count(),
       initialPage: widget.initialPage!,
       enableAutoSlider: false,
     );
@@ -76,9 +115,9 @@ class _AlbumSliderState extends State<AlbumSlider> {
       widgets.add(Align(
           alignment: Alignment.topRight,
           child: TextButton(
-            child: Icon(Icons.close, color: Colors.red, size: 50),
+            child: Icon(Icons.close, color: Colors.red, size: 30),
             onPressed: () {
-                Navigator.maybePop(context);
+              Navigator.maybePop(context);
             },
           )));
     }

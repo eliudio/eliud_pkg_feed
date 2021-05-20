@@ -1,6 +1,6 @@
-import 'package:eliud_core/platform/storage_platform.dart';
 import 'package:eliud_core/tools/storage/medium_base.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
+import 'package:eliud_pkg_feed/platform/medium_platform.dart';
 import 'package:flutter/material.dart';
 
 typedef PhotoWithThumbnailTrigger(
@@ -40,14 +40,14 @@ class PostHelper {
       PhotoWithThumbnailAvailable photoWithThumbnailAvailable,
       VideoWithThumbnailAvailable videoWithThumbnailAvailable) {
     var items = <PopupMenuItem<int>>[];
-    if (AbstractStoragePlatform.platform!.hasCamera()) {
+    if (AbstractMediumPlatform.platform!.hasCamera()) {
       items.add(
         PopupMenuItem<int>(child: const Text('Take photo'), value: 0),
       );
     }
     items.add(
         new PopupMenuItem<int>(child: const Text('Upload photo'), value: 1));
-    if (AbstractStoragePlatform.platform!.hasCamera()) {
+    if (AbstractMediumPlatform.platform!.hasCamera()) {
       items.add(
         PopupMenuItem<int>(child: const Text('Take video'), value: 2),
       );
@@ -62,25 +62,25 @@ class PostHelper {
         itemBuilder: (_) => items,
         onSelected: (choice) {
           if (choice == 0) {
-            AbstractStoragePlatform.platform!.takePhoto(
+            AbstractMediumPlatform.platform!.takePhoto(
               context,
               (value) => photoWithThumbnailAvailable(value),
             );
           }
           if (choice == 1) {
-            AbstractStoragePlatform.platform!.uploadPhoto(
+            AbstractMediumPlatform.platform!.uploadPhoto(
               context,
               (value) => photoWithThumbnailAvailable(value),
             );
           }
           if (choice == 2) {
-            AbstractStoragePlatform.platform!.takeVideo(
+            AbstractMediumPlatform.platform!.takeVideo(
               context,
               (value) => videoWithThumbnailAvailable(value),
             );
           }
           if (choice == 3) {
-            AbstractStoragePlatform.platform!.uploadVideo(
+            AbstractMediumPlatform.platform!.uploadVideo(
               context,
               (value) => videoWithThumbnailAvailable(value),
             );

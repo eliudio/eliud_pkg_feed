@@ -1,7 +1,8 @@
 import 'dart:math';
 
 import 'package:eliud_core/model/member_medium_model.dart';
-import 'package:eliud_pkg_feed/tools/grid/photos_view.dart';
+import 'package:eliud_core/tools/etc.dart';
+import 'package:eliud_pkg_feed/platform/medium_platform.dart';
 import 'package:eliud_pkg_feed/tools/slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +14,9 @@ class MediumToPresentationData {
   List<Widget>? widgets;
 }
 
+/*
+ * Widget to show a grid of photos and allow to open photo in a photoview
+ */
 class PhotosPage extends StatelessWidget {
   final List<MemberMediumModel>? memberMedia;
 
@@ -46,25 +50,9 @@ class PhotosPage extends StatelessWidget {
       var urls = memberMedia!.map((memberMedium) => memberMedium.url).toList();
       widgets.add(GestureDetector(
         onTap: () {
-/*
-          Navigator.push(context, PageRouteBuilder(
-              opaque: true,
-              pageBuilder: (_, __, ___) {
-                return AlbumSlider(title: "Photos", urls: urls, initialPage: i);
-              }));
-*/
-          Navigator.push(context, MaterialPageRoute(builder: (_) {
-            return AlbumSlider(title: "Photos", urls: urls, initialPage: i);
-          }));
-/*
-          DialogStatefulWidgetHelper.openIt(
-              context,
-              WidgetDialog(
-                  title: 'Photo',
-                  widget:
-                      AlbumSlider(title: "Photos", urls: urls, initialPage: i),
-                  yesFunction: () => Navigator.of(context).pop()));
-*/
+        if (urls != null) {
+          AbstractMediumPlatform.platform!.showPhotosFromUrls(context, urls, i);
+        }
         },
         // The custom button
         child: image,
@@ -72,5 +60,55 @@ class PhotosPage extends StatelessWidget {
     }
     return PhotoView.extent(
         maxCrossAxisExtent: 100.0, tiles: tiles, widgets: widgets);
+  }
+}
+
+
+class PhotoView extends StatelessWidget {
+  const PhotoView.extent(
+      {@required this.maxCrossAxisExtent,
+        @required this.tiles,
+        this.mainAxisSpacing: 4.0,
+        this.crossAxisSpacing: 4.0,
+        this.widgets})
+      : crossAxisCount = null;
+
+  static const EdgeInsetsGeometry padding =
+  const EdgeInsets.symmetric(horizontal: 4.0);
+
+  final List<StaggeredTile>? tiles;
+  final int? crossAxisCount;
+  final double? mainAxisSpacing;
+  final double? crossAxisSpacing;
+  final double? maxCrossAxisExtent;
+  final List<Widget>? widgets;
+
+  @override
+  Widget build(BuildContext context) {
+    if (maxCrossAxisExtent == null) return Text("maxCrossAxisExtent is null");
+    if (tiles == null) return Text("tiles is null");
+    return StaggeredGridView.extentBuilder(
+      primary: false,
+      maxCrossAxisExtent: maxCrossAxisExtent!,
+      itemCount: tiles!.length,
+      itemBuilder: _getChild,
+      shrinkWrap: true,
+      physics: ScrollPhysics(),
+      mainAxisSpacing: 4.0,
+      crossAxisSpacing: 4.0,
+      padding: padding,
+      staggeredTileBuilder: _getStaggeredTile,
+    );
+  }
+
+  StaggeredTile _getStaggeredTile(int i) {
+    var tile = i >= tiles!.length ? null : tiles![i];
+    return tile!;
+  }
+
+  Widget _getChild(BuildContext context, int i) {
+    var widget = i >= widgets!.length ? null : widgets![i];
+    if (widget == null) return Text("No child");
+    return widget;
   }
 }
