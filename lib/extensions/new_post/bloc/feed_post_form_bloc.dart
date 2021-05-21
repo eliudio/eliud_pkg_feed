@@ -16,6 +16,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:eliud_core/tools/enums.dart';
+import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 import 'feed_post_form_event.dart';
 import 'feed_post_form_state.dart';
 import 'feed_post_model_details.dart';
@@ -33,22 +34,31 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
       if (event is InitialiseNewFeedPostFormEvent) {
         FeedPostFormLoaded loaded = FeedPostFormLoaded(
             postModelDetails: FeedPostModelDetails(
-            description: "",
-            photoWithThumbnails: [],
-            videoWithThumbnails: [],
+          description: "",
+          photoWithThumbnails: [],
+          videoWithThumbnails: [],
+          postPrivilege: PostPrivilege.Public,
         ));
         yield loaded;
         return;
       }
     } else if (currentState is FeedPostFormInitialized) {
+      if (event is ChangedFeedPostPrivilege) {
+        var newValue =
+            currentState.postModelDetails.copyWith(postPrivilege: event.value);
+        yield SubmittableFeedPostForm(postModelDetails: newValue);
+      }
       if (event is ChangedFeedPostDescription) {
-        var newValue = currentState.postModelDetails.copyWith(description: event.value);
+        var newValue =
+            currentState.postModelDetails.copyWith(description: event.value);
         yield SubmittableFeedPostForm(postModelDetails: newValue);
       } else if (event is ChangedFeedPhotos) {
-        var newValue = currentState.postModelDetails.copyWith(photoWithThumbnails: event.photoWithThumbnails);
+        var newValue = currentState.postModelDetails
+            .copyWith(photoWithThumbnails: event.photoWithThumbnails);
         yield SubmittableFeedPostForm(postModelDetails: newValue);
       } else if (event is ChangedFeedVideos) {
-        var newValue = currentState.postModelDetails.copyWith(videoWithThumbnails: event.videoWithThumbnails);
+        var newValue = currentState.postModelDetails
+            .copyWith(videoWithThumbnails: event.videoWithThumbnails);
         yield SubmittableFeedPostForm(postModelDetails: newValue);
       }
     }

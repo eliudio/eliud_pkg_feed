@@ -13,15 +13,22 @@
 
 */
 
-
 import 'package:eliud_core/core/widgets/progress_indicator.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
+import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_core/tools/storage/medium_base.dart';
+import 'package:eliud_core/tools/storage/member_medium_helper.dart';
+import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_bloc.dart';
+import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_event.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
+import 'package:eliud_pkg_feed/model/post_medium_model.dart';
+import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:eliud_pkg_feed/platform/medium_platform.dart';
+import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
@@ -61,6 +68,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
   late FeedPostFormBloc _myFormBloc;
 
   final TextEditingController _descriptionController = TextEditingController();
+  int? _postPrivilegeSelectedRadioTile;
 
   _MyFeedPostFormState();
 
@@ -69,28 +77,102 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
     super.initState();
     _myFormBloc = BlocProvider.of<FeedPostFormBloc>(context);
     _descriptionController.addListener(_onDescriptionChanged);
+    _postPrivilegeSelectedRadioTile = 0;
   }
 
-  void _addPost(
-      BuildContext context, FeedPostModelDetails feedPostModelDetails) {
-    // Here we need to tell the form block OR the list bloc to upload the PostModelDetail
-    // then We need to use something like this to upload the media...
-    /*var memberImageModel = await UploadFile.createThumbnailUploadVideoFile(widget.appId!, path, widget.memberId!, widget.readAccess!);
-    media.add(
-        PostMediumModel(documentID: newRandomKey(), memberMedium: memberImageModel)
+  Widget _radioPrivilegeTile(String text, int value) {
+    return Flexible(
+      fit: FlexFit.loose,
+      child:
+      RadioListTile(
+        value: value,
+        groupValue: _postPrivilegeSelectedRadioTile,
+        title: Text(text),
+        onChanged: (dynamic value) {
+          _setPostSelectedRadioTile(value);
+        },
+      ),
     );
-    _myFormBloc.add(ChangedFeedPostMemberMedia(value: media));
+  }
 
-    then we need to create the post itself, perhaps something like this
-    if ((_descriptionController.text != null) &&
-        (_descriptionController.text.length > 0)) {
-      postModel = postModel!.copyWith(description: _descriptionController.text);
+  Widget _rowAudience() {
+    List<Widget> children = [];
+    children.add(_radioPrivilegeTile('Public', 0));
+    children.add(_radioPrivilegeTile('Followers', 1));
+    children.add(_radioPrivilegeTile('Just Me', 2));
+    return Row(children: children);
+  }
 
-      BlocProvider.of<PostListPagedBloc>(context)
-          .add(AddPostPaged(value: postModel));
-      _descriptionController.clear();
+  Future<void> _addPost(BuildContext context, FeedPostModelDetails feedPostModelDetails,
+      MemberPublicInfoModel member, AppModel app, LoggedIn accessState) async {
+    // The uploading of the data is to be done in a bloc and we need to feedback updates to the gui on several intervals
+    // We need to be able to cancel the upload as well
+    List<String> readAccess = await PostFollowersHelper.as(feedPostModelDetails.postPrivilege, app.documentID!, accessState);
+
+
+/*
+    DialogWithOptions(title: 'Add page to feed ' + name)
+        .withOption(
+        'Only me', () => addToMe(context, action, accessState))
+        .withOption('My followers',
+            () => addToFollowers(context, action, accessState))
+        .withOptionConditional(accessState.memberIsOwner(), 'Public',
+            () => addToPublic(context, action, accessState)));
+*/
+
+    List<PostMediumModel> memberMedia = [];
+
+    for (PhotoWithThumbnail photoWithThumbnail in feedPostModelDetails.photoWithThumbnails) {
+      var memberMediumModel = await MemberMediumHelper.uploadPhotoWithThumbnail(
+        app.documentID!,
+        photoWithThumbnail,
+        member.documentID!,
+        readAccess,
+      );
+      memberMedia.add(PostMediumModel(
+          documentID: newRandomKey(),
+          memberMedium: memberMediumModel
+      ));
     }
-    */
+
+    for (VideoWithThumbnail videoWithThumbnail in feedPostModelDetails.videoWithThumbnails) {
+      var memberMediumModel = await MemberMediumHelper.uploadVideoWithThumbnail(
+        app.documentID!,
+        videoWithThumbnail,
+        member.documentID!,
+        readAccess,
+      );
+      memberMedia.add(PostMediumModel(
+          documentID: newRandomKey(),
+          memberMedium: memberMediumModel
+      ));
+    }
+
+    PostModel postModel = PostModel(
+        documentID: newRandomKey(),
+        author: member,
+        appId: app.documentID,
+        feedId: widget.feedId,
+        description: feedPostModelDetails.description,
+        likes: 0,
+        dislikes: 0,
+        readAccess: ['PUBLIC'], // todo!
+        archived: PostArchiveStatus.Active,
+        memberMedia: memberMedia);
+
+    BlocProvider.of<PostListPagedBloc>(context)
+        .add(AddPostPaged(value: postModel));
+    _descriptionController.clear();
+  }
+
+  Widget _divider() {
+    return Divider(
+      height: 20,
+      thickness: 1,
+      color: Colors.black,
+      indent: MediaQuery.of(context).size.width * 0.1,
+      endIndent: MediaQuery.of(context).size.width * 0.1,
+    );
   }
 
   @override
@@ -109,16 +191,28 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
           } else {
             _descriptionController.text = "";
           }
+
+          if (state.postModelDetails!.postPrivilege != null)
+            _postPrivilegeSelectedRadioTile = state.postModelDetails!.postPrivilege!.index;
+          else
+            _postPrivilegeSelectedRadioTile = 0;
+
         }
         if (state is FeedPostFormInitialized) {
           List<Widget> rows = [];
-          rows.add(_row1(app, pubMember, state));
+          rows.add(_row1(app, pubMember, state, theState));
+          rows.add(_divider());
+          rows.add(_rowAudience());
           if ((state.postModelDetails.photoWithThumbnails != null) &&
-              (state.postModelDetails.photoWithThumbnails.isNotEmpty))
+              (state.postModelDetails.photoWithThumbnails.isNotEmpty)) {
+            rows.add(_divider());
             rows.add(_row2(state));
+          }
           if ((state.postModelDetails.videoWithThumbnails != null) &&
-              (state.postModelDetails.videoWithThumbnails.isNotEmpty))
+              (state.postModelDetails.videoWithThumbnails.isNotEmpty)) {
+            rows.add(_divider());
             rows.add(_row3(state));
+          }
           return PostHelper.getFormattedPost(rows);
         } else {
           return Center(child: DelayedCircularProgressIndicator());
@@ -130,7 +224,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
   }
 
   Widget _row1(AppModel app, MemberPublicInfoModel member,
-      FeedPostFormInitialized state) {
+      FeedPostFormInitialized state, LoggedIn accessState) {
     var avatar;
     if (member.photoURL == null) {
       avatar = Text("No avatar for this author");
@@ -161,7 +255,8 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
                 borderRadius: BorderRadius.circular(8.0),
               ),
               child: Text('Ok'),
-              onPressed: () => _addPost(context, state.postModelDetails))),
+              onPressed: () =>
+                  _addPost(context, state.postModelDetails, member, app, accessState))),
     ]);
   }
 
@@ -174,7 +269,8 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
     }, (videoWithThumbnail) {
       var videoWithThumbnails = state.postModelDetails.videoWithThumbnails;
       videoWithThumbnails.add(videoWithThumbnail);
-      _myFormBloc.add(ChangedFeedVideos(videoWithThumbnails: videoWithThumbnails));
+      _myFormBloc
+          .add(ChangedFeedVideos(videoWithThumbnails: videoWithThumbnails));
     });
   }
 
@@ -182,7 +278,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
   static int POPUP_MENU_VIEW = 1;
 
   @override
-  Widget staggered(List<MediumBase> media) {
+  Widget _staggered(List<MediumBase> media) {
     List<Widget> widgets = [];
     for (int i = 0; i < media.length; i++) {
       var medium = media[i];
@@ -190,7 +286,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
       if (medium is PhotoWithThumbnail) {
         image = Image.memory(medium.thumbNailData.data);
         name = medium.photoData.baseName;
-      } else if (medium is VideoWithThumbnail){
+      } else if (medium is VideoWithThumbnail) {
         image = Image.memory(medium.thumbNailData.data);
         name = medium.videoData.baseName;
       } else {
@@ -203,22 +299,28 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
           tooltip: name,
           child: image,
           itemBuilder: (_) => [
-            new PopupMenuItem<int>(child: const Text('View'), value: POPUP_MENU_VIEW),
-            new PopupMenuItem<int>(child: const Text('Delete'), value: POPUP_MENU_DELETE_VALUE),
-          ],
+                new PopupMenuItem<int>(
+                    child: const Text('View'), value: POPUP_MENU_VIEW),
+                new PopupMenuItem<int>(
+                    child: const Text('Delete'),
+                    value: POPUP_MENU_DELETE_VALUE),
+              ],
           onSelected: (choice) {
             if (choice == POPUP_MENU_DELETE_VALUE) {
               media.removeAt(i);
               if (medium is PhotoWithThumbnail) {
-                _myFormBloc.add(ChangedFeedPhotos(photoWithThumbnails: media as List<PhotoWithThumbnail>));
-              } else if (medium is VideoWithThumbnail){
-                _myFormBloc.add(ChangedFeedVideos(videoWithThumbnails: media as List<VideoWithThumbnail>));
+                _myFormBloc.add(ChangedFeedPhotos(
+                    photoWithThumbnails: media as List<PhotoWithThumbnail>));
+              } else if (medium is VideoWithThumbnail) {
+                _myFormBloc.add(ChangedFeedVideos(
+                    videoWithThumbnails: media as List<VideoWithThumbnail>));
               }
             }
             if (choice == POPUP_MENU_VIEW) {
               if (medium is PhotoWithThumbnail) {
-                AbstractMediumPlatform.platform!.showPhotos(context, media as List<PhotoWithThumbnail>, i);
-              } else if (medium is VideoWithThumbnail){
+                AbstractMediumPlatform.platform!
+                    .showPhotos(context, media as List<PhotoWithThumbnail>, i);
+              } else if (medium is VideoWithThumbnail) {
                 AbstractMediumPlatform.platform!.showVideo(context, medium);
               }
             }
@@ -232,19 +334,21 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
           slivers: <Widget>[
             SliverPadding(
               padding: const EdgeInsets.all(20),
-              sliver:
-                  SliverGrid.extent(maxCrossAxisExtent: 300, children: widgets, mainAxisSpacing: 5),
+              sliver: SliverGrid.extent(
+                  maxCrossAxisExtent: 300,
+                  children: widgets,
+                  mainAxisSpacing: 5),
             ),
           ],
         ));
   }
 
   Widget _row2(FeedPostFormInitialized state) {
-    return staggered(state.postModelDetails.photoWithThumbnails);
+    return _staggered(state.postModelDetails.photoWithThumbnails);
   }
 
   Widget _row3(FeedPostFormInitialized state) {
-    return staggered(state.postModelDetails.videoWithThumbnails);
+    return _staggered(state.postModelDetails.videoWithThumbnails);
   }
 
   Widget _textField(
@@ -270,6 +374,15 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
   void _onDescriptionChanged() {
     _myFormBloc
         .add(ChangedFeedPostDescription(value: _descriptionController.text));
+  }
+
+  void _setPostSelectedRadioTile(int? val) {
+    if (val != null) {
+      setState(() {
+        _postPrivilegeSelectedRadioTile = val;
+      });
+      _myFormBloc.add(ChangedFeedPostPrivilege(value: toPostPrivilege(val!)));
+    }
   }
 
   @override

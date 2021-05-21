@@ -9,6 +9,7 @@ import 'package:eliud_core/tools/widgets/dialog_helper.dart';
 import 'package:eliud_core/tools/widgets/dialog_with_options.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/tools/action/post_action_model.dart';
+import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 import 'package:eliud_pkg_follow/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
@@ -42,27 +43,17 @@ class PostActionHandler extends PackageActionHandler {
   void addToMe(
       BuildContext context, PostActionModel action, LoggedIn accessState) {
     executePostIt(
-        context, action, [accessState.member.documentID!], accessState);
+        context, action, PostFollowersHelper.asMe(accessState.member.documentID!), accessState);
   }
 
   Future<void> addToFollowers(BuildContext context, PostActionModel action,
       LoggedIn accessState) async {
-    List<String> followers = (await followingRepository(appId: action.appID)!
-            .valuesListWithDetails(
-                eliudQuery: EliudQuery(theConditions: [
-      EliudQueryCondition('followedId',
-          isEqualTo: accessState.member.documentID)
-    ])))
-        .map((following) =>
-            following!.follower!.documentID!)
-        .toList();
-    followers.add(accessState.member.documentID!); // add myself
-    executePostIt(context, action, followers, accessState);
+    executePostIt(context, action, await PostFollowersHelper.asFollowers(accessState.app.documentID!, accessState), accessState);
   }
 
   void addToPublic(
       BuildContext context, PostActionModel action, LoggedIn accessState) {
-    executePostIt(context, action, ['PUBLIC'], accessState);
+    executePostIt(context, action, PostFollowersHelper.asPublic(), accessState);
   }
 
   Future<void> executePostIt(BuildContext context, PostActionModel action,

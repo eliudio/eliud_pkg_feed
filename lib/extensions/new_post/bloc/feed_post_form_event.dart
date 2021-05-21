@@ -14,6 +14,7 @@
 */
 
 import 'package:eliud_core/tools/storage/medium_base.dart';
+import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 
 import 'feed_post_model_details.dart';
 import 'package:equatable/equatable.dart';
@@ -35,6 +36,18 @@ class ChangedFeedPostDescription extends FeedPostFormEvent {
   final String? value;
 
   ChangedFeedPostDescription({this.value});
+
+  @override
+  List<Object?> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedPostDescription{ value: $value }';
+}
+
+class ChangedFeedPostPrivilege extends FeedPostFormEvent {
+  final PostPrivilege? value;
+
+  ChangedFeedPostPrivilege({this.value});
 
   @override
   List<Object?> get props => [ value ];
