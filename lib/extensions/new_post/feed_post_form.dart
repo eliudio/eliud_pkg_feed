@@ -108,18 +108,6 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
     // The uploading of the data is to be done in a bloc and we need to feedback updates to the gui on several intervals
     // We need to be able to cancel the upload as well
     List<String> readAccess = await PostFollowersHelper.as(feedPostModelDetails.postPrivilege, app.documentID!, accessState);
-
-
-/*
-    DialogWithOptions(title: 'Add page to feed ' + name)
-        .withOption(
-        'Only me', () => addToMe(context, action, accessState))
-        .withOption('My followers',
-            () => addToFollowers(context, action, accessState))
-        .withOptionConditional(accessState.memberIsOwner(), 'Public',
-            () => addToPublic(context, action, accessState)));
-*/
-
     List<PostMediumModel> memberMedia = [];
 
     for (PhotoWithThumbnail photoWithThumbnail in feedPostModelDetails.photoWithThumbnails) {
@@ -167,7 +155,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
 
   Widget _divider() {
     return Divider(
-      height: 20,
+      height: 1,
       thickness: 1,
       color: Colors.black,
       indent: MediaQuery.of(context).size.width * 0.1,
@@ -201,18 +189,17 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         if (state is FeedPostFormInitialized) {
           List<Widget> rows = [];
           rows.add(_row1(app, pubMember, state, theState));
-          rows.add(_divider());
-          rows.add(_rowAudience());
           if ((state.postModelDetails.photoWithThumbnails != null) &&
               (state.postModelDetails.photoWithThumbnails.isNotEmpty)) {
-            rows.add(_divider());
             rows.add(_row2(state));
+            rows.add(_divider());
           }
           if ((state.postModelDetails.videoWithThumbnails != null) &&
               (state.postModelDetails.videoWithThumbnails.isNotEmpty)) {
-            rows.add(_divider());
             rows.add(_row3(state));
+            rows.add(_divider());
           }
+          rows.add(_rowAudience());
           return PostHelper.getFormattedPost(rows);
         } else {
           return Center(child: DelayedCircularProgressIndicator());
@@ -327,17 +314,17 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
           }));
     }
     return Container(
-        height: 300,
+        height: 200,
         child: CustomScrollView(
           scrollDirection: Axis.horizontal,
           primary: false,
           slivers: <Widget>[
             SliverPadding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(0),
               sliver: SliverGrid.extent(
-                  maxCrossAxisExtent: 300,
+                  maxCrossAxisExtent: 200,
                   children: widgets,
-                  mainAxisSpacing: 5),
+                  mainAxisSpacing: 10),
             ),
           ],
         ));
