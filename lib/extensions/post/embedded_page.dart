@@ -5,14 +5,10 @@ import 'package:eliud_core/core/components/page_body_helper.dart';
 import 'package:eliud_core/core/widgets/alert_widget.dart';
 import 'package:eliud_core/core/widgets/progress_indicator.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/model/page_component_bloc.dart';
 import 'package:eliud_core/model/page_component_event.dart';
 import 'package:eliud_core/model/page_component_state.dart';
-import 'package:eliud_pkg_feed/tools/grid/photos_page.dart';
-import 'package:eliud_pkg_feed/tools/grid/videos_page.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
-import 'package:eliud_pkg_feed/tools/filter_member_media.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

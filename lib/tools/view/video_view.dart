@@ -1,21 +1,9 @@
 import 'dart:io';
 
 import 'package:chewie/chewie.dart';
-import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-
-class VideosPage extends StatelessWidget {
-  final List<MemberMediumModel>? memberMedia;
-
-  const VideosPage({Key? key, this.memberMedia}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text("TODO");
-  }
-}
 
 enum SourceType { File, Network }
 

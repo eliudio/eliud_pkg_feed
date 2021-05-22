@@ -3,6 +3,7 @@ import 'package:eliud_core/tools/etc.dart';
 import 'package:eliud_core/tools/storage/basename_helper.dart';
 import 'package:eliud_core/tools/storage/medium_base.dart';
 import 'package:eliud_core/tools/storage/medium_data.dart';
+import '../tools/view/video_view.dart';
 import 'package:eliud_pkg_feed/tools/slider/carousel_slider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
@@ -39,6 +40,14 @@ abstract class AbstractMediumPlatform {
   }
 
   void showVideo(BuildContext context, VideoWithThumbnail videoWithThumbnail);
+
+  @override
+  Future<void> showVideoFromUrl(BuildContext context, String url) async {
+    Navigator.push(context, MaterialPageRoute(builder: (_)
+    {
+      return VideoView(sourceType: SourceType.Network, source: url);
+    }));
+  }
 
   /*
    * Allows the user to take a photo

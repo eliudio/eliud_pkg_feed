@@ -25,6 +25,7 @@ import 'package:eliud_core/tools/storage/member_medium_helper.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_event.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
+import 'package:eliud_pkg_feed/extensions/util/post_media_helper.dart';
 import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:eliud_pkg_feed/platform/medium_platform.dart';
@@ -83,8 +84,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
   Widget _radioPrivilegeTile(String text, int value) {
     return Flexible(
       fit: FlexFit.loose,
-      child:
-      RadioListTile(
+      child: RadioListTile(
         value: value,
         groupValue: _postPrivilegeSelectedRadioTile,
         title: Text(text),
@@ -103,14 +103,20 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
     return Row(children: children);
   }
 
-  Future<void> _addPost(BuildContext context, FeedPostModelDetails feedPostModelDetails,
-      MemberPublicInfoModel member, AppModel app, LoggedIn accessState) async {
+  Future<void> _addPost(
+      BuildContext context,
+      FeedPostModelDetails feedPostModelDetails,
+      MemberPublicInfoModel member,
+      AppModel app,
+      LoggedIn accessState) async {
     // The uploading of the data is to be done in a bloc and we need to feedback updates to the gui on several intervals
     // We need to be able to cancel the upload as well
-    List<String> readAccess = await PostFollowersHelper.as(feedPostModelDetails.postPrivilege, app.documentID!, accessState);
+    List<String> readAccess = await PostFollowersHelper.as(
+        feedPostModelDetails.postPrivilege, app.documentID!, accessState);
     List<PostMediumModel> memberMedia = [];
 
-    for (PhotoWithThumbnail photoWithThumbnail in feedPostModelDetails.photoWithThumbnails) {
+    for (PhotoWithThumbnail photoWithThumbnail
+        in feedPostModelDetails.photoWithThumbnails) {
       var memberMediumModel = await MemberMediumHelper.uploadPhotoWithThumbnail(
         app.documentID!,
         photoWithThumbnail,
@@ -118,12 +124,11 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         readAccess,
       );
       memberMedia.add(PostMediumModel(
-          documentID: newRandomKey(),
-          memberMedium: memberMediumModel
-      ));
+          documentID: newRandomKey(), memberMedium: memberMediumModel));
     }
 
-    for (VideoWithThumbnail videoWithThumbnail in feedPostModelDetails.videoWithThumbnails) {
+    for (VideoWithThumbnail videoWithThumbnail
+        in feedPostModelDetails.videoWithThumbnails) {
       var memberMediumModel = await MemberMediumHelper.uploadVideoWithThumbnail(
         app.documentID!,
         videoWithThumbnail,
@@ -131,9 +136,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         readAccess,
       );
       memberMedia.add(PostMediumModel(
-          documentID: newRandomKey(),
-          memberMedium: memberMediumModel
-      ));
+          documentID: newRandomKey(), memberMedium: memberMediumModel));
     }
 
     PostModel postModel = PostModel(
@@ -144,23 +147,13 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         description: feedPostModelDetails.description,
         likes: 0,
         dislikes: 0,
-        readAccess: ['PUBLIC'], // todo!
+        readAccess: readAccess,
         archived: PostArchiveStatus.Active,
         memberMedia: memberMedia);
 
     BlocProvider.of<PostListPagedBloc>(context)
         .add(AddPostPaged(value: postModel));
     _descriptionController.clear();
-  }
-
-  Widget _divider() {
-    return Divider(
-      height: 1,
-      thickness: 1,
-      color: Colors.black,
-      indent: MediaQuery.of(context).size.width * 0.1,
-      endIndent: MediaQuery.of(context).size.width * 0.1,
-    );
   }
 
   @override
@@ -181,10 +174,10 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
           }
 
           if (state.postModelDetails!.postPrivilege != null)
-            _postPrivilegeSelectedRadioTile = state.postModelDetails!.postPrivilege!.index;
+            _postPrivilegeSelectedRadioTile =
+                state.postModelDetails!.postPrivilege!.index;
           else
             _postPrivilegeSelectedRadioTile = 0;
-
         }
         if (state is FeedPostFormInitialized) {
           List<Widget> rows = [];
@@ -192,12 +185,12 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
           if ((state.postModelDetails.photoWithThumbnails != null) &&
               (state.postModelDetails.photoWithThumbnails.isNotEmpty)) {
             rows.add(_row2(state));
-            rows.add(_divider());
+            rows.add(PostMediaHelper.videoAndPhotoDivider(context));
           }
           if ((state.postModelDetails.videoWithThumbnails != null) &&
               (state.postModelDetails.videoWithThumbnails.isNotEmpty)) {
             rows.add(_row3(state));
-            rows.add(_divider());
+            rows.add(PostMediaHelper.videoAndPhotoDivider(context));
           }
           rows.add(_rowAudience());
           return PostHelper.getFormattedPost(rows);
@@ -242,8 +235,8 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
                 borderRadius: BorderRadius.circular(8.0),
               ),
               child: Text('Ok'),
-              onPressed: () =>
-                  _addPost(context, state.postModelDetails, member, app, accessState))),
+              onPressed: () => _addPost(
+                  context, state.postModelDetails, member, app, accessState))),
     ]);
   }
 
@@ -261,81 +254,29 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
     });
   }
 
-  static int POPUP_MENU_DELETE_VALUE = 0;
-  static int POPUP_MENU_VIEW = 1;
-
-  @override
-  Widget _staggered(List<MediumBase> media) {
-    List<Widget> widgets = [];
-    for (int i = 0; i < media.length; i++) {
-      var medium = media[i];
-      var image, name;
-      if (medium is PhotoWithThumbnail) {
-        image = Image.memory(medium.thumbNailData.data);
-        name = medium.photoData.baseName;
-      } else if (medium is VideoWithThumbnail) {
-        image = Image.memory(medium.thumbNailData.data);
-        name = medium.videoData.baseName;
-      } else {
-        image = Icons.error;
-        name = '?';
-      }
-
-      widgets.add(PopupMenuButton(
-          color: Colors.red,
-          tooltip: name,
-          child: image,
-          itemBuilder: (_) => [
-                new PopupMenuItem<int>(
-                    child: const Text('View'), value: POPUP_MENU_VIEW),
-                new PopupMenuItem<int>(
-                    child: const Text('Delete'),
-                    value: POPUP_MENU_DELETE_VALUE),
-              ],
-          onSelected: (choice) {
-            if (choice == POPUP_MENU_DELETE_VALUE) {
-              media.removeAt(i);
-              if (medium is PhotoWithThumbnail) {
-                _myFormBloc.add(ChangedFeedPhotos(
-                    photoWithThumbnails: media as List<PhotoWithThumbnail>));
-              } else if (medium is VideoWithThumbnail) {
-                _myFormBloc.add(ChangedFeedVideos(
-                    videoWithThumbnails: media as List<VideoWithThumbnail>));
-              }
-            }
-            if (choice == POPUP_MENU_VIEW) {
-              if (medium is PhotoWithThumbnail) {
-                AbstractMediumPlatform.platform!
-                    .showPhotos(context, media as List<PhotoWithThumbnail>, i);
-              } else if (medium is VideoWithThumbnail) {
-                AbstractMediumPlatform.platform!.showVideo(context, medium);
-              }
-            }
-          }));
-    }
-    return Container(
-        height: 200,
-        child: CustomScrollView(
-          scrollDirection: Axis.horizontal,
-          primary: false,
-          slivers: <Widget>[
-            SliverPadding(
-              padding: const EdgeInsets.all(0),
-              sliver: SliverGrid.extent(
-                  maxCrossAxisExtent: 200,
-                  children: widgets,
-                  mainAxisSpacing: 10),
-            ),
-          ],
-        ));
-  }
-
   Widget _row2(FeedPostFormInitialized state) {
-    return _staggered(state.postModelDetails.photoWithThumbnails);
+    return PostMediaHelper.staggeredPhotosWithThumbnail(
+        state.postModelDetails.photoWithThumbnails, deleteAction: (index) {
+      var photos = state.postModelDetails.photoWithThumbnails;
+      photos.removeAt(index);
+      _myFormBloc.add(ChangedFeedPhotos(photoWithThumbnails: photos));
+    }, viewAction: (index) {
+      var photos = state.postModelDetails.photoWithThumbnails;
+      AbstractMediumPlatform.platform!.showPhotos(context, photos, index);
+    });
   }
 
   Widget _row3(FeedPostFormInitialized state) {
-    return _staggered(state.postModelDetails.videoWithThumbnails);
+    return PostMediaHelper.staggeredVideosWithThumbnail(
+        state.postModelDetails.videoWithThumbnails, deleteAction: (index) {
+      var videos = state.postModelDetails.videoWithThumbnails;
+      videos.removeAt(index);
+      _myFormBloc.add(ChangedFeedVideos(videoWithThumbnails: videos));
+    }, viewAction: (index) {
+      var videos = state.postModelDetails.videoWithThumbnails;
+      var medium = videos[index];
+      AbstractMediumPlatform.platform!.showVideo(context, medium);
+    });
   }
 
   Widget _textField(

@@ -1,7 +1,7 @@
 import 'package:eliud_core/tools/storage/basename_helper.dart';
 import 'package:eliud_core/tools/storage/medium_base.dart';
 import 'package:eliud_core/tools/storage/medium_data.dart';
-import 'package:eliud_pkg_feed/tools/grid/videos_page.dart';
+import '../tools/view/video_view.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +47,7 @@ class WebMediumPlatform extends AbstractMediumPlatform {
       for (var aFile in result.files) {
         var baseName = aFile.name!;
         var thumbnailBaseName = aFile.extension!;
-        var bytes = await aFile.bytes;
+        var bytes = aFile.bytes;
         if (bytes != null) {
           var thumbnailInfo = await MediumData.enrichPhoto(
               baseName, thumbnailBaseName, bytes);
@@ -67,11 +67,11 @@ class WebMediumPlatform extends AbstractMediumPlatform {
         if (bytes == null) throw Exception('Could not process video. Bytes is null');
         var name = aFile.name;
         if (name == null) throw Exception('Could not process video. Name is null');
-        var ext = aFile.extension;
-        if (ext == null) throw Exception('Could not process video. Ext is null');
+        var path = aFile.path;
+        if (path == null) throw Exception('Could not process video. Path is null');
 
-        var baseName = BaseNameHelper.baseNameExt(name, ext);
-        var thumbnailBaseName = BaseNameHelper.thumbnailBaseNameExt(name, ext);
+        var baseName = BaseNameHelper.baseName(path);
+        var thumbnailBaseName = BaseNameHelper.thumbnailBaseName(path);
         var thumbnailInfo = await MediumData.enrichVideo(baseName, thumbnailBaseName, aFile.bytes!);
 
         feedbackFunction(thumbnailInfo);

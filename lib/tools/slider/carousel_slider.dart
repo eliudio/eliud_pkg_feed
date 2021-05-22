@@ -7,9 +7,11 @@ import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:flutter_carousel_slider/carousel_slider_indicators.dart';
 import 'package:flutter_carousel_slider/carousel_slider_transforms.dart';
 import 'package:photo_view/photo_view.dart' as pv;
+import 'package:photo_view/photo_view.dart';
+import 'package:pinch_zoom/pinch_zoom.dart';
 
 abstract class SlideImageProvider {
-  ImageProvider getImageProvide(int index);
+  Widget getImage(int index);
   int count();
 }
 
@@ -19,8 +21,8 @@ class UrlSlideImageProvider extends SlideImageProvider {
   UrlSlideImageProvider(this.urls);
 
   @override
-  ImageProvider<Object> getImageProvide(int index) {
-    return NetworkImage(urls[index]);
+  Widget getImage(int index) {
+    return Image.network(urls[index]);
   }
 
   @override
@@ -33,8 +35,8 @@ class Uint8ListSlideImageProvider extends SlideImageProvider {
   Uint8ListSlideImageProvider(this.data);
 
   @override
-  ImageProvider<Object> getImageProvide(int index) {
-    return Image.memory(data[index]).image;
+  Widget getImage(int index) {
+    return Image.memory(data[index]);
   }
 
   @override
@@ -62,14 +64,17 @@ class AlbumSlider extends StatefulWidget {
 }
 
 class _AlbumSliderState extends State<AlbumSlider> {
-  bool _isPlaying = false;
-
   CarouselSliderController? _sliderController;
 
   @override
   void initState() {
     super.initState();
     _sliderController = CarouselSliderController();
+  }
+
+  Widget getCarousel2() {
+    return Image.network((widget.slideImageProvider as UrlSlideImageProvider)
+        .urls[widget.initialPage!]);
   }
 
   Widget getCarousel() {
@@ -83,12 +88,18 @@ class _AlbumSliderState extends State<AlbumSlider> {
             Center(child: DelayedCircularProgressIndicator()),
             Center(
                 child: Container(
-                    height: MediaQuery.of(context).size.height - height,
-                    child: pv.PhotoView(
-                        imageProvider:
-                            widget.slideImageProvider.getImageProvide(index),
-                        backgroundDecoration:
-                            BoxDecoration(color: Colors.transparent)))),
+              height: MediaQuery.of(context).size.height - height,
+              child: PinchZoom(
+                image: widget.slideImageProvider.getImage(index),
+                zoomedBackgroundColor: Colors.black.withOpacity(0.5),
+                resetDuration: const Duration(milliseconds: 100),
+                maxScale: 2.5,
+                onZoomStart: () {
+                },
+                onZoomEnd: () {
+                },
+              ),
+            )),
           ],
         );
       },
