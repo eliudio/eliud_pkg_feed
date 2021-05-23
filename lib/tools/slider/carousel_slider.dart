@@ -16,13 +16,19 @@ abstract class SlideImageProvider {
 }
 
 class UrlSlideImageProvider extends SlideImageProvider {
+  static String videoImage = 'packages/eliud_pkg_feed/assets/undraw_co/undraw_online_video_ivvq.png';
   final List<String> urls;
 
   UrlSlideImageProvider(this.urls);
 
   @override
   Widget getImage(int index) {
-    return Image.network(urls[index]);
+    var widget = Image.network(urls[index]);
+    if (widget == null) {
+      return Image.asset("assets/images/manypixels.co/404_Page_Not_Found _Flatline.png",  package: "eliud_pkg_feed");
+    } else {
+      return widget;
+    }
   }
 
   @override
