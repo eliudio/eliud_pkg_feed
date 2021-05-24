@@ -6,29 +6,67 @@ import 'package:flutter/material.dart';
 import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:flutter_carousel_slider/carousel_slider_indicators.dart';
 import 'package:flutter_carousel_slider/carousel_slider_transforms.dart';
-import 'package:photo_view/photo_view.dart' as pv;
-import 'package:photo_view/photo_view.dart';
 import 'package:pinch_zoom/pinch_zoom.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 abstract class SlideImageProvider {
   Widget getImage(int index);
   int count();
 }
 
+class FbStorageImage extends StatefulWidget {
+  final String ref;
+  
+  const FbStorageImage({Key? key, required this.ref, }) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() {
+    return _FbStorageImageState();
+  }
+}
+
+class _FbStorageImageState extends State<FbStorageImage> {
+  Future<Uint8List?>? future;
+
+  @override
+  void initState() {
+    print("Init");
+    future = firebase_storage.FirebaseStorage.instance.ref(widget.ref).getData();
+    print("After");
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<Uint8List?>(
+        future: future,
+        builder: (context, snapshot) {
+          print("1");
+          if (snapshot.hasData) {
+            print("2");
+            if (snapshot.data != null) {
+              print("3");
+              return Image.memory(snapshot.data!);
+            } else {
+              return Image.asset(
+                  "assets/images/manypixels.co/404_Page_Not_Found _Flatline.png",
+                  package: "eliud_pkg_feed");
+            }
+          }
+          return Center(child: DelayedCircularProgressIndicator());
+        });
+  }
+}
+
 class UrlSlideImageProvider extends SlideImageProvider {
-  static String videoImage = 'packages/eliud_pkg_feed/assets/undraw_co/undraw_online_video_ivvq.png';
   final List<String> urls;
 
   UrlSlideImageProvider(this.urls);
 
   @override
   Widget getImage(int index) {
-    var widget = Image.network(urls[index]);
-    if (widget == null) {
-      return Image.asset("assets/images/manypixels.co/404_Page_Not_Found _Flatline.png",  package: "eliud_pkg_feed");
-    } else {
-      return widget;
-    }
+    String ref = urls[index];
+    return FbStorageImage(ref: ref);
   }
 
   @override
@@ -100,21 +138,18 @@ class _AlbumSliderState extends State<AlbumSlider> {
                 zoomedBackgroundColor: Colors.black.withOpacity(0.5),
                 resetDuration: const Duration(milliseconds: 100),
                 maxScale: 2.5,
-                onZoomStart: () {
-                },
-                onZoomEnd: () {
-                },
+                onZoomStart: () {},
+                onZoomEnd: () {},
               ),
             )),
           ],
         );
       },
-      slideTransform: BackgroundToForegroundTransform(),
-      slideIndicator: SequentialFillIndicator(
+      slideTransform: DefaultTransform(),
+      slideIndicator: CircularSlideIndicator(
         padding: EdgeInsets.only(bottom: 0),
         currentIndicatorColor: Colors.red,
         indicatorBackgroundColor: Colors.white,
-        enableAnimation: true,
       ),
       itemCount: widget.slideImageProvider.count(),
       initialPage: widget.initialPage!,

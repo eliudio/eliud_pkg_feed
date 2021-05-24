@@ -67,11 +67,15 @@ class WebMediumPlatform extends AbstractMediumPlatform {
         if (bytes == null) throw Exception('Could not process video. Bytes is null');
         var name = aFile.name;
         if (name == null) throw Exception('Could not process video. Name is null');
+/*
         var path = aFile.path;
         if (path == null) throw Exception('Could not process video. Path is null');
+*/
 
-        var baseName = BaseNameHelper.baseName(path);
-        var thumbnailBaseName = BaseNameHelper.thumbnailBaseName(path);
+        var baseName = name;
+        print("baseName: $baseName");
+        var thumbnailBaseName = BaseNameHelper.thumbnailBaseName(name);
+        print("thumbnailBaseName: $thumbnailBaseName");
         var thumbnailInfo = await MediumData.enrichVideo(baseName, thumbnailBaseName, aFile.bytes!);
 
         feedbackFunction(thumbnailInfo);
