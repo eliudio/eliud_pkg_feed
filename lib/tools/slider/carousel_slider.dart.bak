@@ -109,11 +109,12 @@ class _AlbumSliderState extends State<AlbumSlider> {
           ],
         );
       },
-      slideTransform: DefaultTransform(),
-      slideIndicator: CircularSlideIndicator(
+      slideTransform: BackgroundToForegroundTransform(),
+      slideIndicator: SequentialFillIndicator(
         padding: EdgeInsets.only(bottom: 0),
         currentIndicatorColor: Colors.red,
         indicatorBackgroundColor: Colors.white,
+        enableAnimation: true,
       ),
       itemCount: widget.slideImageProvider.count(),
       initialPage: widget.initialPage!,
