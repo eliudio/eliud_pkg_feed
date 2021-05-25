@@ -38,7 +38,7 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
       var filterMemberMedia = FilterMemberMedia(widget.postModel!.memberMedia!);
       var photos = filterMemberMedia.getPhotos();
       if (photos != null) {
-        var urls = photos.map((memberMedium) => memberMedium.url).toList();
+        var urls = photos.map((memberMedium) => memberMedium.ref).toList();
         if (urls.length > 0) {
           widgets.add(PostMediaHelper.videoAndPhotoDivider(context));
           widgets.add(PostMediaHelper.staggeredMemberMediumModel(
