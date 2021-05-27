@@ -17,17 +17,10 @@ import 'package:eliud_core/core/widgets/progress_indicator.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/model/app_model.dart';
-import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
-import 'package:eliud_core/tools/random.dart';
-import 'package:eliud_core/tools/storage/medium_base.dart';
-import 'package:eliud_core/tools/storage/member_medium_helper.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_bloc.dart';
-import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_event.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_media_helper.dart';
-import 'package:eliud_pkg_feed/model/post_medium_model.dart';
-import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:eliud_pkg_feed/platform/medium_platform.dart';
 import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 import 'package:flutter/material.dart';
@@ -47,14 +40,25 @@ class FeedPostForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var app = AccessBloc.app(context);
-    if (app == null) return Text("No app available");
-    return BlocProvider<FeedPostFormBloc>(
-        create: (context) => FeedPostFormBloc(
-              app.documentID,
-              formAction: FormAction.AddAction,
-            )..add(InitialiseNewFeedPostFormEvent()),
-        child: MyFeedPostForm(feedId));
+    var theState = AccessBloc.getState(context);
+    if (theState is LoggedIn) {
+      var memberPublicInfoModel = theState.memberPublicInfoModel;
+      var app = AccessBloc.app(context);
+      if (app == null) return Text("No app available");
+      return BlocProvider<FeedPostFormBloc>(
+          create: (context) =>
+          FeedPostFormBloc(
+            app.documentID!,
+            BlocProvider.of<PostListPagedBloc>(context),
+            memberPublicInfoModel,
+            feedId,
+            theState
+          )
+            ..add(InitialiseNewFeedPostFormEvent()),
+          child: MyFeedPostForm(feedId));
+    } else {
+      return Text("Not logged in");
+    }
   }
 }
 
@@ -109,51 +113,9 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
       MemberPublicInfoModel member,
       AppModel app,
       LoggedIn accessState) async {
-    // The uploading of the data is to be done in a bloc and we need to feedback updates to the gui on several intervals
-    // We need to be able to cancel the upload as well
-    List<String> readAccess = await PostFollowersHelper.as(
-        feedPostModelDetails.postPrivilege, app.documentID!, accessState);
-    List<PostMediumModel> memberMedia = [];
 
-    for (PhotoWithThumbnail photoWithThumbnail
-        in feedPostModelDetails.photoWithThumbnails) {
-      var memberMediumModel = await MemberMediumHelper.uploadPhotoWithThumbnail(
-        app.documentID!,
-        photoWithThumbnail,
-        member.documentID!,
-        readAccess,
-      );
-      memberMedia.add(PostMediumModel(
-          documentID: newRandomKey(), memberMedium: memberMediumModel));
-    }
-
-    for (VideoWithThumbnail videoWithThumbnail
-        in feedPostModelDetails.videoWithThumbnails) {
-      var memberMediumModel = await MemberMediumHelper.uploadVideoWithThumbnail(
-        app.documentID!,
-        videoWithThumbnail,
-        member.documentID!,
-        readAccess,
-      );
-      memberMedia.add(PostMediumModel(
-          documentID: newRandomKey(), memberMedium: memberMediumModel));
-    }
-
-    PostModel postModel = PostModel(
-        documentID: newRandomKey(),
-        author: member,
-        appId: app.documentID,
-        feedId: widget.feedId,
-        description: feedPostModelDetails.description,
-        likes: 0,
-        dislikes: 0,
-        readAccess: readAccess,
-        archived: PostArchiveStatus.Active,
-        memberMedia: memberMedia);
-
-    BlocProvider.of<PostListPagedBloc>(context)
-        .add(AddPostPaged(value: postModel));
-    _descriptionController.clear();
+    _myFormBloc
+        .add(SubmitPost());
   }
 
   @override
@@ -181,7 +143,11 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         }
         if (state is FeedPostFormInitialized) {
           List<Widget> rows = [];
-          rows.add(_row1(app, pubMember, state, theState));
+          if (state is UploadingPostForm) {
+            rows.add(Text("Uploading: " + state.percentageFinished.toString() + " %"));
+          } else {
+            rows.add(_row1(app, pubMember, state, theState));
+          }
           if ((state.postModelDetails.photoWithThumbnails != null) &&
               (state.postModelDetails.photoWithThumbnails.isNotEmpty)) {
             rows.add(_row2(state));

@@ -80,6 +80,9 @@ class DescriptionFeedPostFormError extends FeedPostFormError {
   }
 }
 
+/*
+ * Form is loaded and ready to be changed / submitted
+ */
 class FeedPostFormLoaded extends FeedPostFormInitialized {
   const FeedPostFormLoaded({ required FeedPostModelDetails postModelDetails }): super(postModelDetails: postModelDetails);
 
@@ -94,7 +97,9 @@ class FeedPostFormLoaded extends FeedPostFormInitialized {
   }
 }
 
-
+/*
+ * Form is ok to be submitted
+ */
 class SubmittableFeedPostForm extends FeedPostFormInitialized {
   const SubmittableFeedPostForm({ required FeedPostModelDetails postModelDetails }): super(postModelDetails: postModelDetails);
 
@@ -109,7 +114,22 @@ class SubmittableFeedPostForm extends FeedPostFormInitialized {
   }
 }
 
-// TODO:
-//class UploadingFeedPostForm extends FeedPostFormInitialized {
-//  final List<double> progress;
-//}
+/*
+ * Form has been submitted and is being processed
+ */
+class UploadingPostForm extends FeedPostFormInitialized {
+  final double percentageFinished;
+
+  const UploadingPostForm({ required FeedPostModelDetails postModelDetails, required this.percentageFinished,  }): super(postModelDetails: postModelDetails);
+
+  @override
+  List<Object?> get props => [ postModelDetails, percentageFinished ];
+
+  @override
+  String toString() {
+    return '''UploadingPostForm {
+      value: $postModelDetails,
+      percentageFinished: $percentageFinished, 
+    }''';
+  }
+}

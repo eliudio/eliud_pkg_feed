@@ -80,3 +80,11 @@ class ChangedFeedVideos extends FeedPostFormEvent {
   String toString() => 'ChangedFeedVideos{ videoWithThumbnails: $videoWithThumbnails }';
 }
 
+class SubmitPost extends FeedPostFormEvent {
+
+  @override
+  List<Object?> get props => [  ];
+
+  @override
+  String toString() => 'SubmitPost{}';
+}
