@@ -1,6 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:eliud_core/core/widgets/progress_indicator.dart';
+import 'package:eliud_core/model/member_medium_model.dart';
+import 'package:eliud_core/tools/storage/fb_storage_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_slider/carousel_slider.dart';
@@ -33,6 +35,26 @@ class UrlSlideImageProvider extends SlideImageProvider {
 
   @override
   int count() => urls.length;
+}
+
+class MemberMediumSlideImageProvider extends SlideImageProvider {
+  final List<MemberMediumModel> media;
+
+  MemberMediumSlideImageProvider(this.media);
+
+  @override
+  Widget getImage(int index) {
+//    var widget = Image.network(media[index].url!);
+     var widget = FbStorageImage(ref: media[index].ref!);
+    if (widget == null) {
+      return Image.asset("assets/images/manypixels.co/404_Page_Not_Found _Flatline.png",  package: "eliud_pkg_feed");
+    } else {
+      return widget;
+    }
+  }
+
+  @override
+  int count() => media.length;
 }
 
 class Uint8ListSlideImageProvider extends SlideImageProvider {
@@ -76,11 +98,6 @@ class _AlbumSliderState extends State<AlbumSlider> {
   void initState() {
     super.initState();
     _sliderController = CarouselSliderController();
-  }
-
-  Widget getCarousel2() {
-    return Image.network((widget.slideImageProvider as UrlSlideImageProvider)
-        .urls[widget.initialPage!]);
   }
 
   Widget getCarousel() {

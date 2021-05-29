@@ -13,6 +13,7 @@
 
 */
 
+import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/tools/storage/medium_base.dart';
 import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 
@@ -56,28 +57,28 @@ class ChangedFeedPostPrivilege extends FeedPostFormEvent {
   String toString() => 'ChangedPostDescription{ value: $value }';
 }
 
-class ChangedFeedPhotos extends FeedPostFormEvent {
-  final List<PhotoWithThumbnail> photoWithThumbnails;
+class ChangedMedia extends FeedPostFormEvent {
+  final List<MemberMediumModel> memberMedia;
 
-  ChangedFeedPhotos({required this.photoWithThumbnails});
-
-  @override
-  List<Object?> get props => [ photoWithThumbnails ];
+  ChangedMedia({required this.memberMedia});
 
   @override
-  String toString() => 'ChangedFeedPhotos{ photoWithThumbnails: $photoWithThumbnails }';
+  List<Object?> get props => [ memberMedia ];
+
+  @override
+  String toString() => 'ChangedMedia{ memberMedia: $memberMedia }';
 }
 
-class ChangedFeedVideos extends FeedPostFormEvent {
-  final List<VideoWithThumbnail> videoWithThumbnails;
+class UploadingMedium extends FeedPostFormEvent {
+  final double progress;
 
-  ChangedFeedVideos({required this.videoWithThumbnails});
-
-  @override
-  List<Object?> get props => [ videoWithThumbnails ];
+  UploadingMedium({required this.progress});
 
   @override
-  String toString() => 'ChangedFeedVideos{ videoWithThumbnails: $videoWithThumbnails }';
+  List<Object?> get props => [ progress ];
+
+  @override
+  String toString() => 'UploadingMedium{ progress: $progress }';
 }
 
 class SubmitPost extends FeedPostFormEvent {

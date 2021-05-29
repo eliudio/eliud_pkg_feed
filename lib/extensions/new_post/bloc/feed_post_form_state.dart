@@ -115,21 +115,13 @@ class SubmittableFeedPostForm extends FeedPostFormInitialized {
 }
 
 /*
- * Form has been submitted and is being processed
+ * Photo or video being uploaded
  */
-class UploadingPostForm extends FeedPostFormInitialized {
-  final double percentageFinished;
+class SubmittableFeedPostFormWithMediumUploading extends SubmittableFeedPostForm {
+  final double progress;
 
-  const UploadingPostForm({ required FeedPostModelDetails postModelDetails, required this.percentageFinished,  }): super(postModelDetails: postModelDetails);
-
-  @override
-  List<Object?> get props => [ postModelDetails, percentageFinished ];
+  SubmittableFeedPostFormWithMediumUploading({ required this.progress, required FeedPostModelDetails postModelDetails }): super(postModelDetails: postModelDetails);
 
   @override
-  String toString() {
-    return '''UploadingPostForm {
-      value: $postModelDetails,
-      percentageFinished: $percentageFinished, 
-    }''';
-  }
+  List<Object?> get props => [ postModelDetails, progress, ];
 }

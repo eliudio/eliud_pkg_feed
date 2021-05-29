@@ -14,8 +14,11 @@
 */
 
 import 'package:eliud_core/model/member_medium_model.dart';
+import 'package:eliud_core/tools/storage/fb_storage_image.dart';
 import 'package:eliud_core/tools/storage/medium_base.dart';
+import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
 typedef PostMediumAction = void Function(int index);
 
@@ -63,17 +66,39 @@ class PostMediaHelper {
     return _getContainer(widgets);
   }
 
-  static Widget staggeredMemberMediumModel(List<MemberMediumModel> media,
+  static Widget staggeredMemberMediumModelFromPostMedia(List<PostMediumModel> media,
       {PostMediumAction? deleteAction, PostMediumAction? viewAction}) {
+    var mmm = media.map((pm) => pm.memberMedium!).toList();
+    return staggeredMemberMediumModel(mmm,
+        deleteAction: deleteAction, viewAction: viewAction);
+  }
+
+  static Widget staggeredMemberMediumModel(List<MemberMediumModel> media,
+      {PostMediumAction? deleteAction, PostMediumAction? viewAction, double? progressExtra, String? progressLabel}) {
     List<Widget> widgets = [];
     for (int i = 0; i < media.length; i++) {
       var medium = media[i];
       var image, name;
-      image = Image.network(medium.urlThumbnail!);
+      image = FbStorageImage(ref: medium.refThumbnail!);
+      //image = Image.network(medium.urlThumbnail!);
       name = medium.urlThumbnail!;
 
       widgets
           .add(_getPopupMenuButton(name, image, i, deleteAction, viewAction));
+    }
+    if (progressExtra != null) {
+      widgets.add(Center(child:/*CircularProgressIndicator(
+        value: progressExtra,
+        semanticsLabel: progressLabel,
+      )*/
+      CircularPercentIndicator(
+        radius: 60.0,
+        lineWidth: 5.0,
+        percent: progressExtra,
+        center: new Text("100%"),
+//        progressColor: Colors.green,
+      )
+      ));
     }
     return _getContainer(widgets);
   }

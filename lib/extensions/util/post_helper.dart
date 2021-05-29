@@ -1,4 +1,5 @@
 import 'package:eliud_core/tools/storage/medium_base.dart';
+import 'package:eliud_core/tools/storage/upload_info.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:eliud_pkg_feed/platform/medium_platform.dart';
 import 'package:flutter/material.dart';
@@ -36,9 +37,15 @@ class PostHelper {
   }
 
   static PopupMenuButton mediaButtons(
-      BuildContext context,
-      PhotoWithThumbnailAvailable photoWithThumbnailAvailable,
-      VideoWithThumbnailAvailable videoWithThumbnailAvailable) {
+    BuildContext context,
+    String appId,
+    String ownerId,
+    List<String> readAccess,
+    MemberMediumAvailable photoFeedbackFunction,
+    FeedbackProgress photoFeedbackProgress,
+    MemberMediumAvailable videoFeedbackFunction,
+    FeedbackProgress videoFeedbackProgress,
+  ) {
     var items = <PopupMenuItem<int>>[];
     if (AbstractMediumPlatform.platform!.hasCamera()) {
       items.add(
@@ -62,28 +69,30 @@ class PostHelper {
         itemBuilder: (_) => items,
         onSelected: (choice) {
           if (choice == 0) {
-            AbstractMediumPlatform.platform!.takePhoto(
-              context,
-              (value) => photoWithThumbnailAvailable(value),
-            );
+            AbstractMediumPlatform.platform!.takePhoto(context, appId, ownerId,
+                readAccess, photoFeedbackFunction, photoFeedbackProgress);
           }
           if (choice == 1) {
             AbstractMediumPlatform.platform!.uploadPhoto(
-              context,
-              (value) => photoWithThumbnailAvailable(value),
-            );
+                context,
+                appId,
+                ownerId,
+                readAccess,
+                photoFeedbackFunction,
+                photoFeedbackProgress);
           }
           if (choice == 2) {
-            AbstractMediumPlatform.platform!.takeVideo(
-              context,
-              (value) => videoWithThumbnailAvailable(value),
-            );
+            AbstractMediumPlatform.platform!.takeVideo(context, appId, ownerId,
+                readAccess, videoFeedbackFunction, videoFeedbackProgress);
           }
           if (choice == 3) {
             AbstractMediumPlatform.platform!.uploadVideo(
-              context,
-              (value) => videoWithThumbnailAvailable(value),
-            );
+                context,
+                appId,
+                ownerId,
+                readAccess,
+                videoFeedbackFunction,
+                videoFeedbackProgress);
           }
         });
   }

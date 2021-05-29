@@ -1,9 +1,12 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/tools/storage/basename_helper.dart';
 import 'package:eliud_core/tools/storage/medium_base.dart';
 import 'package:eliud_core/tools/storage/medium_data.dart';
+import 'package:eliud_core/tools/storage/member_medium_helper.dart';
+import 'package:eliud_core/tools/storage/upload_info.dart';
 import '../tools/view/video_view.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,20 +17,7 @@ import 'medium_platform.dart';
 import 'mobile/eliud_camera.dart';
 
 class MobileMediumPlatform extends AbstractMediumPlatform {
-  @override
-  Future<void> showVideo(BuildContext context, VideoWithThumbnail videoWithThumbnail) async {
-    final appDir = await syspaths.getTemporaryDirectory();
-    var path = '${appDir.path}/sth.jpg';
-    File file = File(path);
-
-    await file.writeAsBytes(videoWithThumbnail.videoData.data);
-    Navigator.push(context, MaterialPageRoute(builder: (_)
-    {
-      return VideoView(sourceType: SourceType.File, source: path);
-    }));
-  }
-
-  Future<void> pickImage(BuildContext context, PhotoWithThumbnailAvailable feedbackFunction, ImgSource source) async {
+  Future<void> _pickImage(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress feedbackProgress, ImgSource source) async {
     var _image = await ImagePickerGC.pickImage(
       enableCloseButton: true,
       closeIcon: Icon(
@@ -46,51 +36,46 @@ class MobileMediumPlatform extends AbstractMediumPlatform {
     var baseName = BaseNameHelper.baseName(_image.path);
     var thumbnailBaseName = BaseNameHelper.thumbnailBaseName(_image.path);
     var bytes = await _image.readAsBytes();
-    var thumbnailInfo = await MediumData.enrichPhoto(baseName, thumbnailBaseName, bytes);
-    feedbackFunction(thumbnailInfo);
+    var memberMediumModel = await MemberMediumHelper.createThumbnailUploadPhotoData(appId, bytes, baseName, thumbnailBaseName,ownerId, readAccess, feedbackProgress: feedbackProgress);
+    feedbackFunction(memberMediumModel);
+  }
+  @override
+  void takePhoto(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress feedbackProgress) {
+    _pickImage(context, appId, ownerId, readAccess, feedbackFunction, feedbackProgress, ImgSource.Camera);
   }
 
   @override
-  void takePhoto(BuildContext context, PhotoWithThumbnailAvailable feedbackFunction) {
-    pickImage(context, feedbackFunction, ImgSource.Camera);
-  }
-
-  Future<void> _videoSaved(XFile file, VideoWithThumbnailAvailable feedbackFunction) async {
-    var thumbnailInfo = await MediumData.enrichVideoWithPath(file.path);
-    feedbackFunction(thumbnailInfo);
-  }
-
-  void _videoError(String message) {
-    print('video error: ' + message);
-  }
-
-  @override
-  void takeVideo(BuildContext context, VideoWithThumbnailAvailable feedbackFunction) {
-    EliudCamera.openVideoRecorder(context, (video) => (_videoSaved(video, feedbackFunction)), _videoError);
+  void takeVideo(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress feedbackProgress) {
+    EliudCamera.openVideoRecorder(context, (video) async {
+      var memberMediumModel = await MemberMediumHelper.createThumbnailUploadVideoFile(appId, video.path, ownerId, readAccess, feedbackProgress: feedbackProgress);
+      feedbackFunction(memberMediumModel);
+    }, (message) {
+      print('video error: ' + message);
+    });
   }
 
   @override
   bool hasCamera() => true;
 
   @override
-  Future<void> uploadPhoto(BuildContext context, PhotoWithThumbnailAvailable feedbackFunction) async {
+  Future<void> uploadPhoto(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress feedbackProgress) async {
     var _result = await FilePicker.platform.pickFiles(type: FileType.image);
-    return processPhotos(_result, feedbackFunction);
+    return processPhotos(appId, ownerId, readAccess, _result, feedbackFunction, feedbackProgress);
   }
 
   @override
-  Future<void> uploadVideo(BuildContext context, VideoWithThumbnailAvailable feedbackFunction) async {
+  Future<void> uploadVideo(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress feedbackProgress) async {
     var _result = await FilePicker.platform.pickFiles(type: FileType.video);
-    return processVideos(_result, feedbackFunction);
+    return processVideos(appId, ownerId, readAccess, _result, feedbackFunction, feedbackProgress);
   }
 
-  Future<void> processPhotos(FilePickerResult? result, PhotoWithThumbnailAvailable feedbackFunction,) async {
+  Future<void> processPhotos(String appId, String ownerId, List<String> readAccess, FilePickerResult? result, MemberMediumAvailable feedbackFunction, FeedbackProgress feedbackProgress) async {
     if (result != null) {
       for (var aFile in result.files) {
         var path = aFile.path;
         if (path != null) {
-          var thumbnailInfo = await MediumData.enrichPhotoWithPath(path);
-          feedbackFunction(thumbnailInfo);
+          var memberMediumModel = await MemberMediumHelper.createThumbnailUploadPhotoFile(appId, path, ownerId, readAccess, feedbackProgress: feedbackProgress);
+          feedbackFunction(memberMediumModel);
         } else {
           print("Can't read file: path is null");
         }
@@ -98,13 +83,13 @@ class MobileMediumPlatform extends AbstractMediumPlatform {
     }
   }
 
-  Future<void> processVideos(FilePickerResult? result, VideoWithThumbnailAvailable feedbackFunction,) async {
+  Future<void> processVideos(String appId, String ownerId, List<String> readAccess, FilePickerResult? result, MemberMediumAvailable feedbackFunction, FeedbackProgress feedbackProgress) async {
     if (result != null) {
       for (var aFile in result.files) {
         var path = aFile.path;
         if (path != null) {
-          var enrichedVideo = await MediumData.enrichVideoWithPath(path);
-          feedbackFunction(enrichedVideo);
+          var memberMediumModel = await MemberMediumHelper.createThumbnailUploadVideoFile(appId, path, ownerId, readAccess, feedbackProgress: feedbackProgress);
+          feedbackFunction(memberMediumModel);
         } else {
           print("Can't read file: path is null");
         }

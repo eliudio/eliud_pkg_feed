@@ -125,7 +125,7 @@ class _PostWidgetState extends State<PostWidget> {
               alignment: Alignment.center, height: 30, child: _textField()),
         ),
         Container(width: 8),
-        PostHelper.mediaButtons(context, _photoAvailable, _videoAvailable),
+        //PostHelper.mediaButtons(context, _photoAvailable, _videoAvailable),
         Container(
             height: 30,
             child: RaisedButton(

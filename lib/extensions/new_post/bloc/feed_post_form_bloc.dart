@@ -8,6 +8,7 @@ import 'package:eliud_core/tools/storage/medium_base.dart';
 import 'package:eliud_core/tools/storage/member_medium_helper.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_event.dart';
+import 'package:eliud_pkg_feed/model/post_form_event.dart';
 import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
@@ -25,6 +26,7 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
   FeedPostFormBloc(this.appId, this.postListPagedBloc,
       this.memberPublicInfoModel, this.feedId, this.accessState)
       : super(FeedPostFormUninitialized());
+
   @override
   Stream<FeedPostFormState> mapEventToState(FeedPostFormEvent event) async* {
     final currentState = state;
@@ -34,24 +36,23 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
       }
     } else if (currentState is FeedPostFormInitialized) {
       if (event is SubmitPost) {
-        yield* _submit(currentState.postModelDetails);
+//        yield* _submit(currentState.postModelDetails);
       }
       if (event is ChangedFeedPostPrivilege) {
         var newValue =
             currentState.postModelDetails.copyWith(postPrivilege: event.value);
         yield SubmittableFeedPostForm(postModelDetails: newValue);
       }
+      if (event is UploadingMedium) {
+        yield SubmittableFeedPostFormWithMediumUploading(postModelDetails: currentState.postModelDetails, progress: event.progress);
+      }
       if (event is ChangedFeedPostDescription) {
         var newValue =
             currentState.postModelDetails.copyWith(description: event.value);
         yield SubmittableFeedPostForm(postModelDetails: newValue);
-      } else if (event is ChangedFeedPhotos) {
+      } else if (event is ChangedMedia) {
         var newValue = currentState.postModelDetails
-            .copyWith(photoWithThumbnails: event.photoWithThumbnails);
-        yield SubmittableFeedPostForm(postModelDetails: newValue);
-      } else if (event is ChangedFeedVideos) {
-        var newValue = currentState.postModelDetails
-            .copyWith(videoWithThumbnails: event.videoWithThumbnails);
+            .copyWith(memberMedia: event.memberMedia);
         yield SubmittableFeedPostForm(postModelDetails: newValue);
       }
     }
@@ -60,29 +61,28 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
   FeedPostFormLoaded _initialised() => FeedPostFormLoaded(
           postModelDetails: FeedPostModelDetails(
         description: "",
-        photoWithThumbnails: [],
-        videoWithThumbnails: [],
+        memberMedia: [],
         postPrivilege: PostPrivilege.Public,
       ));
 
+/*
   Stream<FeedPostFormState> _submit(
       FeedPostModelDetails feedPostModelDetails) async* {
     yield UploadingPostForm(
         postModelDetails: feedPostModelDetails, percentageFinished: 0);
 
     int done = 0;
-    int amount = ((feedPostModelDetails.photoWithThumbnails == null) ? 0 : feedPostModelDetails.photoWithThumbnails.length) +
-        ((feedPostModelDetails.videoWithThumbnails == null) ? 0 : feedPostModelDetails.videoWithThumbnails.length);
+    int amount = ((feedPostModelDetails.memberMedia == null) ? 0 : feedPostModelDetails.memberMedia.length);
 
     List<String> readAccess = await PostFollowersHelper.as(
         feedPostModelDetails.postPrivilege, appId, accessState);
     List<PostMediumModel> memberMedia = [];
 
-    for (PhotoWithThumbnail photoWithThumbnail
-        in feedPostModelDetails.photoWithThumbnails) {
+    for (MemberMediumModel medium
+        in feedPostModelDetails.memberMedia) {
       var memberMediumModel = await MemberMediumHelper.uploadPhotoWithThumbnail(
         appId,
-        photoWithThumbnail,
+        medium,
         memberPublicInfoModel.documentID!,
         readAccess,
       );
@@ -125,4 +125,5 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
     // reset the form
     yield _initialised();
   }
+*/
 }

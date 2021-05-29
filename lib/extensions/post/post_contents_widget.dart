@@ -1,7 +1,9 @@
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
+import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_pkg_feed/extensions/post/embedded_page.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_media_helper.dart';
+import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:eliud_pkg_feed/platform/medium_platform.dart';
 import 'package:eliud_pkg_feed/tools/filter_member_media.dart';
@@ -32,33 +34,21 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
         return EmbeddedPageHelper.postDetails(widget.member!.documentID, widget.postModel,
                 widget.accessBloc, context, widget.parentPageId!);
       }
-    } else if (widget.postModel!.memberMedia != null) {
+    } else if ((widget.postModel!.memberMedia != null) && (widget.postModel!.memberMedia!.length > 0)) {
+      List<PostMediumModel> memberMedia = widget.postModel!.memberMedia!;
       List<Widget> widgets = [];
       // Photos & videos
-      var filterMemberMedia = FilterMemberMedia(widget.postModel!.memberMedia!);
-      var photos = filterMemberMedia.getPhotos();
-      if (photos != null) {
-        var urls = photos.map((memberMedium) => memberMedium.url).toList();
-        if (urls.length > 0) {
-          widgets.add(PostMediaHelper.videoAndPhotoDivider(context));
-          widgets.add(PostMediaHelper.staggeredMemberMediumModel(
-              photos, viewAction: (index) {
-            AbstractMediumPlatform.platform!.showPhotosFromUrls(
-                context, urls, index);
-          }));
-        }
-      };
-      var videos = filterMemberMedia.getVideos();
-      if (videos != null) {
-        if (videos.length > 0) {
-          widgets.add(PostMediaHelper.videoAndPhotoDivider(context));
-          widgets.add(PostMediaHelper.staggeredMemberMediumModel(
-              videos, viewAction: (index) {
-            AbstractMediumPlatform.platform!.showVideoFromUrl(
-                context, videos[index].url!);
-          }));
-        }
-      }
+      widgets.add(PostMediaHelper.videoAndPhotoDivider(context));
+      widgets.add(PostMediaHelper.staggeredMemberMediumModelFromPostMedia(
+          memberMedia, viewAction: (index) {
+            var postMedium = memberMedia[index];
+            if (postMedium.memberMedium!.mediumType! == MediumType.Photo) {
+              AbstractMediumPlatform.platform!.showPhotosFromPostMedia(
+                  context, memberMedia, index);
+            } else {
+              AbstractMediumPlatform.platform!.showVideo(context, postMedium.memberMedium!);
+            }
+      }));
       return Column(children: widgets);
     } else if (widget.postModel!.externalLink != null) {
 /*
