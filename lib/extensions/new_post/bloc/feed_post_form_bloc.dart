@@ -36,7 +36,7 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
       }
     } else if (currentState is FeedPostFormInitialized) {
       if (event is SubmitPost) {
-//        yield* _submit(currentState.postModelDetails);
+        yield await _submit(currentState.postModelDetails);
       }
       if (event is ChangedFeedPostPrivilege) {
         var newValue =
@@ -65,48 +65,14 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
         postPrivilege: PostPrivilege.Public,
       ));
 
-/*
-  Stream<FeedPostFormState> _submit(
-      FeedPostModelDetails feedPostModelDetails) async* {
-    yield UploadingPostForm(
-        postModelDetails: feedPostModelDetails, percentageFinished: 0);
+  Future<FeedPostFormState> _submit(
+      FeedPostModelDetails feedPostModelDetails) async {
+    var postMemberMedia = feedPostModelDetails.memberMedia.map((memberMedium) => PostMediumModel(
+      documentID: newRandomKey(),
+      memberMedium: memberMedium
+    )).toList();
 
-    int done = 0;
-    int amount = ((feedPostModelDetails.memberMedia == null) ? 0 : feedPostModelDetails.memberMedia.length);
-
-    List<String> readAccess = await PostFollowersHelper.as(
-        feedPostModelDetails.postPrivilege, appId, accessState);
-    List<PostMediumModel> memberMedia = [];
-
-    for (MemberMediumModel medium
-        in feedPostModelDetails.memberMedia) {
-      var memberMediumModel = await MemberMediumHelper.uploadPhotoWithThumbnail(
-        appId,
-        medium,
-        memberPublicInfoModel.documentID!,
-        readAccess,
-      );
-      memberMedia.add(PostMediumModel(
-          documentID: newRandomKey(), memberMedium: memberMediumModel));
-      done++;
-      yield UploadingPostForm(
-          postModelDetails: feedPostModelDetails, percentageFinished: done / amount);
-    }
-
-    for (VideoWithThumbnail videoWithThumbnail
-        in feedPostModelDetails.videoWithThumbnails) {
-      var memberMediumModel = await MemberMediumHelper.uploadVideoWithThumbnail(
-        appId,
-        videoWithThumbnail,
-        memberPublicInfoModel.documentID!,
-        readAccess,
-      );
-      memberMedia.add(PostMediumModel(
-          documentID: newRandomKey(), memberMedium: memberMediumModel));
-      done++;
-      yield UploadingPostForm(
-          postModelDetails: feedPostModelDetails, percentageFinished: done / amount);
-    }
+    var readAccess = await  PostFollowersHelper.as(feedPostModelDetails.postPrivilege, appId, accessState);
 
     PostModel postModel = PostModel(
         documentID: newRandomKey(),
@@ -118,12 +84,12 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
         dislikes: 0,
         readAccess: readAccess,
         archived: PostArchiveStatus.Active,
-        memberMedia: memberMedia);
+        memberMedia: postMemberMedia);
 
+    // Now tell the list bloc to add the post
     postListPagedBloc.add(AddPostPaged(value: postModel));
 
     // reset the form
-    yield _initialised();
+    return _initialised();
   }
-*/
 }

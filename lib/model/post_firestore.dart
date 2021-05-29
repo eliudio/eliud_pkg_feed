@@ -48,8 +48,7 @@ class PostFirestore implements PostRepository {
       } else {
         return newValue;
       }
-    })
-;
+    });
   }
 
   Future<void> delete(PostModel value) {

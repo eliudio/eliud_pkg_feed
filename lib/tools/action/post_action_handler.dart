@@ -53,7 +53,7 @@ class PostActionHandler extends PackageActionHandler {
 
   void addToPublic(
       BuildContext context, PostActionModel action, LoggedIn accessState) {
-    executePostIt(context, action, PostFollowersHelper.asPublic(), accessState);
+    executePostIt(context, action, PostFollowersHelper.asPublic(accessState.member.documentID!), accessState);
   }
 
   Future<void> executePostIt(BuildContext context, PostActionModel action,

@@ -33,7 +33,7 @@ class PostFollowersHelper {
       LoggedIn accessState) async {
     switch (who) {
       case PostPrivilege.Public:
-        return asPublic();
+        return asPublic(accessState.member.documentID!);
       case PostPrivilege.JustMe:
         return asMe(accessState.member.documentID!);
       case PostPrivilege.Followers:
@@ -58,8 +58,8 @@ class PostFollowersHelper {
   }
 
   // To allow a post to be publicly available
-  static List<String> asPublic() {
-    return ['PUBLIC'];
+  static List<String> asPublic(String memberId) {
+    return ['PUBLIC', memberId];
   }
 
   static List<String> asMe(String memberId) {
