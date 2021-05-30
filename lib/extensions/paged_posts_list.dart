@@ -1,9 +1,12 @@
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
+import 'package:eliud_core/core/navigate/navigate_bloc.dart';
+import 'package:eliud_core/core/navigate/navigation_event.dart';
 import 'package:eliud_core/core/widgets/progress_indicator.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/model/rgb_model.dart';
 import 'package:eliud_core/tools/etc.dart';
+import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
 import 'new_post/feed_post_form.dart';
 import 'post/bloc/post_bloc.dart';
 import 'postlist_paged/postlist_paged_bloc.dart';
@@ -16,11 +19,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PagedPostsList extends StatefulWidget {
-  final String? parentPageId;
+  //final String? parentPageId;
   final FeedModel feedModel;
   final MemberPublicInfoModel memberPublicInfoModel;
+  //final bool allowNewPost;
+  final SwitchFeedHelper switchFeedHelper;
 
-  const PagedPostsList(this.feedModel, this.memberPublicInfoModel, {Key? key, this.parentPageId}) : super(key: key);
+  const PagedPostsList(this.feedModel, this.memberPublicInfoModel, this.switchFeedHelper, {Key? key, }) : super(key: key);
 
   @override
   _PagedPostsListState createState() => _PagedPostsListState();
@@ -38,8 +43,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
   }
 
   Widget _newPostForm() {
-    return FeedPostForm(feedId: widget.feedModel.documentID!);
-//    return NewPostForm(_app!.documentID!, widget.feedModel.documentID!, widget.memberPublicInfoModel);
+    return FeedPostForm(feedId: widget.feedModel.documentID!, switchFeedHelper: widget.switchFeedHelper,);
   }
 
   @override
@@ -47,16 +51,20 @@ class _PagedPostsListState extends State<PagedPostsList> {
     return BlocBuilder<PostListPagedBloc, PostListPagedState>(
       builder: (context, state) {
         if (state is PostListPagedState) {
-          var theState = state as PostListPagedState;
-          return ListView.builder(
+          var theState = state;
+          List<Widget> widgets = [];
+          if (widget.switchFeedHelper.allowNewPost()) {
+            widgets.add(_newPostForm());
+          }
+          for (int i = 0; i < theState.values.length; i++) {
+            widgets.add(post(context, theState.values[i]!));
+          }
+          widgets.add(_buttonNextPage(!theState.hasReachedMax));
+          return ListView(
               shrinkWrap: true,
               physics: ScrollPhysics(),
-              itemBuilder: (BuildContext context, int index) {
-                if (index >= theState.values.length+1) return _buttonNextPage(!theState.hasReachedMax);
-                if (index == 0) return _newPostForm();
-                return post(context, theState.values[index-1]!);
-              },
-              itemCount: theState.values.length + 2);
+              children: widgets
+          );
         } else {
           return Center(
             child: DelayedCircularProgressIndicator(),
@@ -82,7 +90,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
           create: (context) => PostBloc(postModel, member.documentID!),
           child: PostWidget(
             postModel: postModel,
-            parentPageId: widget.parentPageId!,
+            switchFeedHelper: widget.switchFeedHelper,
             member: member,
           ));
     }

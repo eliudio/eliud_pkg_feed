@@ -2,13 +2,9 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
-import 'package:eliud_core/tools/enums.dart';
 import 'package:eliud_core/tools/random.dart';
-import 'package:eliud_core/tools/storage/medium_base.dart';
-import 'package:eliud_core/tools/storage/member_medium_helper.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_event.dart';
-import 'package:eliud_pkg_feed/model/post_form_event.dart';
 import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
@@ -72,7 +68,7 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
       memberMedium: memberMedium
     )).toList();
 
-    var readAccess = await  PostFollowersHelper.as(feedPostModelDetails.postPrivilege, appId, accessState);
+    var readAccess = await  PostFollowersHelper.as(feedPostModelDetails.postPrivilege, accessState);
 
     PostModel postModel = PostModel(
         documentID: newRandomKey(),

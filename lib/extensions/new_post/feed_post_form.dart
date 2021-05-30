@@ -20,8 +20,10 @@ import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_bloc.dart';
+import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_media_helper.dart';
+import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
 import 'package:eliud_pkg_feed/model/post_form_event.dart';
 import 'package:eliud_pkg_feed/platform/medium_platform.dart';
 import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
@@ -38,7 +40,9 @@ import 'bloc/feed_post_model_details.dart';
 
 class FeedPostForm extends StatelessWidget {
   final String feedId;
-  FeedPostForm({Key? key, required this.feedId}) : super(key: key);
+  //final String parentPageId;
+  final SwitchFeedHelper switchFeedHelper;
+  FeedPostForm({Key? key, required this.feedId, required this.switchFeedHelper}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +59,7 @@ class FeedPostForm extends StatelessWidget {
               feedId,
               theState)
             ..add(InitialiseNewFeedPostFormEvent()),
-          child: MyFeedPostForm(feedId));
+          child: MyFeedPostForm(feedId, switchFeedHelper));
     } else {
       return Text("Not logged in");
     }
@@ -64,7 +68,9 @@ class FeedPostForm extends StatelessWidget {
 
 class MyFeedPostForm extends StatefulWidget {
   final String feedId;
-  MyFeedPostForm(this.feedId);
+  //final String parentPageId;
+  final SwitchFeedHelper switchFeedHelper;
+  MyFeedPostForm(this.feedId, this.switchFeedHelper);
 
   _MyFeedPostFormState createState() => _MyFeedPostFormState();
 }
@@ -154,15 +160,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
 
   Widget _row1(AppModel app, MemberPublicInfoModel member,
       FeedPostFormInitialized state, LoggedIn accessState) {
-    var avatar;
-    if (member.photoURL == null) {
-      avatar = Text("No avatar for this author");
-    } else {
-      avatar = FadeInImage.memoryNetwork(
-        placeholder: kTransparentImage,
-        image: member.photoURL!,
-      );
-    }
+    var avatar = widget.switchFeedHelper.gestured(context, member.documentID!, AvatarHelper.avatar(member));
     return Row(children: [
       Container(
           height: 60, width: 60, child: avatar == null ? Container() : avatar),

@@ -1,5 +1,9 @@
+import 'package:eliud_core/core/navigate/navigate_bloc.dart';
+import 'package:eliud_core/core/navigate/navigation_event.dart';
 import 'package:eliud_core/tools/storage/medium_base.dart';
+import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
+import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/model/member_model.dart';
@@ -18,9 +22,10 @@ import 'bloc/post_state.dart';
 class PostWidget extends StatefulWidget {
   final MemberModel? member;
   final PostModel postModel;
-  final String parentPageId;
+  //final String parentPageId;
+  final SwitchFeedHelper switchFeedHelper;
 
-  const PostWidget({Key? key, required this.postModel, this.member, required this.parentPageId}) : super(key: key);
+  const PostWidget({Key? key, required this.postModel, this.member, /*required this.parentPageId, */required this.switchFeedHelper}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -66,7 +71,7 @@ class _PostWidgetState extends State<PostWidget> {
                           member: widget.member,
                           postModel: postModel,
                           accessBloc: originalAccessBloc,
-                          parentPageId: widget.parentPageId,
+                          parentPageId: widget.switchFeedHelper.pageContextInfo.pageId,
                         ),
                         _dividerLight(),
                         _aBitSpace(),
@@ -105,20 +110,11 @@ class _PostWidgetState extends State<PostWidget> {
     if (widget.member == null) {
       return Container();
     } else {
-      var avatar;
-      if (widget.member!.photoURL == null) {
-        avatar = Text("No avatar");
-      } else {
-        avatar = FadeInImage.memoryNetwork(
-          placeholder: kTransparentImage,
-          image: widget.member!.photoURL!,
-        );
-      }
       return Row(children: [
         Container(
             height: 40,
             width: 40,
-            child: avatar == null ? Container() : avatar),
+            child: widget.switchFeedHelper.gestured(context, widget.member!.documentID!, AvatarHelper.avatar(widget.member))),
         Container(width: 8),
         Flexible(
           child: Container(
@@ -183,15 +179,7 @@ class _PostWidgetState extends State<PostWidget> {
   Widget _heading(BuildContext context, PostModel? postModel, String? memberId) {
     if (postModel == null) return Text("No post");
     if (postModel.author == null) return Text("No author");
-    var avatar;
-    if (postModel.author!.photoURL == null) {
-      avatar = Text("No avatar for this author");
-    } else {
-      avatar = FadeInImage.memoryNetwork(
-        placeholder: kTransparentImage,
-        image: postModel.author!.photoURL!,
-      );
-    }
+
     var name;
     if (postModel.author!.name != null) {
       name = postModel.author!.name!;
@@ -206,7 +194,7 @@ class _PostWidgetState extends State<PostWidget> {
     }
     var children = [
       Container(
-          height: 50, width: 50, child: avatar == null ? Container() : avatar),
+          height: 50, width: 50, child: widget.switchFeedHelper.gestured(context, postModel.author!.documentID!, AvatarHelper.avatar(postModel.author))),
       Container(
         width: 8,
       ),
@@ -352,10 +340,8 @@ class _PostWidgetState extends State<PostWidget> {
 
     if (data == null) return Text("No Comments");
 
-    var avatar;
     var name ;
     if (data.member == null) {
-      avatar = Text("No avatar");
       name = "No name";
     } else {
       if (data.member!.name == null) {
@@ -363,19 +349,10 @@ class _PostWidgetState extends State<PostWidget> {
       } else {
         name = data.member!.name;
       }
-      if (data.member!.photoURL == null) {
-        avatar = Text("No avatar");
-      } else {
-        avatar = NetworkImage(data.member!.photoURL!);
-      }
     }
 
     var rowChildren = [
-      CircleAvatar(
-        radius: 12,
-        backgroundColor: Colors.transparent,
-        backgroundImage: avatar,
-      ),
+      widget.switchFeedHelper.gestured(context, data.member!.documentID!, AvatarHelper.avatar2(data.member)),
       Container(width: 8),
       Expanded(
           child: Container(
@@ -598,4 +575,5 @@ class _PostWidgetState extends State<PostWidget> {
       ) async {
     throw Exception("Needs proper implementation.");
   }
+
 }
