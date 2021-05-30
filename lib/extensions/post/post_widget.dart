@@ -71,7 +71,7 @@ class _PostWidgetState extends State<PostWidget> {
                           member: widget.member,
                           postModel: postModel,
                           accessBloc: originalAccessBloc,
-                          parentPageId: widget.switchFeedHelper.pageContextInfo.pageId,
+                          parentPageId: widget.switchFeedHelper.pageId,
                         ),
                         _dividerLight(),
                         _aBitSpace(),

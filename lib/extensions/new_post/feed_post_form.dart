@@ -1,18 +1,3 @@
-/*
-       _ _           _ 
-      | (_)         | |
-   ___| |_ _   _  __| |
-  / _ \ | | | | |/ _` |
- |  __/ | | |_| | (_| |
-  \___|_|_|\__,_|\__,_|
-                       
- 
- post_form.dart
-                       
- This code is generated. This is read only. Don't touch!
-
-*/
-
 import 'package:eliud_core/core/widgets/progress_indicator.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
@@ -198,8 +183,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
 
   PopupMenuButton _mediaButtons(BuildContext context, AppModel app,
       FeedPostFormInitialized state, String memberId) {
-    // todo
-    List<String> readAccess = [memberId];
+    List<String> readAccess = state.postModelDetails.readAccess;
 
     return PostHelper.mediaButtons(
         context,

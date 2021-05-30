@@ -35,8 +35,9 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
         yield await _submit(currentState.postModelDetails);
       }
       if (event is ChangedFeedPostPrivilege) {
+        var readAccess = await  PostFollowersHelper.as(event.value!, accessState);
         var newValue =
-            currentState.postModelDetails.copyWith(postPrivilege: event.value);
+            currentState.postModelDetails.copyWith(postPrivilege: event.value, readAccess: readAccess);
         yield SubmittableFeedPostForm(postModelDetails: newValue);
       }
       if (event is UploadingMedium) {
@@ -56,9 +57,10 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
 
   FeedPostFormLoaded _initialised() => FeedPostFormLoaded(
           postModelDetails: FeedPostModelDetails(
-        description: "",
-        memberMedia: [],
-        postPrivilege: PostPrivilege.Public,
+          readAccess: ["PUBLIC"],
+          description: "",
+          memberMedia: [],
+          postPrivilege: PostPrivilege.Public,
       ));
 
   Future<FeedPostFormState> _submit(

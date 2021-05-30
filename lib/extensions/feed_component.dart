@@ -42,25 +42,14 @@ class FeedComponent extends AbstractFeedComponent {
 
   @override
   Widget yourWidget(BuildContext context, FeedModel? feedModel) {
-/*
-    var modalRoute = ModalRoute.of(context) as ModalRoute;
-    var settings = modalRoute.settings;
-    parentPageId = settings.name;
-*/
     AccessState state = AccessBloc.getState(context);
     var pageContextInfo = PageParamHelper.getPagaContextInfo(context);
-    var parentPageId = pageContextInfo.pageId;
     if (state is LoggedIn) {
-      SwitchFeedHelper switchFeedHelper =
-          SwitchFeedHelper(pageContextInfo, state);
-
-      return FutureBuilder<WhichFeed>(
-          future: switchFeedHelper.getWhichFeed(),
+      return FutureBuilder<SwitchFeedHelper>(
+          future: SwitchFeedHelper.construct(pageContextInfo, state),
           builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              var whichFeed = snapshot.data;
-              var feedMemberId = switchFeedHelper.feedMember();
-              var memberId = state.member.documentID!;
+            if ((snapshot.hasData) && (snapshot.data != null)) {
+              SwitchFeedHelper switchFeedHelper = snapshot.data!;
               // We could limit the posts retrieve by making adding the condition: 'authorId' whereIn FollowerHelper.following(me, state.app.documentID)
               // However, combining this query with arrayContainsAny in 1 query is not possible currently in the app.
               // For now we lay the responsibility with the one posting the post, i.e. that the readAccess includes the person.
@@ -71,7 +60,7 @@ class FeedComponent extends AbstractFeedComponent {
               // - followers: readAccess becomes the list of followers + me
               // - me: readAccess becomes me
               var query;
-              switch (whichFeed) {
+              switch (switchFeedHelper.whichFeed) {
                 case WhichFeed.MyFeed:
                   // query where I'm in the readAccess, which means I see my posts and everybody's
                   // posts where I was included as follower, be it indicated as publc of as follower:
@@ -83,7 +72,7 @@ class FeedComponent extends AbstractFeedComponent {
                       .withCondition(
                       EliudQueryCondition('feedId', isEqualTo: feedModel!.documentID))
                       .withCondition(EliudQueryCondition('readAccess',
-                      arrayContainsAny: [switchFeedHelper.currentMember()]));
+                      arrayContainsAny: [switchFeedHelper.currentMember().documentID]));
                   break;
                 case WhichFeed.OnlyMyFeed:
                   // query where I'm the author. We could include that we're part of the readAccess but that's obsolete
@@ -91,7 +80,7 @@ class FeedComponent extends AbstractFeedComponent {
                       .withCondition(EliudQueryCondition('archived',
                       isEqualTo: PostArchiveStatus.Active.index))
                       .withCondition(
-                      EliudQueryCondition('authorId', isEqualTo: switchFeedHelper.currentMember()))
+                      EliudQueryCondition('authorId', isEqualTo: switchFeedHelper.currentMember().documentID))
                       .withCondition(
                       EliudQueryCondition('feedId', isEqualTo: feedModel!.documentID)
                       );
@@ -102,11 +91,11 @@ class FeedComponent extends AbstractFeedComponent {
                       .withCondition(EliudQueryCondition('archived',
                       isEqualTo: PostArchiveStatus.Active.index))
                       .withCondition(EliudQueryCondition('authorId',
-                      isEqualTo: switchFeedHelper.feedMember()))
+                      isEqualTo: switchFeedHelper.feedMember().documentID))
                       .withCondition(
                       EliudQueryCondition('feedId', isEqualTo: feedModel!.documentID))
                       .withCondition(EliudQueryCondition('readAccess',
-                      arrayContainsAny: [switchFeedHelper.currentMember()]));
+                      arrayContainsAny: [switchFeedHelper.currentMember().documentID]));
                   break;
                 case WhichFeed.SomeoneElse:
                   // query where that person is the author and PUBLIC in the readAccess
@@ -114,7 +103,7 @@ class FeedComponent extends AbstractFeedComponent {
                       .withCondition(EliudQueryCondition('archived',
                       isEqualTo: PostArchiveStatus.Active.index))
                       .withCondition(EliudQueryCondition('authorId',
-                      isEqualTo: switchFeedHelper.feedMember()))
+                      isEqualTo: switchFeedHelper.feedMember().documentID))
                       .withCondition(
                       EliudQueryCondition('feedId', isEqualTo: feedModel!.documentID))
                       .withCondition(EliudQueryCondition('readAccess',
@@ -129,7 +118,7 @@ class FeedComponent extends AbstractFeedComponent {
          Watching someone else's feed which I do not follow: query where PUBLIC is in readAccess
       */
               return _postPagedBloc(
-                  parentPageId, context, feedModel, query, switchFeedHelper);
+                  switchFeedHelper.pageId, context, feedModel, query, switchFeedHelper);
             } else {
               return Center(child: DelayedCircularProgressIndicator());
             }

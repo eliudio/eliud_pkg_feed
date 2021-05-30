@@ -10,13 +10,14 @@ typedef VideoWithThumbnailTrigger(
     PostModel postModel, VideoWithThumbnail videoWithThumbnail);
 
 class PostHelper {
-  static Widget getFormattedPost(List<Widget> children) {
+  static Widget getFormattedPost(List<Widget> children, {DecorationImage? image}) {
     return Padding(
         padding: const EdgeInsets.all(7.0),
         child: Container(
             decoration: new BoxDecoration(
                 color: Colors.white,
-                border: Border.all(color: Colors.white, width: 1),
+                image: image,
+            border: Border.all(color: Colors.white, width: 1),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.withOpacity(.7),

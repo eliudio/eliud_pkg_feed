@@ -1,12 +1,11 @@
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
-import 'package:eliud_core/core/navigate/navigate_bloc.dart';
-import 'package:eliud_core/core/navigate/navigation_event.dart';
 import 'package:eliud_core/core/widgets/progress_indicator.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/model/rgb_model.dart';
 import 'package:eliud_core/tools/etc.dart';
 import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
+import 'header/header.dart';
 import 'new_post/feed_post_form.dart';
 import 'post/bloc/post_bloc.dart';
 import 'postlist_paged/postlist_paged_bloc.dart';
@@ -53,6 +52,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
         if (state is PostListPagedState) {
           var theState = state;
           List<Widget> widgets = [];
+          widgets.add(Header(switchFeedHelper: widget.switchFeedHelper,));
           if (widget.switchFeedHelper.allowNewPost()) {
             widgets.add(_newPostForm());
           }

@@ -11,8 +11,11 @@ class AvatarHelper {
       avatar = Text("No avatar");
     } else {
       if (memberModel.photoURL == null) {
-        avatar = Image.asset("assets/images/undraw.co/undraw_profile_pic_ic5t.png",  package: "eliud_pkg_feed");
+        avatar = Image.asset(
+            "assets/images/undraw.co/undraw_profile_pic_ic5t.png",
+            package: "eliud_pkg_feed");
       } else {
+//        avatar = Image.asset("assets/images/undraw.co/undraw_profile_pic_ic5t.png",  package: "eliud_pkg_feed");
         avatar = FadeInImage.memoryNetwork(
           placeholder: kTransparentImage,
           image: memberModel.photoURL!,
@@ -22,29 +25,48 @@ class AvatarHelper {
     return avatar;
   }
 
-  static Widget avatar2(memberModel) {
+  static double circle1Size = 5.0;
+  static double circle2Size = 5.0;
+  static double circle3Size = 5.0;
+
+  static Widget avatar2(memberModel,
+      {Color? backgroundColor, Color? backgroundColor2, double? radius}) {
     var avatar;
     if (memberModel == null) {
       return Text("No avatar");
     } else {
       if (memberModel.photoURL == null) {
         return CircleAvatar(
-          radius: 12,
-          backgroundColor: Colors.transparent,
-          backgroundImage: Image.asset("assets/images/undraw.co/undraw_profile_pic_ic5t.png",  package: "eliud_pkg_feed").image,
+          radius: radius == null ? 12 : radius,
+          backgroundColor:
+              backgroundColor == null ? Colors.transparent : backgroundColor,
+          backgroundImage: Image.asset(
+                  "assets/images/undraw.co/undraw_profile_pic_ic5t.png",
+                  package: "eliud_pkg_feed")
+              .image,
         );
       } else {
         return CircleAvatar(
-          radius: 12,
-          backgroundColor: Colors.transparent,
-          backgroundImage: FadeInImage.memoryNetwork(
-            placeholder: kTransparentImage,
-            image: memberModel.photoURL!,
-          ).image,
-        );
+            radius: radius == null ? 17 + circle1Size + circle2Size  + circle3Size : radius + circle1Size + circle2Size + circle3Size,
+            backgroundColor:
+                backgroundColor == null ? Colors.transparent : backgroundColor,
+            child: CircleAvatar(
+                radius: radius == null ? 17 + circle1Size + circle2Size : radius + circle1Size + circle2Size,
+                backgroundColor: backgroundColor2 == null
+                    ? Colors.transparent
+                    : backgroundColor2,
+                child: CircleAvatar(
+                  radius: radius == null ? 17 + circle1Size: radius + circle1Size,
+                  backgroundColor: backgroundColor2 == null
+                      ? Colors.transparent
+                      : backgroundColor2,
+                  backgroundImage: FadeInImage.memoryNetwork(
+                    placeholder: kTransparentImage,
+                    image: memberModel.photoURL!,
+                  ).image,
+                )));
       }
       // add gesturethingy and :
     }
   }
-
 }
