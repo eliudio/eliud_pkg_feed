@@ -28,7 +28,7 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
     final currentState = state;
     if (currentState is FeedPostFormUninitialized) {
       if (event is InitialiseNewFeedPostFormEvent) {
-        yield _initialised();
+        yield await _initialised();
       }
     } else if (currentState is FeedPostFormInitialized) {
       if (event is SubmitPost) {
@@ -55,9 +55,9 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
     }
   }
 
-  FeedPostFormLoaded _initialised() => FeedPostFormLoaded(
+  Future<FeedPostFormLoaded> _initialised() async => FeedPostFormLoaded(
           postModelDetails: FeedPostModelDetails(
-          readAccess: ["PUBLIC"],
+          readAccess: await PostFollowersHelper.as(PostPrivilege.Public, accessState),
           description: "",
           memberMedia: [],
           postPrivilege: PostPrivilege.Public,
@@ -70,7 +70,7 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
       memberMedium: memberMedium
     )).toList();
 
-    var readAccess = await  PostFollowersHelper.as(feedPostModelDetails.postPrivilege, accessState);
+    var readAccess = await PostFollowersHelper.as(feedPostModelDetails.postPrivilege, accessState);
 
     PostModel postModel = PostModel(
         documentID: newRandomKey(),

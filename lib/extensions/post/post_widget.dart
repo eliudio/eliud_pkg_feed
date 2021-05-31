@@ -352,7 +352,7 @@ class _PostWidgetState extends State<PostWidget> {
     }
 
     var rowChildren = [
-      widget.switchFeedHelper.gestured(context, data.member!.documentID!, AvatarHelper.avatar2(data.member)),
+      widget.switchFeedHelper.gestured(context, data.member!.documentID!, AvatarHelper.avatar2(data.member, 8)),
       Container(width: 8),
       Expanded(
           child: Container(

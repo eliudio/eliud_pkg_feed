@@ -39,13 +39,13 @@ class SwitchFeedHelper {
         context, feedMember().documentID!, AvatarHelper.avatar(feedMember()));
   }
 
-  Widget getFeedWidget2(BuildContext context,
-      {Color? backgroundColor, Color? backgroundColor2, double? radius}) {
+  Widget getFeedWidget2(BuildContext context, double radius,
+      {Color? backgroundColor, Color? backgroundColor2}) {
     return gestured(
         context,
         feedMember().documentID!,
-        AvatarHelper.avatar2(feedMember(),
-            backgroundColor: backgroundColor, backgroundColor2: backgroundColor2, radius: radius));
+        AvatarHelper.avatar2(feedMember(),radius,
+            backgroundColor: backgroundColor, backgroundColor2: backgroundColor2,));
   }
 
   static void _switchMember(

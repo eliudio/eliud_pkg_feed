@@ -29,8 +29,8 @@ class AvatarHelper {
   static double circle2Size = 5.0;
   static double circle3Size = 5.0;
 
-  static Widget avatar2(memberModel,
-      {Color? backgroundColor, Color? backgroundColor2, double? radius}) {
+  static Widget avatar2(memberModel, double radius,
+      {Color? backgroundColor, Color? backgroundColor2}) {
     var avatar;
     if (memberModel == null) {
       return Text("No avatar");
@@ -47,16 +47,11 @@ class AvatarHelper {
         );
       } else {
         return CircleAvatar(
-            radius: radius == null ? 17 + circle1Size + circle2Size  + circle3Size : radius + circle1Size + circle2Size + circle3Size,
+            radius: radius + circle1Size + circle2Size + circle3Size,
             backgroundColor:
                 backgroundColor == null ? Colors.transparent : backgroundColor,
-            child: CircleAvatar(
-                radius: radius == null ? 17 + circle1Size + circle2Size : radius + circle1Size + circle2Size,
-                backgroundColor: backgroundColor2 == null
-                    ? Colors.transparent
-                    : backgroundColor2,
                 child: CircleAvatar(
-                  radius: radius == null ? 17 + circle1Size: radius + circle1Size,
+                  radius: radius + circle1Size + circle2Size,
                   backgroundColor: backgroundColor2 == null
                       ? Colors.transparent
                       : backgroundColor2,
@@ -64,6 +59,9 @@ class AvatarHelper {
                     placeholder: kTransparentImage,
                     image: memberModel.photoURL!,
                   ).image,
+                    child: CircleAvatar(
+                      radius: radius + circle1Size,
+                      backgroundColor: Colors.transparent,
                 )));
       }
       // add gesturethingy and :

@@ -32,7 +32,7 @@ class _HeaderImageState extends State<HeaderImage> {
   Widget _profileWidget(BuildContext context) {
     var avatar = Align(
         alignment: Alignment.bottomCenter,
-        child: widget.switchFeedHelper.getFeedWidget2(context, backgroundColor: Colors.black, backgroundColor2: Colors.white, radius: 45));
+        child: widget.switchFeedHelper.getFeedWidget2(context, 45, backgroundColor: Colors.black, backgroundColor2: Colors.white));
     return avatar;
   }
 
