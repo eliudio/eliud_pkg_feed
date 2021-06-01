@@ -5,6 +5,7 @@ import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/model/rgb_model.dart';
 import 'package:eliud_core/tools/etc.dart';
 import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
+import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 import 'header/header.dart';
 import 'new_post/feed_post_form.dart';
 import 'post/bloc/post_bloc.dart';
@@ -50,21 +51,36 @@ class _PagedPostsListState extends State<PagedPostsList> {
     return BlocBuilder<PostListPagedBloc, PostListPagedState>(
       builder: (context, state) {
         if (state is PostListPagedState) {
-          var theState = state;
-          List<Widget> widgets = [];
-          widgets.add(Header(switchFeedHelper: widget.switchFeedHelper,));
-          if (widget.switchFeedHelper.allowNewPost()) {
-            widgets.add(_newPostForm());
-          }
-          for (int i = 0; i < theState.values.length; i++) {
-            widgets.add(post(context, theState.values[i]!));
-          }
-          widgets.add(_buttonNextPage(!theState.hasReachedMax));
-          return ListView(
-              shrinkWrap: true,
-              physics: ScrollPhysics(),
-              children: widgets
-          );
+          var _accessState = AccessBloc.getState(context);
+          return FutureBuilder<List<String>>(
+            future: PostFollowersHelper.asPublic(_accessState),
+            builder: (context, snapshot) {
+              if ((snapshot.hasData) && (snapshot.data != null)) {
+                var theState = state;
+                List<Widget> widgets = [];
+                widgets.add(Header(switchFeedHelper: widget.switchFeedHelper,
+                  appId: widget.feedModel.appId!,
+                  ownerId: widget.memberPublicInfoModel.documentID!,
+                  readAccess: snapshot.data,));
+                if (widget.switchFeedHelper.allowNewPost()) {
+                  widgets.add(_newPostForm());
+                }
+                for (int i = 0; i < theState.values.length; i++) {
+                  widgets.add(post(context, theState.values[i]!));
+                }
+                widgets.add(_buttonNextPage(!theState.hasReachedMax));
+                return ListView(
+                    shrinkWrap: true,
+                    physics: ScrollPhysics(),
+                    children: widgets
+                );
+              } else {
+                return Center(
+                  child: DelayedCircularProgressIndicator(),
+                );
+              }
+            }
+            );
         } else {
           return Center(
             child: DelayedCircularProgressIndicator(),

@@ -44,8 +44,13 @@ class PostFollowersHelper {
   }
 
   // To allow a post to be publicly available
-  static Future<List<String>> asPublic(LoggedIn accessState) async {
-    List<String> followers = await asFollowers(accessState);
+  static Future<List<String>> asPublic(AccessState accessState) async {
+    List<String> followers;
+    if (accessState is LoggedIn) {
+      followers = await asFollowers(accessState);
+    } else {
+      followers = [];
+    }
     followers.add('PUBLIC');
     return followers;
   }
