@@ -6,14 +6,14 @@ import 'package:eliud_core/model/rgb_model.dart';
 import 'package:eliud_core/tools/etc.dart';
 import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
 import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
-import 'header/header.dart';
-import 'new_post/feed_post_form.dart';
-import 'post/bloc/post_bloc.dart';
-import 'postlist_paged/postlist_paged_bloc.dart';
-import 'postlist_paged/postlist_paged_event.dart';
-import 'postlist_paged/postlist_paged_state.dart';
+import '../header/header.dart';
+import '../new_post/feed_post_form.dart';
+import '../post/bloc/post_bloc.dart';
+import '../postlist_paged/postlist_paged_bloc.dart';
+import '../postlist_paged/postlist_paged_event.dart';
+import '../postlist_paged/postlist_paged_state.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
-import 'post/post_widget.dart';
+import '../post/post_widget.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,7 +25,12 @@ class PagedPostsList extends StatefulWidget {
   //final bool allowNewPost;
   final SwitchFeedHelper switchFeedHelper;
 
-  const PagedPostsList(this.feedModel, this.memberPublicInfoModel, this.switchFeedHelper, {Key? key, }) : super(key: key);
+  const PagedPostsList(
+    this.feedModel,
+    this.memberPublicInfoModel,
+    this.switchFeedHelper, {
+    Key? key,
+  }) : super(key: key);
 
   @override
   _PagedPostsListState createState() => _PagedPostsListState();
@@ -43,7 +48,10 @@ class _PagedPostsListState extends State<PagedPostsList> {
   }
 
   Widget _newPostForm() {
-    return FeedPostForm(feedId: widget.feedModel.documentID!, switchFeedHelper: widget.switchFeedHelper,);
+    return FeedPostForm(
+      feedId: widget.feedModel.documentID!,
+      switchFeedHelper: widget.switchFeedHelper,
+    );
   }
 
   @override
@@ -52,35 +60,17 @@ class _PagedPostsListState extends State<PagedPostsList> {
       builder: (context, state) {
         if (state is PostListPagedState) {
           var _accessState = AccessBloc.getState(context);
-          return FutureBuilder<List<String>>(
-            future: PostFollowersHelper.asPublic(_accessState),
-            builder: (context, snapshot) {
-              if ((snapshot.hasData) && (snapshot.data != null)) {
-                var theState = state;
-                List<Widget> widgets = [];
-                widgets.add(Header(switchFeedHelper: widget.switchFeedHelper,
-                  appId: widget.feedModel.appId!,
-                  ownerId: widget.memberPublicInfoModel.documentID!,
-                  readAccess: snapshot.data,));
-                if (widget.switchFeedHelper.allowNewPost()) {
-                  widgets.add(_newPostForm());
-                }
-                for (int i = 0; i < theState.values.length; i++) {
-                  widgets.add(post(context, theState.values[i]!));
-                }
-                widgets.add(_buttonNextPage(!theState.hasReachedMax));
-                return ListView(
-                    shrinkWrap: true,
-                    physics: ScrollPhysics(),
-                    children: widgets
-                );
-              } else {
-                return Center(
-                  child: DelayedCircularProgressIndicator(),
-                );
-              }
-            }
-            );
+          var theState = state;
+          List<Widget> widgets = [];
+          if (widget.switchFeedHelper.allowNewPost()) {
+            widgets.add(_newPostForm());
+          }
+          for (int i = 0; i < theState.values.length; i++) {
+            widgets.add(post(context, theState.values[i]!));
+          }
+          widgets.add(_buttonNextPage(!theState.hasReachedMax));
+          return ListView(
+              shrinkWrap: true, physics: ScrollPhysics(), children: widgets);
         } else {
           return Center(
             child: DelayedCircularProgressIndicator(),

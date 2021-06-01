@@ -50,6 +50,14 @@
       "association": true,
       "group": "image",
       "optional": true
+    },
+    {
+      "fieldName": "readAccess",
+      "displayName": "Members that can read this profile. Array can contain 'PUBLIC'",
+      "fieldType": "String",
+      "iconName": "text_format",
+      "arrayType": "Array",
+      "hidden": true
     }
   ],
   "groups": [
@@ -68,7 +76,7 @@
   ],
   "listFields": {
     "title": "documentID",
-    "subTitle": "url"
+    "subTitle": "documentID"
   },
   "depends": ["eliud_core"]
 }

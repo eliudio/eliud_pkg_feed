@@ -56,6 +56,30 @@ class AdminApp extends AdminAppInstallerBase {
   AdminApp(this.appId, this._drawer, this._endDrawer, this._appBar, this._homeMenu, this.menuItemColor, this.selectedMenuItemColor, this.backgroundColor);
 
 
+  PageModel _albumsPages() {
+    List<BodyComponentModel> components = [];
+    components.add(BodyComponentModel(
+      documentID: "internalWidget-albums", componentName: "eliud_pkg_feed_internalWidgets", componentId: "albums"));
+    PageModel page = PageModel(
+        conditions: ConditionsModel(
+          privilegeLevelRequired: PrivilegeLevelRequired.OwnerPrivilegeRequired,
+          packageCondition: null,
+          conditionOverride: null,
+        ),
+        appId: appId,
+        documentID: "eliud_pkg_feed_albums_page",
+        title: "Albums",
+        drawer: _drawer,
+        endDrawer: _endDrawer,
+        appBar: _appBar,
+        homeMenu: _homeMenu,
+        bodyComponents: components,
+        layout: PageLayout.OnlyTheFirstComponent
+    );
+    return page;
+  }
+
+
   PageModel _feedsPages() {
     List<BodyComponentModel> components = [];
     components.add(BodyComponentModel(
@@ -80,10 +104,10 @@ class AdminApp extends AdminAppInstallerBase {
   }
 
 
-  PageModel _albumsPages() {
+  PageModel _feedMenusPages() {
     List<BodyComponentModel> components = [];
     components.add(BodyComponentModel(
-      documentID: "internalWidget-albums", componentName: "eliud_pkg_feed_internalWidgets", componentId: "albums"));
+      documentID: "internalWidget-feedMenus", componentName: "eliud_pkg_feed_internalWidgets", componentId: "feedMenus"));
     PageModel page = PageModel(
         conditions: ConditionsModel(
           privilegeLevelRequired: PrivilegeLevelRequired.OwnerPrivilegeRequired,
@@ -91,8 +115,32 @@ class AdminApp extends AdminAppInstallerBase {
           conditionOverride: null,
         ),
         appId: appId,
-        documentID: "eliud_pkg_feed_albums_page",
-        title: "Albums",
+        documentID: "eliud_pkg_feed_feedmenus_page",
+        title: "FeedMenus",
+        drawer: _drawer,
+        endDrawer: _endDrawer,
+        appBar: _appBar,
+        homeMenu: _homeMenu,
+        bodyComponents: components,
+        layout: PageLayout.OnlyTheFirstComponent
+    );
+    return page;
+  }
+
+
+  PageModel _headersPages() {
+    List<BodyComponentModel> components = [];
+    components.add(BodyComponentModel(
+      documentID: "internalWidget-headers", componentName: "eliud_pkg_feed_internalWidgets", componentId: "headers"));
+    PageModel page = PageModel(
+        conditions: ConditionsModel(
+          privilegeLevelRequired: PrivilegeLevelRequired.OwnerPrivilegeRequired,
+          packageCondition: null,
+          conditionOverride: null,
+        ),
+        appId: appId,
+        documentID: "eliud_pkg_feed_headers_page",
+        title: "Headers",
         drawer: _drawer,
         endDrawer: _endDrawer,
         appBar: _appBar,
@@ -176,17 +224,47 @@ class AdminApp extends AdminAppInstallerBase {
   }
 
 
+  PageModel _profilesPages() {
+    List<BodyComponentModel> components = [];
+    components.add(BodyComponentModel(
+      documentID: "internalWidget-profiles", componentName: "eliud_pkg_feed_internalWidgets", componentId: "profiles"));
+    PageModel page = PageModel(
+        conditions: ConditionsModel(
+          privilegeLevelRequired: PrivilegeLevelRequired.OwnerPrivilegeRequired,
+          packageCondition: null,
+          conditionOverride: null,
+        ),
+        appId: appId,
+        documentID: "eliud_pkg_feed_profiles_page",
+        title: "Profiles",
+        drawer: _drawer,
+        endDrawer: _endDrawer,
+        appBar: _appBar,
+        homeMenu: _homeMenu,
+        bodyComponents: components,
+        layout: PageLayout.OnlyTheFirstComponent
+    );
+    return page;
+  }
+
+
   Future<void> _setupAdminPages() {
 
-    return pageRepository(appId: appId)!.add(_feedsPages())
+    return pageRepository(appId: appId)!.add(_albumsPages())
 
-        .then((_) => pageRepository(appId: appId)!.add(_albumsPages()))
+        .then((_) => pageRepository(appId: appId)!.add(_feedsPages()))
+
+        .then((_) => pageRepository(appId: appId)!.add(_feedMenusPages()))
+
+        .then((_) => pageRepository(appId: appId)!.add(_headersPages()))
 
         .then((_) => pageRepository(appId: appId)!.add(_postsPages()))
 
         .then((_) => pageRepository(appId: appId)!.add(_postCommentsPages()))
 
         .then((_) => pageRepository(appId: appId)!.add(_postLikesPages()))
+
+        .then((_) => pageRepository(appId: appId)!.add(_profilesPages()))
 
     ;
   }
@@ -206,6 +284,16 @@ class AdminMenu extends AdminAppMenuInstallerBase {
 
     menuItems.add(
       MenuItemModel(
+        documentID: "Albums",
+        text: "Albums",
+        description: "Albums",
+        icon: IconModel(codePoint: 0xe88a, fontFamily: "MaterialIcons"),
+        action: GotoPage(appId, pageID: "eliud_pkg_feed_albums_page"))
+    );
+
+
+    menuItems.add(
+      MenuItemModel(
         documentID: "Feeds",
         text: "Feeds",
         description: "Feeds",
@@ -216,11 +304,21 @@ class AdminMenu extends AdminAppMenuInstallerBase {
 
     menuItems.add(
       MenuItemModel(
-        documentID: "Albums",
-        text: "Albums",
-        description: "Albums",
+        documentID: "FeedMenus",
+        text: "FeedMenus",
+        description: "FeedMenus",
         icon: IconModel(codePoint: 0xe88a, fontFamily: "MaterialIcons"),
-        action: GotoPage(appId, pageID: "eliud_pkg_feed_albums_page"))
+        action: GotoPage(appId, pageID: "eliud_pkg_feed_feedmenus_page"))
+    );
+
+
+    menuItems.add(
+      MenuItemModel(
+        documentID: "Headers",
+        text: "Headers",
+        description: "Headers",
+        icon: IconModel(codePoint: 0xe88a, fontFamily: "MaterialIcons"),
+        action: GotoPage(appId, pageID: "eliud_pkg_feed_headers_page"))
     );
 
 
@@ -251,6 +349,16 @@ class AdminMenu extends AdminAppMenuInstallerBase {
         description: "PostLikes",
         icon: IconModel(codePoint: 0xe88a, fontFamily: "MaterialIcons"),
         action: GotoPage(appId, pageID: "eliud_pkg_feed_postlikes_page"))
+    );
+
+
+    menuItems.add(
+      MenuItemModel(
+        documentID: "Profiles",
+        text: "Profiles",
+        description: "Profiles",
+        icon: IconModel(codePoint: 0xe88a, fontFamily: "MaterialIcons"),
+        action: GotoPage(appId, pageID: "eliud_pkg_feed_profiles_page"))
     );
 
 

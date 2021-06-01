@@ -13,9 +13,13 @@
 
 */
 
-export '../model/feed_model.dart';
 export '../model/album_model.dart';
+export '../model/feed_model.dart';
+export '../model/feed_menu_model.dart';
+export '../model/header_model.dart';
+export '../model/member_profile_model.dart';
 export '../model/post_model.dart';
 export '../model/post_comment_model.dart';
 export '../model/post_like_model.dart';
 export '../model/post_medium_model.dart';
+export '../model/profile_model.dart';

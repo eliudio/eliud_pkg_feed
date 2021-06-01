@@ -99,7 +99,7 @@
     },
     {
       "fieldName": "readAccess",
-      "displayName": "Members that can read this post. Array can contain 'public'",
+      "displayName": "Members that can read this post. Array can contain 'PUBLIC'",
       "fieldType": "String",
       "iconName": "text_format",
       "arrayType": "Array",
