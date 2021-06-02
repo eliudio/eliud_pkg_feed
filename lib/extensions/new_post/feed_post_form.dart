@@ -24,27 +24,12 @@ class FeedPostForm extends StatelessWidget {
   final String feedId;
   //final String parentPageId;
   final SwitchFeedHelper switchFeedHelper;
-  FeedPostForm({Key? key, required this.feedId, required this.switchFeedHelper}) : super(key: key);
+  final PostListPagedBloc postListPagedBloc;
+  FeedPostForm({Key? key, required this.feedId, required this.switchFeedHelper, required this.postListPagedBloc}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var theState = AccessBloc.getState(context);
-    if (theState is LoggedIn) {
-      var memberPublicInfoModel = theState.memberPublicInfoModel;
-      var app = AccessBloc.app(context);
-      if (app == null) return Text("No app available");
-      return BlocProvider<FeedPostFormBloc>(
-          create: (context) => FeedPostFormBloc(
-              app.documentID!,
-              BlocProvider.of<PostListPagedBloc>(context),
-              memberPublicInfoModel,
-              feedId,
-              theState)
-            ..add(InitialiseNewFeedPostFormEvent()),
-          child: MyFeedPostForm(feedId, switchFeedHelper));
-    } else {
-      return Text("Not logged in");
-    }
+    return MyFeedPostForm(feedId, switchFeedHelper);
   }
 }
 
@@ -58,8 +43,7 @@ class MyFeedPostForm extends StatefulWidget {
 }
 
 class _MyFeedPostFormState extends State<MyFeedPostForm> {
-  late FeedPostFormBloc _myFormBloc;
-
+  final DialogStateHelper dialogHelper = DialogStateHelper();
   final TextEditingController _descriptionController = TextEditingController();
   int? _postPrivilegeSelectedRadioTile;
 
@@ -68,7 +52,6 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
   @override
   void initState() {
     super.initState();
-    _myFormBloc = BlocProvider.of<FeedPostFormBloc>(context);
     _descriptionController.addListener(_onDescriptionChanged);
     _postPrivilegeSelectedRadioTile = 0;
   }
@@ -106,37 +89,55 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
       if (app == null) return Text('No app available');
       return BlocBuilder<FeedPostFormBloc, FeedPostFormState>(
           builder: (context, state) {
-        if (state is FeedPostFormLoaded) {
-          if (state.postModelDetails.description != null) {
-            _descriptionController.text =
-                state.postModelDetails.description.toString();
-          } else {
-            _descriptionController.text = "";
-          }
-
-          if (state.postModelDetails!.postPrivilege != null)
-            _postPrivilegeSelectedRadioTile =
-                state.postModelDetails!.postPrivilege!.index;
-          else
-            _postPrivilegeSelectedRadioTile = 0;
-        }
-        if (state is FeedPostFormInitialized) {
-          List<Widget> rows = [];
-          rows.add(_row1(app, pubMember, state, theState));
-          if ((state is SubmittableFeedPostFormWithMediumUploading) ||
-              ((state.postModelDetails.memberMedia != null) &&
-                  (state.postModelDetails.memberMedia!.isNotEmpty))) {
-            rows.add(_row2(state));
-            rows.add(PostMediaHelper.videoAndPhotoDivider(context));
-          }
-          rows.add(_rowAudience(state.postModelDetails));
-          return PostHelper.getFormattedPost(rows);
-        } else {
-          return Center(child: DelayedCircularProgressIndicator());
-        }
+            return dialogHelper.build(
+                dialogButtonPosition: DialogButtonPosition.TopRight,
+                title: 'New post',
+                contents: _contents(context, state, app, pubMember, theState),
+                buttons: dialogHelper.getYesNoButtons(context, () {
+                  BlocProvider.of<FeedPostFormBloc>(context).add(SubmitPost());
+                  Navigator.pop(context);
+                }, () {
+                  Navigator.pop(context);
+                }, yesButtonLabel: "Ok", noButtonLabel: "Cancel"));
       });
     } else {
       return Text("Not logged in");
+    }
+  }
+
+  Widget _contents(context, state, app, pubMember, theState) {
+    if (state is FeedPostFormLoaded) {
+      if (state.postModelDetails.description != null) {
+        _descriptionController.text =
+            state.postModelDetails.description.toString();
+      } else {
+        _descriptionController.text = "";
+      }
+
+      if (state.postModelDetails!.postPrivilege != null)
+        _postPrivilegeSelectedRadioTile =
+            state.postModelDetails!.postPrivilege!.index;
+      else
+        _postPrivilegeSelectedRadioTile = 0;
+    }
+    if (state is FeedPostFormInitialized) {
+      List<Widget> rows = [];
+      rows.add(_row1(app, pubMember, state, theState));
+      if ((state is SubmittableFeedPostFormWithMediumUploading) ||
+          ((state.postModelDetails.memberMedia != null) &&
+              (state.postModelDetails.memberMedia!.isNotEmpty))) {
+        rows.add(_row2(state));
+        rows.add(PostMediaHelper.videoAndPhotoDivider(context));
+      }
+      rows.add(_rowAudience(state.postModelDetails));
+//          return PostHelper.getFormattedPost(rows);
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: rows,
+      );
+
+    } else {
+      return Center(child: DelayedCircularProgressIndicator());
     }
   }
 
@@ -155,26 +156,17 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
       ),
       Container(width: 8),
       _mediaButtons(context, app, state, member.documentID!),
-      Container(width: 8),
-      Container(
-          height: 30,
-          child: RaisedButton(
-              color: Colors.grey,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: Text('Ok'),
-              onPressed: () => _myFormBloc.add(SubmitPost()))),
     ]);
+
   }
 
   void _photoUploading(double progress) {
-    _myFormBloc.add(UploadingMedium(progress: progress));
+    BlocProvider.of<FeedPostFormBloc>(context).add(UploadingMedium(progress: progress));
     setState(() {});
   }
 
   void _videoUploading(double progress) {
-    _myFormBloc.add(UploadingMedium(progress: progress));
+    BlocProvider.of<FeedPostFormBloc>(context).add(UploadingMedium(progress: progress));
     setState(() {});
   }
 
@@ -190,13 +182,13 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         (photo) {
           var memberMedia = state.postModelDetails.memberMedia;
           memberMedia.add(photo);
-          _myFormBloc.add(ChangedMedia(memberMedia: memberMedia));
+          BlocProvider.of<FeedPostFormBloc>(context).add(ChangedMedia(memberMedia: memberMedia));
         },
         _photoUploading,
         (video) {
           var memberMedia = state.postModelDetails.memberMedia;
           memberMedia.add(video);
-          _myFormBloc.add(ChangedMedia(memberMedia: memberMedia));
+          BlocProvider.of<FeedPostFormBloc>(context).add(ChangedMedia(memberMedia: memberMedia));
         },
         _videoUploading);
   }
@@ -212,7 +204,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         progressExtra: progressValue, deleteAction: (index) {
       var memberMedia = state.postModelDetails.memberMedia;
       memberMedia.removeAt(index);
-      _myFormBloc.add(ChangedMedia(memberMedia: memberMedia));
+      BlocProvider.of<FeedPostFormBloc>(context).add(ChangedMedia(memberMedia: memberMedia));
     }, viewAction: (index) {
       var medium = state.postModelDetails.memberMedia[index];
       if (medium.mediumType == MediumType.Photo) {
@@ -260,7 +252,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
   }
 
   void _onDescriptionChanged() {
-    _myFormBloc
+    BlocProvider.of<FeedPostFormBloc>(context)
         .add(ChangedFeedPostDescription(value: _descriptionController.text));
   }
 
@@ -269,7 +261,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
       setState(() {
         _postPrivilegeSelectedRadioTile = val;
       });
-      _myFormBloc.add(ChangedFeedPostPrivilege(value: toPostPrivilege(val!)));
+      BlocProvider.of<FeedPostFormBloc>(context).add(ChangedFeedPostPrivilege(value: toPostPrivilege(val!)));
     }
   }
 

@@ -6,9 +6,7 @@ import 'package:eliud_core/model/rgb_model.dart';
 import 'package:eliud_core/tools/etc.dart';
 import 'package:eliud_pkg_feed/extensions/new_post/feed_post_dialog.dart';
 import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
-import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
-import '../header/header.dart';
-import '../new_post/feed_post_form.dart';
+import 'package:eliud_pkg_feed/platform/medium_platform.dart';
 import '../post/bloc/post_bloc.dart';
 import '../postlist_paged/postlist_paged_bloc.dart';
 import '../postlist_paged/postlist_paged_event.dart';
@@ -50,41 +48,46 @@ class _PagedPostsListState extends State<PagedPostsList> {
 
   Widget _button(Widget icon, Widget text, action) {
     return MaterialButton(
-        color: Colors.red,
+        color: Colors.white,
         shape: CircleBorder(),
         onPressed: action,
         child: Padding(
-        padding: const EdgeInsets.all(5),
+        padding: const EdgeInsets.all(10),
     child: icon,
         ));
   }
 
   Widget _newPostForm() {
-/*
     List<Widget> widgets = [];
     widgets.add(Spacer());
     widgets.add(_button(
         Icon(
           Icons.camera,
-          size: 70,
+          size: 50,
         ),
         Text("Photo"),
-        () => FeedPostDialog.open(
-            context, widget.feedModel.documentID!, widget.switchFeedHelper)));
+        () => {
+/*
+        probably needs to go into a seperate dialog
+
+        AbstractMediumPlatform.platform!.takePhoto(context, widget.feedModel.appId, widget.switchFeedHelper.memberCurrent.documentID, widget.switchFeedHelper.
+        readAccess, photoFeedbackFunction, photoFeedbackProgress);
+*/
+
+        }));
     widgets.add(Spacer());
     widgets.add(_button(
         Icon(
           Icons.videocam_rounded,
-          size: 70,
+          size: 50,
         ),
         Text("Video"),
-        () => FeedPostDialog.open(
-            context, widget.feedModel.documentID!, widget.switchFeedHelper)));
+        () => {}));
     widgets.add(Spacer());
     widgets.add(_button(
         Icon(
-          Icons.summarize,
-          size: 70,
+          Icons.add,
+          size: 50,
         ),
         Text("Simple"),
         () => FeedPostDialog.open(
@@ -92,16 +95,14 @@ class _PagedPostsListState extends State<PagedPostsList> {
     widgets.add(Spacer());
     widgets.add(_button(
         Icon(
-          Icons.article,
-          size: 70,
+          Icons.note_add,
+          size: 50,
         ),
         Text("Fancy"),
-        () => FeedPostDialog.open(
-            context, widget.feedModel.documentID!, widget.switchFeedHelper)));
+        () => {}));
     widgets.add(Spacer());
     return Container(height: 110, child: Row(children: widgets));
-*/
-    return FeedPostForm(feedId: widget.feedModel.documentID!, switchFeedHelper: widget.switchFeedHelper,);
+//    return FeedPostForm(feedId: widget.feedModel.documentID!, switchFeedHelper: widget.switchFeedHelper, postListPagedBloc: BlocProvider.of<PostListPagedBloc>(context));
   }
 
   @override
