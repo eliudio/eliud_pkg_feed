@@ -36,6 +36,12 @@
       "group": "general"
     },
     {
+      "fieldName": "profile",
+      "displayName": "App ID",
+      "fieldType": "String",
+      "group": "general"
+    },
+    {
       "fieldName": "profileBackground",
       "displayName": "Image",
       "fieldType": "MemberMedium",

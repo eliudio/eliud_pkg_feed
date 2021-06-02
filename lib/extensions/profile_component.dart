@@ -1,9 +1,13 @@
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
+import 'package:eliud_core/core/access/bloc/access_state.dart';
+import 'package:eliud_core/core/navigate/page_param_helper.dart';
 import 'package:eliud_core/core/widgets/alert_widget.dart';
 import 'package:eliud_core/core/widgets/progress_indicator.dart';
 import 'package:eliud_core/tools/component_constructor.dart';
-import 'package:eliud_pkg_feed/extensions/util/feed_widget_helper.dart';
+import 'package:eliud_pkg_feed/extensions/util/profile_helper.dart';
+import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_feed/model/member_profile_model.dart';
 import 'package:eliud_pkg_feed/model/profile_component.dart';
 import 'package:eliud_pkg_feed/model/profile_model.dart';
 import 'package:eliud_pkg_feed/model/profile_repository.dart';
@@ -31,15 +35,15 @@ class ProfileComponent extends AbstractProfileComponent {
   @override
   Widget yourWidget(BuildContext context, ProfileModel? profileModel) {
     var _accessState = AccessBloc.getState(context);
-    return FutureBuilder<List<String>>(
-        future: PostFollowersHelper.asPublic(_accessState),
+    return FutureBuilder<ProfileHelper>(
+        future: ProfileHelper.getProfileInformation(context, _accessState, profileModel!.appId!, ),
         builder: (context, snapshot) {
-          if ((snapshot.hasData) && (snapshot.data != null)) {
-            return FeedWidgetHelper(widgetProvider: (switchFeedHelper) =>
-                Profile(switchFeedHelper: switchFeedHelper,
-                  appId: profileModel!.appId!,
-                  ownerId: switchFeedHelper.feedMember().documentID!,
-                  readAccess: snapshot.data,));
+          if (snapshot.hasData)  {
+            var profileInformation = snapshot.data!;
+            Profile(switchFeedHelper: profileInformation.switchFeedHelper,
+              appId: profileModel!.appId!,
+              ownerId: profileInformation.switchFeedHelper.feedMember().documentID!,
+              readAccess: profileInformation.readAccess, html: profileInformation.memberProfileModel.profile!, feedback: (String value) => profileInformation.updateProfile(value),);
           }
           return Center(
             child: DelayedCircularProgressIndicator(),

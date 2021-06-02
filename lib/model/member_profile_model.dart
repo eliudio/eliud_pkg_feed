@@ -39,20 +39,21 @@ import 'package:eliud_core/tools/random.dart';
 class MemberProfileModel {
   String? documentID;
   String? appId;
+  String? profile;
   MemberMediumModel? profileBackground;
   MemberMediumModel? profileOverride;
   List<String>? readAccess;
 
-  MemberProfileModel({this.documentID, this.appId, this.profileBackground, this.profileOverride, this.readAccess, })  {
+  MemberProfileModel({this.documentID, this.appId, this.profile, this.profileBackground, this.profileOverride, this.readAccess, })  {
     assert(documentID != null);
   }
 
-  MemberProfileModel copyWith({String? documentID, String? appId, MemberMediumModel? profileBackground, MemberMediumModel? profileOverride, List<String>? readAccess, }) {
-    return MemberProfileModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, profileBackground: profileBackground ?? this.profileBackground, profileOverride: profileOverride ?? this.profileOverride, readAccess: readAccess ?? this.readAccess, );
+  MemberProfileModel copyWith({String? documentID, String? appId, String? profile, MemberMediumModel? profileBackground, MemberMediumModel? profileOverride, List<String>? readAccess, }) {
+    return MemberProfileModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, profile: profile ?? this.profile, profileBackground: profileBackground ?? this.profileBackground, profileOverride: profileOverride ?? this.profileOverride, readAccess: readAccess ?? this.readAccess, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ appId.hashCode ^ profileBackground.hashCode ^ profileOverride.hashCode ^ readAccess.hashCode;
+  int get hashCode => documentID.hashCode ^ appId.hashCode ^ profile.hashCode ^ profileBackground.hashCode ^ profileOverride.hashCode ^ readAccess.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -61,6 +62,7 @@ class MemberProfileModel {
           runtimeType == other.runtimeType && 
           documentID == other.documentID &&
           appId == other.appId &&
+          profile == other.profile &&
           profileBackground == other.profileBackground &&
           profileOverride == other.profileOverride &&
           ListEquality().equals(readAccess, other.readAccess);
@@ -69,12 +71,13 @@ class MemberProfileModel {
   String toString() {
     String readAccessCsv = (readAccess == null) ? '' : readAccess!.join(', ');
 
-    return 'MemberProfileModel{documentID: $documentID, appId: $appId, profileBackground: $profileBackground, profileOverride: $profileOverride, readAccess: String[] { $readAccessCsv }}';
+    return 'MemberProfileModel{documentID: $documentID, appId: $appId, profile: $profile, profileBackground: $profileBackground, profileOverride: $profileOverride, readAccess: String[] { $readAccessCsv }}';
   }
 
   MemberProfileEntity toEntity({String? appId}) {
     return MemberProfileEntity(
           appId: (appId != null) ? appId : null, 
+          profile: (profile != null) ? profile : null, 
           profileBackgroundId: (profileBackground != null) ? profileBackground!.documentID : null, 
           profileOverrideId: (profileOverride != null) ? profileOverride!.documentID : null, 
           readAccess: (readAccess != null) ? readAccess : null, 
@@ -86,6 +89,7 @@ class MemberProfileModel {
     return MemberProfileModel(
           documentID: documentID, 
           appId: entity.appId, 
+          profile: entity.profile, 
           readAccess: entity.readAccess, 
     );
   }
@@ -118,6 +122,7 @@ class MemberProfileModel {
     return MemberProfileModel(
           documentID: documentID, 
           appId: entity.appId, 
+          profile: entity.profile, 
           profileBackground: profileBackgroundHolder, 
           profileOverride: profileOverrideHolder, 
           readAccess: entity.readAccess, 

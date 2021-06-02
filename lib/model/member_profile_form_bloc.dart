@@ -54,6 +54,7 @@ class MemberProfileFormBloc extends Bloc<MemberProfileFormEvent, MemberProfileFo
         MemberProfileFormLoaded loaded = MemberProfileFormLoaded(value: MemberProfileModel(
                                                documentID: "",
                                  appId: "",
+                                 profile: "",
                                  readAccess: [],
 
         ));
@@ -85,6 +86,12 @@ class MemberProfileFormBloc extends Bloc<MemberProfileFormEvent, MemberProfileFo
 
         return;
       }
+      if (event is ChangedMemberProfileProfile) {
+        newValue = currentState.value!.copyWith(profile: event.value);
+        yield SubmittableMemberProfileForm(value: newValue);
+
+        return;
+      }
       if (event is ChangedMemberProfileProfileBackground) {
         if (event.value != null)
           newValue = currentState.value!.copyWith(profileBackground: await memberMediumRepository(appId: appId)!.get(event.value));
@@ -92,6 +99,7 @@ class MemberProfileFormBloc extends Bloc<MemberProfileFormEvent, MemberProfileFo
           newValue = new MemberProfileModel(
                                  documentID: currentState.value!.documentID,
                                  appId: currentState.value!.appId,
+                                 profile: currentState.value!.profile,
                                  profileBackground: null,
                                  profileOverride: currentState.value!.profileOverride,
                                  readAccess: currentState.value!.readAccess,
@@ -107,6 +115,7 @@ class MemberProfileFormBloc extends Bloc<MemberProfileFormEvent, MemberProfileFo
           newValue = new MemberProfileModel(
                                  documentID: currentState.value!.documentID,
                                  appId: currentState.value!.appId,
+                                 profile: currentState.value!.profile,
                                  profileBackground: currentState.value!.profileBackground,
                                  profileOverride: null,
                                  readAccess: currentState.value!.readAccess,

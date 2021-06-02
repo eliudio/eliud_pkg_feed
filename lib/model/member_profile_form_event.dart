@@ -83,6 +83,18 @@ class ChangedMemberProfileAppId extends MemberProfileFormEvent {
   String toString() => 'ChangedMemberProfileAppId{ value: $value }';
 }
 
+class ChangedMemberProfileProfile extends MemberProfileFormEvent {
+  final String? value;
+
+  ChangedMemberProfileProfile({this.value});
+
+  @override
+  List<Object?> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedMemberProfileProfile{ value: $value }';
+}
+
 class ChangedMemberProfileProfileBackground extends MemberProfileFormEvent {
   final String? value;
 

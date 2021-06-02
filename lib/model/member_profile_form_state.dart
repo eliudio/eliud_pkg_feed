@@ -95,6 +95,22 @@ class AppIdMemberProfileFormError extends MemberProfileFormError {
 }
 
 
+class ProfileMemberProfileFormError extends MemberProfileFormError { 
+  const ProfileMemberProfileFormError({ String? message, MemberProfileModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''ProfileMemberProfileFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
 class ProfileBackgroundMemberProfileFormError extends MemberProfileFormError { 
   const ProfileBackgroundMemberProfileFormError({ String? message, MemberProfileModel? value }): super(message: message, value: value);
 

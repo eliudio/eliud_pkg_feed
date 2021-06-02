@@ -4,6 +4,7 @@ import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/model/rgb_model.dart';
 import 'package:eliud_core/tools/etc.dart';
+import 'package:eliud_pkg_feed/extensions/new_post/feed_post_dialog.dart';
 import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
 import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 import '../header/header.dart';
@@ -47,11 +48,60 @@ class _PagedPostsListState extends State<PagedPostsList> {
     _app = AccessBloc.app(context);
   }
 
+  Widget _button(Widget icon, Widget text, action) {
+    return MaterialButton(
+        color: Colors.red,
+        shape: CircleBorder(),
+        onPressed: action,
+        child: Padding(
+        padding: const EdgeInsets.all(5),
+    child: icon,
+        ));
+  }
+
   Widget _newPostForm() {
-    return FeedPostForm(
-      feedId: widget.feedModel.documentID!,
-      switchFeedHelper: widget.switchFeedHelper,
-    );
+/*
+    List<Widget> widgets = [];
+    widgets.add(Spacer());
+    widgets.add(_button(
+        Icon(
+          Icons.camera,
+          size: 70,
+        ),
+        Text("Photo"),
+        () => FeedPostDialog.open(
+            context, widget.feedModel.documentID!, widget.switchFeedHelper)));
+    widgets.add(Spacer());
+    widgets.add(_button(
+        Icon(
+          Icons.videocam_rounded,
+          size: 70,
+        ),
+        Text("Video"),
+        () => FeedPostDialog.open(
+            context, widget.feedModel.documentID!, widget.switchFeedHelper)));
+    widgets.add(Spacer());
+    widgets.add(_button(
+        Icon(
+          Icons.summarize,
+          size: 70,
+        ),
+        Text("Simple"),
+        () => FeedPostDialog.open(
+            context, widget.feedModel.documentID!, widget.switchFeedHelper)));
+    widgets.add(Spacer());
+    widgets.add(_button(
+        Icon(
+          Icons.article,
+          size: 70,
+        ),
+        Text("Fancy"),
+        () => FeedPostDialog.open(
+            context, widget.feedModel.documentID!, widget.switchFeedHelper)));
+    widgets.add(Spacer());
+    return Container(height: 110, child: Row(children: widgets));
+*/
+    return FeedPostForm(feedId: widget.feedModel.documentID!, switchFeedHelper: widget.switchFeedHelper,);
   }
 
   @override

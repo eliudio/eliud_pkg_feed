@@ -133,6 +133,7 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
 
   final TextEditingController _documentIDController = TextEditingController();
   final TextEditingController _appIdController = TextEditingController();
+  final TextEditingController _profileController = TextEditingController();
   String? _profileBackground;
   String? _profileOverride;
 
@@ -145,6 +146,7 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
     _myFormBloc = BlocProvider.of<MemberProfileFormBloc>(context);
     _documentIDController.addListener(_onDocumentIDChanged);
     _appIdController.addListener(_onAppIdChanged);
+    _profileController.addListener(_onProfileChanged);
   }
 
   @override
@@ -166,6 +168,10 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
           _appIdController.text = state.value!.appId.toString();
         else
           _appIdController.text = "";
+        if (state.value!.profile != null)
+          _profileController.text = state.value!.profile.toString();
+        else
+          _profileController.text = "";
         if (state.value!.profileBackground != null)
           _profileBackground= state.value!.profileBackground!.documentID;
         else
@@ -226,6 +232,24 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
                 ),
           );
 
+        children.add(
+
+                TextFormField(
+                style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor)),
+                  readOnly: _readOnly(accessState, state),
+                  controller: _profileController,
+                  decoration: InputDecoration(
+                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldTextColor))),                    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldFocusColor))),                    icon: Icon(Icons.text_format, color: RgbHelper.color(rgbo: app.formFieldHeaderColor)),
+                    labelText: 'App ID',
+                  ),
+                  keyboardType: TextInputType.text,
+                  autovalidate: true,
+                  validator: (_) {
+                    return state is ProfileMemberProfileFormError ? state.message : null;
+                  },
+                ),
+          );
+
 
         children.add(Container(height: 20.0));
         children.add(Divider(height: 1.0, thickness: 1.0, color: RgbHelper.color(rgbo: app.dividerColor)));
@@ -269,6 +293,7 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
                           UpdateMemberProfileList(value: state.value!.copyWith(
                               documentID: state.value!.documentID, 
                               appId: state.value!.appId, 
+                              profile: state.value!.profile, 
                               profileBackground: state.value!.profileBackground, 
                               profileOverride: state.value!.profileOverride, 
                               readAccess: state.value!.readAccess, 
@@ -278,6 +303,7 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
                           AddMemberProfileList(value: MemberProfileModel(
                               documentID: state.value!.documentID, 
                               appId: state.value!.appId, 
+                              profile: state.value!.profile, 
                               profileBackground: state.value!.profileBackground, 
                               profileOverride: state.value!.profileOverride, 
                               readAccess: state.value!.readAccess, 
@@ -323,6 +349,11 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
   }
 
 
+  void _onProfileChanged() {
+    _myFormBloc.add(ChangedMemberProfileProfile(value: _profileController.text));
+  }
+
+
   void _onProfileBackgroundSelected(String? val) {
     setState(() {
       _profileBackground = val;
@@ -350,6 +381,7 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
   void dispose() {
     _documentIDController.dispose();
     _appIdController.dispose();
+    _profileController.dispose();
     super.dispose();
   }
 
