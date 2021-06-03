@@ -134,6 +134,7 @@ class _MyProfileFormState extends State<MyProfileForm> {
   final TextEditingController _documentIDController = TextEditingController();
   final TextEditingController _appIdController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  String? _feed;
 
 
   _MyProfileFormState(this.formAction);
@@ -170,6 +171,10 @@ class _MyProfileFormState extends State<MyProfileForm> {
           _descriptionController.text = state.value!.description.toString();
         else
           _descriptionController.text = "";
+        if (state.value!.feed != null)
+          _feed= state.value!.feed!.documentID;
+        else
+          _feed= "";
       }
       if (state is ProfileFormInitialized) {
         List<Widget> children = [];
@@ -236,6 +241,11 @@ class _MyProfileFormState extends State<MyProfileForm> {
                 ),
           );
 
+        children.add(
+
+                DropdownButtonComponentFactory().createNew(id: "feeds", value: _feed, trigger: _onFeedSelected, optional: false),
+          );
+
 
         children.add(Container(height: 20.0));
         children.add(Divider(height: 1.0, thickness: 1.0, color: RgbHelper.color(rgbo: app.dividerColor)));
@@ -268,6 +278,7 @@ class _MyProfileFormState extends State<MyProfileForm> {
                               documentID: state.value!.documentID, 
                               appId: state.value!.appId, 
                               description: state.value!.description, 
+                              feed: state.value!.feed, 
                               conditions: state.value!.conditions, 
                         )));
                       } else {
@@ -276,6 +287,7 @@ class _MyProfileFormState extends State<MyProfileForm> {
                               documentID: state.value!.documentID, 
                               appId: state.value!.appId, 
                               description: state.value!.description, 
+                              feed: state.value!.feed, 
                               conditions: state.value!.conditions, 
                           )));
                       }
@@ -321,6 +333,14 @@ class _MyProfileFormState extends State<MyProfileForm> {
 
   void _onDescriptionChanged() {
     _myFormBloc.add(ChangedProfileDescription(value: _descriptionController.text));
+  }
+
+
+  void _onFeedSelected(String? val) {
+    setState(() {
+      _feed = val;
+    });
+    _myFormBloc.add(ChangedProfileFeed(value: val));
   }
 
 

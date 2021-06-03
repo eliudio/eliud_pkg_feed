@@ -95,6 +95,18 @@ class ChangedProfileDescription extends ProfileFormEvent {
   String toString() => 'ChangedProfileDescription{ value: $value }';
 }
 
+class ChangedProfileFeed extends ProfileFormEvent {
+  final String? value;
+
+  ChangedProfileFeed({this.value});
+
+  @override
+  List<Object?> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedProfileFeed{ value: $value }';
+}
+
 class ChangedProfileConditions extends ProfileFormEvent {
   final ConditionsSimpleModel? value;
 

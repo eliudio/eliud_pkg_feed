@@ -40,7 +40,7 @@ ProfileRepository? profileRepository({ String? appId }) => AbstractRepositorySin
 
 abstract class AbstractRepositorySingleton {
   static List<MemberCollectionInfo> collections = [
-    MemberCollectionInfo('memberprofile', 'documentID'),
+    MemberCollectionInfo('memberprofile', 'authorId'),
     MemberCollectionInfo('post', 'authorId'),
     MemberCollectionInfo('postcomment', 'memberId'),
     MemberCollectionInfo('postlike', 'memberId'),

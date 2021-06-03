@@ -35,15 +35,12 @@ class ProfileComponent extends AbstractProfileComponent {
   @override
   Widget yourWidget(BuildContext context, ProfileModel? profileModel) {
     var _accessState = AccessBloc.getState(context);
-    return FutureBuilder<ProfileHelper>(
-        future: ProfileHelper.getProfileInformation(context, _accessState, profileModel!.appId!, ),
+    return FutureBuilder<ProfileHelper?>(
+        future: ProfileHelper.getProfileInformation(context, profileModel!.feed!.documentID!, _accessState, profileModel!.appId!),
         builder: (context, snapshot) {
           if (snapshot.hasData)  {
             var profileInformation = snapshot.data!;
-            Profile(switchFeedHelper: profileInformation.switchFeedHelper,
-              appId: profileModel!.appId!,
-              ownerId: profileInformation.switchFeedHelper.feedMember().documentID!,
-              readAccess: profileInformation.readAccess, html: profileInformation.memberProfileModel.profile!, feedback: (String value) => profileInformation.updateProfile(value),);
+            return Profile(appId: profileModel!.appId!,profileHelper: profileInformation);
           }
           return Center(
             child: DelayedCircularProgressIndicator(),

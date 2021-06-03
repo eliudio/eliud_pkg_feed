@@ -97,6 +97,21 @@ class ProfileFormBloc extends Bloc<ProfileFormEvent, ProfileFormState> {
 
         return;
       }
+      if (event is ChangedProfileFeed) {
+        if (event.value != null)
+          newValue = currentState.value!.copyWith(feed: await feedRepository(appId: appId)!.get(event.value));
+        else
+          newValue = new ProfileModel(
+                                 documentID: currentState.value!.documentID,
+                                 appId: currentState.value!.appId,
+                                 description: currentState.value!.description,
+                                 feed: null,
+                                 conditions: currentState.value!.conditions,
+          );
+        yield SubmittableProfileForm(value: newValue);
+
+        return;
+      }
       if (event is ChangedProfileConditions) {
         newValue = currentState.value!.copyWith(conditions: event.value);
         yield SubmittableProfileForm(value: newValue);

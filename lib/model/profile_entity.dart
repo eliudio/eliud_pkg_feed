@@ -24,16 +24,17 @@ import 'package:eliud_pkg_feed/model/entity_export.dart';
 class ProfileEntity {
   final String? appId;
   final String? description;
+  final String? feedId;
   final ConditionsSimpleEntity? conditions;
 
-  ProfileEntity({this.appId, this.description, this.conditions, });
+  ProfileEntity({this.appId, this.description, this.feedId, this.conditions, });
 
 
-  List<Object?> get props => [appId, description, conditions, ];
+  List<Object?> get props => [appId, description, feedId, conditions, ];
 
   @override
   String toString() {
-    return 'ProfileEntity{appId: $appId, description: $description, conditions: $conditions}';
+    return 'ProfileEntity{appId: $appId, description: $description, feedId: $feedId, conditions: $conditions}';
   }
 
   static ProfileEntity? fromMap(Map? map) {
@@ -47,6 +48,7 @@ class ProfileEntity {
     return ProfileEntity(
       appId: map['appId'], 
       description: map['description'], 
+      feedId: map['feedId'], 
       conditions: conditionsFromMap, 
     );
   }
@@ -61,6 +63,8 @@ class ProfileEntity {
       else theDocument["appId"] = null;
     if (description != null) theDocument["description"] = description;
       else theDocument["description"] = null;
+    if (feedId != null) theDocument["feedId"] = feedId;
+      else theDocument["feedId"] = null;
     if (conditions != null) theDocument["conditions"] = conditionsMap;
       else theDocument["conditions"] = null;
     return theDocument;

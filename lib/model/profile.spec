@@ -41,6 +41,13 @@
       "group": "general"
     },
     {
+      "fieldName": "feed",
+      "displayName": "Feed",
+      "fieldType": "Feed",
+      "association": true,
+      "group": "general"
+    },
+    {
       "fieldName": "conditions",
       "displayName": "Conditions",
       "fieldType": "ConditionsSimple",

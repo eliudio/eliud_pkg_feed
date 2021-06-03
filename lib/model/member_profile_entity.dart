@@ -23,21 +23,23 @@ import 'package:eliud_pkg_feed/model/entity_export.dart';
 
 class MemberProfileEntity {
   final String? appId;
+  final String? feedId;
+  final String? authorId;
   final String? profile;
   final String? profileBackgroundId;
   final String? profileOverrideId;
   final List<String>? readAccess;
 
-  MemberProfileEntity({this.appId, this.profile, this.profileBackgroundId, this.profileOverrideId, this.readAccess, });
+  MemberProfileEntity({this.appId, this.feedId, this.authorId, this.profile, this.profileBackgroundId, this.profileOverrideId, this.readAccess, });
 
 
-  List<Object?> get props => [appId, profile, profileBackgroundId, profileOverrideId, readAccess, ];
+  List<Object?> get props => [appId, feedId, authorId, profile, profileBackgroundId, profileOverrideId, readAccess, ];
 
   @override
   String toString() {
     String readAccessCsv = (readAccess == null) ? '' : readAccess!.join(', ');
 
-    return 'MemberProfileEntity{appId: $appId, profile: $profile, profileBackgroundId: $profileBackgroundId, profileOverrideId: $profileOverrideId, readAccess: String[] { $readAccessCsv }}';
+    return 'MemberProfileEntity{appId: $appId, feedId: $feedId, authorId: $authorId, profile: $profile, profileBackgroundId: $profileBackgroundId, profileOverrideId: $profileOverrideId, readAccess: String[] { $readAccessCsv }}';
   }
 
   static MemberProfileEntity? fromMap(Map? map) {
@@ -45,6 +47,8 @@ class MemberProfileEntity {
 
     return MemberProfileEntity(
       appId: map['appId'], 
+      feedId: map['feedId'], 
+      authorId: map['authorId'], 
       profile: map['profile'], 
       profileBackgroundId: map['profileBackgroundId'], 
       profileOverrideId: map['profileOverrideId'], 
@@ -56,6 +60,10 @@ class MemberProfileEntity {
     Map<String, Object?> theDocument = HashMap();
     if (appId != null) theDocument["appId"] = appId;
       else theDocument["appId"] = null;
+    if (feedId != null) theDocument["feedId"] = feedId;
+      else theDocument["feedId"] = null;
+    if (authorId != null) theDocument["authorId"] = authorId;
+      else theDocument["authorId"] = null;
     if (profile != null) theDocument["profile"] = profile;
       else theDocument["profile"] = null;
     if (profileBackgroundId != null) theDocument["profileBackgroundId"] = profileBackgroundId;

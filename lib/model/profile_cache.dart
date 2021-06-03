@@ -128,7 +128,18 @@ class ProfileCache implements ProfileRepository {
 
   static Future<ProfileModel> refreshRelations(ProfileModel model) async {
 
+    FeedModel? feedHolder;
+    if (model.feed != null) {
+      try {
+        await feedRepository(appId: model.feed!.appId)!.get(model.feed!.documentID).then((val) {
+          feedHolder = val;
+        }).catchError((error) {});
+      } catch (_) {}
+    }
+
     return model.copyWith(
+        feed: feedHolder,
+
 
     );
   }

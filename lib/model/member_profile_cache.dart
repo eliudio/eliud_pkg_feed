@@ -128,6 +128,15 @@ class MemberProfileCache implements MemberProfileRepository {
 
   static Future<MemberProfileModel> refreshRelations(MemberProfileModel model) async {
 
+    MemberPublicInfoModel? authorHolder;
+    if (model.author != null) {
+      try {
+        await memberPublicInfoRepository()!.get(model.author!.documentID).then((val) {
+          authorHolder = val;
+        }).catchError((error) {});
+      } catch (_) {}
+    }
+
     MemberMediumModel? profileBackgroundHolder;
     if (model.profileBackground != null) {
       try {
@@ -147,6 +156,8 @@ class MemberProfileCache implements MemberProfileRepository {
     }
 
     return model.copyWith(
+        author: authorHolder,
+
         profileBackground: profileBackgroundHolder,
 
         profileOverride: profileOverrideHolder,

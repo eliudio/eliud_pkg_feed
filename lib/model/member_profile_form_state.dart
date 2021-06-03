@@ -95,6 +95,38 @@ class AppIdMemberProfileFormError extends MemberProfileFormError {
 }
 
 
+class FeedIdMemberProfileFormError extends MemberProfileFormError { 
+  const FeedIdMemberProfileFormError({ String? message, MemberProfileModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''FeedIdMemberProfileFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
+class AuthorMemberProfileFormError extends MemberProfileFormError { 
+  const AuthorMemberProfileFormError({ String? message, MemberProfileModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''AuthorMemberProfileFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
 class ProfileMemberProfileFormError extends MemberProfileFormError { 
   const ProfileMemberProfileFormError({ String? message, MemberProfileModel? value }): super(message: message, value: value);
 

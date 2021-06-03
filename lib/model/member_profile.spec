@@ -18,7 +18,7 @@
     "generateEmbeddedComponent": true,
     "isDocumentCollection": true
   },
-  "memberIdentifier": "documentID",
+  "memberIdentifier": "authorId",
   "fields": [
     {
       "fieldName": "documentID",
@@ -36,8 +36,22 @@
       "group": "general"
     },
     {
+      "fieldName": "feedId",
+      "displayName": "Feed Identifier",
+      "remark": "This is the identifier of the feed",
+      "fieldType": "String",
+      "group": "general"
+    },
+    {
+      "fieldName": "author",
+      "displayName": "Author",
+      "fieldType": "MemberPublicInfo",
+      "association": true,
+      "group": "member"
+    },
+    {
       "fieldName": "profile",
-      "displayName": "App ID",
+      "displayName": "Profile",
       "fieldType": "String",
       "group": "general"
     },

@@ -1,5 +1,3 @@
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,6 +13,9 @@ class HeaderImage extends StatefulWidget {
 }
 
 class _HeaderImageState extends State<HeaderImage> {
+  static double height(BuildContext context) =>
+      MediaQuery.of(context).size.height;
+
   ImageProvider _backgroundPhoto(BuildContext context) {
     return AssetImage(
         'assets/images/pexels.com/pexels-bri-schneiter-346529.jpg',
@@ -26,7 +27,7 @@ class _HeaderImageState extends State<HeaderImage> {
   }
 
   Widget _container(BuildContext context) {
-    return Container(height: 200, child: _profileWidget(context));
+    return Container(height: height(context) / 3, child: _profileWidget(context));
   }
 
   Widget _profileWidget(BuildContext context) {

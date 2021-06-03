@@ -22,6 +22,7 @@ import 'package:eliud_pkg_feed/model/profile_component_state.dart';
 import 'package:eliud_pkg_feed/model/profile_repository.dart';
 import 'package:flutter/services.dart';
 
+
 class ProfileComponentBloc extends Bloc<ProfileComponentEvent, ProfileComponentState> {
   final ProfileRepository? profileRepository;
 

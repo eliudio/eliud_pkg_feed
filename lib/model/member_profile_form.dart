@@ -133,6 +133,8 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
 
   final TextEditingController _documentIDController = TextEditingController();
   final TextEditingController _appIdController = TextEditingController();
+  final TextEditingController _feedIdController = TextEditingController();
+  String? _author;
   final TextEditingController _profileController = TextEditingController();
   String? _profileBackground;
   String? _profileOverride;
@@ -146,6 +148,7 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
     _myFormBloc = BlocProvider.of<MemberProfileFormBloc>(context);
     _documentIDController.addListener(_onDocumentIDChanged);
     _appIdController.addListener(_onAppIdChanged);
+    _feedIdController.addListener(_onFeedIdChanged);
     _profileController.addListener(_onProfileChanged);
   }
 
@@ -168,6 +171,14 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
           _appIdController.text = state.value!.appId.toString();
         else
           _appIdController.text = "";
+        if (state.value!.feedId != null)
+          _feedIdController.text = state.value!.feedId.toString();
+        else
+          _feedIdController.text = "";
+        if (state.value!.author != null)
+          _author= state.value!.author!.documentID;
+        else
+          _author= "";
         if (state.value!.profile != null)
           _profileController.text = state.value!.profile.toString();
         else
@@ -190,6 +201,11 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
                       style: TextStyle(
                           color: RgbHelper.color(rgbo: app.formGroupTitleColor), fontWeight: FontWeight.bold)),
                 ));
+
+        children.add(
+
+                DropdownButtonComponentFactory().createNew(id: "memberPublicInfos", value: _author, trigger: _onAuthorSelected, optional: false),
+          );
 
         children.add(
 
@@ -237,10 +253,29 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
                 TextFormField(
                 style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor)),
                   readOnly: _readOnly(accessState, state),
+                  controller: _feedIdController,
+                  decoration: InputDecoration(
+                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldTextColor))),                    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldFocusColor))),                    icon: Icon(Icons.text_format, color: RgbHelper.color(rgbo: app.formFieldHeaderColor)),
+                    labelText: 'Feed Identifier',
+                    hintText: "This is the identifier of the feed (optional as a post can also be used in an album)",
+                  ),
+                  keyboardType: TextInputType.text,
+                  autovalidate: true,
+                  validator: (_) {
+                    return state is FeedIdMemberProfileFormError ? state.message : null;
+                  },
+                ),
+          );
+
+        children.add(
+
+                TextFormField(
+                style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor)),
+                  readOnly: _readOnly(accessState, state),
                   controller: _profileController,
                   decoration: InputDecoration(
                     enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldTextColor))),                    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldFocusColor))),                    icon: Icon(Icons.text_format, color: RgbHelper.color(rgbo: app.formFieldHeaderColor)),
-                    labelText: 'App ID',
+                    labelText: 'Profile',
                   ),
                   keyboardType: TextInputType.text,
                   autovalidate: true,
@@ -293,6 +328,8 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
                           UpdateMemberProfileList(value: state.value!.copyWith(
                               documentID: state.value!.documentID, 
                               appId: state.value!.appId, 
+                              feedId: state.value!.feedId, 
+                              author: state.value!.author, 
                               profile: state.value!.profile, 
                               profileBackground: state.value!.profileBackground, 
                               profileOverride: state.value!.profileOverride, 
@@ -303,6 +340,8 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
                           AddMemberProfileList(value: MemberProfileModel(
                               documentID: state.value!.documentID, 
                               appId: state.value!.appId, 
+                              feedId: state.value!.feedId, 
+                              author: state.value!.author, 
                               profile: state.value!.profile, 
                               profileBackground: state.value!.profileBackground, 
                               profileOverride: state.value!.profileOverride, 
@@ -349,6 +388,19 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
   }
 
 
+  void _onFeedIdChanged() {
+    _myFormBloc.add(ChangedMemberProfileFeedId(value: _feedIdController.text));
+  }
+
+
+  void _onAuthorSelected(String? val) {
+    setState(() {
+      _author = val;
+    });
+    _myFormBloc.add(ChangedMemberProfileAuthor(value: val));
+  }
+
+
   void _onProfileChanged() {
     _myFormBloc.add(ChangedMemberProfileProfile(value: _profileController.text));
   }
@@ -381,6 +433,7 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
   void dispose() {
     _documentIDController.dispose();
     _appIdController.dispose();
+    _feedIdController.dispose();
     _profileController.dispose();
     super.dispose();
   }
