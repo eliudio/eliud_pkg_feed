@@ -11,13 +11,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'avatar_helper.dart';
 
-enum WhichFeed { MyFeed, OnlyMyFeed, SomeoneIFollow, SomeoneElse }
+enum WhichFeed { MyFeed, OnlyMyFeed, SomeoneIFollow, SomeoneElse, PublicFeed }
 
 class SwitchFeedHelper {
   static String switchMemberFeedPageParameter = 'memberId';
   final String pageId;
   final WhichFeed whichFeed;
-  final MemberPublicInfoModel memberCurrent;
+  final MemberPublicInfoModel? memberCurrent;
   final MemberPublicInfoModel memberOfFeed;
 
   SwitchFeedHelper(
@@ -44,8 +44,12 @@ class SwitchFeedHelper {
     return gestured(
         context,
         feedMember().documentID!,
-        AvatarHelper.avatar2(feedMember(),radius,
-            backgroundColor: backgroundColor, backgroundColor2: backgroundColor2,));
+        AvatarHelper.avatar2(
+          feedMember(),
+          radius,
+          backgroundColor: backgroundColor,
+          backgroundColor2: backgroundColor2,
+        ));
   }
 
   static void _switchMember(
@@ -58,7 +62,7 @@ class SwitchFeedHelper {
 
   bool allowNewPost() => currentMember() == feedMember();
 
-  MemberPublicInfoModel currentMember() => memberCurrent;
+  MemberPublicInfoModel? currentMember() => memberCurrent;
 
   MemberPublicInfoModel feedMember() => memberOfFeed;
 
@@ -79,43 +83,60 @@ class SwitchFeedHelper {
   // * watch your feed only.
   // This flag is to indicate you just want to watch your own feed.
   static Future<SwitchFeedHelper> construct(
-      PageContextInfo pageContextInfo, LoggedIn loggedIn,
+      PageContextInfo pageContextInfo, String appId, String? memberId,
       {bool? watchOnlyMyFeed}) async {
     // Determine current member
-    MemberPublicInfoModel _memberCurrent =
-        await _getMember(loggedIn.member.documentID!);
+    MemberPublicInfoModel? _memberCurrent;
+    if (memberId != null) _memberCurrent = await _getMember(memberId);
 
     // Determine feed member
     MemberPublicInfoModel _memberOfFeed;
-    if (pageContextInfo.parameters == null) {
-      _memberOfFeed = _memberCurrent;
-    } else {
-      var param = pageContextInfo.parameters![switchMemberFeedPageParameter];
-      if (param == null) {
+    if (_memberCurrent != null) {
+      if (pageContextInfo.parameters == null) {
         _memberOfFeed = _memberCurrent;
       } else {
-        _memberOfFeed = await _getMember(param);
+        var param = pageContextInfo.parameters![switchMemberFeedPageParameter];
+        if (param == null) {
+          _memberOfFeed = _memberCurrent;
+        } else {
+          _memberOfFeed = await _getMember(param);
+        }
+      }
+    } else {
+      if (pageContextInfo.parameters == null) {
+        throw Exception(
+            "Looking at a feed without argument, without being logged in");
+      } else {
+        var param = pageContextInfo.parameters![switchMemberFeedPageParameter];
+        if (param == null) {
+          throw Exception(
+              "Looking at a feed without argument, without being logged in");
+        } else {
+          _memberOfFeed = await _getMember(param);
+        }
       }
     }
 
-    String meId = _memberCurrent.documentID!;
-
     // Determine whichFeed
     WhichFeed whichFeed;
-    if (meId == _memberOfFeed.documentID!) {
-      if ((watchOnlyMyFeed != null) && (watchOnlyMyFeed)) {
-        whichFeed = WhichFeed.OnlyMyFeed;
+    if (_memberCurrent != null) {
+      String meId = _memberCurrent.documentID!;
+      if (meId == _memberOfFeed.documentID!) {
+        if ((watchOnlyMyFeed != null) && (watchOnlyMyFeed)) {
+          whichFeed = WhichFeed.OnlyMyFeed;
+        } else {
+          whichFeed = WhichFeed.MyFeed;
+        }
       } else {
-        whichFeed = WhichFeed.MyFeed;
+        var following = await FollowerHelper.following(meId, appId);
+        if (following.contains(meId)) {
+          whichFeed = WhichFeed.SomeoneIFollow;
+        } else {
+          whichFeed = WhichFeed.SomeoneElse;
+        }
       }
     } else {
-      var following =
-          await FollowerHelper.following(meId, loggedIn.app.documentID!);
-      if (following.contains(meId)) {
-        whichFeed = WhichFeed.SomeoneIFollow;
-      } else {
-        whichFeed = WhichFeed.SomeoneElse;
-      }
+      whichFeed = WhichFeed.PublicFeed;
     }
 
     return SwitchFeedHelper(

@@ -65,7 +65,7 @@ class FeedComponent extends AbstractFeedComponent {
             .withCondition(
                 EliudQueryCondition('feedId', isEqualTo: feedModel!.documentID))
             .withCondition(EliudQueryCondition('readAccess', arrayContainsAny: [
-              switchFeedHelper.currentMember().documentID
+              switchFeedHelper.currentMember()!.documentID
             ]));
         break;
       case WhichFeed.OnlyMyFeed:
@@ -74,7 +74,7 @@ class FeedComponent extends AbstractFeedComponent {
             .withCondition(EliudQueryCondition('archived',
                 isEqualTo: PostArchiveStatus.Active.index))
             .withCondition(EliudQueryCondition('authorId',
-                isEqualTo: switchFeedHelper.currentMember().documentID))
+                isEqualTo: switchFeedHelper.currentMember()!.documentID))
             .withCondition(EliudQueryCondition('feedId',
                 isEqualTo: feedModel!.documentID));
         break;
@@ -88,9 +88,10 @@ class FeedComponent extends AbstractFeedComponent {
             .withCondition(
                 EliudQueryCondition('feedId', isEqualTo: feedModel!.documentID))
             .withCondition(EliudQueryCondition('readAccess', arrayContainsAny: [
-              switchFeedHelper.currentMember().documentID
+              switchFeedHelper.currentMember()!.documentID
             ]));
         break;
+      case WhichFeed.PublicFeed:
       case WhichFeed.SomeoneElse:
         // query where that person is the author and PUBLIC in the readAccess
         query = EliudQuery()

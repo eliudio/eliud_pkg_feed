@@ -23,7 +23,7 @@ class _FeedWidgetHelperState extends State<FeedWidgetHelper> {
       var pageContextInfo = PageParamHelper.getPagaContextInfo(context);
       if (state is LoggedIn) {
         return FutureBuilder<SwitchFeedHelper>(
-            future: SwitchFeedHelper.construct(pageContextInfo, state),
+            future: SwitchFeedHelper.construct(pageContextInfo, state.app.documentID!, state.member.documentID!),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 SwitchFeedHelper switchFeedHelper = snapshot.data!;
