@@ -40,7 +40,7 @@ class MemberProfileModel {
   String? documentID;
   String? appId;
 
-  // This is the identifier of the feed (optional as a post can also be used in an album)
+  // This is the identifier of the feed
   String? feedId;
   MemberPublicInfoModel? author;
   String? profile;

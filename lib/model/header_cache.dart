@@ -128,7 +128,18 @@ class HeaderCache implements HeaderRepository {
 
   static Future<HeaderModel> refreshRelations(HeaderModel model) async {
 
+    FeedModel? feedHolder;
+    if (model.feed != null) {
+      try {
+        await feedRepository(appId: model.feed!.appId)!.get(model.feed!.documentID).then((val) {
+          feedHolder = val;
+        }).catchError((error) {});
+      } catch (_) {}
+    }
+
     return model.copyWith(
+        feed: feedHolder,
+
 
     );
   }

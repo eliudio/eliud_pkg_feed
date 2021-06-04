@@ -257,7 +257,7 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
                   decoration: InputDecoration(
                     enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldTextColor))),                    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldFocusColor))),                    icon: Icon(Icons.text_format, color: RgbHelper.color(rgbo: app.formFieldHeaderColor)),
                     labelText: 'Feed Identifier',
-                    hintText: "This is the identifier of the feed (optional as a post can also be used in an album)",
+                    hintText: "This is the identifier of the feed",
                   ),
                   keyboardType: TextInputType.text,
                   autovalidate: true,

@@ -95,6 +95,18 @@ class ChangedHeaderDescription extends HeaderFormEvent {
   String toString() => 'ChangedHeaderDescription{ value: $value }';
 }
 
+class ChangedHeaderFeed extends HeaderFormEvent {
+  final String? value;
+
+  ChangedHeaderFeed({this.value});
+
+  @override
+  List<Object?> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedHeaderFeed{ value: $value }';
+}
+
 class ChangedHeaderConditions extends HeaderFormEvent {
   final ConditionsSimpleModel? value;
 

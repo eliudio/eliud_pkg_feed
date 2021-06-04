@@ -24,16 +24,17 @@ import 'package:eliud_pkg_feed/model/entity_export.dart';
 class HeaderEntity {
   final String? appId;
   final String? description;
+  final String? feedId;
   final ConditionsSimpleEntity? conditions;
 
-  HeaderEntity({this.appId, this.description, this.conditions, });
+  HeaderEntity({this.appId, this.description, this.feedId, this.conditions, });
 
 
-  List<Object?> get props => [appId, description, conditions, ];
+  List<Object?> get props => [appId, description, feedId, conditions, ];
 
   @override
   String toString() {
-    return 'HeaderEntity{appId: $appId, description: $description, conditions: $conditions}';
+    return 'HeaderEntity{appId: $appId, description: $description, feedId: $feedId, conditions: $conditions}';
   }
 
   static HeaderEntity? fromMap(Map? map) {
@@ -47,6 +48,7 @@ class HeaderEntity {
     return HeaderEntity(
       appId: map['appId'], 
       description: map['description'], 
+      feedId: map['feedId'], 
       conditions: conditionsFromMap, 
     );
   }
@@ -61,6 +63,8 @@ class HeaderEntity {
       else theDocument["appId"] = null;
     if (description != null) theDocument["description"] = description;
       else theDocument["description"] = null;
+    if (feedId != null) theDocument["feedId"] = feedId;
+      else theDocument["feedId"] = null;
     if (conditions != null) theDocument["conditions"] = conditionsMap;
       else theDocument["conditions"] = null;
     return theDocument;

@@ -22,6 +22,7 @@ import 'package:eliud_pkg_feed/model/header_component_state.dart';
 import 'package:eliud_pkg_feed/model/header_repository.dart';
 import 'package:flutter/services.dart';
 
+
 class HeaderComponentBloc extends Bloc<HeaderComponentEvent, HeaderComponentState> {
   final HeaderRepository? headerRepository;
 

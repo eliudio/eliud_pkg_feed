@@ -48,6 +48,7 @@ import '../model/profile_cache.dart';
 
 import '../model/album_model.dart';
 import '../model/feed_menu_model.dart';
+import '../model/header_model.dart';
 import '../model/member_profile_model.dart';
 import '../model/post_model.dart';
 import '../model/post_medium_model.dart';

@@ -97,6 +97,21 @@ class HeaderFormBloc extends Bloc<HeaderFormEvent, HeaderFormState> {
 
         return;
       }
+      if (event is ChangedHeaderFeed) {
+        if (event.value != null)
+          newValue = currentState.value!.copyWith(feed: await feedRepository(appId: appId)!.get(event.value));
+        else
+          newValue = new HeaderModel(
+                                 documentID: currentState.value!.documentID,
+                                 appId: currentState.value!.appId,
+                                 description: currentState.value!.description,
+                                 feed: null,
+                                 conditions: currentState.value!.conditions,
+          );
+        yield SubmittableHeaderForm(value: newValue);
+
+        return;
+      }
       if (event is ChangedHeaderConditions) {
         newValue = currentState.value!.copyWith(conditions: event.value);
         yield SubmittableHeaderForm(value: newValue);

@@ -111,6 +111,22 @@ class DescriptionHeaderFormError extends HeaderFormError {
 }
 
 
+class FeedHeaderFormError extends HeaderFormError { 
+  const FeedHeaderFormError({ String? message, HeaderModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''FeedHeaderFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
 class ConditionsHeaderFormError extends HeaderFormError { 
   const ConditionsHeaderFormError({ String? message, HeaderModel? value }): super(message: message, value: value);
 

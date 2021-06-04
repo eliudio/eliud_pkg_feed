@@ -1,4 +1,5 @@
 import 'package:eliud_core/core/widgets/progress_indicator.dart';
+import 'package:eliud_pkg_feed/extensions/util/editable_widget.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,10 +14,7 @@ import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 class Profile extends StatefulWidget {
   final String appId;
 
-  Profile(
-      {Key? key,
-      required this.appId})
-      : super(key: key);
+  Profile({Key? key, required this.appId}) : super(key: key);
 
   @override
   _ProfileState createState() => _ProfileState();
@@ -28,31 +26,22 @@ class _ProfileState extends State<Profile> {
     return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
       if (state is ProfileError) return Text("No profile");
       if (state is ProfileInitialised) {
-        if (state.allowedToUpdate()) {
-          return Stack(
-            children: [
-              PostHelper.getFormattedPost([HtmlWidget(state.html())]),
-              Align(
-                alignment: Alignment.topRight,
-                child: IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: () {
-                    RichTextDialog.open(
-                        context,
-                        widget.appId,
-                        state.ownerId(),
-                        state.readAccess(),
-                        "Profile",
-                            (value) => BlocProvider.of<ProfileBloc>(context).add(ChangedProfileEventProfile(value)),
-                        state.html());
-                  },
-                ),
-              ),
-            ],
-          );
-        } else {
-          return PostHelper.getFormattedPost([HtmlWidget(state.html())]);
-        }
+        return EditableWidget(
+          child: PostHelper.getFormattedPost([HtmlWidget(state.html())]),
+          editFunction: state.allowedToUpdate()
+              ? () {
+                  RichTextDialog.open(
+                      context,
+                      widget.appId,
+                      state.ownerId(),
+                      state.readAccess(),
+                      "Profile",
+                      (value) => BlocProvider.of<ProfileBloc>(context)
+                          .add(ChangedProfileEventProfile(value)),
+                      state.html());
+                }
+              : null,
+        );
       }
       return Center(child: DelayedCircularProgressIndicator());
     });
