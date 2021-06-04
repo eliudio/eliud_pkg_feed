@@ -134,13 +134,6 @@ class _HeaderState extends State<Header> {
         icon: Icon(Icons.edit, size: 14, color: Colors.white));
   }
 
-  void _videoUploading(double progress) {
-/*
-    BlocProvider.of<FeedPostFormBloc>(context).add(UploadingMedium(progress: progress));
-    setState(() {});
-*/
-  }
-
   void _photoUploading(double progress) {
 /*
     BlocProvider.of<FeedPostFormBloc>(context).add(UploadingMedium(progress: progress));

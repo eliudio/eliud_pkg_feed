@@ -11,7 +11,7 @@ class MediaButtons {
     String ownerId,
     List<String> readAccess,{
     required MemberMediumAvailable photoFeedbackFunction,
-    required FeedbackProgress photoFeedbackProgress,
+    FeedbackProgress? photoFeedbackProgress,
     MemberMediumAvailable? videoFeedbackFunction,
     FeedbackProgress? videoFeedbackProgress,
     Widget? icon,
