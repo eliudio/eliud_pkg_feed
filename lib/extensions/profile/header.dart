@@ -19,8 +19,9 @@ class Header extends StatefulWidget {
 }
 
 class _HeaderState extends State<Header> {
-  static double height(BuildContext context) =>
+  static double heightBackgroundPhoto(BuildContext context) =>
       MediaQuery.of(context).size.height / 2.5;
+  static double heightText = 66;
   static double width(BuildContext context) =>
       MediaQuery.of(context).size.width;
 
@@ -74,8 +75,7 @@ class _HeaderState extends State<Header> {
                 Align(
                   alignment: Alignment.topRight,
                   child: EditableButton2(
-                    button: _button(context, profileInitialised)
-                  ),
+                      button: _button(context, profileInitialised)),
                 ) // EditableButton(editFunction: () {})
               ],
             )));
@@ -85,40 +85,46 @@ class _HeaderState extends State<Header> {
   Widget _container(BuildContext context, SwitchFeedHelper switchFeedHelper,
       bool isEditable, ProfileInitialised profileInitialised) {
     return Container(
-        height: height(context),
-        child: _profileWidget(context, switchFeedHelper, isEditable, profileInitialised));
+        height: heightBackgroundPhoto(context),
+        child: _profileWidget(
+            context, switchFeedHelper, isEditable, profileInitialised));
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
-      if (state is ProfileError) return Text("No profile");
-      if (state is ProfileInitialised) {
-        List<Widget> allRows = [];
-        var isEditable = state.allowedToUpdate();
+    return Container(
+        // this container creates the space until blocbuilder has retrieved the data and image has been downloaded, preventing the screen to jump
+        height: heightBackgroundPhoto(context) + heightText,
+        child:
+            BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
+          if (state is ProfileError) return Text("No profile");
+          if (state is ProfileInitialised) {
+            List<Widget> allRows = [];
+            var isEditable = state.allowedToUpdate();
 
-        // Construct profile photo + background photo
-        List<Widget> rows = [];
-        rows.add(_container(context, state.switchFeedHelper, isEditable, state));
+            // Construct profile photo + background photo
+            List<Widget> rows = [];
+            rows.add(
+                _container(context, state.switchFeedHelper, isEditable, state));
 
-        // Add the profile photo + background photo
-        allRows.add(EditableWidget2(
-          child: PostHelper.getFormattedPost(rows,
-              image: _background(context, state.memberProfileModel)),
-          button: _button(context, state),
-        ));
+            // Add the profile photo + background photo
+            allRows.add(EditableWidget2(
+              child: PostHelper.getFormattedPost(rows,
+                  image: _background(context, state.memberProfileModel)),
+              button: _button(context, state),
+            ));
 
-        // Add the name
-        allRows.add(Align(
-            alignment: Alignment.bottomCenter,
-            child: Text(
-              state.switchFeedHelper.memberOfFeed.name!,
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-            )));
-        return Column(children: allRows);
-      }
-      return Center(child: DelayedCircularProgressIndicator());
-    });
+            // Add the name
+            allRows.add(Align(
+                alignment: Alignment.bottomCenter,
+                child: Text(
+                  state.switchFeedHelper.memberOfFeed.name!,
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                )));
+            return Column(children: allRows);
+          }
+          return Center(child: DelayedCircularProgressIndicator());
+        }));
   }
 
   Widget _button(BuildContext context, ProfileInitialised profileInitialised) {
@@ -126,10 +132,9 @@ class _HeaderState extends State<Header> {
         context,
         profileInitialised.appId,
         profileInitialised.switchFeedHelper.memberOfFeed.documentID!,
-        profileInitialised.readAccess(),
-        photoFeedbackFunction: (photo) {
-          //
-        },
+        profileInitialised.readAccess(), photoFeedbackFunction: (photo) {
+      //
+    },
         photoFeedbackProgress: _photoUploading,
         icon: Icon(Icons.edit, size: 14, color: Colors.white));
   }
@@ -140,5 +145,4 @@ class _HeaderState extends State<Header> {
     setState(() {});
 */
   }
-
 }
