@@ -17,7 +17,7 @@ import 'medium_platform.dart';
 import 'mobile/eliud_camera.dart';
 
 class MobileMediumPlatform extends AbstractMediumPlatform {
-  Future<void> _pickImage(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress feedbackProgress, ImgSource source) async {
+  Future<void> _pickImage(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress, ImgSource source) async {
     var _image = await ImagePickerGC.pickImage(
       enableCloseButton: true,
       closeIcon: Icon(
@@ -40,12 +40,12 @@ class MobileMediumPlatform extends AbstractMediumPlatform {
     feedbackFunction(memberMediumModel);
   }
   @override
-  void takePhoto(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress feedbackProgress) {
+  void takePhoto(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress) {
     _pickImage(context, appId, ownerId, readAccess, feedbackFunction, feedbackProgress, ImgSource.Camera);
   }
 
   @override
-  void takeVideo(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress feedbackProgress) {
+  void takeVideo(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress) {
     EliudCamera.openVideoRecorder(context, (video) async {
       var memberMediumModel = await MemberMediumHelper.createThumbnailUploadVideoFile(appId, video.path, ownerId, readAccess, feedbackProgress: feedbackProgress);
       feedbackFunction(memberMediumModel);
@@ -58,18 +58,18 @@ class MobileMediumPlatform extends AbstractMediumPlatform {
   bool hasCamera() => true;
 
   @override
-  Future<void> uploadPhoto(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress feedbackProgress) async {
+  Future<void> uploadPhoto(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress) async {
     var _result = await FilePicker.platform.pickFiles(type: FileType.image);
     return processPhotos(appId, ownerId, readAccess, _result, feedbackFunction, feedbackProgress);
   }
 
   @override
-  Future<void> uploadVideo(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress feedbackProgress) async {
+  Future<void> uploadVideo(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress) async {
     var _result = await FilePicker.platform.pickFiles(type: FileType.video);
     return processVideos(appId, ownerId, readAccess, _result, feedbackFunction, feedbackProgress);
   }
 
-  Future<void> processPhotos(String appId, String ownerId, List<String> readAccess, FilePickerResult? result, MemberMediumAvailable feedbackFunction, FeedbackProgress feedbackProgress) async {
+  Future<void> processPhotos(String appId, String ownerId, List<String> readAccess, FilePickerResult? result, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress) async {
     if (result != null) {
       for (var aFile in result.files) {
         var path = aFile.path;
@@ -83,7 +83,7 @@ class MobileMediumPlatform extends AbstractMediumPlatform {
     }
   }
 
-  Future<void> processVideos(String appId, String ownerId, List<String> readAccess, FilePickerResult? result, MemberMediumAvailable feedbackFunction, FeedbackProgress feedbackProgress) async {
+  Future<void> processVideos(String appId, String ownerId, List<String> readAccess, FilePickerResult? result, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress) async {
     if (result != null) {
       for (var aFile in result.files) {
         var path = aFile.path;

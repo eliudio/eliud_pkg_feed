@@ -10,26 +10,26 @@ import 'medium_platform.dart';
 
 class WebMediumPlatform extends AbstractMediumPlatform {
   @override
-  void takePhoto(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress feedbackProgress) {}
+  void takePhoto(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress) {}
 
   @override
-  void takeVideo(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress feedbackProgress) {}
+  void takeVideo(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress) {}
 
   @override
   bool hasCamera() => false;
 
-  Future<void> uploadPhoto(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress feedbackProgress) async {
+  Future<void> uploadPhoto(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress) async {
     var _result = await FilePicker.platform.pickFiles(type: FileType.image);
     return processPhotos(_result, appId, ownerId, readAccess, feedbackFunction, feedbackProgress);
   }
 
-  Future<void> uploadVideo(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress feedbackProgress) async {
+  Future<void> uploadVideo(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress) async {
     var _result = await FilePicker.platform.pickFiles(type: FileType.video);
     return processVideos(_result, appId, ownerId, readAccess, feedbackFunction, feedbackProgress);
   }
 
   Future<void> processPhotos(
-    FilePickerResult? result, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress feedbackProgress,
+    FilePickerResult? result, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress,
   ) async {
     if (result != null) {
       for (var aFile in result.files) {
@@ -47,7 +47,7 @@ class WebMediumPlatform extends AbstractMediumPlatform {
   }
 
   Future<void> processVideos(
-    FilePickerResult? result, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress feedbackProgress,
+    FilePickerResult? result, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress,
   ) async {
     if (result != null) {
       for (var aFile in result.files) {

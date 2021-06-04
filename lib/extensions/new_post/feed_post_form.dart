@@ -7,6 +7,7 @@ import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/tools/widgets/dialog_helper.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
+import 'package:eliud_pkg_feed/extensions/util/mediua_buttons.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_media_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
@@ -174,23 +175,23 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
       FeedPostFormInitialized state, String memberId) {
     List<String> readAccess = state.postModelDetails.readAccess;
 
-    return PostHelper.mediaButtons(
+    return MediaButtons.mediaButtons(
         context,
         app.documentID!,
         memberId,
         readAccess,
-        (photo) {
+        photoFeedbackFunction: (photo) {
           var memberMedia = state.postModelDetails.memberMedia;
           memberMedia.add(photo);
           BlocProvider.of<FeedPostFormBloc>(context).add(ChangedMedia(memberMedia: memberMedia));
         },
-        _photoUploading,
-        (video) {
+        photoFeedbackProgress: _photoUploading,
+        videoFeedbackFunction: (video) {
           var memberMedia = state.postModelDetails.memberMedia;
           memberMedia.add(video);
           BlocProvider.of<FeedPostFormBloc>(context).add(ChangedMedia(memberMedia: memberMedia));
         },
-        _videoUploading);
+        videoFeedbackProgress: _videoUploading);
   }
 
   Widget _row2(FeedPostFormInitialized state) {

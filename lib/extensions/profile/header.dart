@@ -2,6 +2,7 @@ import 'package:eliud_core/core/widgets/progress_indicator.dart';
 import 'package:eliud_pkg_feed/extensions/profile/bloc/profile_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/profile/bloc/profile_state.dart';
 import 'package:eliud_pkg_feed/extensions/util/editable_widget.dart';
+import 'package:eliud_pkg_feed/extensions/util/mediua_buttons.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
 import 'package:eliud_pkg_feed/model/member_profile_model.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +56,7 @@ class _HeaderState extends State<Header> {
 
   // Profile photo
   Widget _profileWidget(BuildContext context, SwitchFeedHelper switchFeedHelper,
-      bool isEditable) {
+      bool isEditable, ProfileInitialised profileInitialised) {
     return Align(
         alignment: Alignment.bottomCenter,
         child: ConstrainedBox(
@@ -72,8 +73,8 @@ class _HeaderState extends State<Header> {
                             backgroundColor2: Colors.white))),
                 Align(
                   alignment: Alignment.topRight,
-                  child: EditableButton(
-                    editFunction: () {},
+                  child: EditableButton2(
+                    button: _button(context, profileInitialised)
                   ),
                 ) // EditableButton(editFunction: () {})
               ],
@@ -82,8 +83,10 @@ class _HeaderState extends State<Header> {
 
   //
   Widget _container(BuildContext context, SwitchFeedHelper switchFeedHelper,
-      bool isEditable) {
-      return Container(height: height(context), child: _profileWidget(context, switchFeedHelper, isEditable));
+      bool isEditable, ProfileInitialised profileInitialised) {
+    return Container(
+        height: height(context),
+        child: _profileWidget(context, switchFeedHelper, isEditable, profileInitialised));
   }
 
   @override
@@ -96,11 +99,14 @@ class _HeaderState extends State<Header> {
 
         // Construct profile photo + background photo
         List<Widget> rows = [];
-        rows.add(_container(context, state.switchFeedHelper, isEditable));
+        rows.add(_container(context, state.switchFeedHelper, isEditable, state));
 
         // Add the profile photo + background photo
-        allRows.add(EditableWidget(child: PostHelper.getFormattedPost(rows,
-            image: _background(context, state.memberProfileModel)), editFunction: () {}));
+        allRows.add(EditableWidget2(
+          child: PostHelper.getFormattedPost(rows,
+              image: _background(context, state.memberProfileModel)),
+          button: _button(context, state),
+        ));
 
         // Add the name
         allRows.add(Align(
@@ -114,4 +120,32 @@ class _HeaderState extends State<Header> {
       return Center(child: DelayedCircularProgressIndicator());
     });
   }
+
+  Widget _button(BuildContext context, ProfileInitialised profileInitialised) {
+    return MediaButtons.mediaButtons(
+        context,
+        profileInitialised.appId,
+        profileInitialised.switchFeedHelper.memberOfFeed.documentID!,
+        profileInitialised.readAccess(),
+        photoFeedbackFunction: (photo) {
+          //
+        },
+        photoFeedbackProgress: _photoUploading,
+        icon: Icon(Icons.edit, size: 14, color: Colors.white));
+  }
+
+  void _videoUploading(double progress) {
+/*
+    BlocProvider.of<FeedPostFormBloc>(context).add(UploadingMedium(progress: progress));
+    setState(() {});
+*/
+  }
+
+  void _photoUploading(double progress) {
+/*
+    BlocProvider.of<FeedPostFormBloc>(context).add(UploadingMedium(progress: progress));
+    setState(() {});
+*/
+  }
+
 }
