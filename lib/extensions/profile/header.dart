@@ -59,15 +59,15 @@ class _HeaderState extends State<Header> {
     return Align(
         alignment: Alignment.bottomCenter,
         child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 130, maxHeight: 130),
+            constraints: BoxConstraints(maxWidth: 110, maxHeight: 110),
             child: Stack(
               children: [
                 Align(
                     alignment: Alignment.bottomCenter,
                     child: ConstrainedBox(
                         constraints:
-                            BoxConstraints(maxWidth: 130, maxHeight: 130),
-                        child: switchFeedHelper.getFeedWidget2(context, 45,
+                            BoxConstraints(maxWidth: 110, maxHeight: 110),
+                        child: switchFeedHelper.getFeedWidget2(context, 39,
                             backgroundColor: Colors.black,
                             backgroundColor2: Colors.white))),
                 Align(
@@ -75,32 +75,15 @@ class _HeaderState extends State<Header> {
                   child: EditableButton(
                     editFunction: () {},
                   ),
-                )// EditableButton(editFunction: () {})
+                ) // EditableButton(editFunction: () {})
               ],
             )));
-/*
-    var avatar = Align(
-        alignment: Alignment.bottomCenter,
-        child: switchFeedHelper.getFeedWidget2(context, 45,
-            backgroundColor: Colors.black, backgroundColor2: Colors.white));
-*/
-/*
-
-        EditableWidget(
-            child: x,
-            editFunction: isEditable ? () {} : null));
-*/
   }
 
   //
   Widget _container(BuildContext context, SwitchFeedHelper switchFeedHelper,
       bool isEditable) {
-    return Container(
-            height: height(context),
-            width: width(context),
-            child: EditableWidget(
-                child: _profileWidget(context, switchFeedHelper, isEditable),
-        editFunction: isEditable ? () {} : null));
+      return Container(height: height(context), child: _profileWidget(context, switchFeedHelper, isEditable));
   }
 
   @override
@@ -116,8 +99,8 @@ class _HeaderState extends State<Header> {
         rows.add(_container(context, state.switchFeedHelper, isEditable));
 
         // Add the profile photo + background photo
-        allRows.add(PostHelper.getFormattedPost(rows,
-            image: _background(context, state.memberProfileModel)));
+        allRows.add(EditableWidget(child: PostHelper.getFormattedPost(rows,
+            image: _background(context, state.memberProfileModel)), editFunction: () {}));
 
         // Add the name
         allRows.add(Align(
