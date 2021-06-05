@@ -281,18 +281,31 @@ class PostBloc extends Bloc<PostEvent, PostState> {
             ? postCommentContainer.postComment!.documentID
             : null,
         memberId);
+
+    // find a like that might already exist
     var like = await postLikeRepository(appId: postModel.appId)!
         .get(likeKey);
+
+    // keep track of the EXTRA likes / dislikes this like / dislike will cause
     int likesExtra = 0;
     int dislikesExtra = 0;
+
+    // what is this like / dislike
     var thisMembersLikeType;
+
+    // did we like / dislike before?
     if (like == null) {
+      // we did not like / disliked before.
       thisMembersLikeType = likePressed;
+
+      // did we press like or dislike and determine the extra like / dislike for in memory update
       if (likePressed == LikeType.Like) {
         likesExtra = 1;
       } else if (likePressed == LikeType.Dislike) {
         dislikesExtra = 1;
       }
+
+      // create the like/dislike
       postLikeRepository(appId: appId)!.add(PostLikeModel(
           documentID: likeKey,
           postId: postModel.documentID,
@@ -303,26 +316,36 @@ class PostBloc extends Bloc<PostEvent, PostState> {
               : postCommentContainer.postComment!.documentID,
           likeType: likePressed));
     } else {
+      // we already liked / disliked before
       if (like.likeType != likePressed) {
+        // we changed from like to dislike or vice versa
         thisMembersLikeType = likePressed;
+
+        // We changed from dislike to like, which means: count down dislikes and count up likes
         if (likePressed == LikeType.Like) {
           // changing a dislike into a like
           likesExtra = 1;
           dislikesExtra = -1;
+        // We changed from like to dislike, which means: count down likes and count up dislikes
         } else if (likePressed == LikeType.Dislike) {
           // changing a like into a dislike
           dislikesExtra = 1;
           likesExtra = -1;
         }
+
+        // upate the like / dislike
         postLikeRepository(appId: appId)!
             .update(like.copyWith(likeType: likePressed));
       } else {
+        // we undo a like
         if (likePressed == LikeType.Like) {
           likesExtra = -1;
+        // we undo a dislike
         } else if (likePressed == LikeType.Dislike) {
           dislikesExtra = -1;
         }
-        // an update, but nothing changed in terms of likeType... it must mean we want to unlike
+
+        // and update  but nothing changed in terms of likeType... it must mean we want to unlike
         await postLikeRepository(appId: appId)!.delete(like);
       }
     }

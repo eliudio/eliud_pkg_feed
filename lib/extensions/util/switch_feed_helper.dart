@@ -39,19 +39,6 @@ class SwitchFeedHelper {
         context, feedMember().documentID!, AvatarHelper.avatar(feedMember()));
   }
 
-  Widget getFeedWidget2(BuildContext context, double radius,
-      {Color? backgroundColor, Color? backgroundColor2}) {
-    return gestured(
-        context,
-        feedMember().documentID!,
-        AvatarHelper.avatar2(
-          feedMember(),
-          radius,
-          backgroundColor: backgroundColor,
-          backgroundColor2: backgroundColor2,
-        ));
-  }
-
   static void _switchMember(
       BuildContext context, String pageId, String memberId) {
     var _navigatorBloc = BlocProvider.of<NavigatorBloc>(context);

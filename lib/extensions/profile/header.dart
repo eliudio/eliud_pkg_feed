@@ -1,8 +1,10 @@
+import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:eliud_core/core/widgets/progress_indicator.dart';
 import 'package:eliud_pkg_feed/extensions/profile/bloc/profile_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/profile/bloc/profile_state.dart';
 import 'package:eliud_pkg_feed/extensions/util/editable_widget.dart';
-import 'package:eliud_pkg_feed/extensions/util/mediua_buttons.dart';
+import 'package:eliud_pkg_feed/extensions/util/media_buttons.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
 import 'package:eliud_pkg_feed/model/member_profile_model.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +23,7 @@ class Header extends StatefulWidget {
 class _HeaderState extends State<Header> {
   static double heightBackgroundPhoto(BuildContext context) =>
       MediaQuery.of(context).size.height / 2.5;
-  static double heightText = 66;
+  static double heightText = 122;
   static double width(BuildContext context) =>
       MediaQuery.of(context).size.width;
 
@@ -67,11 +69,14 @@ class _HeaderState extends State<Header> {
                 Align(
                     alignment: Alignment.bottomCenter,
                     child: ConstrainedBox(
-                        constraints:
-                            BoxConstraints(maxWidth: 110, maxHeight: 110),
-                        child: switchFeedHelper.getFeedWidget2(context, 39,
+                      constraints:
+                          BoxConstraints(maxWidth: 110, maxHeight: 110),
+                      child: AvatarHelper.avatar3(
+                        switchFeedHelper.feedMember(),
+                      ), /*switchFeedHelper.getFeedWidget2(context, 39,
                             backgroundColor: Colors.black,
-                            backgroundColor2: Colors.white))),
+                            backgroundColor2: Colors.white)*/
+                    )),
                 Align(
                   alignment: Alignment.topRight,
                   child: EditableButton2(
@@ -102,12 +107,12 @@ class _HeaderState extends State<Header> {
             List<Widget> allRows = [];
             var isEditable = state.allowedToUpdate();
 
-            // Construct profile photo + background photo
+            // Add profile photo
             List<Widget> rows = [];
             rows.add(
                 _container(context, state.switchFeedHelper, isEditable, state));
 
-            // Add the profile photo + background photo
+            // Add the background photo
             allRows.add(EditableWidget2(
               child: PostHelper.getFormattedPost(rows,
                   image: _background(context, state.memberProfileModel)),
@@ -117,10 +122,12 @@ class _HeaderState extends State<Header> {
             // Add the name
             allRows.add(Align(
                 alignment: Alignment.bottomCenter,
-                child: Text(
-                  state.switchFeedHelper.memberOfFeed.name!,
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                )));
+                child: PostHelper.getFormattedRoundedShape(Container(
+                    padding: EdgeInsets.all(10.0),
+                    child: Text(
+                      state.switchFeedHelper.memberOfFeed.name!,
+                      style: GoogleFonts.annieUseYourTelescope(fontSize: 35),
+                    )))));
             return Column(children: allRows);
           }
           return Center(child: DelayedCircularProgressIndicator());
@@ -128,6 +135,8 @@ class _HeaderState extends State<Header> {
   }
 
   Widget _button(BuildContext context, ProfileInitialised profileInitialised) {
+    var pen = Image.asset("assets/images/segoshvishna.fiverr.com/pen128.png",
+        package: "eliud_pkg_feed");
     return MediaButtons.mediaButtons(
         context,
         profileInitialised.appId,
@@ -136,7 +145,12 @@ class _HeaderState extends State<Header> {
       //
     },
         photoFeedbackProgress: _photoUploading,
-        icon: Icon(Icons.edit, size: 14, color: Colors.white));
+        icon: Container(
+    height: 33,
+    width: 33,
+    child: PostHelper.getFormattedCircleShape(
+                IconButton(icon: pen, iconSize: 22, onPressed: () {}),
+                border: 0)));
   }
 
   void _photoUploading(double progress) {

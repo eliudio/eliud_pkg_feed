@@ -1,3 +1,4 @@
+import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:flutter/material.dart';
 
@@ -65,6 +66,24 @@ class AvatarHelper {
                 )));
       }
       // add gesturethingy and :
+    }
+  }
+
+  static Widget avatar3(memberModel) {
+    var avatar;
+    if (memberModel == null) {
+      return Text("No avatar");
+    } else {
+      if (memberModel.photoURL == null) {
+        return PostHelper.getFormattedCircleShape(Image.asset(
+            "assets/images/undraw.co/undraw_profile_pic_ic5t.png",
+            package: "eliud_pkg_feed"));
+      } else {
+        return PostHelper.getFormattedCircleShape(FadeInImage.memoryNetwork(
+          placeholder: kTransparentImage,
+          image: memberModel.photoURL!,
+        ));
+      }
     }
   }
 }

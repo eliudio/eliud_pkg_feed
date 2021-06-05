@@ -743,7 +743,7 @@ packages:
       name: image_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.7.4"
+    version: "0.7.5+4"
   image_picker_for_web:
     dependency: transitive
     description:
@@ -765,6 +765,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
+  image_picker_type:
+    dependency: "direct main"
+    description:
+      name: image_picker_type
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   infinite_listview:
     dependency: transitive
     description:

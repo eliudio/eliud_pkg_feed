@@ -25,7 +25,12 @@ class PostWidget extends StatefulWidget {
   //final String parentPageId;
   final SwitchFeedHelper switchFeedHelper;
 
-  const PostWidget({Key? key, required this.postModel, this.member, /*required this.parentPageId, */required this.switchFeedHelper}) : super(key: key);
+  const PostWidget(
+      {Key? key,
+      required this.postModel,
+      this.member,
+      /*required this.parentPageId, */ required this.switchFeedHelper})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -62,38 +67,30 @@ class _PostWidgetState extends State<PostWidget> {
     if (size == null) size = MediaQuery.of(context).size;
     var originalAccessBloc = BlocProvider.of<AccessBloc>(context);
 
-    return PostHelper.getFormattedPost( [
-                        _heading(context, widget.postModel, memberId),
-                        _aBitSpace(),
-                        _description(postModel),
-                        _aBitSpace(),
-                        PostContentsWidget(
-                          member: widget.member,
-                          postModel: postModel,
-                          accessBloc: originalAccessBloc,
-                          parentPageId: widget.switchFeedHelper.pageId,
-                        ),
-                        _dividerLight(),
-                        _aBitSpace(),
-                        _postLikes(postModel.likes,
-                            postModel.dislikes),
-                        _aBitSpace(),
-                        _dividerLight(),
-                        _postActionBtns(
-                            context,
-                            postModel,
-                            memberId),
-                        _aBitSpace(),
-                        _dividerLight(),
-                        _aBitSpace(),
-                        _enterComment(context, postModel),
-                        _aBitSpace(),
-                        _postComments(
-                            context,
-                            postModel,
-                            memberId),
-                      ],
-                    );
+    List<Widget> widgets = [];
+
+    widgets.add(_heading(context, widget.postModel, memberId));
+    widgets.add(_aBitSpace());
+    if ((postModel.description != null) && (postModel.description!.length > 0)) {
+      widgets.add(_description(postModel));
+      widgets.add(_aBitSpace());
+    }
+    widgets.add(PostContentsWidget(
+      member: widget.member,
+      postModel: postModel,
+      accessBloc: originalAccessBloc,
+      parentPageId: widget.switchFeedHelper.pageId,
+    ));
+    widgets.add(_aBitSpace());
+
+    widgets.add(_postActionBtns(
+        context, postModel, memberId, postModel.likes, postModel.dislikes));
+    widgets.add(_aBitSpace());
+    widgets.add(_enterComment(context, postModel));
+    widgets.add(_aBitSpace());
+    widgets.add(_postComments(context, postModel, memberId));
+
+    return PostHelper.getFormattedPost(widgets);
   }
 
   Widget _description(PostModel? postModel) {
@@ -114,7 +111,10 @@ class _PostWidgetState extends State<PostWidget> {
         Container(
             height: 40,
             width: 40,
-            child: widget.switchFeedHelper.gestured(context, widget.member!.documentID!, AvatarHelper.avatar(widget.member))),
+            child: widget.switchFeedHelper.gestured(
+                context,
+                widget.member!.documentID!,
+                AvatarHelper.avatar(widget.member))),
         Container(width: 8),
         Flexible(
           child: Container(
@@ -176,7 +176,8 @@ class _PostWidgetState extends State<PostWidget> {
     return Divider(height: 1, thickness: 1, color: Colors.black);
   }
 
-  Widget _heading(BuildContext context, PostModel? postModel, String? memberId) {
+  Widget _heading(
+      BuildContext context, PostModel? postModel, String? memberId) {
     if (postModel == null) return Text("No post");
     if (postModel.author == null) return Text("No author");
 
@@ -194,7 +195,12 @@ class _PostWidgetState extends State<PostWidget> {
     }
     var children = [
       Container(
-          height: 50, width: 50, child: widget.switchFeedHelper.gestured(context, postModel.author!.documentID!, AvatarHelper.avatar(postModel.author))),
+          height: 50,
+          width: 50,
+          child: widget.switchFeedHelper.gestured(
+              context,
+              postModel.author!.documentID!,
+              AvatarHelper.avatar(postModel.author))),
       Container(
         width: 8,
       ),
@@ -271,8 +277,8 @@ class _PostWidgetState extends State<PostWidget> {
           hintText: 'Comment',
           yesFunction: (comment) {
             if (comment != null) {
-              BlocProvider.of<PostBloc>(context)
-                  .add(AddCommentCommentEvent(widget.postModel, postCommentContainer, comment));
+              BlocProvider.of<PostBloc>(context).add(AddCommentCommentEvent(
+                  widget.postModel, postCommentContainer, comment));
             }
             Navigator.pop(context);
           },
@@ -291,8 +297,8 @@ class _PostWidgetState extends State<PostWidget> {
           hintText: 'Comment',
           initialValue: postCommentContainer!.comment,
           yesFunction: (comment) {
-            BlocProvider.of<PostBloc>(context).add(
-                UpdateCommentEvent(widget.postModel, postCommentContainer.postComment!, comment!));
+            BlocProvider.of<PostBloc>(context).add(UpdateCommentEvent(
+                widget.postModel, postCommentContainer.postComment!, comment!));
             Navigator.pop(context);
           },
           noFunction: () => Navigator.pop(context)),
@@ -307,15 +313,15 @@ class _PostWidgetState extends State<PostWidget> {
           message: "Do you want to delete this comment",
           yesFunction: () async {
             Navigator.pop(context);
-            BlocProvider.of<PostBloc>(context)
-                .add(DeleteCommentEvent(widget.postModel, postCommentContainer!.postComment!));
+            BlocProvider.of<PostBloc>(context).add(DeleteCommentEvent(
+                widget.postModel, postCommentContainer!.postComment!));
           },
           noFunction: () => Navigator.pop(context),
         ));
   }
 
-  Widget _postComments(BuildContext context, PostModel? postModel,
-      String? memberId) {
+  Widget _postComments(
+      BuildContext context, PostModel? postModel, String? memberId) {
     return BlocBuilder<PostBloc, PostState>(builder: (context, postState) {
       if (postState is CommentsLoaded) {
         List<PostCommentContainer?>? comments = postState.comments;
@@ -337,10 +343,9 @@ class _PostWidgetState extends State<PostWidget> {
 
   Widget getCommentTreeWidget(
       BuildContext context, PostModel? postModel, PostCommentContainer? data) {
-
     if (data == null) return Text("No Comments");
 
-    var name ;
+    var name;
     if (data.member == null) {
       name = "No name";
     } else {
@@ -352,70 +357,87 @@ class _PostWidgetState extends State<PostWidget> {
     }
 
     var rowChildren = [
-      widget.switchFeedHelper.gestured(context, data.member!.documentID!, AvatarHelper.avatar2(data.member, 8)),
+      widget.switchFeedHelper.gestured(context, data.member!.documentID!,
+          AvatarHelper.avatar2(data.member, 8)),
       Container(width: 8),
       Expanded(
           child: Container(
-            constraints: BoxConstraints(minWidth: 150),
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-            decoration: BoxDecoration(
-                color: Colors.grey, borderRadius: BorderRadius.circular(12)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '${name}',
-                  style: Theme.of(context)
-                      .textTheme
-                      .caption!
-                      .copyWith(fontWeight: FontWeight.w600, color: Colors.black),
-                ),
-                SizedBox(
-                  height: 4,
-                ),
-                Text(
-                  '${data.comment}',
-                  style: Theme.of(context)
-                      .textTheme
-                      .caption!
-                      .copyWith(fontWeight: FontWeight.w300, color: Colors.black),
-                ),
-                SizedBox(
-                  height: 4,
-                ),
-                Align(
-                    alignment: Alignment.bottomRight,
-                    child: Text(
-                      data.postComment == null || data.postComment!.likes == null
-                          ? 'no likes'
-                          : '${data.postComment!.likes} likes',
-                      style: Theme.of(context).textTheme.caption!.copyWith(
-                          fontWeight: FontWeight.w300, color: Colors.black),
-                    )),
-              ],
+        constraints: BoxConstraints(minWidth: 150),
+        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+        decoration: BoxDecoration(
+            color: Colors.grey, borderRadius: BorderRadius.circular(12)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${name}',
+              style: Theme.of(context)
+                  .textTheme
+                  .caption!
+                  .copyWith(fontWeight: FontWeight.w600, color: Colors.black),
             ),
-          )),
-      ];
-      if (widget.member!.documentID == data.member!.documentID) {
-        rowChildren.add(_optionsPostComments(
-            context, postModel, data.member!.documentID, data));
-      }
+            SizedBox(
+              height: 4,
+            ),
+            Text(
+              '${data.comment}',
+              style: Theme.of(context)
+                  .textTheme
+                  .caption!
+                  .copyWith(fontWeight: FontWeight.w300, color: Colors.black),
+            ),
+            SizedBox(
+              height: 4,
+            ),
+            Align(
+                alignment: Alignment.bottomRight,
+                child: Text(
+                  data.postComment == null || data.postComment!.likes == null
+                      ? 'no likes'
+                      : '${data.postComment!.likes} likes',
+                  style: Theme.of(context).textTheme.caption!.copyWith(
+                      fontWeight: FontWeight.w300, color: Colors.black),
+                )),
+          ],
+        ),
+      )),
+    ];
+    if (widget.member!.documentID == data.member!.documentID) {
+      rowChildren.add(_optionsPostComments(
+          context, postModel, data.member!.documentID, data));
+    }
 
-      var header = Padding(
-          padding: const EdgeInsets.only(top: 0.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                  padding: const EdgeInsets.only(top: 0.0),
-                  child: IntrinsicHeight(child: Row(children: rowChildren))),
-              //Divider(height: 1, thickness: 1),
-              Row(children: [
-                SizedBox(
-                  height: 0,
-                  width: 25,
-                ),
-                ButtonTheme(
+    var header = Padding(
+        padding: const EdgeInsets.only(top: 0.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+                padding: const EdgeInsets.only(top: 0.0),
+                child: IntrinsicHeight(child: Row(children: rowChildren))),
+            //Divider(height: 1, thickness: 1),
+            Row(children: [
+              SizedBox(
+                height: 0,
+                width: 25,
+              ),
+              ButtonTheme(
+                padding: EdgeInsets.symmetric(
+                    vertical: 0.0,
+                    horizontal: 8.0), //adds padding inside the button
+                materialTapTargetSize: MaterialTapTargetSize
+                    .shrinkWrap, //limits the touch area to the button area
+                minWidth: 0, //wraps child's width
+                height: 0, //wraps child's height
+                child: TextButton(
+                    child: Text('Like',
+                        style: data.thisMemberLikesThisComment!
+                            ? TextStyle(fontWeight: FontWeight.w900)
+                            : null),
+                    onPressed: () => _likeComment(
+                        context, postModel, data)), //your original button
+              ),
+              ButtonTheme(
                   padding: EdgeInsets.symmetric(
                       vertical: 0.0,
                       horizontal: 8.0), //adds padding inside the button
@@ -424,54 +446,41 @@ class _PostWidgetState extends State<PostWidget> {
                   minWidth: 0, //wraps child's width
                   height: 0, //wraps child's height
                   child: TextButton(
-                      child: Text('Like',
-                          style: data.thisMemberLikesThisComment!
-                              ? TextStyle(fontWeight: FontWeight.w900)
-                              : null),
-                      onPressed: () => _likeComment(
-                          context, postModel, data)), //your original button
-                ),
-                ButtonTheme(
-                    padding: EdgeInsets.symmetric(
-                        vertical: 0.0,
-                        horizontal: 8.0), //adds padding inside the button
-                    materialTapTargetSize: MaterialTapTargetSize
-                        .shrinkWrap, //limits the touch area to the button area
-                    minWidth: 0, //wraps child's width
-                    height: 0, //wraps child's height
-                    child: TextButton(
-                        child: Text('Reply'),
-                        onPressed: () => allowToAddCommentComment(
-                            context, data, data.member!.documentID!))),
-              ]),
-            ],
-          ));
-      List<Widget> items = [
-        Container(
-          height: 10,
-        ),
-        header,
-      ];
-      List<Widget> children = [];
-      if (data.postCommentContainer != null) {
-        for (int i = 0; i < data.postCommentContainer!.length; i++) {
-          children.add(getCommentTreeWidget(
-              context, postModel, data.postCommentContainer![i]));
-        }
-        if (children.length > 0)
-          items.add(Padding(
-              padding: const EdgeInsets.only(top: 0.0, left: 40),
-              child: ListView(
-                  physics: ScrollPhysics(),
-                  shrinkWrap: true,
-                  children: children)));
+                      child: Text('Reply'),
+                      onPressed: () => allowToAddCommentComment(
+                          context, data, data.member!.documentID!))),
+            ]),
+          ],
+        ));
+    List<Widget> items = [
+      Container(
+        height: 10,
+      ),
+      header,
+    ];
+    List<Widget> children = [];
+    if (data.postCommentContainer != null) {
+      for (int i = 0; i < data.postCommentContainer!.length; i++) {
+        children.add(getCommentTreeWidget(
+            context, postModel, data.postCommentContainer![i]));
       }
-      return ListView(
-          physics: ScrollPhysics(), shrinkWrap: true, children: items);
+      if (children.length > 0)
+        items.add(Padding(
+            padding: const EdgeInsets.only(top: 0.0, left: 40),
+            child: ListView(
+                physics: ScrollPhysics(),
+                shrinkWrap: true,
+                children: children)));
+    }
+    return ListView(
+        physics: ScrollPhysics(), shrinkWrap: true, children: items);
   }
 
-  PopupMenuButton _optionsPostComments(BuildContext context,
-      PostModel? postModel, String? memberId, PostCommentContainer? postComment) {
+  PopupMenuButton _optionsPostComments(
+      BuildContext context,
+      PostModel? postModel,
+      String? memberId,
+      PostCommentContainer? postComment) {
     return PopupMenuButton(
         icon: Icon(Icons.more_horiz),
         itemBuilder: (_) => <PopupMenuItem<int>>[
@@ -488,39 +497,53 @@ class _PostWidgetState extends State<PostWidget> {
         });
   }
 
-  Widget _postActionBtns(BuildContext context, PostModel? postModel,
-      String? memberId, ) {
+  Widget _postActionBtns(
+    BuildContext context,
+    PostModel? postModel,
+    String? memberId,
+    int? likes,
+    int? dislikes,
+  ) {
+    if (likes == null) likes = 0;
+    if (dislikes == null) dislikes = 0;
     return BlocBuilder<PostBloc, PostState>(builder: (context, postState) {
       LikeType? thisMemberLikeType;
       if (postState is CommentsLoaded) {
-        thisMemberLikeType = postState is CommentsLoaded ? postState.thisMembersLikeType : null;
+        thisMemberLikeType =
+            postState is CommentsLoaded ? postState.thisMembersLikeType : null;
       }
       return Row(
         children: <Widget>[
           Spacer(),
-          IconButton(
-              icon: ImageIcon(
-                AssetImage(
-                    (thisMemberLikeType == null) ||
-                        (thisMemberLikeType != LikeType.Like)
-                        ? "assets/images/basicons.xyz/ThumbsUp.png"
-                        : "assets/images/basicons.xyz/ThumbsUpSelected.png",
-                    package: "eliud_pkg_feed"),
-              ),
-              onPressed: () => _like(context, postModel),
-              color: Colors.black),
+          PostHelper.getFormattedRoundedShape(IconButton(
+            icon: ImageIcon(
+              AssetImage(
+                  (thisMemberLikeType == null) ||
+                          (thisMemberLikeType != LikeType.Like)
+                      ? "assets/images/segoshvishna.fiverr.com/thumbs-up.png"
+                      : "assets/images/segoshvishna.fiverr.com/thumbs-up-selected.png",
+                  package: "eliud_pkg_feed"),
+            ),
+            onPressed: () => _like(context, postModel),
+          )),
+          Text(
+            "$likes",
+          ),
           Spacer(flex: 3),
-          IconButton(
-              icon: ImageIcon(
-                AssetImage(
-                    (thisMemberLikeType == null) ||
-                        (thisMemberLikeType != LikeType.Dislike)
-                        ? "assets/images/basicons.xyz/ThumbsDown.png"
-                        : "assets/images/basicons.xyz/ThumbsDownSelected.png",
-                    package: "eliud_pkg_feed"),
-              ),
-              onPressed: () => _dislike(context, postModel),
-              color: Colors.black),
+          PostHelper.getFormattedRoundedShape(IconButton(
+            icon: ImageIcon(
+              AssetImage(
+                  (thisMemberLikeType == null) ||
+                          (thisMemberLikeType != LikeType.Dislike)
+                      ? "assets/images/segoshvishna.fiverr.com/thumbs-down.png"
+                      : "assets/images/segoshvishna.fiverr.com/thumbs-down-selected.png",
+                  package: "eliud_pkg_feed"),
+            ),
+            onPressed: () => _dislike(context, postModel),
+          )),
+          Text(
+            "$dislikes",
+          ),
           Spacer(),
         ],
       );
@@ -530,20 +553,20 @@ class _PostWidgetState extends State<PostWidget> {
   Future<void> _like(BuildContext context, PostModel? postModel) async {
     if (postModel != null)
       BlocProvider.of<PostBloc>(context)
-        .add(LikePostEvent(postModel, LikeType.Like));
+          .add(LikePostEvent(postModel, LikeType.Like));
   }
 
   Future<void> _likeComment(BuildContext context, PostModel? postModel,
       PostCommentContainer? postCommentContainer) async {
     if ((postModel != null) && (postCommentContainer != null))
-    BlocProvider.of<PostBloc>(context).add(
-        LikeCommentPostEvent(postModel, postCommentContainer, LikeType.Like));
+      BlocProvider.of<PostBloc>(context).add(
+          LikeCommentPostEvent(postModel, postCommentContainer, LikeType.Like));
   }
 
   void _dislike(BuildContext context, PostModel? postModel) async {
     if (postModel != null)
       BlocProvider.of<PostBloc>(context)
-        .add(LikePostEvent(postModel, LikeType.Dislike));
+          .add(LikePostEvent(postModel, LikeType.Dislike));
   }
 
   Widget _postLikes(int? likes, int? dislikes) {
@@ -558,9 +581,7 @@ class _PostWidgetState extends State<PostWidget> {
     );
   }
 
-  Future<void> _photoAvailable(
-      PhotoWithThumbnail photoWithThumbnail
-      ) async {
+  Future<void> _photoAvailable(PhotoWithThumbnail photoWithThumbnail) async {
     throw Exception("Needs proper implementation.");
 /*
     var memberImageModel = await UploadFile.uploadMediumAndItsThumbnailData(widget.postModel.appId!, mediumAndItsThumbnailData, widget.member!.documentID!, widget.postModel.readAccess!);
@@ -570,10 +591,7 @@ class _PostWidgetState extends State<PostWidget> {
 */
   }
 
-  Future<void> _videoAvailable(
-      VideoWithThumbnail videoWithThumbnail
-      ) async {
+  Future<void> _videoAvailable(VideoWithThumbnail videoWithThumbnail) async {
     throw Exception("Needs proper implementation.");
   }
-
 }

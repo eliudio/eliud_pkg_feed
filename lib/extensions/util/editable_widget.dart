@@ -1,7 +1,5 @@
-import 'package:transparent_image/transparent_image.dart';
+import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
 import 'package:flutter/material.dart';
-
-import 'mediua_buttons.dart';
 
 typedef EditFunction();
 
@@ -9,8 +7,7 @@ class EditableWidget1 extends StatelessWidget {
   final Widget child;
   final EditFunction? editFunction;
 
-  const EditableWidget1(
-      {Key? key, required this.child, this.editFunction})
+  const EditableWidget1({Key? key, required this.child, this.editFunction})
       : super(key: key);
 
   @override
@@ -21,8 +18,7 @@ class EditableWidget1 extends StatelessWidget {
           child,
           Align(
               alignment: Alignment.topRight,
-              child:
-                  EditableButton1(editFunction: editFunction!)),
+              child: EditableButton1(editFunction: editFunction!)),
         ],
       );
     } else {
@@ -39,6 +35,15 @@ class EditableButton1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var pen = Image.asset("assets/images/segoshvishna.fiverr.com/pen128.png",
+        package: "eliud_pkg_feed");
+    return Container(
+        height: 33,
+        width: 33,
+        child: PostHelper.getFormattedCircleShape(
+            IconButton(icon: pen, iconSize: 22, onPressed: () => editFunction!()), border: 0)
+    );
+/*
     return CircleAvatar(
         radius: 17,
         backgroundColor: Colors.black,
@@ -46,6 +51,7 @@ class EditableButton1 extends StatelessWidget {
                 icon: Icon(Icons.edit, size: 14, color: Colors.white),
                 onPressed: () => editFunction!(),
               ));
+*/
   }
 }
 
@@ -53,8 +59,7 @@ class EditableWidget2 extends StatelessWidget {
   final Widget child;
   final Widget? button;
 
-  const EditableWidget2(
-      {Key? key, required this.child, this.button})
+  const EditableWidget2({Key? key, required this.child, this.button})
       : super(key: key);
 
   @override
@@ -65,8 +70,7 @@ class EditableWidget2 extends StatelessWidget {
           child,
           Align(
               alignment: Alignment.topRight,
-              child:
-              EditableButton2(button: button!)),
+              child: EditableButton2(button: button!)),
         ],
       );
     } else {
@@ -78,14 +82,11 @@ class EditableWidget2 extends StatelessWidget {
 class EditableButton2 extends StatelessWidget {
   final Widget button;
 
-  const EditableButton2({Key? key, required this.button})
-      : super(key: key);
+  const EditableButton2({Key? key, required this.button}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return CircleAvatar(
-        radius: 17,
-        backgroundColor: Colors.black,
-        child: button);
+        radius: 17, backgroundColor: Colors.black, child: button);
   }
 }

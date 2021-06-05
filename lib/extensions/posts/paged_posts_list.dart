@@ -5,6 +5,7 @@ import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/model/rgb_model.dart';
 import 'package:eliud_core/tools/etc.dart';
 import 'package:eliud_pkg_feed/extensions/new_post/feed_post_dialog.dart';
+import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
 import 'package:eliud_pkg_feed/platform/medium_platform.dart';
 import '../post/bloc/post_bloc.dart';
@@ -52,21 +53,32 @@ class _PagedPostsListState extends State<PagedPostsList> {
         shape: CircleBorder(),
         onPressed: action,
         child: Padding(
-        padding: const EdgeInsets.all(10),
-    child: icon,
+          padding: const EdgeInsets.all(10),
+          child: icon,
         ));
   }
 
   Widget _newPostForm() {
     List<Widget> widgets = [];
     widgets.add(Spacer());
-    widgets.add(_button(
-        Icon(
-          Icons.camera,
-          size: 50,
-        ),
-        Text("Photo"),
-        () => {
+    var album = Image.asset("assets/images/segoshvishna.fiverr.com/album.png",
+        package: "eliud_pkg_feed");
+    var article = Image.asset(
+        "assets/images/segoshvishna.fiverr.com/article.png",
+        package: "eliud_pkg_feed");
+    var audio = Image.asset("assets/images/segoshvishna.fiverr.com/audio.png",
+        package: "eliud_pkg_feed");
+    var message = Image.asset(
+        "assets/images/segoshvishna.fiverr.com/message.png",
+        package: "eliud_pkg_feed");
+    var photo = Image.asset("assets/images/segoshvishna.fiverr.com/photo.png",
+        package: "eliud_pkg_feed");
+    var video = Image.asset("assets/images/segoshvishna.fiverr.com/video.png",
+        package: "eliud_pkg_feed");
+
+    // Photo
+    widgets.add(PostHelper.getFormattedRoundedShape(IconButton(icon: photo, onPressed: () {})));
+    widgets.add(Spacer());
 /*
         probably needs to go into a seperate dialog
 
@@ -74,33 +86,27 @@ class _PagedPostsListState extends State<PagedPostsList> {
         readAccess, photoFeedbackFunction, photoFeedbackProgress);
 */
 
-        }));
+    // Video
+    widgets.add(PostHelper.getFormattedRoundedShape(IconButton(icon: video, onPressed: () {})));
     widgets.add(Spacer());
-    widgets.add(_button(
-        Icon(
-          Icons.videocam_rounded,
-          size: 50,
-        ),
-        Text("Video"),
-        () => {}));
+
+    // Message
+    widgets.add(PostHelper.getFormattedRoundedShape(IconButton(icon: message, onPressed: () {})));
     widgets.add(Spacer());
-    widgets.add(_button(
-        Icon(
-          Icons.add,
-          size: 50,
-        ),
-        Text("Simple"),
-        () => FeedPostDialog.open(
-            context, widget.feedModel.documentID!, widget.switchFeedHelper)));
+
+    // Audio
+    widgets.add(PostHelper.getFormattedRoundedShape(IconButton(icon: audio, onPressed: () {})));
     widgets.add(Spacer());
-    widgets.add(_button(
-        Icon(
-          Icons.note_add,
-          size: 50,
-        ),
-        Text("Fancy"),
-        () => {}));
+
+    // Album
+    widgets.add(PostHelper.getFormattedRoundedShape(IconButton(icon: album, onPressed: () => FeedPostDialog.open(
+        context, widget.feedModel.documentID!, widget.switchFeedHelper))));
     widgets.add(Spacer());
+
+    // Article
+    widgets.add(PostHelper.getFormattedRoundedShape(IconButton(icon: article, onPressed: () {})));
+    widgets.add(Spacer());
+
     return Container(height: 110, child: Row(children: widgets));
 //    return FeedPostForm(feedId: widget.feedModel.documentID!, switchFeedHelper: widget.switchFeedHelper, postListPagedBloc: BlocProvider.of<PostListPagedBloc>(context));
   }

@@ -1,18 +1,3 @@
-/*
-       _ _           _ 
-      | (_)         | |
-   ___| |_ _   _  __| |
-  / _ \ | | | | |/ _` |
- |  __/ | | |_| | (_| |
-  \___|_|_|\__,_|\__,_|
-                       
- 
- post_form.dart
-                       
- This code is generated. This is read only. Don't touch!
-
-*/
-
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/tools/storage/fb_storage_image.dart';
 import 'package:eliud_core/tools/storage/medium_base.dart';

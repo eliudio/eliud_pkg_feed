@@ -1,7 +1,9 @@
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:eliud_core/core/components/page_helper.dart';
 import 'package:eliud_core/tools/etc.dart';
+import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
@@ -39,35 +41,31 @@ class FeedMenuComponent extends AbstractFeedMenuComponent {
         for (int i = 0; i < items.length; i++) {
           var item = items[i];
           if (theState.menuItemHasAccess(item)) {
-            var isActive = PageHelper.isActivePage(
-                switchFeedHelper.pageId, item.action);
+            var isActive =
+                PageHelper.isActivePage(switchFeedHelper.pageId, item.action);
             var _color = isActive
                 ? RgbHelper.color(rgbo: feedMenuModel!.selectedItemColor)
                 : RgbHelper.color(rgbo: feedMenuModel!.itemColor);
-            widgets.add(Center(
-                child: OutlineButton(
-              padding: EdgeInsets.all(10.0),
-              child: Text('${item.text}', style: TextStyle(color: _color)),
-              onPressed: () {
-                if (!isActive) {
-                  eliudrouter.Router.navigateTo(context, item.action!);
-                }
-              },
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0)),
-              borderSide:
-                  BorderSide(color: _color),
-            )));
+            widgets.add(PostHelper.getFormattedRoundedShape(Container(
+                width: 110,
+                child: IconButton(
+                    icon: Center(child: Text('${item.text}',
+                        style: GoogleFonts.annieUseYourTelescope(
+                            fontSize: 20, color: _color))),
+                    onPressed: !isActive
+                        ? () {
+                            eliudrouter.Router.navigateTo(
+                                context, item.action!);
+                          }
+                        : null))));
           }
           if (i != items.length - 1) {
-            widgets.add(Container(width:10));
+            widgets.add(Container(width: 10));
           }
         }
         return Container(
-            height: 50,
-            child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: widgets));
+            height: 60,
+            child: ListView(scrollDirection: Axis.horizontal, children: widgets));
       });
     } else {
       return Text("State is not AppLoaded");

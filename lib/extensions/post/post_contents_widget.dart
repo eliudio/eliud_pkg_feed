@@ -1,3 +1,9 @@
+import 'package:eliud_core/model/member_medium_model.dart';
+import 'package:eliud_core/tools/storage/fb_storage_image.dart';
+import 'package:eliud_core/tools/storage/medium_base.dart';
+import 'package:eliud_pkg_feed/model/post_medium_model.dart';
+import 'package:flutter/material.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/model/member_model.dart';
@@ -15,7 +21,13 @@ class PostContentsWidget extends StatefulWidget {
   final AccessBloc? accessBloc;
   final String? parentPageId;
 
-  const PostContentsWidget({Key? key, this.member, this.postModel, this.accessBloc, this.parentPageId}) : super(key: key);
+  const PostContentsWidget(
+      {Key? key,
+      this.member,
+      this.postModel,
+      this.accessBloc,
+      this.parentPageId})
+      : super(key: key);
 
   @override
   _PostContentsWidgetState createState() {
@@ -31,25 +43,25 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
 
     if (widget.postModel!.postPageId != null) {
       if (widget.member != null) {
-        return EmbeddedPageHelper.postDetails(widget.member!.documentID, widget.postModel,
-                widget.accessBloc, context, widget.parentPageId!);
+        return EmbeddedPageHelper.postDetails(widget.member!.documentID,
+            widget.postModel, widget.accessBloc, context, widget.parentPageId!);
       }
-    } else if ((widget.postModel!.memberMedia != null) && (widget.postModel!.memberMedia!.length > 0)) {
-      List<PostMediumModel> memberMedia = widget.postModel!.memberMedia!;
-      List<Widget> widgets = [];
-      // Photos & videos
-      widgets.add(PostMediaHelper.videoAndPhotoDivider(context));
-      widgets.add(PostMediaHelper.staggeredMemberMediumModelFromPostMedia(
-          memberMedia, viewAction: (index) {
-            var postMedium = memberMedia[index];
-            if (postMedium.memberMedium!.mediumType! == MediumType.Photo) {
-              AbstractMediumPlatform.platform!.showPhotosFromPostMedia(
-                  context, memberMedia, index);
-            } else {
-              AbstractMediumPlatform.platform!.showVideo(context, postMedium.memberMedium!);
-            }
-      }));
-      return Column(children: widgets);
+    } else if ((widget.postModel!.memberMedia != null) &&
+        (widget.postModel!.memberMedia!.length > 0)) {
+      if (widget.postModel!.memberMedia!.length == 1) {
+        var medium = widget.postModel!.memberMedia![0];
+        return Center(child:FbStorageImage(ref: medium.memberMedium!.refThumbnail!));
+      } else {
+        List<PostMediumModel> memberMedia = widget.postModel!.memberMedia!;
+        List<Widget> widgets = [];
+        // Photos & videos
+        widgets.add(PostMediaHelper.videoAndPhotoDivider(context));
+        widgets.add(PostMediaHelper.staggeredMemberMediumModelFromPostMedia(
+            memberMedia, viewAction: (index) {
+          _action(memberMedia, index);
+        }));
+        return Column(children: widgets);
+      }
     } else if (widget.postModel!.externalLink != null) {
 /*
       return WebView(
@@ -60,6 +72,17 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
       return Text("External link not supported yet");
     }
     return Container(height: 1); // nothing
+  }
+
+  void _action(List<PostMediumModel> memberMedia, int index) {
+    var postMedium = memberMedia[index];
+    if (postMedium.memberMedium!.mediumType! == MediumType.Photo) {
+      AbstractMediumPlatform.platform!
+          .showPhotosFromPostMedia(context, memberMedia, index);
+    } else {
+      AbstractMediumPlatform.platform!
+          .showVideo(context, postMedium.memberMedium!);
+    }
   }
 
 /*

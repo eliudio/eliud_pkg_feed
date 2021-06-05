@@ -34,7 +34,10 @@ class MediaButtons {
           new PopupMenuItem<int>(child: const Text('Upload video'), value: 3));
     }
     return PopupMenuButton(
+      padding: EdgeInsets.all(0.0),
+/*
         color: Colors.red,
+*/
         icon: icon == null
             ? Icon(
                 Icons.add,

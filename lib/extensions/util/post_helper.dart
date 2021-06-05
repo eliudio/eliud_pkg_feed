@@ -20,10 +20,8 @@ class PostHelper {
             border: Border.all(color: Colors.white, width: 1),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(.7),
-                    spreadRadius: 5,
-                    blurRadius: 7,
-                    offset: Offset(0, 3), // changes position of shadow
+                    color: Colors.black,
+                    blurRadius: 5.0,
                   ),
                 ],
                 borderRadius: new BorderRadius.all(
@@ -35,6 +33,42 @@ class PostHelper {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: children,
                 ))));
+  }
+
+  static Widget getFormattedRoundedShape(Widget child) {
+    return Container(
+        margin:EdgeInsets.all(7.0),
+            decoration: new BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.white, width: 1),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black,
+                    blurRadius: 5.0,
+                  ),
+                ],
+                borderRadius: new BorderRadius.all(
+                  const Radius.circular(10.0),
+                )),
+            child: child);
+  }
+
+  static Widget getFormattedCircleShape(Widget child, {double? border}) {
+    return Container(
+        decoration: new BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white, width: border == null ? 3 : border),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black,
+                blurRadius: 5.0,
+              ),
+            ],
+            /*borderRadius: new BorderRadius.all(
+              const Radius.circular(10.0),
+            )*/),
+        child: child);
   }
 
 }
