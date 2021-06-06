@@ -1,4 +1,5 @@
 import 'package:eliud_core/model/member_medium_model.dart';
+import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/tools/storage/fb_storage_image.dart';
 import 'package:eliud_core/tools/storage/medium_base.dart';
 import 'package:eliud_pkg_feed/model/post_medium_model.dart';
@@ -16,14 +17,14 @@ import 'package:eliud_pkg_feed/tools/filter_member_media.dart';
 import 'package:flutter/material.dart';
 
 class PostContentsWidget extends StatefulWidget {
-  final MemberModel? member;
+  final String? memberID;
   final PostModel? postModel;
   final AccessBloc? accessBloc;
   final String? parentPageId;
 
   const PostContentsWidget(
       {Key? key,
-      this.member,
+      this.memberID,
       this.postModel,
       this.accessBloc,
       this.parentPageId})
@@ -42,8 +43,8 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
     List<Tab> tabs = [];
 
     if (widget.postModel!.postPageId != null) {
-      if (widget.member != null) {
-        return EmbeddedPageHelper.postDetails(widget.member!.documentID,
+      if (widget.memberID != null) {
+        return EmbeddedPageHelper.postDetails(widget.memberID,
             widget.postModel, widget.accessBloc, context, widget.parentPageId!);
       }
     } else if ((widget.postModel!.memberMedia != null) &&

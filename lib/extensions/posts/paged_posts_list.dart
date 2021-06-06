@@ -8,7 +8,6 @@ import 'package:eliud_pkg_feed/extensions/new_post/feed_post_dialog.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
 import 'package:eliud_pkg_feed/platform/medium_platform.dart';
-import '../post/bloc/post_bloc.dart';
 import '../postlist_paged/postlist_paged_bloc.dart';
 import '../postlist_paged/postlist_paged_event.dart';
 import '../postlist_paged/postlist_paged_state.dart';
@@ -113,10 +112,10 @@ class _PagedPostsListState extends State<PagedPostsList> {
 
   @override
   Widget build(BuildContext context) {
+    var _accessState = AccessBloc.getState(context);
     return BlocBuilder<PostListPagedBloc, PostListPagedState>(
       builder: (context, state) {
         if (state is PostListPagedState) {
-          var _accessState = AccessBloc.getState(context);
           var theState = state;
           List<Widget> widgets = [];
           if (widget.switchFeedHelper.allowNewPost()) {
@@ -144,19 +143,10 @@ class _PagedPostsListState extends State<PagedPostsList> {
             .add(DeletePostPaged(value: postModel)));
   }
 
-  Widget post(BuildContext context, PostModel postModel) {
-    var member = AccessBloc.memberFor(AccessBloc.getState(context));
-    if (member == null) {
-      return Text("Not logged in");
-    } else {
-      return BlocProvider<PostBloc>(
-          create: (context) => PostBloc(postModel, member.documentID!),
-          child: PostWidget(
-            postModel: postModel,
-            switchFeedHelper: widget.switchFeedHelper,
-            member: member,
-          ));
-    }
+  Widget post(BuildContext context, PostDetails postDetails) {
+     return PostWidget(
+            switchFeedHelper: widget.switchFeedHelper, details: postDetails,
+    );
   }
 
   Widget _buttonNextPage(bool mightHaveMore) {

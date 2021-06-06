@@ -136,11 +136,12 @@ class FeedComponent extends AbstractFeedComponent {
       return Text("No member public info for member");
     } else {
       return BlocProvider(
-        create: (_) => PostListPagedBloc(eliudQuery,
+        create: (_) =>
+        PostListPagedBloc(switchFeedHelper.memberOfFeed.documentID!, eliudQuery,
             postRepository: posts.postRepository(appId: feedModel!.appId)!)
           ..add(PostListPagedFetched()),
         child:
-            PagedPostsList(feedModel!, memberPublicInfoModel, switchFeedHelper),
+        PagedPostsList(feedModel!, memberPublicInfoModel, switchFeedHelper),
       );
     }
   }
