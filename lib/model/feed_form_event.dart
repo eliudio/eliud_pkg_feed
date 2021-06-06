@@ -95,6 +95,18 @@ class ChangedFeedDescription extends FeedFormEvent {
   String toString() => 'ChangedFeedDescription{ value: $value }';
 }
 
+class ChangedFeedThumbImage extends FeedFormEvent {
+  final ThumbStyle? value;
+
+  ChangedFeedThumbImage({this.value});
+
+  @override
+  List<Object?> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedFeedThumbImage{ value: $value }';
+}
+
 class ChangedFeedConditions extends FeedFormEvent {
   final ConditionsSimpleModel? value;
 

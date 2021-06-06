@@ -144,7 +144,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
   }
 
   Widget post(BuildContext context, PostDetails postDetails) {
-     return PostWidget(
+     return PostWidget(thumbStyle: widget.feedModel.thumbImage,
             switchFeedHelper: widget.switchFeedHelper, details: postDetails,
     );
   }

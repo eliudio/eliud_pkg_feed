@@ -10,6 +10,7 @@ import 'package:eliud_core/tools/widgets/dialog_helper.dart';
 import 'package:eliud_core/tools/widgets/request_value_dialog.dart';
 import 'package:eliud_core/tools/widgets/yes_no_dialog.dart';
 import 'package:eliud_pkg_feed/extensions/post/post_contents_widget.dart';
+import 'package:eliud_pkg_feed/model/feed_model.dart';
 import 'package:eliud_pkg_feed/model/post_like_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:flutter/material.dart';
@@ -18,11 +19,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class PostWidget extends StatefulWidget {
   //final MemberModel? member;
   //final String parentPageId;
+  final ThumbStyle? thumbStyle;
   final PostDetails details;
   final SwitchFeedHelper switchFeedHelper;
 
   const PostWidget(
-      {Key? key, required this.switchFeedHelper, required this.details})
+      {Key? key, required this.thumbStyle, required this.switchFeedHelper, required this.details})
       : super(key: key);
 
   @override
@@ -501,13 +503,7 @@ class _PostWidgetState extends State<PostWidget> {
       children: <Widget>[
         Spacer(),
         PostHelper.getFormattedRoundedShape(IconButton(
-          icon: ImageIcon(
-            AssetImage(
-                (thisMemberLikeType == null) ||
-                        (thisMemberLikeType != LikeType.Like)
-                    ? "assets/images/segoshvishna.fiverr.com/thumbs-up.png"
-                    : "assets/images/segoshvishna.fiverr.com/thumbs-up-selected.png",
-                package: "eliud_pkg_feed"),
+          icon: ImageIcon(_assetThumbUp(thisMemberLikeType)
           ),
           onPressed: () => _like(context, postDetails),
         )),
@@ -516,13 +512,7 @@ class _PostWidgetState extends State<PostWidget> {
         ),
         Spacer(flex: 3),
         PostHelper.getFormattedRoundedShape(IconButton(
-          icon: ImageIcon(
-            AssetImage(
-                (thisMemberLikeType == null) ||
-                        (thisMemberLikeType != LikeType.Dislike)
-                    ? "assets/images/segoshvishna.fiverr.com/thumbs-down.png"
-                    : "assets/images/segoshvishna.fiverr.com/thumbs-down-selected.png",
-                package: "eliud_pkg_feed"),
+          icon: ImageIcon(_assetThumbDown(thisMemberLikeType)
           ),
           onPressed: () => _dislike(context, postDetails),
         )),
@@ -532,6 +522,54 @@ class _PostWidgetState extends State<PostWidget> {
         Spacer(),
       ],
     );
+  }
+
+  AssetImage _assetThumbUp(LikeType? thisMemberLikeType) {
+    if (widget.thumbStyle == ThumbStyle.Thumbs) {
+      if ((thisMemberLikeType == null) ||
+          (thisMemberLikeType != LikeType.Like)) {
+        return AssetImage("assets/images/segoshvishna.fiverr.com/thumbs-up.png",
+            package: "eliud_pkg_feed");
+      } else {
+        return AssetImage(
+            "assets/images/segoshvishna.fiverr.com/thumbs-up-selected.png",
+            package: "eliud_pkg_feed");
+      }
+    } else {
+      if ((thisMemberLikeType == null) ||
+          (thisMemberLikeType != LikeType.Like)) {
+        return AssetImage("assets/images/segoshvishna.fiverr.com/banana.png",
+            package: "eliud_pkg_feed");
+      } else {
+        return AssetImage(
+            "assets/images/segoshvishna.fiverr.com/banana-selected.png",
+            package: "eliud_pkg_feed");
+      }
+    }
+  }
+
+  AssetImage _assetThumbDown(LikeType? thisMemberLikeType) {
+    if (widget.thumbStyle == ThumbStyle.Thumbs) {
+      if ((thisMemberLikeType == null) ||
+          (thisMemberLikeType != LikeType.Dislike)) {
+        return AssetImage("assets/images/segoshvishna.fiverr.com/thumbs-down.png",
+            package: "eliud_pkg_feed");
+      } else {
+        return AssetImage(
+            "assets/images/segoshvishna.fiverr.com/thumbs-down-selected.png",
+            package: "eliud_pkg_feed");
+      }
+    } else {
+      if ((thisMemberLikeType == null) ||
+          (thisMemberLikeType != LikeType.Dislike)) {
+        return AssetImage("assets/images/segoshvishna.fiverr.com/bananapeel.png",
+            package: "eliud_pkg_feed");
+      } else {
+        return AssetImage(
+            "assets/images/segoshvishna.fiverr.com/bananapeel-selected.png",
+            package: "eliud_pkg_feed");
+      }
+    }
   }
 
   Future<void> _like(BuildContext context, PostDetails postDetail) async {

@@ -33,6 +33,18 @@ import 'package:eliud_pkg_feed/model/feed_entity.dart';
 
 import 'package:eliud_core/tools/random.dart';
 
+enum ThumbStyle {
+  Thumbs, Banana, Unknown
+}
+
+
+ThumbStyle toThumbStyle(int? index) {
+  switch (index) {
+    case 0: return ThumbStyle.Thumbs;
+    case 1: return ThumbStyle.Banana;
+  }
+  return ThumbStyle.Unknown;
+}
 
 
 class FeedModel {
@@ -41,18 +53,19 @@ class FeedModel {
   // This is the identifier of the app to which this feed belongs
   String? appId;
   String? description;
+  ThumbStyle? thumbImage;
   ConditionsSimpleModel? conditions;
 
-  FeedModel({this.documentID, this.appId, this.description, this.conditions, })  {
+  FeedModel({this.documentID, this.appId, this.description, this.thumbImage, this.conditions, })  {
     assert(documentID != null);
   }
 
-  FeedModel copyWith({String? documentID, String? appId, String? description, ConditionsSimpleModel? conditions, }) {
-    return FeedModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, conditions: conditions ?? this.conditions, );
+  FeedModel copyWith({String? documentID, String? appId, String? description, ThumbStyle? thumbImage, ConditionsSimpleModel? conditions, }) {
+    return FeedModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, thumbImage: thumbImage ?? this.thumbImage, conditions: conditions ?? this.conditions, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ appId.hashCode ^ description.hashCode ^ conditions.hashCode;
+  int get hashCode => documentID.hashCode ^ appId.hashCode ^ description.hashCode ^ thumbImage.hashCode ^ conditions.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -62,17 +75,19 @@ class FeedModel {
           documentID == other.documentID &&
           appId == other.appId &&
           description == other.description &&
+          thumbImage == other.thumbImage &&
           conditions == other.conditions;
 
   @override
   String toString() {
-    return 'FeedModel{documentID: $documentID, appId: $appId, description: $description, conditions: $conditions}';
+    return 'FeedModel{documentID: $documentID, appId: $appId, description: $description, thumbImage: $thumbImage, conditions: $conditions}';
   }
 
   FeedEntity toEntity({String? appId}) {
     return FeedEntity(
           appId: (appId != null) ? appId : null, 
           description: (description != null) ? description : null, 
+          thumbImage: (thumbImage != null) ? thumbImage!.index : null, 
           conditions: (conditions != null) ? conditions!.toEntity(appId: appId) : null, 
     );
   }
@@ -83,6 +98,7 @@ class FeedModel {
           documentID: documentID, 
           appId: entity.appId, 
           description: entity.description, 
+          thumbImage: toThumbStyle(entity.thumbImage), 
           conditions: 
             ConditionsSimpleModel.fromEntity(entity.conditions), 
     );
@@ -95,6 +111,7 @@ class FeedModel {
           documentID: documentID, 
           appId: entity.appId, 
           description: entity.description, 
+          thumbImage: toThumbStyle(entity.thumbImage), 
           conditions: 
             await ConditionsSimpleModel.fromEntityPlus(entity.conditions, appId: appId), 
     );

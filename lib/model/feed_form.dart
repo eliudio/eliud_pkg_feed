@@ -134,6 +134,7 @@ class _MyFeedFormState extends State<MyFeedForm> {
   final TextEditingController _documentIDController = TextEditingController();
   final TextEditingController _appIdController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  int? _thumbImageSelectedRadioTile;
 
 
   _MyFeedFormState(this.formAction);
@@ -145,6 +146,7 @@ class _MyFeedFormState extends State<MyFeedForm> {
     _documentIDController.addListener(_onDocumentIDChanged);
     _appIdController.addListener(_onAppIdChanged);
     _descriptionController.addListener(_onDescriptionChanged);
+    _thumbImageSelectedRadioTile = 0;
   }
 
   @override
@@ -170,9 +172,53 @@ class _MyFeedFormState extends State<MyFeedForm> {
           _descriptionController.text = state.value!.description.toString();
         else
           _descriptionController.text = "";
+        if (state.value!.thumbImage != null)
+          _thumbImageSelectedRadioTile = state.value!.thumbImage!.index;
+        else
+          _thumbImageSelectedRadioTile = 0;
       }
       if (state is FeedFormInitialized) {
         List<Widget> children = [];
+         children.add(Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                  child: Text('General',
+                      style: TextStyle(
+                          color: RgbHelper.color(rgbo: app.formGroupTitleColor), fontWeight: FontWeight.bold)),
+                ));
+
+        children.add(
+
+                RadioListTile(
+                    value: 0,
+                    activeColor: RgbHelper.color(rgbo: app.formFieldTextColor),
+                    groupValue: _thumbImageSelectedRadioTile,
+                    title: Text("Thumbs", style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor))),
+                    subtitle: Text("Thumbs", style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor))),
+                    onChanged: !accessState.memberIsOwner() ? null : (dynamic val) {
+                      setSelectionThumbImage(val);
+                    },
+                ),
+          );
+        children.add(
+
+                RadioListTile(
+                    value: 1,
+                    activeColor: RgbHelper.color(rgbo: app.formFieldTextColor),
+                    groupValue: _thumbImageSelectedRadioTile,
+                    title: Text("Banana", style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor))),
+                    subtitle: Text("Banana", style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor))),
+                    onChanged: !accessState.memberIsOwner() ? null : (dynamic val) {
+                      setSelectionThumbImage(val);
+                    },
+                ),
+          );
+
+
+        children.add(Container(height: 20.0));
+        children.add(Divider(height: 1.0, thickness: 1.0, color: RgbHelper.color(rgbo: app.dividerColor)));
+
+
          children.add(Container(
                   alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
@@ -268,6 +314,7 @@ class _MyFeedFormState extends State<MyFeedForm> {
                               documentID: state.value!.documentID, 
                               appId: state.value!.appId, 
                               description: state.value!.description, 
+                              thumbImage: state.value!.thumbImage, 
                               conditions: state.value!.conditions, 
                         )));
                       } else {
@@ -276,6 +323,7 @@ class _MyFeedFormState extends State<MyFeedForm> {
                               documentID: state.value!.documentID, 
                               appId: state.value!.appId, 
                               description: state.value!.description, 
+                              thumbImage: state.value!.thumbImage, 
                               conditions: state.value!.conditions, 
                           )));
                       }
@@ -321,6 +369,14 @@ class _MyFeedFormState extends State<MyFeedForm> {
 
   void _onDescriptionChanged() {
     _myFormBloc.add(ChangedFeedDescription(value: _descriptionController.text));
+  }
+
+
+  void setSelectionThumbImage(int? val) {
+    setState(() {
+      _thumbImageSelectedRadioTile = val;
+    });
+    _myFormBloc.add(ChangedFeedThumbImage(value: toThumbStyle(val)));
   }
 
 

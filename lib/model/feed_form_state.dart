@@ -111,6 +111,22 @@ class DescriptionFeedFormError extends FeedFormError {
 }
 
 
+class ThumbImageFeedFormError extends FeedFormError { 
+  const ThumbImageFeedFormError({ String? message, FeedModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''ThumbImageFeedFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
 class ConditionsFeedFormError extends FeedFormError { 
   const ConditionsFeedFormError({ String? message, FeedModel? value }): super(message: message, value: value);
 

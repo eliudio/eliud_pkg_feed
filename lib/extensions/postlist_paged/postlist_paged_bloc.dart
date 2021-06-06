@@ -456,7 +456,7 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
     int dislikesExtra = 0;
 
     // what is this like / dislike
-    var thisMembersLikeType;
+    LikeType? thisMembersLikeType = LikeType.Unknown;
 
     // did we like / dislike before?
     if (like == null) {

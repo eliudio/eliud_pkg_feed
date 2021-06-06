@@ -31,39 +31,7 @@ class HeaderComponent extends AbstractHeaderComponent {
 
   @override
   Widget yourWidget(BuildContext context, HeaderModel? headerModel) {
-/*
-    var _accessState = AccessBloc.getState(context);
-    return FutureBuilder<List<String>>(
-        future: PostFollowersHelper.asPublic(_accessState),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return FeedWidgetHelper(widgetProvider: (switchFeedHelper) =>
-                Header(switchFeedHelper: switchFeedHelper,
-                  appId: headerModel!.appId!,
-                  ownerId: switchFeedHelper.feedMember().documentID!,));
-          }
-          return Center(
-            child: DelayedCircularProgressIndicator(),
-          );
-        }
-    );
-
-
-
-*/
-    var _accessState = AccessBloc.getState(context);
-    var modalRoute = ModalRoute.of(context) as ModalRoute;
-    if (_accessState is AppLoaded) {
-      return BlocProvider<ProfileBloc>(
-        create: (context) => ProfileBloc()
-          ..add(InitialiseProfileEvent(
-              headerModel!.feed!.documentID!, _accessState, modalRoute)),
-        child: Header(),
-      );
-    } else {
-      return Text("No app loaded");
-    }
-
+    return Header();
   }
 
   @override

@@ -41,14 +41,8 @@ class ProfileComponent extends AbstractProfileComponent {
   @override
   Widget yourWidget(BuildContext context, ProfileModel? profileModel) {
     var _accessState = AccessBloc.getState(context);
-    var modalRoute = ModalRoute.of(context) as ModalRoute;
     if (_accessState is AppLoaded) {
-      return BlocProvider<ProfileBloc>(
-        create: (context) => ProfileBloc()
-          ..add(InitialiseProfileEvent(
-              profileModel!.feed!.documentID!, _accessState, modalRoute)),
-        child: Profile(appId: _accessState.app.documentID!),
-      );
+      return Profile(appId: _accessState.app.documentID!);
     } else {
       return Text("No app loaded");
     }

@@ -41,6 +41,13 @@
       "group": "general"
     },
     {
+      "fieldName": "thumbImage",
+      "displayName": "Thumbs Image",
+      "fieldType": "enum",
+      "enumName": "ThumbStyle",
+      "enumValues" : [ "Thumbs", "Banana" ]
+    },
+    {
       "fieldName": "conditions",
       "displayName": "Conditions",
       "fieldType": "ConditionsSimple",
