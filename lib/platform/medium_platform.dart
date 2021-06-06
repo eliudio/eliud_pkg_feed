@@ -56,7 +56,7 @@ abstract class AbstractMediumPlatform {
    * Allows the user to take a photo
    * When photo is selected feedbackFunction is triggered
    */
-  void takePhoto(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress);
+  void takePhoto(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress, {bool? allowCrop});
 
   /*
    * Allows the user to take a photo

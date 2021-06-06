@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:image_cropper/image_cropper.dart';
 import 'package:camera/camera.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/tools/storage/basename_helper.dart';
@@ -17,7 +18,7 @@ import 'medium_platform.dart';
 import 'mobile/eliud_camera.dart';
 
 class MobileMediumPlatform extends AbstractMediumPlatform {
-  Future<void> _pickImage(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress, ImgSource source) async {
+  Future<void> _pickImage(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress, ImgSource source, {bool? allowCrop}) async {
     var _image = await ImagePickerGC.pickImage(
       enableCloseButton: true,
       closeIcon: Icon(
@@ -33,14 +34,44 @@ class MobileMediumPlatform extends AbstractMediumPlatform {
         color: Colors.red,
       ),
     );
-    var baseName = BaseNameHelper.baseName(_image.path);
-    var thumbnailBaseName = BaseNameHelper.thumbnailBaseName(_image.path);
-    var bytes = await _image.readAsBytes();
-    var memberMediumModel = await MemberMediumHelper.createThumbnailUploadPhotoData(appId, bytes, baseName, thumbnailBaseName,ownerId, readAccess, feedbackProgress: feedbackProgress);
-    feedbackFunction(memberMediumModel);
+
+    if (_image != null) {
+      if ((allowCrop != null) && (allowCrop)) {
+        _image = await ImageCropper.cropImage(
+            sourcePath: _image.path,
+            aspectRatioPresets: [
+              CropAspectRatioPreset.square,
+              CropAspectRatioPreset.ratio3x2,
+              CropAspectRatioPreset.original,
+              CropAspectRatioPreset.ratio4x3,
+              CropAspectRatioPreset.ratio16x9
+            ],
+            androidUiSettings: AndroidUiSettings(
+                toolbarTitle: 'Cropper',
+                toolbarColor: Colors.deepOrange,
+                toolbarWidgetColor: Colors.white,
+                initAspectRatio: CropAspectRatioPreset.original,
+                lockAspectRatio: false),
+            iosUiSettings: IOSUiSettings(
+              minimumAspectRatio: 1.0,
+            )
+        );
+      }
+    }
+
+    if (_image != null) {
+      var baseName = BaseNameHelper.baseName(_image.path);
+      var thumbnailBaseName = BaseNameHelper.thumbnailBaseName(_image.path);
+      var bytes = await _image.readAsBytes();
+      var memberMediumModel = await MemberMediumHelper
+          .createThumbnailUploadPhotoData(
+          appId, bytes, baseName, thumbnailBaseName, ownerId, readAccess,
+          feedbackProgress: feedbackProgress);
+      feedbackFunction(memberMediumModel);
+    }
   }
   @override
-  void takePhoto(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress) {
+  void takePhoto(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress, {bool? allowCrop}) {
     _pickImage(context, appId, ownerId, readAccess, feedbackFunction, feedbackProgress, ImgSource.Camera);
   }
 
@@ -59,13 +90,13 @@ class MobileMediumPlatform extends AbstractMediumPlatform {
 
   @override
   Future<void> uploadPhoto(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress) async {
-    var _result = await FilePicker.platform.pickFiles(type: FileType.image);
+    var _result = await FilePicker.platform.pickFiles(type: FileType.image, allowMultiple: true);
     return processPhotos(appId, ownerId, readAccess, _result, feedbackFunction, feedbackProgress);
   }
 
   @override
   Future<void> uploadVideo(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress) async {
-    var _result = await FilePicker.platform.pickFiles(type: FileType.video);
+    var _result = await FilePicker.platform.pickFiles(type: FileType.video, allowMultiple: true);
     return processVideos(appId, ownerId, readAccess, _result, feedbackFunction, feedbackProgress);
   }
 
