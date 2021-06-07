@@ -53,7 +53,7 @@ class MediaButtons {
                 ownerId,
                 readAccess,
                 photoFeedbackFunction,
-                photoFeedbackProgress);
+                photoFeedbackProgress, allowCrop: allowCrop);
           }
           if (videoFeedbackFunction != null) {
             if (choice == 2) {

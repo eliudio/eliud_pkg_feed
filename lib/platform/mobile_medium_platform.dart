@@ -82,8 +82,32 @@ class MobileMediumPlatform extends AbstractMediumPlatform {
   bool hasCamera() => true;
 
   @override
-  Future<void> uploadPhoto(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress) async {
-    var _result = await FilePicker.platform.pickFiles(type: FileType.image, allowMultiple: true);
+  Future<void> uploadPhoto(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress, {bool? allowCrop}) async {
+    var _result = await FilePicker.platform.pickFiles(type: FileType.image, allowMultiple: false);
+    if (_result != null) {
+      if ((allowCrop != null) && (allowCrop)) {
+        var path = _result!.paths[0];
+        if (path == null) return;
+        var _image = await ImageCropper.cropImage(
+            sourcePath: path,
+            androidUiSettings: AndroidUiSettings(
+                toolbarTitle: 'Crop image',
+                toolbarColor: Colors.black,
+                toolbarWidgetColor: Colors.white,
+                initAspectRatio: CropAspectRatioPreset.square,
+                lockAspectRatio: true),
+            iosUiSettings: IOSUiSettings(
+              minimumAspectRatio: 1.0,
+            )
+        );
+        if (_image != null) {
+          processPhoto(
+              appId, ownerId, readAccess, _image.path, feedbackFunction,
+              feedbackProgress);
+        }
+        return;
+      }
+    }
     return processPhotos(appId, ownerId, readAccess, _result, feedbackFunction, feedbackProgress);
   }
 
@@ -93,16 +117,20 @@ class MobileMediumPlatform extends AbstractMediumPlatform {
     return processVideos(appId, ownerId, readAccess, _result, feedbackFunction, feedbackProgress);
   }
 
+  Future<void> processPhoto(String appId, String ownerId, List<String> readAccess, String? path, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress) async {
+    if (path != null) {
+      var memberMediumModel = await MemberMediumHelper.createThumbnailUploadPhotoFile(appId, path, ownerId, readAccess, feedbackProgress: feedbackProgress);
+      feedbackFunction(memberMediumModel);
+    } else {
+      print("Can't read file: path is null");
+    }
+ }
+
   Future<void> processPhotos(String appId, String ownerId, List<String> readAccess, FilePickerResult? result, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress) async {
     if (result != null) {
       for (var aFile in result.files) {
         var path = aFile.path;
-        if (path != null) {
-          var memberMediumModel = await MemberMediumHelper.createThumbnailUploadPhotoFile(appId, path, ownerId, readAccess, feedbackProgress: feedbackProgress);
-          feedbackFunction(memberMediumModel);
-        } else {
-          print("Can't read file: path is null");
-        }
+        processPhoto(appId, ownerId, readAccess, path, feedbackFunction, feedbackProgress);
       }
     }
   }

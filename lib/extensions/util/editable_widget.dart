@@ -44,19 +44,17 @@ Widget getEditIcon({EditAction? onPressed}) {
       child: Container(
           height: size,
           width: size,
-          child: Container(
-            decoration: new BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 8),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black,
-                  blurRadius: 5.0,
-                ),
-              ],
-            ),
-            child: pen),
+          decoration: new BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white, width: 8),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black,
+                blurRadius: 5.0,
+              ),
+            ],
           ),
+          child: pen),
       onTap: onPressed);
 }

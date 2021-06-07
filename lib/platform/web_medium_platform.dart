@@ -18,7 +18,7 @@ class WebMediumPlatform extends AbstractMediumPlatform {
   @override
   bool hasCamera() => false;
 
-  Future<void> uploadPhoto(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress) async {
+  Future<void> uploadPhoto(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress, {bool? allowCrop}) async {
     var _result = await FilePicker.platform.pickFiles(type: FileType.image);
     return processPhotos(_result, appId, ownerId, readAccess, feedbackFunction, feedbackProgress);
   }
