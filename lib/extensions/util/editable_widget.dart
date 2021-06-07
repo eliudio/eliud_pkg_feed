@@ -87,6 +87,6 @@ class EditableButton2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CircleAvatar(
-        radius: 17, backgroundColor: Colors.black, child: button);
+        radius: 18, backgroundColor: Colors.black, child: button);
   }
 }

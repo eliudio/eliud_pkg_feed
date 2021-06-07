@@ -1,4 +1,7 @@
+import 'package:eliud_core/model/member_public_info_model.dart';
+import 'package:eliud_core/tools/storage/fb_storage_image.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
+import 'package:eliud_pkg_feed/model/member_profile_model.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:flutter/material.dart';
 
@@ -69,20 +72,31 @@ class AvatarHelper {
     }
   }
 
-  static Widget avatar3(memberModel) {
+  static Widget _defaultAvatar() {
+    return PostHelper.getFormattedCircleShape(Image.asset(
+        "assets/images/undraw.co/undraw_profile_pic_ic5t.png",
+        package: "eliud_pkg_feed"));
+  }
+
+
+  static Widget avatarProfile(MemberPublicInfoModel memberModel, MemberProfileModel memberProfileModel) {
     var avatar;
-    if (memberModel == null) {
-      return Text("No avatar");
-    } else {
-      if (memberModel.photoURL == null) {
-        return PostHelper.getFormattedCircleShape(Image.asset(
-            "assets/images/undraw.co/undraw_profile_pic_ic5t.png",
-            package: "eliud_pkg_feed"));
+    if ((memberModel == null) || (memberModel.photoURL == null) && (memberProfileModel == null) || (memberProfileModel.profileOverride == null)  || (memberProfileModel.profileOverride!.ref == null) ){
+      return _defaultAvatar();
       } else {
+      if  ((memberProfileModel == null) || (memberProfileModel.profileOverride == null)  || (memberProfileModel.profileOverride!.ref == null)) {
         return PostHelper.getFormattedCircleShape(FadeInImage.memoryNetwork(
           placeholder: kTransparentImage,
           image: memberModel.photoURL!,
+          fit: BoxFit.fill,
         ));
+      } else {
+        return PostHelper.getFormattedCircleShape(FadeInImage.memoryNetwork(
+          placeholder: kTransparentImage,
+          image: memberProfileModel.profileOverride!.url!,
+          fit: BoxFit.cover,
+        ));
+//        return PostHelper.getFormattedCircleShape(FbStorageImage(ref: memberProfileModel.profileOverride!.ref!));
       }
     }
   }

@@ -9,15 +9,18 @@ typedef PhotoWithThumbnailTrigger(
 typedef VideoWithThumbnailTrigger(
     PostModel postModel, VideoWithThumbnail videoWithThumbnail);
 
+typedef void EditAction();
+
 class PostHelper {
-  static Widget getFormattedPost(List<Widget> children, {DecorationImage? image}) {
+  static Widget getFormattedPost(List<Widget> children,
+      {DecorationImage? image}) {
     return Padding(
         padding: const EdgeInsets.all(7.0),
         child: Container(
             decoration: new BoxDecoration(
                 color: Colors.white,
                 image: image,
-            border: Border.all(color: Colors.white, width: 1),
+                border: Border.all(color: Colors.white, width: 1),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black,
@@ -37,38 +40,77 @@ class PostHelper {
 
   static Widget getFormattedRoundedShape(Widget child) {
     return Container(
-        margin:EdgeInsets.all(7.0),
-            decoration: new BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.white, width: 1),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black,
-                    blurRadius: 5.0,
-                  ),
-                ],
-                borderRadius: new BorderRadius.all(
-                  const Radius.circular(10.0),
-                )),
-            child: child);
-  }
-
-  static Widget getFormattedCircleShape(Widget child, {double? border}) {
-    return Container(
+        margin: EdgeInsets.all(7.0),
         decoration: new BoxDecoration(
             color: Colors.white,
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.white, width: border == null ? 3 : border),
+            border: Border.all(color: Colors.white, width: 1),
             boxShadow: [
               BoxShadow(
                 color: Colors.black,
                 blurRadius: 5.0,
               ),
             ],
-            /*borderRadius: new BorderRadius.all(
+            borderRadius: new BorderRadius.all(
               const Radius.circular(10.0),
-            )*/),
+            )),
         child: child);
   }
 
+  static Widget getEditIcon({EditAction? onPressed}) {
+    var pen = Image.asset("assets/images/segoshvishna.fiverr.com/pen128.png",
+        package: "eliud_pkg_feed");
+    double size = 33;
+    return GestureDetector(
+        child: Container(
+        height: size,
+        width: size,
+        child: Container(
+          decoration: new BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white, width: 3),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black,
+                blurRadius: 5.0,
+              ),
+            ],
+          ),
+          child: Container(
+              decoration: new BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white, width: 5),
+              ),
+              child: pen),
+        )),
+        onTap: onPressed);
+  }
+
+  static Widget getFormattedCircleShape(Widget child, {double? border}) {
+    return CircleAvatar(
+        radius: (52),
+        backgroundColor: Colors.white,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(50),
+          child: child,
+        ));
+    return Container(
+        decoration: new BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+          border: Border.all(
+              color: Colors.white, width: border == null ? 3 : border),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black,
+              blurRadius: 5.0,
+            ),
+          ],
+          /*borderRadius: new BorderRadius.all(
+              const Radius.circular(10.0),
+            )*/
+        ),
+        child: child);
+  }
 }

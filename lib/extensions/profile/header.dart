@@ -1,3 +1,4 @@
+import 'package:eliud_pkg_feed/extensions/profile/bloc/profile_event.dart';
 import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:eliud_core/core/widgets/progress_indicator.dart';
@@ -58,7 +59,7 @@ class _HeaderState extends State<Header> {
   }
 
   // Profile photo
-  Widget _profileWidget(BuildContext context, SwitchFeedHelper switchFeedHelper,
+  Widget _profileWidget(BuildContext context, MemberProfileModel memberProfileModel, SwitchFeedHelper switchFeedHelper,
       bool isEditable, ProfileInitialised profileInitialised) {
     return Align(
         alignment: Alignment.bottomCenter,
@@ -71,8 +72,8 @@ class _HeaderState extends State<Header> {
                     child: ConstrainedBox(
                       constraints:
                           BoxConstraints(maxWidth: 110, maxHeight: 110),
-                      child: AvatarHelper.avatar3(
-                        switchFeedHelper.feedMember(),
+                      child: AvatarHelper.avatarProfile(
+                        switchFeedHelper.feedMember(), memberProfileModel
                       ), /*switchFeedHelper.getFeedWidget2(context, 39,
                             backgroundColor: Colors.black,
                             backgroundColor2: Colors.white)*/
@@ -80,19 +81,19 @@ class _HeaderState extends State<Header> {
                 Align(
                   alignment: Alignment.topRight,
                   child: EditableButton2(
-                      button: _button(context, profileInitialised)),
+                      button: _button(context, profileInitialised, false)),
                 ) // EditableButton(editFunction: () {})
               ],
             )));
   }
 
   //
-  Widget _container(BuildContext context, SwitchFeedHelper switchFeedHelper,
+  Widget _container(BuildContext context, MemberProfileModel memberProfileModel, SwitchFeedHelper switchFeedHelper,
       bool isEditable, ProfileInitialised profileInitialised) {
     return Container(
         height: heightBackgroundPhoto(context),
         child: _profileWidget(
-            context, switchFeedHelper, isEditable, profileInitialised));
+            context, memberProfileModel, switchFeedHelper, isEditable, profileInitialised));
   }
 
   @override
@@ -110,13 +111,13 @@ class _HeaderState extends State<Header> {
             // Add profile photo
             List<Widget> rows = [];
             rows.add(
-                _container(context, state.switchFeedHelper, isEditable, state));
+                _container(context, state.memberProfileModel, state.switchFeedHelper, isEditable, state));
 
             // Add the background photo
             allRows.add(EditableWidget2(
               child: PostHelper.getFormattedPost(rows,
                   image: _background(context, state.memberProfileModel)),
-              button: _button(context, state),
+              button: _button(context, state, true),
             ));
 
             // Add the name
@@ -134,23 +135,24 @@ class _HeaderState extends State<Header> {
         }));
   }
 
-  Widget _button(BuildContext context, ProfileInitialised profileInitialised) {
-    var pen = Image.asset("assets/images/segoshvishna.fiverr.com/pen128.png",
-        package: "eliud_pkg_feed");
+  Widget _button(BuildContext context, ProfileInitialised profileInitialised, bool isBG) {
     return MediaButtons.mediaButtons(
         context,
         profileInitialised.appId,
         profileInitialised.switchFeedHelper.memberOfFeed.documentID!,
-        profileInitialised.readAccess(), photoFeedbackFunction: (photo) {
-      //
+        profileInitialised.readAccess(),
+        allowCrop: !isBG,
+        photoFeedbackFunction: (photo) {
+          if (!isBG) {
+            BlocProvider.of<ProfileBloc>(context)
+                .add(ProfilePhotoChangedProfileEvent(photo));
+          } else {
+            BlocProvider.of<ProfileBloc>(context)
+                .add(ProfileBGPhotoChangedProfileEvent(photo));
+          }
     },
         photoFeedbackProgress: _photoUploading,
-        icon: Container(
-    height: 33,
-    width: 33,
-    child: PostHelper.getFormattedCircleShape(
-                IconButton(icon: pen, iconSize: 22, onPressed: () {}),
-                border: 0)));
+        icon: PostHelper.getEditIcon());
   }
 
   void _photoUploading(double progress) {

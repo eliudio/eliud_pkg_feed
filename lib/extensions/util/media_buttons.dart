@@ -1,6 +1,4 @@
-import 'package:eliud_core/tools/storage/medium_base.dart';
 import 'package:eliud_core/tools/storage/upload_info.dart';
-import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:eliud_pkg_feed/platform/medium_platform.dart';
 import 'package:flutter/material.dart';
 
@@ -9,12 +7,13 @@ class MediaButtons {
     BuildContext context,
     String appId,
     String ownerId,
-    List<String> readAccess,{
+    List<String> readAccess, {
     required MemberMediumAvailable photoFeedbackFunction,
     FeedbackProgress? photoFeedbackProgress,
     MemberMediumAvailable? videoFeedbackFunction,
     FeedbackProgress? videoFeedbackProgress,
     Widget? icon,
+    bool? allowCrop,
   }) {
     var items = <PopupMenuItem<int>>[];
     if (AbstractMediumPlatform.platform!.hasCamera()) {
@@ -34,10 +33,7 @@ class MediaButtons {
           new PopupMenuItem<int>(child: const Text('Upload video'), value: 3));
     }
     return PopupMenuButton(
-      padding: EdgeInsets.all(0.0),
-/*
-        color: Colors.red,
-*/
+        padding: EdgeInsets.all(0.0),
         icon: icon == null
             ? Icon(
                 Icons.add,
@@ -47,7 +43,8 @@ class MediaButtons {
         onSelected: (choice) {
           if (choice == 0) {
             AbstractMediumPlatform.platform!.takePhoto(context, appId, ownerId,
-                readAccess, photoFeedbackFunction, photoFeedbackProgress);
+                readAccess, photoFeedbackFunction, photoFeedbackProgress,
+                allowCrop: allowCrop);
           }
           if (choice == 1) {
             AbstractMediumPlatform.platform!.uploadPhoto(

@@ -26,8 +26,20 @@ class _ProfileState extends State<Profile> {
     return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
       if (state is ProfileError) return Text("No profile");
       if (state is ProfileInitialised) {
-        return EditableWidget1(
+        return EditableWidget2(
           child: PostHelper.getFormattedPost([HtmlWidget(state.html())]),
+            button: PostHelper.getEditIcon(onPressed: () {
+              RichTextDialog.open(
+                  context,
+                  widget.appId,
+                  state.ownerId(),
+                  state.readAccess(),
+                  "Profile",
+                      (value) => BlocProvider.of<ProfileBloc>(context)
+                      .add(ProfileChangedProfileEvent(value)),
+                  state.html());
+            },)
+/*
           editFunction: state.allowedToUpdate()
               ? () {
                   RichTextDialog.open(
@@ -37,10 +49,11 @@ class _ProfileState extends State<Profile> {
                       state.readAccess(),
                       "Profile",
                       (value) => BlocProvider.of<ProfileBloc>(context)
-                          .add(ChangedProfileEventProfile(value)),
+                          .add(ProfileChangedProfileEvent(value)),
                       state.html());
                 }
               : null,
+*/
         );
       }
       return Center(child: DelayedCircularProgressIndicator());

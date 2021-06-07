@@ -39,19 +39,12 @@ class MobileMediumPlatform extends AbstractMediumPlatform {
       if ((allowCrop != null) && (allowCrop)) {
         _image = await ImageCropper.cropImage(
             sourcePath: _image.path,
-            aspectRatioPresets: [
-              CropAspectRatioPreset.square,
-              CropAspectRatioPreset.ratio3x2,
-              CropAspectRatioPreset.original,
-              CropAspectRatioPreset.ratio4x3,
-              CropAspectRatioPreset.ratio16x9
-            ],
             androidUiSettings: AndroidUiSettings(
-                toolbarTitle: 'Cropper',
-                toolbarColor: Colors.deepOrange,
+                toolbarTitle: 'Crop image',
+                toolbarColor: Colors.black,
                 toolbarWidgetColor: Colors.white,
-                initAspectRatio: CropAspectRatioPreset.original,
-                lockAspectRatio: false),
+                initAspectRatio: CropAspectRatioPreset.square,
+                lockAspectRatio: true),
             iosUiSettings: IOSUiSettings(
               minimumAspectRatio: 1.0,
             )
@@ -72,7 +65,7 @@ class MobileMediumPlatform extends AbstractMediumPlatform {
   }
   @override
   void takePhoto(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress, {bool? allowCrop}) {
-    _pickImage(context, appId, ownerId, readAccess, feedbackFunction, feedbackProgress, ImgSource.Camera);
+    _pickImage(context, appId, ownerId, readAccess, feedbackFunction, feedbackProgress, ImgSource.Camera, allowCrop: allowCrop);
   }
 
   @override
