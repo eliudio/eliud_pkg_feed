@@ -80,7 +80,7 @@ class _HeaderState extends State<Header> {
                     )),
                 Align(
                   alignment: Alignment.topRight,
-                  child: EditableButton2(
+                  child: EditableButton(
                       button: _button(context, profileInitialised, false)),
                 ) // EditableButton(editFunction: () {})
               ],
@@ -114,7 +114,7 @@ class _HeaderState extends State<Header> {
                 _container(context, state.memberProfileModel, state.switchFeedHelper, isEditable, state));
 
             // Add the background photo
-            allRows.add(EditableWidget2(
+            allRows.add(EditableWidget(
               child: PostHelper.getFormattedPost(rows,
                   image: _background(context, state.memberProfileModel)),
               button: _button(context, state, true),
@@ -152,7 +152,7 @@ class _HeaderState extends State<Header> {
           }
     },
         photoFeedbackProgress: _photoUploading,
-        icon: PostHelper.getEditIcon());
+        icon: getEditIcon());
   }
 
   void _photoUploading(double progress) {

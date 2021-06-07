@@ -26,9 +26,9 @@ class _ProfileState extends State<Profile> {
     return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
       if (state is ProfileError) return Text("No profile");
       if (state is ProfileInitialised) {
-        return EditableWidget2(
+        return EditableWidget(
           child: PostHelper.getFormattedPost([HtmlWidget(state.html())]),
-            button: PostHelper.getEditIcon(onPressed: () {
+            button: getEditIcon(onPressed: () {
               RichTextDialog.open(
                   context,
                   widget.appId,

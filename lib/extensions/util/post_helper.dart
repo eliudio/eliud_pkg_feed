@@ -56,37 +56,6 @@ class PostHelper {
         child: child);
   }
 
-  static Widget getEditIcon({EditAction? onPressed}) {
-    var pen = Image.asset("assets/images/segoshvishna.fiverr.com/pen128.png",
-        package: "eliud_pkg_feed");
-    double size = 33;
-    return GestureDetector(
-        child: Container(
-        height: size,
-        width: size,
-        child: Container(
-          decoration: new BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.white, width: 3),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black,
-                blurRadius: 5.0,
-              ),
-            ],
-          ),
-          child: Container(
-              decoration: new BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.white, width: 5),
-              ),
-              child: pen),
-        )),
-        onTap: onPressed);
-  }
-
   static Widget getFormattedCircleShape(Widget child, {double? border}) {
     return CircleAvatar(
         radius: (52),
