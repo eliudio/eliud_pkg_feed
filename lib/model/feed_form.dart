@@ -135,6 +135,12 @@ class _MyFeedFormState extends State<MyFeedForm> {
   final TextEditingController _appIdController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   int? _thumbImageSelectedRadioTile;
+  bool? _photoPostSelection;
+  bool? _videoPostSelection;
+  bool? _messagePostSelection;
+  bool? _audioPostSelection;
+  bool? _albumPostSelection;
+  bool? _articlePostSelection;
 
 
   _MyFeedFormState(this.formAction);
@@ -147,6 +153,12 @@ class _MyFeedFormState extends State<MyFeedForm> {
     _appIdController.addListener(_onAppIdChanged);
     _descriptionController.addListener(_onDescriptionChanged);
     _thumbImageSelectedRadioTile = 0;
+    _photoPostSelection = false;
+    _videoPostSelection = false;
+    _messagePostSelection = false;
+    _audioPostSelection = false;
+    _albumPostSelection = false;
+    _articlePostSelection = false;
   }
 
   @override
@@ -176,6 +188,30 @@ class _MyFeedFormState extends State<MyFeedForm> {
           _thumbImageSelectedRadioTile = state.value!.thumbImage!.index;
         else
           _thumbImageSelectedRadioTile = 0;
+        if (state.value!.photoPost != null)
+        _photoPostSelection = state.value!.photoPost;
+        else
+        _photoPostSelection = false;
+        if (state.value!.videoPost != null)
+        _videoPostSelection = state.value!.videoPost;
+        else
+        _videoPostSelection = false;
+        if (state.value!.messagePost != null)
+        _messagePostSelection = state.value!.messagePost;
+        else
+        _messagePostSelection = false;
+        if (state.value!.audioPost != null)
+        _audioPostSelection = state.value!.audioPost;
+        else
+        _audioPostSelection = false;
+        if (state.value!.albumPost != null)
+        _albumPostSelection = state.value!.albumPost;
+        else
+        _albumPostSelection = false;
+        if (state.value!.articlePost != null)
+        _articlePostSelection = state.value!.articlePost;
+        else
+        _articlePostSelection = false;
       }
       if (state is FeedFormInitialized) {
         List<Widget> children = [];
@@ -212,6 +248,66 @@ class _MyFeedFormState extends State<MyFeedForm> {
                       setSelectionThumbImage(val);
                     },
                 ),
+          );
+
+        children.add(
+
+                CheckboxListTile(
+                    title: Text('Photo Post', style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor))),
+                    value: _photoPostSelection,
+                    onChanged: _readOnly(accessState, state) ? null : (dynamic val) {
+                      setSelectionPhotoPost(val);
+                    }),
+          );
+
+        children.add(
+
+                CheckboxListTile(
+                    title: Text('Video Post', style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor))),
+                    value: _videoPostSelection,
+                    onChanged: _readOnly(accessState, state) ? null : (dynamic val) {
+                      setSelectionVideoPost(val);
+                    }),
+          );
+
+        children.add(
+
+                CheckboxListTile(
+                    title: Text('Message Post', style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor))),
+                    value: _messagePostSelection,
+                    onChanged: _readOnly(accessState, state) ? null : (dynamic val) {
+                      setSelectionMessagePost(val);
+                    }),
+          );
+
+        children.add(
+
+                CheckboxListTile(
+                    title: Text('Audio Post', style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor))),
+                    value: _audioPostSelection,
+                    onChanged: _readOnly(accessState, state) ? null : (dynamic val) {
+                      setSelectionAudioPost(val);
+                    }),
+          );
+
+        children.add(
+
+                CheckboxListTile(
+                    title: Text('Album Post', style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor))),
+                    value: _albumPostSelection,
+                    onChanged: _readOnly(accessState, state) ? null : (dynamic val) {
+                      setSelectionAlbumPost(val);
+                    }),
+          );
+
+        children.add(
+
+                CheckboxListTile(
+                    title: Text('Article Post', style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor))),
+                    value: _articlePostSelection,
+                    onChanged: _readOnly(accessState, state) ? null : (dynamic val) {
+                      setSelectionArticlePost(val);
+                    }),
           );
 
 
@@ -315,6 +411,12 @@ class _MyFeedFormState extends State<MyFeedForm> {
                               appId: state.value!.appId, 
                               description: state.value!.description, 
                               thumbImage: state.value!.thumbImage, 
+                              photoPost: state.value!.photoPost, 
+                              videoPost: state.value!.videoPost, 
+                              messagePost: state.value!.messagePost, 
+                              audioPost: state.value!.audioPost, 
+                              albumPost: state.value!.albumPost, 
+                              articlePost: state.value!.articlePost, 
                               conditions: state.value!.conditions, 
                         )));
                       } else {
@@ -324,6 +426,12 @@ class _MyFeedFormState extends State<MyFeedForm> {
                               appId: state.value!.appId, 
                               description: state.value!.description, 
                               thumbImage: state.value!.thumbImage, 
+                              photoPost: state.value!.photoPost, 
+                              videoPost: state.value!.videoPost, 
+                              messagePost: state.value!.messagePost, 
+                              audioPost: state.value!.audioPost, 
+                              albumPost: state.value!.albumPost, 
+                              articlePost: state.value!.articlePost, 
                               conditions: state.value!.conditions, 
                           )));
                       }
@@ -379,6 +487,48 @@ class _MyFeedFormState extends State<MyFeedForm> {
     _myFormBloc.add(ChangedFeedThumbImage(value: toThumbStyle(val)));
   }
 
+
+  void setSelectionPhotoPost(bool? val) {
+    setState(() {
+      _photoPostSelection = val;
+    });
+    _myFormBloc.add(ChangedFeedPhotoPost(value: val));
+  }
+
+  void setSelectionVideoPost(bool? val) {
+    setState(() {
+      _videoPostSelection = val;
+    });
+    _myFormBloc.add(ChangedFeedVideoPost(value: val));
+  }
+
+  void setSelectionMessagePost(bool? val) {
+    setState(() {
+      _messagePostSelection = val;
+    });
+    _myFormBloc.add(ChangedFeedMessagePost(value: val));
+  }
+
+  void setSelectionAudioPost(bool? val) {
+    setState(() {
+      _audioPostSelection = val;
+    });
+    _myFormBloc.add(ChangedFeedAudioPost(value: val));
+  }
+
+  void setSelectionAlbumPost(bool? val) {
+    setState(() {
+      _albumPostSelection = val;
+    });
+    _myFormBloc.add(ChangedFeedAlbumPost(value: val));
+  }
+
+  void setSelectionArticlePost(bool? val) {
+    setState(() {
+      _articlePostSelection = val;
+    });
+    _myFormBloc.add(ChangedFeedArticlePost(value: val));
+  }
 
 
   @override

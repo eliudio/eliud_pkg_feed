@@ -1,4 +1,5 @@
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
+import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/widgets/progress_indicator.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
@@ -76,8 +77,11 @@ class _PagedPostsListState extends State<PagedPostsList> {
         package: "eliud_pkg_feed");
 
     // Photo
-    widgets.add(PostHelper.getFormattedRoundedShape(IconButton(icon: photo, onPressed: () {})));
-    widgets.add(Spacer());
+    if (widget.feedModel!.photoPost!) {
+      widgets.add(PostHelper.getFormattedRoundedShape(
+          IconButton(icon: photo, onPressed: () {})));
+      widgets.add(Spacer());
+    }
 /*
         probably needs to go into a seperate dialog
 
@@ -86,25 +90,42 @@ class _PagedPostsListState extends State<PagedPostsList> {
 */
 
     // Video
-    widgets.add(PostHelper.getFormattedRoundedShape(IconButton(icon: video, onPressed: () {})));
-    widgets.add(Spacer());
+    if (widget.feedModel!.videoPost!) {
+      widgets.add(PostHelper.getFormattedRoundedShape(
+          IconButton(icon: video, onPressed: () {})));
+      widgets.add(Spacer());
+    }
 
     // Message
-    widgets.add(PostHelper.getFormattedRoundedShape(IconButton(icon: message, onPressed: () {})));
-    widgets.add(Spacer());
+    if (widget.feedModel!.messagePost!) {
+      widgets.add(PostHelper.getFormattedRoundedShape(
+          IconButton(icon: message, onPressed: () {})));
+      widgets.add(Spacer());
+    }
 
     // Audio
-    widgets.add(PostHelper.getFormattedRoundedShape(IconButton(icon: audio, onPressed: () {})));
-    widgets.add(Spacer());
+    if (widget.feedModel!.audioPost!) {
+      widgets.add(PostHelper.getFormattedRoundedShape(
+          IconButton(icon: audio, onPressed: () {})));
+      widgets.add(Spacer());
+    }
 
     // Album
-    widgets.add(PostHelper.getFormattedRoundedShape(IconButton(icon: album, onPressed: () => FeedPostDialog.open(
-        context, widget.feedModel.documentID!, widget.switchFeedHelper))));
-    widgets.add(Spacer());
+    if (widget.feedModel!.albumPost!) {
+      widgets.add(PostHelper.getFormattedRoundedShape(
+          IconButton(icon: album, onPressed: () =>
+              FeedPostDialog.open(
+                  context, widget.feedModel.documentID!,
+                  widget.switchFeedHelper))));
+      widgets.add(Spacer());
+    }
 
     // Article
-    widgets.add(PostHelper.getFormattedRoundedShape(IconButton(icon: article, onPressed: () {})));
-    widgets.add(Spacer());
+    if (widget.feedModel!.articlePost!) {
+      widgets.add(PostHelper.getFormattedRoundedShape(
+          IconButton(icon: article, onPressed: () {})));
+      widgets.add(Spacer());
+    }
 
     return Container(height: 110, child: Row(children: widgets));
 //    return FeedPostForm(feedId: widget.feedModel.documentID!, switchFeedHelper: widget.switchFeedHelper, postListPagedBloc: BlocProvider.of<PostListPagedBloc>(context));
@@ -113,27 +134,31 @@ class _PagedPostsListState extends State<PagedPostsList> {
   @override
   Widget build(BuildContext context) {
     var _accessState = AccessBloc.getState(context);
-    return BlocBuilder<PostListPagedBloc, PostListPagedState>(
-      builder: (context, state) {
-        if (state is PostListPagedState) {
-          var theState = state;
-          List<Widget> widgets = [];
-          if (widget.switchFeedHelper.allowNewPost()) {
-            widgets.add(_newPostForm());
+    if (_accessState is AppLoaded) {
+      return BlocBuilder<PostListPagedBloc, PostListPagedState>(
+        builder: (context, state) {
+          if (state is PostListPagedState) {
+            var theState = state;
+            List<Widget> widgets = [];
+            if (widget.switchFeedHelper.allowNewPost()) {
+              widgets.add(_newPostForm());
+            }
+            for (int i = 0; i < theState.values.length; i++) {
+              widgets.add(post(context, _accessState.app.documentID!, theState.values[i]!));
+            }
+            widgets.add(_buttonNextPage(!theState.hasReachedMax));
+            return ListView(
+                shrinkWrap: true, physics: ScrollPhysics(), children: widgets);
+          } else {
+            return Center(
+              child: DelayedCircularProgressIndicator(),
+            );
           }
-          for (int i = 0; i < theState.values.length; i++) {
-            widgets.add(post(context, theState.values[i]!));
-          }
-          widgets.add(_buttonNextPage(!theState.hasReachedMax));
-          return ListView(
-              shrinkWrap: true, physics: ScrollPhysics(), children: widgets);
-        } else {
-          return Center(
-            child: DelayedCircularProgressIndicator(),
-          );
-        }
-      },
-    );
+        },
+      );
+    } else {
+      return Text("App not loaded");
+    }
   }
 
   Widget simplePost(BuildContext context, PostModel postModel) {
@@ -143,8 +168,8 @@ class _PagedPostsListState extends State<PagedPostsList> {
             .add(DeletePostPaged(value: postModel)));
   }
 
-  Widget post(BuildContext context, PostDetails postDetails) {
-     return PostWidget(thumbStyle: widget.feedModel.thumbImage,
+  Widget post(BuildContext context, String appId, PostDetails postDetails) {
+     return PostWidget(thumbStyle: widget.feedModel.thumbImage, appId: appId, feedId: widget.feedModel!.documentID!,
             switchFeedHelper: widget.switchFeedHelper, details: postDetails,
     );
   }

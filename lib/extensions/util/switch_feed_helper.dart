@@ -15,13 +15,14 @@ enum WhichFeed { MyFeed, OnlyMyFeed, SomeoneIFollow, SomeoneElse, PublicFeed }
 
 class SwitchFeedHelper {
   static String switchMemberFeedPageParameter = 'memberId';
+  final String appId;
+  final String feedId;
   final String pageId;
   final WhichFeed whichFeed;
   final MemberPublicInfoModel? memberCurrent;
   final MemberPublicInfoModel memberOfFeed;
 
-  SwitchFeedHelper(
-      this.pageId, this.whichFeed, this.memberCurrent, this.memberOfFeed);
+  SwitchFeedHelper(this.appId, this.feedId, this.pageId, this.whichFeed, this.memberCurrent, this.memberOfFeed);
 
   Widget gestured(
       BuildContext context, String switchToThisMemberId, Widget avatar) {
@@ -36,7 +37,7 @@ class SwitchFeedHelper {
     BuildContext context,
   ) {
     return gestured(
-        context, feedMember().documentID!, AvatarHelper.avatar(feedMember()));
+        context, feedMember().documentID!, AvatarHelper.avatar(feedMember, appId, feedId));
   }
 
   static void _switchMember(
@@ -70,7 +71,7 @@ class SwitchFeedHelper {
   // * watch your feed only.
   // This flag is to indicate you just want to watch your own feed.
   static Future<SwitchFeedHelper> construct(
-      PageContextInfo pageContextInfo, String appId, String? memberId,
+      PageContextInfo pageContextInfo, String appId, String feedId, String? memberId,
       {bool? watchOnlyMyFeed}) async {
     // Determine current member
     MemberPublicInfoModel? _memberCurrent;
@@ -126,7 +127,7 @@ class SwitchFeedHelper {
       whichFeed = WhichFeed.PublicFeed;
     }
 
-    return SwitchFeedHelper(
+    return SwitchFeedHelper(appId, feedId,
         pageContextInfo.pageId, whichFeed, _memberCurrent, _memberOfFeed);
   }
 }

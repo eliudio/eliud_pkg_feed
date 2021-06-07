@@ -127,6 +127,102 @@ class ThumbImageFeedFormError extends FeedFormError {
 }
 
 
+class PhotoPostFeedFormError extends FeedFormError { 
+  const PhotoPostFeedFormError({ String? message, FeedModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''PhotoPostFeedFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
+class VideoPostFeedFormError extends FeedFormError { 
+  const VideoPostFeedFormError({ String? message, FeedModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''VideoPostFeedFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
+class MessagePostFeedFormError extends FeedFormError { 
+  const MessagePostFeedFormError({ String? message, FeedModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''MessagePostFeedFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
+class AudioPostFeedFormError extends FeedFormError { 
+  const AudioPostFeedFormError({ String? message, FeedModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''AudioPostFeedFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
+class AlbumPostFeedFormError extends FeedFormError { 
+  const AlbumPostFeedFormError({ String? message, FeedModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''AlbumPostFeedFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
+class ArticlePostFeedFormError extends FeedFormError { 
+  const ArticlePostFeedFormError({ String? message, FeedModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''ArticlePostFeedFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
 class ConditionsFeedFormError extends FeedFormError { 
   const ConditionsFeedFormError({ String? message, FeedModel? value }): super(message: message, value: value);
 

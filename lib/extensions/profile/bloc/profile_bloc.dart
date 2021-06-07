@@ -52,7 +52,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     var readRights = ['PUBLIC'];
     if (member != null) readRights.add(member.documentID!);
     var switchFeedHelper = await SwitchFeedHelper.construct(pageContextInfo,
-        app.documentID!, member == null ? null : member.documentID);
+        app.documentID!, event.feedId, member == null ? null : member.documentID);
     var query = EliudQuery()
         .withCondition(EliudQueryCondition('feedId', isEqualTo: event.feedId))
         .withCondition(EliudQueryCondition('authorId',

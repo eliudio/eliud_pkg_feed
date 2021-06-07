@@ -54,18 +54,36 @@ class FeedModel {
   String? appId;
   String? description;
   ThumbStyle? thumbImage;
+
+  // Allow photo posts
+  bool? photoPost;
+
+  // Allow video posts
+  bool? videoPost;
+
+  // Allow message posts
+  bool? messagePost;
+
+  // Allow audio posts
+  bool? audioPost;
+
+  // Allow album posts
+  bool? albumPost;
+
+  // Allow article posts
+  bool? articlePost;
   ConditionsSimpleModel? conditions;
 
-  FeedModel({this.documentID, this.appId, this.description, this.thumbImage, this.conditions, })  {
+  FeedModel({this.documentID, this.appId, this.description, this.thumbImage, this.photoPost, this.videoPost, this.messagePost, this.audioPost, this.albumPost, this.articlePost, this.conditions, })  {
     assert(documentID != null);
   }
 
-  FeedModel copyWith({String? documentID, String? appId, String? description, ThumbStyle? thumbImage, ConditionsSimpleModel? conditions, }) {
-    return FeedModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, thumbImage: thumbImage ?? this.thumbImage, conditions: conditions ?? this.conditions, );
+  FeedModel copyWith({String? documentID, String? appId, String? description, ThumbStyle? thumbImage, bool? photoPost, bool? videoPost, bool? messagePost, bool? audioPost, bool? albumPost, bool? articlePost, ConditionsSimpleModel? conditions, }) {
+    return FeedModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, thumbImage: thumbImage ?? this.thumbImage, photoPost: photoPost ?? this.photoPost, videoPost: videoPost ?? this.videoPost, messagePost: messagePost ?? this.messagePost, audioPost: audioPost ?? this.audioPost, albumPost: albumPost ?? this.albumPost, articlePost: articlePost ?? this.articlePost, conditions: conditions ?? this.conditions, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ appId.hashCode ^ description.hashCode ^ thumbImage.hashCode ^ conditions.hashCode;
+  int get hashCode => documentID.hashCode ^ appId.hashCode ^ description.hashCode ^ thumbImage.hashCode ^ photoPost.hashCode ^ videoPost.hashCode ^ messagePost.hashCode ^ audioPost.hashCode ^ albumPost.hashCode ^ articlePost.hashCode ^ conditions.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -76,11 +94,17 @@ class FeedModel {
           appId == other.appId &&
           description == other.description &&
           thumbImage == other.thumbImage &&
+          photoPost == other.photoPost &&
+          videoPost == other.videoPost &&
+          messagePost == other.messagePost &&
+          audioPost == other.audioPost &&
+          albumPost == other.albumPost &&
+          articlePost == other.articlePost &&
           conditions == other.conditions;
 
   @override
   String toString() {
-    return 'FeedModel{documentID: $documentID, appId: $appId, description: $description, thumbImage: $thumbImage, conditions: $conditions}';
+    return 'FeedModel{documentID: $documentID, appId: $appId, description: $description, thumbImage: $thumbImage, photoPost: $photoPost, videoPost: $videoPost, messagePost: $messagePost, audioPost: $audioPost, albumPost: $albumPost, articlePost: $articlePost, conditions: $conditions}';
   }
 
   FeedEntity toEntity({String? appId}) {
@@ -88,6 +112,12 @@ class FeedModel {
           appId: (appId != null) ? appId : null, 
           description: (description != null) ? description : null, 
           thumbImage: (thumbImage != null) ? thumbImage!.index : null, 
+          photoPost: (photoPost != null) ? photoPost : null, 
+          videoPost: (videoPost != null) ? videoPost : null, 
+          messagePost: (messagePost != null) ? messagePost : null, 
+          audioPost: (audioPost != null) ? audioPost : null, 
+          albumPost: (albumPost != null) ? albumPost : null, 
+          articlePost: (articlePost != null) ? articlePost : null, 
           conditions: (conditions != null) ? conditions!.toEntity(appId: appId) : null, 
     );
   }
@@ -99,6 +129,12 @@ class FeedModel {
           appId: entity.appId, 
           description: entity.description, 
           thumbImage: toThumbStyle(entity.thumbImage), 
+          photoPost: entity.photoPost, 
+          videoPost: entity.videoPost, 
+          messagePost: entity.messagePost, 
+          audioPost: entity.audioPost, 
+          albumPost: entity.albumPost, 
+          articlePost: entity.articlePost, 
           conditions: 
             ConditionsSimpleModel.fromEntity(entity.conditions), 
     );
@@ -112,6 +148,12 @@ class FeedModel {
           appId: entity.appId, 
           description: entity.description, 
           thumbImage: toThumbStyle(entity.thumbImage), 
+          photoPost: entity.photoPost, 
+          videoPost: entity.videoPost, 
+          messagePost: entity.messagePost, 
+          audioPost: entity.audioPost, 
+          albumPost: entity.albumPost, 
+          articlePost: entity.articlePost, 
           conditions: 
             await ConditionsSimpleModel.fromEntityPlus(entity.conditions, appId: appId), 
     );

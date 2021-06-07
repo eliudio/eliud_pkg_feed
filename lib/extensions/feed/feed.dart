@@ -1,43 +1,20 @@
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
-import 'package:eliud_core/core/components/util/page_helper.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:eliud_core/tools/etc.dart';
-import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
-import 'package:eliud_pkg_feed/model/feed_menu_model.dart';
 import 'package:eliud_core/core/widgets/progress_indicator.dart';
 import 'package:eliud_pkg_feed/extensions/profile/bloc/profile_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/profile/bloc/profile_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
-import 'package:eliud_core/core/access/bloc/access_state.dart';
-import 'package:eliud_core/core/navigate/navigation_event.dart';
-import 'package:eliud_core/core/navigate/page_param_helper.dart';
-import 'package:eliud_core/core/widgets/alert_widget.dart';
-import 'package:eliud_core/core/widgets/progress_indicator.dart';
-import 'package:eliud_core/tools/component_constructor.dart';
-import 'package:eliud_core/tools/query/query_tools.dart';
-import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
-import 'package:eliud_pkg_feed/extensions/util/feed_widget_helper.dart';
-import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
 import '../posts/paged_posts_list.dart';
 import '../postlist_paged/postlist_paged_bloc.dart';
 import '../postlist_paged/postlist_paged_event.dart';
-import 'package:eliud_pkg_feed/model/feed_component.dart';
-import 'package:eliud_pkg_feed/model/feed_model.dart';
-import 'package:eliud_pkg_feed/model/feed_repository.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart'
 as posts;
 import 'package:eliud_pkg_feed/model/post_model.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 
 class Feed extends StatefulWidget {
   final FeedModel feedModel;
@@ -139,14 +116,6 @@ class _FeedState extends State<Feed> {
       */
     return _postPagedBloc(
         switchFeedHelper.pageId, context, feedModel, query, switchFeedHelper);
-  }
-
-  @override
-  Widget yourWidget(BuildContext context, FeedModel? feedModel) {
-
-    return FeedWidgetHelper(
-        widgetProvider: (switchFeedHelper) =>
-            _getIt(context, feedModel!, switchFeedHelper));
   }
 
   Widget _postPagedBloc(

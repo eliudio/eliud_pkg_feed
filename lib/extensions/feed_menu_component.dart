@@ -9,7 +9,6 @@ import 'package:flutter/widgets.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 import 'package:eliud_core/core/widgets/alert_widget.dart';
 import 'package:eliud_core/tools/component_constructor.dart';
-import 'package:eliud_pkg_feed/extensions/util/feed_widget_helper.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/feed_menu_component.dart';
 import 'package:eliud_pkg_feed/model/feed_menu_model.dart';

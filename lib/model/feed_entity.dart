@@ -25,16 +25,22 @@ class FeedEntity {
   final String? appId;
   final String? description;
   final int? thumbImage;
+  final bool? photoPost;
+  final bool? videoPost;
+  final bool? messagePost;
+  final bool? audioPost;
+  final bool? albumPost;
+  final bool? articlePost;
   final ConditionsSimpleEntity? conditions;
 
-  FeedEntity({this.appId, this.description, this.thumbImage, this.conditions, });
+  FeedEntity({this.appId, this.description, this.thumbImage, this.photoPost, this.videoPost, this.messagePost, this.audioPost, this.albumPost, this.articlePost, this.conditions, });
 
 
-  List<Object?> get props => [appId, description, thumbImage, conditions, ];
+  List<Object?> get props => [appId, description, thumbImage, photoPost, videoPost, messagePost, audioPost, albumPost, articlePost, conditions, ];
 
   @override
   String toString() {
-    return 'FeedEntity{appId: $appId, description: $description, thumbImage: $thumbImage, conditions: $conditions}';
+    return 'FeedEntity{appId: $appId, description: $description, thumbImage: $thumbImage, photoPost: $photoPost, videoPost: $videoPost, messagePost: $messagePost, audioPost: $audioPost, albumPost: $albumPost, articlePost: $articlePost, conditions: $conditions}';
   }
 
   static FeedEntity? fromMap(Map? map) {
@@ -49,6 +55,12 @@ class FeedEntity {
       appId: map['appId'], 
       description: map['description'], 
       thumbImage: map['thumbImage'], 
+      photoPost: map['photoPost'], 
+      videoPost: map['videoPost'], 
+      messagePost: map['messagePost'], 
+      audioPost: map['audioPost'], 
+      albumPost: map['albumPost'], 
+      articlePost: map['articlePost'], 
       conditions: conditionsFromMap, 
     );
   }
@@ -65,6 +77,18 @@ class FeedEntity {
       else theDocument["description"] = null;
     if (thumbImage != null) theDocument["thumbImage"] = thumbImage;
       else theDocument["thumbImage"] = null;
+    if (photoPost != null) theDocument["photoPost"] = photoPost;
+      else theDocument["photoPost"] = null;
+    if (videoPost != null) theDocument["videoPost"] = videoPost;
+      else theDocument["videoPost"] = null;
+    if (messagePost != null) theDocument["messagePost"] = messagePost;
+      else theDocument["messagePost"] = null;
+    if (audioPost != null) theDocument["audioPost"] = audioPost;
+      else theDocument["audioPost"] = null;
+    if (albumPost != null) theDocument["albumPost"] = albumPost;
+      else theDocument["albumPost"] = null;
+    if (articlePost != null) theDocument["articlePost"] = articlePost;
+      else theDocument["articlePost"] = null;
     if (conditions != null) theDocument["conditions"] = conditionsMap;
       else theDocument["conditions"] = null;
     return theDocument;

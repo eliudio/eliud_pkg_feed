@@ -3,6 +3,7 @@ import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/tools/storage/fb_storage_image.dart';
 import 'package:eliud_core/tools/storage/medium_base.dart';
 import 'package:eliud_pkg_feed/model/post_medium_model.dart';
+import 'package:eliud_pkg_feed/tools/view/video_view.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
@@ -37,6 +38,9 @@ class PostContentsWidget extends StatefulWidget {
 }
 
 class _PostContentsWidgetState extends State<PostContentsWidget> {
+  static double _width(BuildContext context) =>
+      MediaQuery.of(context).size.width;
+
   @override
   Widget build(BuildContext context) {
     if (widget.postModel == null) return Text("No post defined");
@@ -44,19 +48,35 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
 
     if (widget.postModel!.postPageId != null) {
       if (widget.memberID != null) {
-        return EmbeddedPageHelper.postDetails(widget.memberID,
-            widget.postModel, widget.accessBloc, context, widget.parentPageId!);
+        return EmbeddedPageHelper.postDetails(widget.memberID, widget.postModel,
+            widget.accessBloc, context, widget.parentPageId!);
       }
     } else if ((widget.postModel!.memberMedia != null) &&
         (widget.postModel!.memberMedia!.length > 0)) {
       if (widget.postModel!.memberMedia!.length == 1) {
         var medium = widget.postModel!.memberMedia![0];
-        return Center(child:FbStorageImage(ref: medium.memberMedium!.refThumbnail!));
+        var ref;
+        var width;
+        if (medium.memberMedium!.mediumType == MediumType.Photo) {
+          ref = medium.memberMedium!.ref!;
+          width = _width(context) * .7;
+        } else {
+          ref = medium.memberMedium!.refThumbnail!;
+        }
+        return GestureDetector(
+            child: Center(
+                child: FbStorageImage(
+              ref: ref,
+              width: width,
+            )),
+            onTap: () {
+              _action([medium], 0);
+            });
       } else {
         List<PostMediumModel> memberMedia = widget.postModel!.memberMedia!;
         List<Widget> widgets = [];
         // Photos & videos
-        widgets.add(PostMediaHelper.videoAndPhotoDivider(context));
+        //widgets.add(PostMediaHelper.videoAndPhotoDivider(context));
         widgets.add(PostMediaHelper.staggeredMemberMediumModelFromPostMedia(
             memberMedia, viewAction: (index) {
           _action(memberMedia, index);

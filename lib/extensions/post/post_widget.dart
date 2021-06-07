@@ -19,12 +19,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class PostWidget extends StatefulWidget {
   //final MemberModel? member;
   //final String parentPageId;
+  final String appId;
+  final String feedId;
   final ThumbStyle? thumbStyle;
   final PostDetails details;
   final SwitchFeedHelper switchFeedHelper;
 
   const PostWidget(
-      {Key? key, required this.thumbStyle, required this.switchFeedHelper, required this.details})
+      {Key? key, required this.appId, required this.feedId, required this.thumbStyle, required this.switchFeedHelper, required this.details})
       : super(key: key);
 
   @override
@@ -110,7 +112,7 @@ class _PostWidgetState extends State<PostWidget> {
             child: widget.switchFeedHelper.gestured(
                 context,
                 widget.switchFeedHelper.memberCurrent!.documentID!,
-                AvatarHelper.avatar(widget.switchFeedHelper.memberCurrent!))),
+                AvatarHelper.avatar(widget.switchFeedHelper.memberCurrent!, widget.appId, widget.feedId))),
         Container(width: 8),
         Flexible(
           child: Container(
@@ -196,7 +198,7 @@ class _PostWidgetState extends State<PostWidget> {
           child: widget.switchFeedHelper.gestured(
               context,
               postModel.author!.documentID!,
-              AvatarHelper.avatar(postModel.author))),
+              AvatarHelper.avatar(postModel.author, widget.appId, widget.feedId))),
       Container(
         width: 8,
       ),
@@ -349,7 +351,7 @@ class _PostWidgetState extends State<PostWidget> {
 
     var rowChildren = [
       widget.switchFeedHelper.gestured(context, data.member!.documentID!,
-          AvatarHelper.avatar2(data.member, 8)),
+          AvatarHelper.avatar2(data.member, widget.appId, widget.feedId, 8)),
       Container(width: 8),
       Expanded(
           child: Container(

@@ -144,7 +144,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
 
   Widget _row1(AppModel app, MemberPublicInfoModel member,
       FeedPostFormInitialized state, LoggedIn accessState) {
-    var avatar = widget.switchFeedHelper.gestured(context, member.documentID!, AvatarHelper.avatar(member));
+    var avatar = widget.switchFeedHelper.gestured(context, member.documentID!, AvatarHelper.avatar(member, widget.feedId, app.documentID!));
     return Row(children: [
       Container(
           height: 60, width: 60, child: avatar == null ? Container() : avatar),

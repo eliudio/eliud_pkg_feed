@@ -48,6 +48,42 @@
       "enumValues" : [ "Thumbs", "Banana" ]
     },
     {
+      "fieldName": "photoPost",
+      "displayName": "Photo Post",
+      "remark": "Allow photo posts",
+      "fieldType": "bool"
+    },
+    {
+      "fieldName": "videoPost",
+      "displayName": "Video Post",
+      "remark": "Allow video posts",
+      "fieldType": "bool"
+    },
+    {
+      "fieldName": "messagePost",
+      "displayName": "Message Post",
+      "remark": "Allow message posts",
+      "fieldType": "bool"
+    },
+    {
+      "fieldName": "audioPost",
+      "displayName": "Audio Post",
+      "remark": "Allow audio posts",
+      "fieldType": "bool"
+    },
+    {
+      "fieldName": "albumPost",
+      "displayName": "Album Post",
+      "remark": "Allow album posts",
+      "fieldType": "bool"
+    },
+    {
+      "fieldName": "articlePost",
+      "displayName": "Article Post",
+      "remark": "Allow article posts",
+      "fieldType": "bool"
+    },
+    {
       "fieldName": "conditions",
       "displayName": "Conditions",
       "fieldType": "ConditionsSimple",

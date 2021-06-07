@@ -103,6 +103,42 @@ class FeedFormBloc extends Bloc<FeedFormEvent, FeedFormState> {
 
         return;
       }
+      if (event is ChangedFeedPhotoPost) {
+        newValue = currentState.value!.copyWith(photoPost: event.value);
+        yield SubmittableFeedForm(value: newValue);
+
+        return;
+      }
+      if (event is ChangedFeedVideoPost) {
+        newValue = currentState.value!.copyWith(videoPost: event.value);
+        yield SubmittableFeedForm(value: newValue);
+
+        return;
+      }
+      if (event is ChangedFeedMessagePost) {
+        newValue = currentState.value!.copyWith(messagePost: event.value);
+        yield SubmittableFeedForm(value: newValue);
+
+        return;
+      }
+      if (event is ChangedFeedAudioPost) {
+        newValue = currentState.value!.copyWith(audioPost: event.value);
+        yield SubmittableFeedForm(value: newValue);
+
+        return;
+      }
+      if (event is ChangedFeedAlbumPost) {
+        newValue = currentState.value!.copyWith(albumPost: event.value);
+        yield SubmittableFeedForm(value: newValue);
+
+        return;
+      }
+      if (event is ChangedFeedArticlePost) {
+        newValue = currentState.value!.copyWith(articlePost: event.value);
+        yield SubmittableFeedForm(value: newValue);
+
+        return;
+      }
       if (event is ChangedFeedConditions) {
         newValue = currentState.value!.copyWith(conditions: event.value);
         yield SubmittableFeedForm(value: newValue);

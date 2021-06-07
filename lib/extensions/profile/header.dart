@@ -24,7 +24,9 @@ class Header extends StatefulWidget {
 class _HeaderState extends State<Header> {
   static double heightBackgroundPhoto(BuildContext context) =>
       MediaQuery.of(context).size.height / 2.5;
+/*
   static double heightText = 122;
+*/
   static double width(BuildContext context) =>
       MediaQuery.of(context).size.width;
 
@@ -98,11 +100,7 @@ class _HeaderState extends State<Header> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        // this container creates the space until blocbuilder has retrieved the data and image has been downloaded, preventing the screen to jump
-        height: heightBackgroundPhoto(context) + heightText,
-        child:
-            BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
+    return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
           if (state is ProfileError) return Text("No profile");
           if (state is ProfileInitialised) {
             List<Widget> allRows = [];
@@ -132,7 +130,7 @@ class _HeaderState extends State<Header> {
             return Column(children: allRows);
           }
           return Center(child: DelayedCircularProgressIndicator());
-        }));
+        });
   }
 
   Widget _button(BuildContext context, ProfileInitialised profileInitialised, bool isBG) {

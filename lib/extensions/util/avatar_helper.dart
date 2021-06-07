@@ -1,74 +1,119 @@
+import 'package:eliud_core/core/widgets/progress_indicator.dart';
+import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
+import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/storage/fb_storage_image.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
+import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/member_profile_model.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:flutter/material.dart';
 
 class AvatarHelper {
+
+  static Future<String?> _getFuture(String memberId, String authorId, String appId, String feedId) async {
+    var readRights = ['PUBLIC', memberId];
+    var query = EliudQuery()
+        .withCondition(EliudQueryCondition('authorId',
+        isEqualTo: authorId))
+        .withCondition(EliudQueryCondition('feedId',
+        isEqualTo: feedId))
+    .withCondition(
+    EliudQueryCondition('readAccess', arrayContainsAny: readRights));
+
+    var valuesList = await memberProfileRepository(appId: appId)!
+        .valuesListWithDetails(eliudQuery: query);
+    if (valuesList.length > 1) {
+      // In theory a person can create multiple profiles. However, we use the first only.
+      var value = valuesList[0];
+      if (value!.profileOverride == null) return null;
+      return value!.profileOverride!.url;
+    } else {
+      return null;
+    }
+  }
+
   /*
    * Not specifying the memberModel type allows to use MemberModel as well as MemberPublicInfoModel
    */
-  static Widget avatar(memberModel) {
-    var avatar;
+  static Widget avatar(memberModel, String appId, String feedId) {
     if (memberModel == null) {
-      avatar = Text("No avatar");
+      return Text("No member");
     } else {
-      if (memberModel.photoURL == null) {
-        avatar = Image.asset(
-            "assets/images/undraw.co/undraw_profile_pic_ic5t.png",
-            package: "eliud_pkg_feed");
-      } else {
-//        avatar = Image.asset("assets/images/undraw.co/undraw_profile_pic_ic5t.png",  package: "eliud_pkg_feed");
-        avatar = FadeInImage.memoryNetwork(
-          placeholder: kTransparentImage,
-          image: memberModel.photoURL!,
-        );
-      }
+      return FutureBuilder<String?>(
+          future: _getFuture(memberModel.documentID!, memberModel.documentID!, appId, feedId) ,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return FadeInImage.memoryNetwork(
+                placeholder: kTransparentImage,
+                image: snapshot.data!,
+              );
+            } else if (memberModel.photoURL == null) {
+              return Image.asset(
+                  "assets/images/undraw.co/undraw_profile_pic_ic5t.png",
+                  package: "eliud_pkg_feed");
+            } else {
+              return FadeInImage.memoryNetwork(
+                placeholder: kTransparentImage,
+                image: memberModel.photoURL!,
+              );
+            }
+          });
     }
-    return avatar;
   }
 
   static double circle1Size = 5.0;
   static double circle2Size = 5.0;
   static double circle3Size = 5.0;
 
-  static Widget avatar2(memberModel, double radius,
+  static Widget _getIt(String url, double radius, Color? backgroundColor, Color? backgroundColor2) {
+    return CircleAvatar(
+        radius: radius + circle1Size + circle2Size + circle3Size,
+        backgroundColor: backgroundColor == null
+            ? Colors.transparent
+            : backgroundColor,
+        child: CircleAvatar(
+            radius: radius + circle1Size + circle2Size,
+            backgroundColor: backgroundColor2 == null
+                ? Colors.transparent
+                : backgroundColor2,
+            backgroundImage: FadeInImage.memoryNetwork(
+              placeholder: kTransparentImage,
+              image: url,
+            ).image,
+            child: CircleAvatar(
+              radius: radius + circle1Size,
+              backgroundColor: Colors.transparent,
+            )));
+  }
+
+  static Widget avatar2(memberModel, String appId, String feedId, double radius,
       {Color? backgroundColor, Color? backgroundColor2}) {
     var avatar;
     if (memberModel == null) {
       return Text("No avatar");
     } else {
-      if (memberModel.photoURL == null) {
-        return CircleAvatar(
-          radius: radius == null ? 12 : radius,
-          backgroundColor:
-              backgroundColor == null ? Colors.transparent : backgroundColor,
-          backgroundImage: Image.asset(
-                  "assets/images/undraw.co/undraw_profile_pic_ic5t.png",
-                  package: "eliud_pkg_feed")
-              .image,
-        );
-      } else {
-        return CircleAvatar(
-            radius: radius + circle1Size + circle2Size + circle3Size,
-            backgroundColor:
-                backgroundColor == null ? Colors.transparent : backgroundColor,
-                child: CircleAvatar(
-                  radius: radius + circle1Size + circle2Size,
-                  backgroundColor: backgroundColor2 == null
-                      ? Colors.transparent
-                      : backgroundColor2,
-                  backgroundImage: FadeInImage.memoryNetwork(
-                    placeholder: kTransparentImage,
-                    image: memberModel.photoURL!,
-                  ).image,
-                    child: CircleAvatar(
-                      radius: radius + circle1Size,
-                      backgroundColor: Colors.transparent,
-                )));
-      }
-      // add gesturethingy and :
+      return FutureBuilder<String?>(
+          future: _getFuture(memberModel.documentID!, memberModel.documentID!, appId, feedId) ,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return _getIt(snapshot.data!, radius, backgroundColor, backgroundColor2);
+            } else if (memberModel.photoURL == null) {
+              return CircleAvatar(
+                radius: radius == null ? 12 : radius,
+                backgroundColor: backgroundColor == null
+                    ? Colors.transparent
+                    : backgroundColor,
+                backgroundImage: Image.asset(
+                        "assets/images/undraw.co/undraw_profile_pic_ic5t.png",
+                        package: "eliud_pkg_feed")
+                    .image,
+              );
+            } else {
+              return _getIt(memberModel.photoURL!,radius, backgroundColor, backgroundColor2);
+            }
+            // add gesturethingy and :
+          });
     }
   }
 
@@ -78,13 +123,18 @@ class AvatarHelper {
         package: "eliud_pkg_feed"));
   }
 
-
-  static Widget avatarProfile(MemberPublicInfoModel memberModel, MemberProfileModel memberProfileModel) {
+  static Widget avatarProfile(MemberPublicInfoModel memberModel,
+      MemberProfileModel memberProfileModel) {
     var avatar;
-    if ((memberModel == null) || (memberModel.photoURL == null) && (memberProfileModel == null) || (memberProfileModel.profileOverride == null)  || (memberProfileModel.profileOverride!.ref == null) ){
+    if ((memberModel == null) ||
+        (memberModel.photoURL == null) && (memberProfileModel == null) ||
+        (memberProfileModel.profileOverride == null) ||
+        (memberProfileModel.profileOverride!.ref == null)) {
       return _defaultAvatar();
-      } else {
-      if  ((memberProfileModel == null) || (memberProfileModel.profileOverride == null)  || (memberProfileModel.profileOverride!.ref == null)) {
+    } else {
+      if ((memberProfileModel == null) ||
+          (memberProfileModel.profileOverride == null) ||
+          (memberProfileModel.profileOverride!.ref == null)) {
         return PostHelper.getFormattedCircleShape(FadeInImage.memoryNetwork(
           placeholder: kTransparentImage,
           image: memberModel.photoURL!,

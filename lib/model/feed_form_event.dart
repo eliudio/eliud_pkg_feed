@@ -107,6 +107,78 @@ class ChangedFeedThumbImage extends FeedFormEvent {
   String toString() => 'ChangedFeedThumbImage{ value: $value }';
 }
 
+class ChangedFeedPhotoPost extends FeedFormEvent {
+  final bool? value;
+
+  ChangedFeedPhotoPost({this.value});
+
+  @override
+  List<Object?> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedFeedPhotoPost{ value: $value }';
+}
+
+class ChangedFeedVideoPost extends FeedFormEvent {
+  final bool? value;
+
+  ChangedFeedVideoPost({this.value});
+
+  @override
+  List<Object?> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedFeedVideoPost{ value: $value }';
+}
+
+class ChangedFeedMessagePost extends FeedFormEvent {
+  final bool? value;
+
+  ChangedFeedMessagePost({this.value});
+
+  @override
+  List<Object?> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedFeedMessagePost{ value: $value }';
+}
+
+class ChangedFeedAudioPost extends FeedFormEvent {
+  final bool? value;
+
+  ChangedFeedAudioPost({this.value});
+
+  @override
+  List<Object?> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedFeedAudioPost{ value: $value }';
+}
+
+class ChangedFeedAlbumPost extends FeedFormEvent {
+  final bool? value;
+
+  ChangedFeedAlbumPost({this.value});
+
+  @override
+  List<Object?> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedFeedAlbumPost{ value: $value }';
+}
+
+class ChangedFeedArticlePost extends FeedFormEvent {
+  final bool? value;
+
+  ChangedFeedArticlePost({this.value});
+
+  @override
+  List<Object?> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedFeedArticlePost{ value: $value }';
+}
+
 class ChangedFeedConditions extends FeedFormEvent {
   final ConditionsSimpleModel? value;
 
