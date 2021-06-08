@@ -12,20 +12,11 @@ import 'package:flutter/material.dart';
 class AvatarHelper {
 
   static Future<String?> _getFuture(String memberId, String authorId, String appId, String feedId) async {
-    var readRights = ['PUBLIC', memberId];
-    var query = EliudQuery()
-        .withCondition(EliudQueryCondition('authorId',
-        isEqualTo: authorId))
-        .withCondition(EliudQueryCondition('feedId',
-        isEqualTo: feedId))
-    .withCondition(
-    EliudQueryCondition('readAccess', arrayContainsAny: readRights));
-
-    var valuesList = await memberProfileRepository(appId: appId)!
-        .valuesListWithDetails(eliudQuery: query);
-    if (valuesList.length > 1) {
+    var key = authorId + "-" + feedId;
+    var memberProfileModel = await memberProfileRepository(appId: appId)!.get(key);
+    if (memberProfileModel != null) {
       // In theory a person can create multiple profiles. However, we use the first only.
-      var value = valuesList[0];
+      var value = memberProfileModel;
       if (value!.profileOverride == null) return null;
       return value!.profileOverride!.url;
     } else {

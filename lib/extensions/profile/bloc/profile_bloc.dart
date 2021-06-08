@@ -48,26 +48,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     var app = accessState.app;
     var pageContextInfo =
         PageParamHelper.getPagaContextInfoWithRoutAndApp(event.modalRoute, app);
-    var readAccess = await PostFollowersHelper.asPublic(accessState);
-    var readRights = ['PUBLIC'];
-    if (member != null) readRights.add(member.documentID!);
     var switchFeedHelper = await SwitchFeedHelper.construct(pageContextInfo,
         app.documentID!, event.feedId, member == null ? null : member.documentID);
-    var query = EliudQuery()
-        .withCondition(EliudQueryCondition('feedId', isEqualTo: event.feedId))
-        .withCondition(EliudQueryCondition('authorId',
-            isEqualTo: switchFeedHelper.memberOfFeed.documentID))
-        .withCondition(
-            EliudQueryCondition('readAccess', arrayContainsAny: readRights));
-    var valuesList = await memberProfileRepository(appId: app.documentID)!
-        .valuesListWithDetails(eliudQuery: query);
-    if (valuesList.length > 1) {
-      // In theory a person can create multiple profiles. However, we use the first only.
-      var memberProfileModel = valuesList[0];
-      return ProfileInitialised(event.feedId, app.documentID!, readAccess,
-          memberProfileModel!, switchFeedHelper);
-    } else {
-      return ProfileError("No profile available");
+    var key = switchFeedHelper.memberOfFeed.documentID! + "-" + event.feedId;
+    var memberProfileModel = await memberProfileRepository(appId: app.documentID)!.get(key);
+    if (memberProfileModel == null) {
+      // create default profile
+      memberProfileModel = MemberProfileModel(documentID: key, readAccess: switchFeedHelper.defaultReadAccess, profile: "");
     }
+    return ProfileInitialised(event.feedId, app.documentID!, switchFeedHelper.defaultReadAccess,
+        memberProfileModel!, switchFeedHelper);
   }
 }

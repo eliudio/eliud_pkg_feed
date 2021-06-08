@@ -64,22 +64,5 @@ class PostHelper {
           borderRadius: BorderRadius.circular(50),
           child: child,
         ));
-    return Container(
-        decoration: new BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.circle,
-          border: Border.all(
-              color: Colors.white, width: border == null ? 3 : border),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black,
-              blurRadius: 5.0,
-            ),
-          ],
-          /*borderRadius: new BorderRadius.all(
-              const Radius.circular(10.0),
-            )*/
-        ),
-        child: child);
   }
 }

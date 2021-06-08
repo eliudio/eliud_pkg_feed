@@ -89,7 +89,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
       },
           photoFeedbackProgress: _photoUploading,
           icon: PostHelper.getFormattedRoundedShape(
-              Container(width: 100, height: 100, child: photo))));
+              Center(child: ConstrainedBox(constraints: BoxConstraints(minWidth: 100, maxWidth: 100),  child: photo)))));
 
       widgets.add(Spacer());
     }
