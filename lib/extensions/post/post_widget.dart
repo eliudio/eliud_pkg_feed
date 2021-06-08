@@ -2,6 +2,7 @@ import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/tools/storage/fb_storage_image.dart';
 import 'package:eliud_core/tools/storage/medium_base.dart';
 import 'package:eliud_pkg_feed/extensions/post/embedded_page.dart';
+import 'package:eliud_pkg_feed/extensions/post/post_contents_widget.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_event.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_state.dart';
@@ -79,7 +80,7 @@ class _PostWidgetState extends State<PostWidget> {
       widgets.add(_description(postModel));
       widgets.add(_aBitSpace());
     }
-    widgets.add(_contents(
+    widgets.add(PostContentsWidget(
       memberID: widget.switchFeedHelper.memberCurrent!.documentID!,
       postModel: postModel,
       accessBloc: originalAccessBloc,
@@ -100,71 +101,6 @@ class _PostWidgetState extends State<PostWidget> {
 
   static double _width(BuildContext context) =>
       MediaQuery.of(context).size.width;
-
-  @override
-  Widget _contents({String? memberID,
-    PostModel? postModel,
-    AccessBloc? accessBloc,
-    String? parentPageId}) {
-    List<Tab> tabs = [];
-
-    if (postModel!.postPageId != null) {
-      if (memberID != null) {
-        return EmbeddedPageHelper.postDetails(memberID, postModel,
-            accessBloc, context, parentPageId!
-        );
-      }
-    } else if ((postModel!.memberMedia != null) &&
-        (postModel!.memberMedia!.length > 0)) {
-      if (postModel!.memberMedia!.length == 1) {
-        var medium = postModel!.memberMedia![0];
-        var width;
-        if (medium.memberMedium!.mediumType == MediumType.Photo) {
-          width = _width(context) * .7;
-        }
-        return GestureDetector(
-            child: Center(
-                child: MemberImageModelWidget(memberMediumModel:medium.memberMedium!,
-                  width: width,
-                  showThumbnail: medium.memberMedium!.mediumType != MediumType.Photo,
-                )),
-            onTap: () {
-              _action([medium], 0);
-            });
-      } else {
-        List<PostMediumModel> memberMedia = postModel!.memberMedia!;
-        List<Widget> widgets = [];
-        // Photos & videos
-        //widgets.add(PostMediaHelper.videoAndPhotoDivider(context));
-        widgets.add(PostMediaHelper.staggeredMemberMediumModelFromPostMedia(
-            memberMedia, viewAction: (index) {
-          _action(memberMedia, index);
-        }));
-        return Column(children: widgets);
-      }
-    } else if (postModel!.externalLink != null) {
-/*
-      return WebView(
-        initialUrl: state.postModel.externalLink,
-        javascriptMode: JavascriptMode.unrestricted,
-      );
-*/
-      return Text("External link not supported yet");
-    }
-    return Container(height: 1); // nothing
-  }
-
-  void _action(List<PostMediumModel> memberMedia, int index) {
-    var postMedium = memberMedia[index];
-    if (postMedium.memberMedium!.mediumType! == MediumType.Photo) {
-      AbstractMediumPlatform.platform!
-          .showPhotosFromPostMedia(context, memberMedia, index);
-    } else {
-      AbstractMediumPlatform.platform!
-          .showVideo(context, postMedium.memberMedium!);
-    }
-  }
-
 
   Widget _description(PostModel? postModel) {
     if ((postModel != null) && (postModel.description != null)) {

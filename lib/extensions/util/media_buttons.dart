@@ -8,21 +8,24 @@ class MediaButtons {
     String appId,
     String ownerId,
     List<String> readAccess, {
-    required MemberMediumAvailable photoFeedbackFunction,
+    MemberMediumAvailable? photoFeedbackFunction,
     FeedbackProgress? photoFeedbackProgress,
     MemberMediumAvailable? videoFeedbackFunction,
     FeedbackProgress? videoFeedbackProgress,
     Widget? icon,
     bool? allowCrop,
+    String? tooltip,
   }) {
     var items = <PopupMenuItem<int>>[];
-    if (AbstractMediumPlatform.platform!.hasCamera()) {
+    if (photoFeedbackFunction != null) {
+      if (AbstractMediumPlatform.platform!.hasCamera()) {
+        items.add(
+          PopupMenuItem<int>(child: const Text('Take photo'), value: 0),
+        );
+      }
       items.add(
-        PopupMenuItem<int>(child: const Text('Take photo'), value: 0),
-      );
+          new PopupMenuItem<int>(child: const Text('Upload photo'), value: 1));
     }
-    items.add(
-        new PopupMenuItem<int>(child: const Text('Upload photo'), value: 1));
     if (videoFeedbackFunction != null) {
       if (AbstractMediumPlatform.platform!.hasCamera()) {
         items.add(
@@ -33,27 +36,34 @@ class MediaButtons {
           new PopupMenuItem<int>(child: const Text('Upload video'), value: 3));
     }
     return PopupMenuButton(
+        tooltip: tooltip,
         padding: EdgeInsets.all(0.0),
+        child: icon,
+/*
         icon: icon == null
             ? Icon(
                 Icons.add,
               )
             : icon,
+*/
         itemBuilder: (_) => items,
         onSelected: (choice) {
-          if (choice == 0) {
-            AbstractMediumPlatform.platform!.takePhoto(context, appId, ownerId,
-                readAccess, photoFeedbackFunction, photoFeedbackProgress,
-                allowCrop: allowCrop);
-          }
-          if (choice == 1) {
-            AbstractMediumPlatform.platform!.uploadPhoto(
-                context,
-                appId,
-                ownerId,
-                readAccess,
-                photoFeedbackFunction,
-                photoFeedbackProgress, allowCrop: allowCrop);
+          if (photoFeedbackFunction != null) {
+            if (choice == 0) {
+              AbstractMediumPlatform.platform!.takePhoto(
+                  context, appId, ownerId,
+                  readAccess, photoFeedbackFunction, photoFeedbackProgress,
+                  allowCrop: allowCrop);
+            }
+            if (choice == 1) {
+              AbstractMediumPlatform.platform!.uploadPhoto(
+                  context,
+                  appId,
+                  ownerId,
+                  readAccess,
+                  photoFeedbackFunction,
+                  photoFeedbackProgress, allowCrop: allowCrop);
+            }
           }
           if (videoFeedbackFunction != null) {
             if (choice == 2) {

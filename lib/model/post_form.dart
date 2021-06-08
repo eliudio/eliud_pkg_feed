@@ -142,6 +142,7 @@ class _MyPostFormState extends State<MyPostForm> {
   final TextEditingController _feedIdController = TextEditingController();
   final TextEditingController _postAppIdController = TextEditingController();
   final TextEditingController _postPageIdController = TextEditingController();
+  final TextEditingController _htmlController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _likesController = TextEditingController();
   final TextEditingController _dislikesController = TextEditingController();
@@ -160,6 +161,7 @@ class _MyPostFormState extends State<MyPostForm> {
     _feedIdController.addListener(_onFeedIdChanged);
     _postAppIdController.addListener(_onPostAppIdChanged);
     _postPageIdController.addListener(_onPostPageIdChanged);
+    _htmlController.addListener(_onHtmlChanged);
     _descriptionController.addListener(_onDescriptionChanged);
     _likesController.addListener(_onLikesChanged);
     _dislikesController.addListener(_onDislikesChanged);
@@ -202,6 +204,10 @@ class _MyPostFormState extends State<MyPostForm> {
           _postPageIdController.text = state.value!.postPageId.toString();
         else
           _postPageIdController.text = "";
+        if (state.value!.html != null)
+          _htmlController.text = state.value!.html.toString();
+        else
+          _htmlController.text = "";
         if (state.value!.description != null)
           _descriptionController.text = state.value!.description.toString();
         else
@@ -374,6 +380,24 @@ class _MyPostFormState extends State<MyPostForm> {
                 TextFormField(
                 style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor)),
                   readOnly: _readOnly(accessState, state),
+                  controller: _htmlController,
+                  decoration: InputDecoration(
+                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldTextColor))),                    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldFocusColor))),                    icon: Icon(Icons.text_format, color: RgbHelper.color(rgbo: app.formFieldHeaderColor)),
+                    labelText: 'Rich Text',
+                  ),
+                  keyboardType: TextInputType.text,
+                  autovalidate: true,
+                  validator: (_) {
+                    return state is HtmlPostFormError ? state.message : null;
+                  },
+                ),
+          );
+
+        children.add(
+
+                TextFormField(
+                style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor)),
+                  readOnly: _readOnly(accessState, state),
                   controller: _descriptionController,
                   decoration: InputDecoration(
                     enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldTextColor))),                    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldFocusColor))),                    icon: Icon(Icons.text_format, color: RgbHelper.color(rgbo: app.formFieldHeaderColor)),
@@ -503,6 +527,7 @@ class _MyPostFormState extends State<MyPostForm> {
                               postAppId: state.value!.postAppId, 
                               postPageId: state.value!.postPageId, 
                               pageParameters: state.value!.pageParameters, 
+                              html: state.value!.html, 
                               description: state.value!.description, 
                               likes: state.value!.likes, 
                               dislikes: state.value!.dislikes, 
@@ -522,6 +547,7 @@ class _MyPostFormState extends State<MyPostForm> {
                               postAppId: state.value!.postAppId, 
                               postPageId: state.value!.postPageId, 
                               pageParameters: state.value!.pageParameters, 
+                              html: state.value!.html, 
                               description: state.value!.description, 
                               likes: state.value!.likes, 
                               dislikes: state.value!.dislikes, 
@@ -594,6 +620,11 @@ class _MyPostFormState extends State<MyPostForm> {
   }
 
 
+  void _onHtmlChanged() {
+    _myFormBloc.add(ChangedPostHtml(value: _htmlController.text));
+  }
+
+
   void _onDescriptionChanged() {
     _myFormBloc.add(ChangedPostDescription(value: _descriptionController.text));
   }
@@ -642,6 +673,7 @@ class _MyPostFormState extends State<MyPostForm> {
     _feedIdController.dispose();
     _postAppIdController.dispose();
     _postPageIdController.dispose();
+    _htmlController.dispose();
     _descriptionController.dispose();
     _likesController.dispose();
     _dislikesController.dispose();

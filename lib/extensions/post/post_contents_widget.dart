@@ -1,21 +1,15 @@
-import 'package:eliud_core/model/member_medium_model.dart';
-import 'package:eliud_core/model/member_public_info_model.dart';
-import 'package:eliud_core/tools/storage/fb_storage_image.dart';
-import 'package:eliud_core/tools/storage/medium_base.dart';
-import 'package:eliud_pkg_feed/model/post_medium_model.dart';
-import 'package:eliud_pkg_feed/tools/view/video_view.dart';
 import 'package:flutter/material.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
-import 'package:eliud_core/model/member_model.dart';
+import 'package:eliud_core/tools/storage/fb_storage_image.dart';
+import 'package:eliud_pkg_feed/model/post_medium_model.dart';
+import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/post/embedded_page.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_media_helper.dart';
-import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:eliud_pkg_feed/platform/medium_platform.dart';
-import 'package:eliud_pkg_feed/tools/filter_member_media.dart';
-import 'package:flutter/material.dart';
 
 class PostContentsWidget extends StatefulWidget {
   final String? memberID;
@@ -43,37 +37,42 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.postModel == null) return Text("No post defined");
+    return _contents(memberID: widget.memberID!, postModel: widget.postModel,
+        accessBloc: widget.accessBloc, parentPageId: widget.parentPageId);
+  }
+
+  @override
+  Widget _contents({String? memberID,
+    PostModel? postModel,
+    AccessBloc? accessBloc,
+    String? parentPageId}) {
     List<Tab> tabs = [];
 
-    if (widget.postModel!.postPageId != null) {
-      if (widget.memberID != null) {
-        return EmbeddedPageHelper.postDetails(widget.memberID, widget.postModel,
-            widget.accessBloc, context, widget.parentPageId!);
+    if (postModel!.postPageId != null) {
+      if (memberID != null) {
+        return EmbeddedPageHelper.postDetails(memberID, postModel,
+            accessBloc, context, parentPageId!
+        );
       }
-    } else if ((widget.postModel!.memberMedia != null) &&
-        (widget.postModel!.memberMedia!.length > 0)) {
-      if (widget.postModel!.memberMedia!.length == 1) {
-        var medium = widget.postModel!.memberMedia![0];
-        var ref;
+    } else if ((postModel!.memberMedia != null) &&
+        (postModel!.memberMedia!.length > 0)) {
+      if (postModel!.memberMedia!.length == 1) {
+        var medium = postModel!.memberMedia![0];
         var width;
         if (medium.memberMedium!.mediumType == MediumType.Photo) {
-          ref = medium.memberMedium!.ref!;
           width = _width(context) * .7;
-        } else {
-          ref = medium.memberMedium!.refThumbnail!;
         }
         return GestureDetector(
             child: Center(
                 child: MemberImageModelWidget(memberMediumModel:medium.memberMedium!,
-              width: width,
+                  width: width,
                   showThumbnail: medium.memberMedium!.mediumType != MediumType.Photo,
-            )),
+                )),
             onTap: () {
               _action([medium], 0);
             });
       } else {
-        List<PostMediumModel> memberMedia = widget.postModel!.memberMedia!;
+        List<PostMediumModel> memberMedia = postModel!.memberMedia!;
         List<Widget> widgets = [];
         // Photos & videos
         //widgets.add(PostMediaHelper.videoAndPhotoDivider(context));
@@ -83,7 +82,7 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
         }));
         return Column(children: widgets);
       }
-    } else if (widget.postModel!.externalLink != null) {
+    } else if (postModel!.externalLink != null) {
 /*
       return WebView(
         initialUrl: state.postModel.externalLink,
@@ -91,7 +90,10 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
       );
 */
       return Text("External link not supported yet");
+    } else if (postModel!.html != null) {
+      return HtmlWidget(postModel!.html!);
     }
+
     return Container(height: 1); // nothing
   }
 
@@ -106,29 +108,5 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
     }
   }
 
-/*
-  Widget _row2(FeedPostFormInitialized state) {
-    return PostMediaHelper.staggeredPhotosWithThumbnail(state.postModelDetails.photoWithThumbnails, (index) {
-      var photos = state.postModelDetails.photoWithThumbnails;
-      photos.removeAt(index);
-      _myFormBloc.add(ChangedFeedPhotos(photoWithThumbnails: photos));
-    }, (index) {
-      var photos = state.postModelDetails.photoWithThumbnails;
-      AbstractMediumPlatform.platform!.showPhotos(context, photos, index);
-    });
-  }
-
-  Widget _row3(FeedPostFormInitialized state) {
-    return PostMediaHelper.staggeredVideosWithThumbnail(state.postModelDetails.videoWithThumbnails, (index) {
-      var videos = state.postModelDetails.videoWithThumbnails;
-      videos.removeAt(index);
-      _myFormBloc.add(ChangedFeedVideos(videoWithThumbnails: videos));
-    }, (index) {
-      var videos = state.postModelDetails.videoWithThumbnails;
-      var medium = videos[index];
-      AbstractMediumPlatform.platform!.showVideo(context, medium);
-    });
-  }
-*/
 
 }

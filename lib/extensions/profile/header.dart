@@ -83,7 +83,7 @@ class _HeaderState extends State<Header> {
                 Align(
                   alignment: Alignment.topRight,
                   child: EditableButton(
-                      button: _button(context, profileInitialised, false)),
+                      button: _button(context, profileInitialised, false, 'Update profile photo')),
                 ) // EditableButton(editFunction: () {})
               ],
             )));
@@ -115,7 +115,7 @@ class _HeaderState extends State<Header> {
             allRows.add(EditableWidget(
               child: PostHelper.getFormattedPost(rows,
                   image: _background(context, state.memberProfileModel)),
-              button: _button(context, state, true),
+              button: _button(context, state, true, 'Update profile background'),
             ));
 
             // Add the name
@@ -133,13 +133,14 @@ class _HeaderState extends State<Header> {
         });
   }
 
-  Widget _button(BuildContext context, ProfileInitialised profileInitialised, bool isBG) {
+  Widget _button(BuildContext context, ProfileInitialised profileInitialised, bool isBG, String tooltip) {
     return MediaButtons.mediaButtons(
         context,
         profileInitialised.appId,
         profileInitialised.switchFeedHelper.memberOfFeed.documentID!,
         profileInitialised.readAccess(),
         allowCrop: !isBG,
+        tooltip: tooltip,
         photoFeedbackFunction: (photo) {
           if (!isBG) {
             BlocProvider.of<ProfileBloc>(context)

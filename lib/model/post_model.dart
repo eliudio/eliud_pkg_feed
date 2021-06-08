@@ -69,6 +69,7 @@ class PostModel {
   // This is the identifier of the page to where this feed points to
   String? postPageId;
   Map<String, dynamic>? pageParameters;
+  String? html;
   String? description;
   int? likes;
   int? dislikes;
@@ -77,16 +78,16 @@ class PostModel {
   String? externalLink;
   List<PostMediumModel>? memberMedia;
 
-  PostModel({this.documentID, this.author, this.timestamp, this.appId, this.feedId, this.postAppId, this.postPageId, this.pageParameters, this.description, this.likes, this.dislikes, this.readAccess, this.archived, this.externalLink, this.memberMedia, })  {
+  PostModel({this.documentID, this.author, this.timestamp, this.appId, this.feedId, this.postAppId, this.postPageId, this.pageParameters, this.html, this.description, this.likes, this.dislikes, this.readAccess, this.archived, this.externalLink, this.memberMedia, })  {
     assert(documentID != null);
   }
 
-  PostModel copyWith({String? documentID, MemberPublicInfoModel? author, String? timestamp, String? appId, String? feedId, String? postAppId, String? postPageId, Map<String, dynamic>? pageParameters, String? description, int? likes, int? dislikes, List<String>? readAccess, PostArchiveStatus? archived, String? externalLink, List<PostMediumModel>? memberMedia, }) {
-    return PostModel(documentID: documentID ?? this.documentID, author: author ?? this.author, timestamp: timestamp ?? this.timestamp, appId: appId ?? this.appId, feedId: feedId ?? this.feedId, postAppId: postAppId ?? this.postAppId, postPageId: postPageId ?? this.postPageId, pageParameters: pageParameters ?? this.pageParameters, description: description ?? this.description, likes: likes ?? this.likes, dislikes: dislikes ?? this.dislikes, readAccess: readAccess ?? this.readAccess, archived: archived ?? this.archived, externalLink: externalLink ?? this.externalLink, memberMedia: memberMedia ?? this.memberMedia, );
+  PostModel copyWith({String? documentID, MemberPublicInfoModel? author, String? timestamp, String? appId, String? feedId, String? postAppId, String? postPageId, Map<String, dynamic>? pageParameters, String? html, String? description, int? likes, int? dislikes, List<String>? readAccess, PostArchiveStatus? archived, String? externalLink, List<PostMediumModel>? memberMedia, }) {
+    return PostModel(documentID: documentID ?? this.documentID, author: author ?? this.author, timestamp: timestamp ?? this.timestamp, appId: appId ?? this.appId, feedId: feedId ?? this.feedId, postAppId: postAppId ?? this.postAppId, postPageId: postPageId ?? this.postPageId, pageParameters: pageParameters ?? this.pageParameters, html: html ?? this.html, description: description ?? this.description, likes: likes ?? this.likes, dislikes: dislikes ?? this.dislikes, readAccess: readAccess ?? this.readAccess, archived: archived ?? this.archived, externalLink: externalLink ?? this.externalLink, memberMedia: memberMedia ?? this.memberMedia, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ author.hashCode ^ timestamp.hashCode ^ appId.hashCode ^ feedId.hashCode ^ postAppId.hashCode ^ postPageId.hashCode ^ pageParameters.hashCode ^ description.hashCode ^ likes.hashCode ^ dislikes.hashCode ^ readAccess.hashCode ^ archived.hashCode ^ externalLink.hashCode ^ memberMedia.hashCode;
+  int get hashCode => documentID.hashCode ^ author.hashCode ^ timestamp.hashCode ^ appId.hashCode ^ feedId.hashCode ^ postAppId.hashCode ^ postPageId.hashCode ^ pageParameters.hashCode ^ html.hashCode ^ description.hashCode ^ likes.hashCode ^ dislikes.hashCode ^ readAccess.hashCode ^ archived.hashCode ^ externalLink.hashCode ^ memberMedia.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -101,6 +102,7 @@ class PostModel {
           postAppId == other.postAppId &&
           postPageId == other.postPageId &&
           pageParameters == other.pageParameters &&
+          html == other.html &&
           description == other.description &&
           likes == other.likes &&
           dislikes == other.dislikes &&
@@ -114,7 +116,7 @@ class PostModel {
     String readAccessCsv = (readAccess == null) ? '' : readAccess!.join(', ');
     String memberMediaCsv = (memberMedia == null) ? '' : memberMedia!.join(', ');
 
-    return 'PostModel{documentID: $documentID, author: $author, timestamp: $timestamp, appId: $appId, feedId: $feedId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, description: $description, likes: $likes, dislikes: $dislikes, readAccess: String[] { $readAccessCsv }, archived: $archived, externalLink: $externalLink, memberMedia: PostMedium[] { $memberMediaCsv }}';
+    return 'PostModel{documentID: $documentID, author: $author, timestamp: $timestamp, appId: $appId, feedId: $feedId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, html: $html, description: $description, likes: $likes, dislikes: $dislikes, readAccess: String[] { $readAccessCsv }, archived: $archived, externalLink: $externalLink, memberMedia: PostMedium[] { $memberMediaCsv }}';
   }
 
   PostEntity toEntity({String? appId}) {
@@ -126,6 +128,7 @@ class PostModel {
           postAppId: (postAppId != null) ? postAppId : null, 
           postPageId: (postPageId != null) ? postPageId : null, 
           pageParameters: pageParameters, 
+          html: (html != null) ? html : null, 
           description: (description != null) ? description : null, 
           likes: (likes != null) ? likes : null, 
           dislikes: (dislikes != null) ? dislikes : null, 
@@ -148,6 +151,7 @@ class PostModel {
           postAppId: entity.postAppId, 
           postPageId: entity.postPageId, 
           pageParameters: entity.pageParameters, 
+          html: entity.html, 
           description: entity.description, 
           likes: entity.likes, 
           dislikes: entity.dislikes, 
@@ -185,6 +189,7 @@ class PostModel {
           postAppId: entity.postAppId, 
           postPageId: entity.postPageId, 
           pageParameters: entity.pageParameters, 
+          html: entity.html, 
           description: entity.description, 
           likes: entity.likes, 
           dislikes: entity.dislikes, 

@@ -79,6 +79,13 @@
       "bespokeEntityToDocument" : "    theDocument['pageParameters'] = pageParameters;\n"
     },
     {
+      "fieldName": "html",
+      "displayName": "Rich Text",
+      "fieldType": "String",
+      "iconName": "text_format",
+      "group": "general"
+    },
+    {
       "fieldName": "description",
       "displayName": "Description",
       "fieldType": "String",

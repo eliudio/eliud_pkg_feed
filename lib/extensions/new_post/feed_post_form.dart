@@ -92,7 +92,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
           builder: (context, state) {
             return dialogHelper.build(
                 dialogButtonPosition: DialogButtonPosition.TopRight,
-                title: 'New post',
+                title: 'New Album',
                 contents: _contents(context, state, app, pubMember, theState),
                 buttons: dialogHelper.getYesNoButtons(context, () {
                   BlocProvider.of<FeedPostFormBloc>(context).add(SubmitPost());
@@ -144,7 +144,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
 
   Widget _row1(AppModel app, MemberPublicInfoModel member,
       FeedPostFormInitialized state, LoggedIn accessState) {
-    var avatar = widget.switchFeedHelper.gestured(context, member.documentID!, AvatarHelper.avatar(member, widget.feedId, app.documentID!));
+    var avatar = widget.switchFeedHelper.gestured(context, member.documentID!, AvatarHelper.avatar(member, app.documentID!, widget.feedId, ));
     return Row(children: [
       Container(
           height: 60, width: 60, child: avatar == null ? Container() : avatar),
@@ -180,6 +180,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         app.documentID!,
         memberId,
         readAccess,
+        tooltip: 'Add video or photo',
         photoFeedbackFunction: (photo) {
           var memberMedia = state.postModelDetails.memberMedia;
           memberMedia.add(photo);

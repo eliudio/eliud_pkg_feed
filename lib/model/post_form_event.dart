@@ -159,6 +159,18 @@ class ChangedPostPageParameters extends PostFormEvent {
   String toString() => 'ChangedPostPageParameters{ value: $value }';
 }
 
+class ChangedPostHtml extends PostFormEvent {
+  final String? value;
+
+  ChangedPostHtml({this.value});
+
+  @override
+  List<Object?> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedPostHtml{ value: $value }';
+}
+
 class ChangedPostDescription extends PostFormEvent {
   final String? value;
 

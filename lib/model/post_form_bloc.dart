@@ -61,6 +61,7 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
                                  feedId: "",
                                  postAppId: "",
                                  postPageId: "",
+                                 html: "",
                                  description: "",
                                  likes: 0,
                                  dislikes: 0,
@@ -111,6 +112,7 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
                                  postAppId: currentState.value!.postAppId,
                                  postPageId: currentState.value!.postPageId,
                                  pageParameters: currentState.value!.pageParameters,
+                                 html: currentState.value!.html,
                                  description: currentState.value!.description,
                                  likes: currentState.value!.likes,
                                  dislikes: currentState.value!.dislikes,
@@ -155,6 +157,12 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
       }
       if (event is ChangedPostPageParameters) {
         newValue = currentState.value!.copyWith(pageParameters: event.value);
+        yield SubmittablePostForm(value: newValue);
+
+        return;
+      }
+      if (event is ChangedPostHtml) {
+        newValue = currentState.value!.copyWith(html: event.value);
         yield SubmittablePostForm(value: newValue);
 
         return;

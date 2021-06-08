@@ -191,6 +191,22 @@ class PageParametersPostFormError extends PostFormError {
 }
 
 
+class HtmlPostFormError extends PostFormError { 
+  const HtmlPostFormError({ String? message, PostModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''HtmlPostFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
 class DescriptionPostFormError extends PostFormError { 
   const DescriptionPostFormError({ String? message, PostModel? value }): super(message: message, value: value);
 
