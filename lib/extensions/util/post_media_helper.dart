@@ -64,8 +64,7 @@ class PostMediaHelper {
     for (int i = 0; i < media.length; i++) {
       var medium = media[i];
       var image, name;
-      image = FbStorageImage(ref: medium.refThumbnail!);
-      //image = Image.network(medium.urlThumbnail!);
+      image = MemberImageModelWidget(memberMediumModel: medium, showThumbnail: true,);
       name = medium.urlThumbnail!;
 
       widgets

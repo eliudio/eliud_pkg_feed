@@ -44,13 +44,7 @@ class MemberMediumSlideImageProvider extends SlideImageProvider {
 
   @override
   Widget getImage(int index) {
-//    var widget = Image.network(media[index].url!);
-     var widget = FbStorageImage(ref: media[index].ref!);
-    if (widget == null) {
-      return Image.asset("assets/images/manypixels.co/404_Page_Not_Found _Flatline.png",  package: "eliud_pkg_feed");
-    } else {
-      return widget;
-    }
+    return MemberImageModelWidget(memberMediumModel: media[index], showThumbnail: false, defaultWidget: Image.asset("assets/images/manypixels.co/404_Page_Not_Found _Flatline.png",  package: "eliud_pkg_feed"),);
   }
 
   @override

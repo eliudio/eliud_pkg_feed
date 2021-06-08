@@ -65,9 +65,9 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
         }
         return GestureDetector(
             child: Center(
-                child: FbStorageImage(
-              ref: ref,
+                child: MemberImageModelWidget(memberMediumModel:medium.memberMedium!,
               width: width,
+                  showThumbnail: medium.memberMedium!.mediumType != MediumType.Photo,
             )),
             onTap: () {
               _action([medium], 0);

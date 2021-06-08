@@ -40,21 +40,26 @@ Widget getEditIcon({EditAction? onPressed}) {
   var pen = Image.asset("assets/images/segoshvishna.fiverr.com/pen128.png",
       package: "eliud_pkg_feed");
   double size = 33;
-  return GestureDetector(
-      child: Container(
-          height: size,
-          width: size,
-          decoration: new BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.white, width: 8),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black,
-                blurRadius: 5.0,
-              ),
-            ],
+  var _container = Container(
+      height: size,
+      width: size,
+      decoration: new BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.white, width: 8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black,
+            blurRadius: 5.0,
           ),
-          child: pen),
-      onTap: onPressed);
+        ],
+      ),
+      child: pen);
+  if (onPressed != null) {
+    return GestureDetector(
+        child: _container,
+        onTap: onPressed);
+  } else {
+    return _container;
+  }
 }

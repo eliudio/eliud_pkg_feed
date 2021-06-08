@@ -2,6 +2,7 @@ import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/navigate/page_param_helper.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
+import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 import 'package:eliud_pkg_follow/tools/follower_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:eliud_core/core/navigate/navigate_bloc.dart';
@@ -21,8 +22,9 @@ class SwitchFeedHelper {
   final WhichFeed whichFeed;
   final MemberPublicInfoModel? memberCurrent;
   final MemberPublicInfoModel memberOfFeed;
+  final List<String> defaultReadAccess;
 
-  SwitchFeedHelper(this.appId, this.feedId, this.pageId, this.whichFeed, this.memberCurrent, this.memberOfFeed);
+  SwitchFeedHelper(this.appId, this.feedId, this.pageId, this.whichFeed, this.memberCurrent, this.memberOfFeed, this.defaultReadAccess);
 
   Widget gestured(
       BuildContext context, String switchToThisMemberId, Widget avatar) {
@@ -107,6 +109,7 @@ class SwitchFeedHelper {
 
     // Determine whichFeed
     WhichFeed whichFeed;
+    var defaultReadAccess;
     if (_memberCurrent != null) {
       String meId = _memberCurrent.documentID!;
       if (meId == _memberOfFeed.documentID!) {
@@ -123,11 +126,13 @@ class SwitchFeedHelper {
           whichFeed = WhichFeed.SomeoneElse;
         }
       }
+      defaultReadAccess = await PostFollowersMemberHelper.asFollowers(appId, meId);
     } else {
       whichFeed = WhichFeed.PublicFeed;
     }
 
+
     return SwitchFeedHelper(appId, feedId,
-        pageContextInfo.pageId, whichFeed, _memberCurrent, _memberOfFeed);
+        pageContextInfo.pageId, whichFeed, _memberCurrent, _memberOfFeed, defaultReadAccess);
   }
 }

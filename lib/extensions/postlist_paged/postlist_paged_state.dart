@@ -81,11 +81,8 @@ class PostListPagedState extends Equatable {
       }
     }
 
-    return PostListPagedState(
-      status: status,
+    return copyWith(
       values: newValues,
-      hasReachedMax: this.hasReachedMax,
-      lastRowFetched: this.lastRowFetched,
     );
   }
 

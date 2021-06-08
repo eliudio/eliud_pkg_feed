@@ -1,18 +1,23 @@
+import 'package:eliud_core/model/member_medium_model.dart';
+import 'package:eliud_core/tools/storage/fb_storage_image.dart';
 import 'package:eliud_core/tools/storage/medium_base.dart';
+import 'package:eliud_pkg_feed/extensions/post/embedded_page.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_event.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_state.dart';
 import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
+import 'package:eliud_pkg_feed/extensions/util/post_media_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/tools/widgets/dialog_helper.dart';
 import 'package:eliud_core/tools/widgets/request_value_dialog.dart';
 import 'package:eliud_core/tools/widgets/yes_no_dialog.dart';
-import 'package:eliud_pkg_feed/extensions/post/post_contents_widget.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
 import 'package:eliud_pkg_feed/model/post_like_model.dart';
+import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
+import 'package:eliud_pkg_feed/platform/medium_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -67,13 +72,14 @@ class _PostWidgetState extends State<PostWidget> {
     List<Widget> widgets = [];
 
     widgets.add(_heading(context, postModel, memberId));
+
     widgets.add(_aBitSpace());
     if ((postModel.description != null) &&
         (postModel.description!.length > 0)) {
       widgets.add(_description(postModel));
       widgets.add(_aBitSpace());
     }
-    widgets.add(PostContentsWidget(
+    widgets.add(_contents(
       memberID: widget.switchFeedHelper.memberCurrent!.documentID!,
       postModel: postModel,
       accessBloc: originalAccessBloc,
@@ -90,6 +96,75 @@ class _PostWidgetState extends State<PostWidget> {
 
     return PostHelper.getFormattedPost(widgets);
   }
+
+
+  static double _width(BuildContext context) =>
+      MediaQuery.of(context).size.width;
+
+  @override
+  Widget _contents({String? memberID,
+    PostModel? postModel,
+    AccessBloc? accessBloc,
+    String? parentPageId}) {
+    List<Tab> tabs = [];
+
+    if (postModel!.postPageId != null) {
+      if (memberID != null) {
+        return EmbeddedPageHelper.postDetails(memberID, postModel,
+            accessBloc, context, parentPageId!
+        );
+      }
+    } else if ((postModel!.memberMedia != null) &&
+        (postModel!.memberMedia!.length > 0)) {
+      if (postModel!.memberMedia!.length == 1) {
+        var medium = postModel!.memberMedia![0];
+        var width;
+        if (medium.memberMedium!.mediumType == MediumType.Photo) {
+          width = _width(context) * .7;
+        }
+        return GestureDetector(
+            child: Center(
+                child: MemberImageModelWidget(memberMediumModel:medium.memberMedium!,
+                  width: width,
+                  showThumbnail: medium.memberMedium!.mediumType != MediumType.Photo,
+                )),
+            onTap: () {
+              _action([medium], 0);
+            });
+      } else {
+        List<PostMediumModel> memberMedia = postModel!.memberMedia!;
+        List<Widget> widgets = [];
+        // Photos & videos
+        //widgets.add(PostMediaHelper.videoAndPhotoDivider(context));
+        widgets.add(PostMediaHelper.staggeredMemberMediumModelFromPostMedia(
+            memberMedia, viewAction: (index) {
+          _action(memberMedia, index);
+        }));
+        return Column(children: widgets);
+      }
+    } else if (postModel!.externalLink != null) {
+/*
+      return WebView(
+        initialUrl: state.postModel.externalLink,
+        javascriptMode: JavascriptMode.unrestricted,
+      );
+*/
+      return Text("External link not supported yet");
+    }
+    return Container(height: 1); // nothing
+  }
+
+  void _action(List<PostMediumModel> memberMedia, int index) {
+    var postMedium = memberMedia[index];
+    if (postMedium.memberMedium!.mediumType! == MediumType.Photo) {
+      AbstractMediumPlatform.platform!
+          .showPhotosFromPostMedia(context, memberMedia, index);
+    } else {
+      AbstractMediumPlatform.platform!
+          .showVideo(context, postMedium.memberMedium!);
+    }
+  }
+
 
   Widget _description(PostModel? postModel) {
     if ((postModel != null) && (postModel.description != null)) {
@@ -191,6 +266,7 @@ class _PostWidgetState extends State<PostWidget> {
     } else {
       timeStamp = postModel.timestamp!;
     }
+
     var children = [
       Container(
           height: 50,

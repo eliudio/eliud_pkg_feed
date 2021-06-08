@@ -2,12 +2,17 @@ import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/widgets/progress_indicator.dart';
 import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/model/rgb_model.dart';
 import 'package:eliud_core/tools/etc.dart';
+import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_pkg_feed/extensions/new_post/feed_post_dialog.dart';
+import 'package:eliud_pkg_feed/extensions/util/media_buttons.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
+import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:eliud_pkg_feed/platform/medium_platform.dart';
 import '../postlist_paged/postlist_paged_bloc.dart';
 import '../postlist_paged/postlist_paged_event.dart';
@@ -47,39 +52,45 @@ class _PagedPostsListState extends State<PagedPostsList> {
     _app = AccessBloc.app(context);
   }
 
-  Widget _button(Widget icon, Widget text, action) {
-    return MaterialButton(
-        color: Colors.white,
-        shape: CircleBorder(),
-        onPressed: action,
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: icon,
-        ));
-  }
+  void _photoUploading(double progress) {}
 
   Widget _newPostForm() {
     List<Widget> widgets = [];
     widgets.add(Spacer());
-    var album = Image.asset("assets/images/segoshvishna.fiverr.com/album.png",
-        package: "eliud_pkg_feed");
-    var article = Image.asset(
-        "assets/images/segoshvishna.fiverr.com/article.png",
-        package: "eliud_pkg_feed");
-    var audio = Image.asset("assets/images/segoshvishna.fiverr.com/audio.png",
-        package: "eliud_pkg_feed");
-    var message = Image.asset(
-        "assets/images/segoshvishna.fiverr.com/message.png",
-        package: "eliud_pkg_feed");
-    var photo = Image.asset("assets/images/segoshvishna.fiverr.com/photo.png",
-        package: "eliud_pkg_feed");
-    var video = Image.asset("assets/images/segoshvishna.fiverr.com/video.png",
-        package: "eliud_pkg_feed");
 
     // Photo
     if (widget.feedModel!.photoPost!) {
+      var photo = Image.asset("assets/images/segoshvishna.fiverr.com/photo.png",
+          package: "eliud_pkg_feed");
+
       widgets.add(PostHelper.getFormattedRoundedShape(
           IconButton(icon: photo, onPressed: () {})));
+      widgets.add(MediaButtons.mediaButtons(
+          context,
+          widget.feedModel.appId!,
+          widget.switchFeedHelper.memberOfFeed.documentID!,
+          widget.switchFeedHelper.defaultReadAccess,
+          allowCrop: false, photoFeedbackFunction: (photo) {
+        var postMemberMedia = [
+          PostMediumModel(documentID: newRandomKey(), memberMedium: photo)
+        ];
+
+        BlocProvider.of<PostListPagedBloc>(context).add(AddPostPaged(
+            value: PostModel(
+                documentID: newRandomKey(),
+                author: widget.switchFeedHelper.memberCurrent,
+                appId: widget.feedModel.appId!,
+                feedId: widget.feedModel.documentID!,
+                likes: 0,
+                dislikes: 0,
+                readAccess: widget.switchFeedHelper.defaultReadAccess,
+                archived: PostArchiveStatus.Active,
+                memberMedia: postMemberMedia)));
+      },
+          photoFeedbackProgress: _photoUploading,
+          icon: PostHelper.getFormattedRoundedShape(
+              Container(width: 100, height: 100, child: photo))));
+
       widgets.add(Spacer());
     }
 /*
@@ -90,45 +101,57 @@ class _PagedPostsListState extends State<PagedPostsList> {
 */
 
     // Video
-    if (widget.feedModel!.videoPost!) {
+    if (widget.feedModel!.videoPost != null && widget.feedModel!.videoPost!) {
+      var video = Image.asset("assets/images/segoshvishna.fiverr.com/video.png",
+          package: "eliud_pkg_feed");
       widgets.add(PostHelper.getFormattedRoundedShape(
           IconButton(icon: video, onPressed: () {})));
       widgets.add(Spacer());
     }
 
     // Message
-    if (widget.feedModel!.messagePost!) {
+    if (widget.feedModel!.messagePost != null &&
+        widget.feedModel!.messagePost!) {
+      var message = Image.asset(
+          "assets/images/segoshvishna.fiverr.com/message.png",
+          package: "eliud_pkg_feed");
       widgets.add(PostHelper.getFormattedRoundedShape(
           IconButton(icon: message, onPressed: () {})));
       widgets.add(Spacer());
     }
 
     // Audio
-    if (widget.feedModel!.audioPost!) {
+    if (widget.feedModel!.audioPost != null && widget.feedModel!.audioPost!) {
+      var audio = Image.asset("assets/images/segoshvishna.fiverr.com/audio.png",
+          package: "eliud_pkg_feed");
       widgets.add(PostHelper.getFormattedRoundedShape(
           IconButton(icon: audio, onPressed: () {})));
       widgets.add(Spacer());
     }
 
     // Album
-    if (widget.feedModel!.albumPost!) {
-      widgets.add(PostHelper.getFormattedRoundedShape(
-          IconButton(icon: album, onPressed: () =>
-              FeedPostDialog.open(
-                  context, widget.feedModel.documentID!,
-                  widget.switchFeedHelper))));
+    if (widget.feedModel!.albumPost != null && widget.feedModel!.albumPost!) {
+      var album = Image.asset("assets/images/segoshvishna.fiverr.com/album.png",
+          package: "eliud_pkg_feed");
+      widgets.add(PostHelper.getFormattedRoundedShape(IconButton(
+          icon: album,
+          onPressed: () => FeedPostDialog.open(context,
+              widget.feedModel.documentID!, widget.switchFeedHelper))));
       widgets.add(Spacer());
     }
 
     // Article
-    if (widget.feedModel!.articlePost!) {
+    if (widget.feedModel!.articlePost != null &&
+        widget.feedModel!.articlePost!) {
+      var article = Image.asset(
+          "assets/images/segoshvishna.fiverr.com/article.png",
+          package: "eliud_pkg_feed");
       widgets.add(PostHelper.getFormattedRoundedShape(
           IconButton(icon: article, onPressed: () {})));
       widgets.add(Spacer());
     }
 
     return Container(height: 110, child: Row(children: widgets));
-//    return FeedPostForm(feedId: widget.feedModel.documentID!, switchFeedHelper: widget.switchFeedHelper, postListPagedBloc: BlocProvider.of<PostListPagedBloc>(context));
   }
 
   @override
@@ -144,7 +167,8 @@ class _PagedPostsListState extends State<PagedPostsList> {
               widgets.add(_newPostForm());
             }
             for (int i = 0; i < theState.values.length; i++) {
-              widgets.add(post(context, _accessState.app.documentID!, theState.values[i]!));
+              widgets.add(post(
+                  context, _accessState.app.documentID!, theState.values[i]!));
             }
             widgets.add(_buttonNextPage(!theState.hasReachedMax));
             return ListView(
@@ -169,8 +193,12 @@ class _PagedPostsListState extends State<PagedPostsList> {
   }
 
   Widget post(BuildContext context, String appId, PostDetails postDetails) {
-     return PostWidget(thumbStyle: widget.feedModel.thumbImage, appId: appId, feedId: widget.feedModel!.documentID!,
-            switchFeedHelper: widget.switchFeedHelper, details: postDetails,
+    return PostWidget(
+      thumbStyle: widget.feedModel.thumbImage,
+      appId: appId,
+      feedId: widget.feedModel!.documentID!,
+      switchFeedHelper: widget.switchFeedHelper,
+      details: postDetails,
     );
   }
 

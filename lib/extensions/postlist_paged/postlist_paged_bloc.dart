@@ -49,7 +49,10 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
       List<PostDetails> newListOfValues = [];
       newListOfValues.add(details);
       newListOfValues.addAll(state.values);
-      yield state.copyWith(values: newListOfValues);
+      var previousState = state;
+      var newState = state.copyWith(values: newListOfValues);
+      bool isEqual = newState == previousState;
+      yield newState;
     } else if (event is DeletePostPaged) {
       await _mapDeletePost(event);
 
