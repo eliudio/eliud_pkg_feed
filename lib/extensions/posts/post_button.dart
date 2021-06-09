@@ -92,15 +92,15 @@ class _PostButtonState extends State<PostButton> {
         _getOriginalIcon(child),
         Container(
             padding: const EdgeInsets.only(top: 22.5, bottom: 22.5),
-            child: (Container(
+            child: Align(alignment: Alignment.bottomLeft, child: Container(
                 margin: EdgeInsets.all(7.0),
                 padding: EdgeInsets.all(2.0),
                 child: SizedBox(
                   width: 45 * photoUploadingProgress!,
-                  height: 40,
+                  height: 5,
                   child: ColorFiltered(
                       colorFilter: new ColorFilter.mode(
-                          Colors.black.withOpacity(0.2), BlendMode.dstATop),
+                          Colors.black.withOpacity(0.9), BlendMode.dstATop),
                       child: const DecoratedBox(
                         decoration: const BoxDecoration(color: Colors.red),
                       )),
