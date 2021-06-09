@@ -21,11 +21,14 @@ import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart'
     as posts;
 import 'package:eliud_pkg_feed/model/post_model.dart';
 
+enum PostType { PostPhoto, PostVideo}
+
 class PostButton extends StatefulWidget {
   final FeedModel feedModel;
   final SwitchFeedHelper switchFeedHelper;
+  final PostType postType;
 
-  PostButton(this.feedModel, this.switchFeedHelper);
+  PostButton(this.feedModel, this.switchFeedHelper, this.postType);
 
   _PostButtonState createState() => _PostButtonState();
 }
@@ -36,27 +39,51 @@ class _PostButtonState extends State<PostButton> {
 
   @override
   Widget build(BuildContext context) {
-    var _photo = Image.asset("assets/images/segoshvishna.fiverr.com/photo.png",
-        package: "eliud_pkg_feed");
-    var items = <PopupMenuItem<int>>[];
-    items.add(PopupMenuItem<int>(child: const Text('Take photo'), value: 0));
-
-    return MediaButtons.mediaButtons(
-        context,
-        widget.feedModel.appId!,
-        widget.switchFeedHelper.memberOfFeed.documentID!,
-        widget.switchFeedHelper.defaultReadAccess,
-        allowCrop: false,
-        tooltip: 'Photo', photoFeedbackFunction: (photo) {
-      _addPost(postMemberMedia: [
-        PostMediumModel(documentID: newRandomKey(), memberMedium: photo)
-      ]);
-      photoUploadingProgress = null;
-    }, photoFeedbackProgress: (progress) {
-      setState(() {
-        photoUploadingProgress = progress;
-      });
-    }, icon: _getIcon(_photo));
+    if (widget.postType == PostType.PostPhoto) {
+      var _photo = Image.asset("assets/images/segoshvishna.fiverr.com/photo.png",
+          package: "eliud_pkg_feed");
+      return MediaButtons.mediaButtons(
+          context,
+          widget.feedModel.appId!,
+          widget.switchFeedHelper.memberOfFeed.documentID!,
+          widget.switchFeedHelper.defaultReadAccess,
+          allowCrop: false,
+          tooltip: 'Add photo',
+          photoFeedbackFunction: (photo) {
+            _addPost(postMemberMedia: [
+              PostMediumModel(documentID: newRandomKey(), memberMedium: photo)
+            ]);
+            photoUploadingProgress = null;
+          },
+          photoFeedbackProgress: (progress) {
+            setState(() {
+              photoUploadingProgress = progress;
+            });
+          },
+          icon: _getIcon(_photo));
+    } else {
+      var _video = Image.asset("assets/images/segoshvishna.fiverr.com/video.png",
+          package: "eliud_pkg_feed");
+      return MediaButtons.mediaButtons(
+          context,
+          widget.feedModel.appId!,
+          widget.switchFeedHelper.memberOfFeed.documentID!,
+          widget.switchFeedHelper.defaultReadAccess,
+          allowCrop: false,
+          tooltip: 'Add video',
+          videoFeedbackFunction: (photo) {
+            _addPost(postMemberMedia: [
+              PostMediumModel(documentID: newRandomKey(), memberMedium: photo)
+            ]);
+            photoUploadingProgress = null;
+          },
+          videoFeedbackProgress: (progress) {
+            setState(() {
+              photoUploadingProgress = progress;
+            });
+          },
+          icon: _getIcon(_video));
+    }
   }
 
   void _addPost(
@@ -78,12 +105,6 @@ class _PostButtonState extends State<PostButton> {
             memberMedia: postMemberMedia)));
   }
 
-  void _photoUploading(double progress) {
-    setState(_) {
-      photoUploadingProgress = progress;
-    }
-  }
-
   Widget _getIcon(Widget child) {
     if (photoUploadingProgress == null) {
       return _getOriginalIcon(child);
@@ -92,19 +113,21 @@ class _PostButtonState extends State<PostButton> {
         _getOriginalIcon(child),
         Container(
             padding: const EdgeInsets.only(top: 22.5, bottom: 22.5),
-            child: Align(alignment: Alignment.bottomLeft, child: Container(
-                margin: EdgeInsets.all(7.0),
-                padding: EdgeInsets.all(2.0),
-                child: SizedBox(
-                  width: 45 * photoUploadingProgress!,
-                  height: 5,
-                  child: ColorFiltered(
-                      colorFilter: new ColorFilter.mode(
-                          Colors.black.withOpacity(0.9), BlendMode.dstATop),
-                      child: const DecoratedBox(
-                        decoration: const BoxDecoration(color: Colors.red),
-                      )),
-                ))))
+            child: Align(
+                alignment: Alignment.bottomLeft,
+                child: Container(
+                    margin: EdgeInsets.all(7.0),
+                    padding: EdgeInsets.all(2.0),
+                    child: SizedBox(
+                      width: 45 * photoUploadingProgress!,
+                      height: 5,
+                      child: ColorFiltered(
+                          colorFilter: new ColorFilter.mode(
+                              Colors.black.withOpacity(0.9), BlendMode.dstATop),
+                          child: const DecoratedBox(
+                            decoration: const BoxDecoration(color: Colors.red),
+                          )),
+                    ))))
       ]);
     }
   }

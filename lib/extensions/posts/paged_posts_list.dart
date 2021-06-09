@@ -98,27 +98,13 @@ class _PagedPostsListState extends State<PagedPostsList> {
 
     // Photo
     if (widget.feedModel!.photoPost!) {
-      widgets.add(PostButton(widget.feedModel, widget.switchFeedHelper));
+      widgets.add(PostButton(widget.feedModel, widget.switchFeedHelper, PostType.PostPhoto));
       widgets.add(Spacer());
     }
 
     // Video
     if (widget.feedModel!.videoPost != null && widget.feedModel!.videoPost!) {
-      var video = Image.asset("assets/images/segoshvishna.fiverr.com/video.png",
-          package: "eliud_pkg_feed");
-
-      widgets.add(MediaButtons.mediaButtons(
-          context,
-          widget.feedModel.appId!,
-          widget.switchFeedHelper.memberOfFeed.documentID!,
-          widget.switchFeedHelper.defaultReadAccess,
-          allowCrop: false,
-          tooltip: 'Video',
-          videoFeedbackFunction: (video) {
-        _addPost(postMemberMedia: [PostMediumModel(documentID: newRandomKey(), memberMedium: video)]);
-        videoUploadingProgress = null;
-      }, videoFeedbackProgress: _videoUploading, icon: _getIcon(video)));
-
+      widgets.add(PostButton(widget.feedModel, widget.switchFeedHelper, PostType.PostVideo));
       widgets.add(Spacer());
     }
 
