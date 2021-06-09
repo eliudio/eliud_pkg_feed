@@ -1,6 +1,7 @@
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/tools/storage/fb_storage_image.dart';
 import 'package:eliud_core/tools/storage/medium_base.dart';
+import 'package:eliud_pkg_etc/tools/formatter/format_helpere.dart';
 import 'package:eliud_pkg_feed/extensions/post/embedded_page.dart';
 import 'package:eliud_pkg_feed/extensions/post/post_contents_widget.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_bloc.dart';
@@ -95,7 +96,7 @@ class _PostWidgetState extends State<PostWidget> {
     widgets.add(_aBitSpace());
     widgets.add(_postComments(context, widget.details, memberId));
 
-    return PostHelper.getFormattedPost(widgets);
+    return FormatHelper.getFormattedPost(widgets);
   }
 
 
@@ -516,7 +517,7 @@ class _PostWidgetState extends State<PostWidget> {
     return Row(
       children: <Widget>[
         Spacer(),
-        PostHelper.getFormattedRoundedShape(IconButton(
+        FormatHelper.getFormattedRoundedShape(IconButton(
           icon: ImageIcon(_assetThumbUp(thisMemberLikeType)
           ),
           onPressed: () => _like(context, postDetails),
@@ -525,7 +526,7 @@ class _PostWidgetState extends State<PostWidget> {
           "$likes",
         ),
         Spacer(flex: 3),
-        PostHelper.getFormattedRoundedShape(IconButton(
+        FormatHelper.getFormattedRoundedShape(IconButton(
           icon: ImageIcon(_assetThumbDown(thisMemberLikeType)
           ),
           onPressed: () => _dislike(context, postDetails),

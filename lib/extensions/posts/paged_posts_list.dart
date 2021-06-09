@@ -8,6 +8,7 @@ import 'package:eliud_core/model/rgb_model.dart';
 import 'package:eliud_core/tools/etc.dart';
 import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_core/tools/widgets/dialog_helper.dart';
+import 'package:eliud_pkg_etc/tools/formatter/format_helpere.dart';
 import 'package:eliud_pkg_feed/extensions/new_post/feed_post_dialog.dart';
 import 'package:eliud_pkg_feed/extensions/posts/post_button.dart';
 import 'package:eliud_pkg_feed/extensions/quick_message/quick_message_dialog.dart';
@@ -68,7 +69,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
   Widget _getIcon(Widget child) {
     return Container(
         padding: const EdgeInsets.only(top: 22.5, bottom: 22.5),
-        child: PostHelper.getFormattedRoundedShape(Center(
+        child: FormatHelper.getFormattedRoundedShape(Center(
             child: Container(
                 padding: EdgeInsets.all(2.0),
                 width: 45,
@@ -114,7 +115,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
       var message = Image.asset(
           "assets/images/segoshvishna.fiverr.com/message.png",
           package: "eliud_pkg_feed");
-      widgets.add(PostHelper.getFormattedRoundedShape(
+      widgets.add(FormatHelper.getFormattedRoundedShape(
           IconButton(icon: message,
               tooltip: 'Message',
               onPressed: () {
@@ -134,7 +135,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
     if (widget.feedModel!.audioPost != null && widget.feedModel!.audioPost!) {
       var audio = Image.asset("assets/images/segoshvishna.fiverr.com/audio.png",
           package: "eliud_pkg_feed");
-      widgets.add(PostHelper.getFormattedRoundedShape(
+      widgets.add(FormatHelper.getFormattedRoundedShape(
           IconButton(icon: audio,
               tooltip: 'Audio',
               onPressed: () {})));
@@ -145,7 +146,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
     if (widget.feedModel!.albumPost != null && widget.feedModel!.albumPost!) {
       var album = Image.asset("assets/images/segoshvishna.fiverr.com/album.png",
           package: "eliud_pkg_feed");
-      widgets.add(PostHelper.getFormattedRoundedShape(IconButton(
+      widgets.add(FormatHelper.getFormattedRoundedShape(IconButton(
           icon: album,
           tooltip: 'Album',
           onPressed: () => FeedPostDialog.open(context,
@@ -159,7 +160,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
       var article = Image.asset(
           "assets/images/segoshvishna.fiverr.com/article.png",
           package: "eliud_pkg_feed");
-      widgets.add(PostHelper.getFormattedRoundedShape(IconButton(
+      widgets.add(FormatHelper.getFormattedRoundedShape(IconButton(
           icon: article,
           tooltip: 'Article',
           onPressed: () {

@@ -3,6 +3,7 @@ import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/storage/fb_storage_image.dart';
+import 'package:eliud_pkg_etc/tools/formatter/format_helpere.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/member_profile_model.dart';
@@ -109,7 +110,7 @@ class AvatarHelper {
   }
 
   static Widget _defaultAvatar() {
-    return PostHelper.getFormattedCircleShape(Image.asset(
+    return FormatHelper.getFormattedCircleShape(Image.asset(
         "assets/images/undraw.co/undraw_profile_pic_ic5t.png",
         package: "eliud_pkg_feed"));
   }
@@ -126,13 +127,13 @@ class AvatarHelper {
       if ((memberProfileModel == null) ||
           (memberProfileModel.profileOverride == null) ||
           (memberProfileModel.profileOverride!.ref == null)) {
-        return PostHelper.getFormattedCircleShape(FadeInImage.memoryNetwork(
+        return FormatHelper.getFormattedCircleShape(FadeInImage.memoryNetwork(
           placeholder: kTransparentImage,
           image: memberModel.photoURL!,
           fit: BoxFit.fill,
         ));
       } else {
-        return PostHelper.getFormattedCircleShape(FadeInImage.memoryNetwork(
+        return FormatHelper.getFormattedCircleShape(FadeInImage.memoryNetwork(
           placeholder: kTransparentImage,
           image: memberProfileModel.profileOverride!.url!,
           fit: BoxFit.cover,

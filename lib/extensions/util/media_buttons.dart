@@ -39,13 +39,6 @@ class MediaButtons {
         tooltip: tooltip,
         padding: EdgeInsets.all(0.0),
         child: icon,
-/*
-        icon: icon == null
-            ? Icon(
-                Icons.add,
-              )
-            : icon,
-*/
         itemBuilder: (_) => items,
         onSelected: (choice) {
           if (photoFeedbackFunction != null) {

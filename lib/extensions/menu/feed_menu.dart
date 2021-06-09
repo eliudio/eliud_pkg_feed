@@ -1,9 +1,11 @@
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/components/util/page_helper.dart';
+import 'package:eliud_core/model/menu_item_model.dart';
+import 'package:eliud_pkg_etc/tools/formatter/format_helpere.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:eliud_core/tools/etc.dart';
-import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
@@ -30,38 +32,39 @@ class _FeedMenuState extends State<FeedMenu> {
     if (theState is AppLoaded) {
       return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
         if (state is ProfileInitialised) {
-          var widgets = <Widget>[];
+          var popupMenuItems = <DropdownMenuItem<int>>[];
           var items = widget.feedMenuModel.menu!.menuItems!;
+          var selectedPage = 0;
           for (int i = 0; i < items.length; i++) {
             var item = items[i];
             if (theState.menuItemHasAccess(item)) {
-              var isActive =
-                  PageHelper.isActivePage(state.switchFeedHelper.pageId, item.action);
-              var _color = isActive
-                  ? RgbHelper.color(rgbo: widget.feedMenuModel.selectedItemColor)
-                  : RgbHelper.color(rgbo: widget.feedMenuModel.itemColor);
-              widgets.add(PostHelper.getFormattedRoundedShape(Container(
-                  width: 110,
-                  child: IconButton(
-                      icon: Center(
-                          child: Text('${item.text}',
-                              style: GoogleFonts.annieUseYourTelescope(
-                                  fontSize: 20, color: _color))),
-                      onPressed: !isActive
-                          ? () {
-                              eliudrouter.Router.navigateTo(
-                                  context, item.action!);
-                            }
-                          : null))));
-            }
-            if (i != items.length - 1) {
-              widgets.add(Container(width: 10));
+              var isActive = PageHelper.isActivePage(
+                  state.switchFeedHelper.pageId, item.action);
+              if (isActive) {
+                selectedPage = i;
+              }
+              popupMenuItems.add(
+                DropdownMenuItem<int>(
+                    child: Text(
+                      item!.text!,
+                      style: GoogleFonts.annieUseYourTelescope(fontSize: 35),
+                    ),
+                    value: i),
+              );
             }
           }
-          return Container(
-              height: 60,
-              child: ListView(
-                  scrollDirection: Axis.horizontal, children: widgets));
+
+          return Align(
+              alignment: Alignment.center,
+              child: FormatHelper.getFormattedRoundedShape(Container(
+                  padding: const EdgeInsets.all(10.0),
+                  child: DropdownButton(
+                      value: selectedPage,
+                      items: popupMenuItems,
+                      onChanged: (choice) {
+                        eliudrouter.Router.navigateTo(
+                            context, items[choice as int]!.action!);
+                      }))));
         } else {
           return Center(child: DelayedCircularProgressIndicator());
         }
