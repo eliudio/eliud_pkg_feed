@@ -63,6 +63,7 @@ class MobileMediumPlatform extends AbstractMediumPlatform {
       feedbackFunction(memberMediumModel);
     }
   }
+
   @override
   void takePhoto(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress, {bool? allowCrop}) {
     _pickImage(context, appId, ownerId, readAccess, feedbackFunction, feedbackProgress, ImgSource.Camera, allowCrop: allowCrop);

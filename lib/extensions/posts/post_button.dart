@@ -1,0 +1,122 @@
+import 'package:eliud_core/core/access/bloc/access_bloc.dart';
+import 'package:eliud_core/core/access/bloc/access_state.dart';
+import 'package:eliud_core/tools/query/query_tools.dart';
+import 'package:eliud_core/tools/random.dart';
+import 'package:eliud_pkg_feed/extensions/util/media_buttons.dart';
+import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
+import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
+import 'package:eliud_pkg_feed/model/feed_model.dart';
+import 'package:eliud_pkg_feed/model/post_medium_model.dart';
+import 'package:eliud_pkg_feed/platform/medium_platform.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:eliud_core/core/widgets/progress_indicator.dart';
+import 'package:eliud_pkg_feed/extensions/profile/bloc/profile_bloc.dart';
+import 'package:eliud_pkg_feed/extensions/profile/bloc/profile_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../posts/paged_posts_list.dart';
+import '../postlist_paged/postlist_paged_bloc.dart';
+import '../postlist_paged/postlist_paged_event.dart';
+import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart'
+    as posts;
+import 'package:eliud_pkg_feed/model/post_model.dart';
+
+class PostButton extends StatefulWidget {
+  final FeedModel feedModel;
+  final SwitchFeedHelper switchFeedHelper;
+
+  PostButton(this.feedModel, this.switchFeedHelper);
+
+  _PostButtonState createState() => _PostButtonState();
+}
+
+class _PostButtonState extends State<PostButton> {
+  double? photoUploadingProgress;
+  _PostButtonState();
+
+  @override
+  Widget build(BuildContext context) {
+    var _photo = Image.asset("assets/images/segoshvishna.fiverr.com/photo.png",
+        package: "eliud_pkg_feed");
+    var items = <PopupMenuItem<int>>[];
+    items.add(PopupMenuItem<int>(child: const Text('Take photo'), value: 0));
+
+    return MediaButtons.mediaButtons(
+        context,
+        widget.feedModel.appId!,
+        widget.switchFeedHelper.memberOfFeed.documentID!,
+        widget.switchFeedHelper.defaultReadAccess,
+        allowCrop: false,
+        tooltip: 'Photo', photoFeedbackFunction: (photo) {
+      _addPost(postMemberMedia: [
+        PostMediumModel(documentID: newRandomKey(), memberMedium: photo)
+      ]);
+      photoUploadingProgress = null;
+    }, photoFeedbackProgress: (progress) {
+      setState(() {
+        photoUploadingProgress = progress;
+      });
+    }, icon: _getIcon(_photo));
+  }
+
+  void _addPost(
+      {String? html,
+      String? description,
+      List<PostMediumModel>? postMemberMedia}) {
+    BlocProvider.of<PostListPagedBloc>(context).add(AddPostPaged(
+        value: PostModel(
+            documentID: newRandomKey(),
+            author: widget.switchFeedHelper.memberCurrent,
+            appId: widget.feedModel.appId!,
+            feedId: widget.feedModel.documentID!,
+            likes: 0,
+            dislikes: 0,
+            description: description,
+            readAccess: widget.switchFeedHelper.defaultReadAccess,
+            archived: PostArchiveStatus.Active,
+            html: html,
+            memberMedia: postMemberMedia)));
+  }
+
+  void _photoUploading(double progress) {
+    setState(_) {
+      photoUploadingProgress = progress;
+    }
+  }
+
+  Widget _getIcon(Widget child) {
+    if (photoUploadingProgress == null) {
+      return _getOriginalIcon(child);
+    } else {
+      return Stack(children: [
+        _getOriginalIcon(child),
+        Container(
+            padding: const EdgeInsets.only(top: 22.5, bottom: 22.5),
+            child: (Container(
+                margin: EdgeInsets.all(7.0),
+                padding: EdgeInsets.all(2.0),
+                child: SizedBox(
+                  width: 45 * photoUploadingProgress!,
+                  height: 40,
+                  child: ColorFiltered(
+                      colorFilter: new ColorFilter.mode(
+                          Colors.black.withOpacity(0.2), BlendMode.dstATop),
+                      child: const DecoratedBox(
+                        decoration: const BoxDecoration(color: Colors.red),
+                      )),
+                ))))
+      ]);
+    }
+  }
+
+  Widget _getOriginalIcon(Widget child, {double? width}) {
+    return Container(
+        padding: const EdgeInsets.only(top: 22.5, bottom: 22.5),
+        child: PostHelper.getFormattedRoundedShape(Center(
+            child: Container(
+                padding: EdgeInsets.all(2.0),
+                width: width == null ? 45 : width,
+                height: 40,
+                child: child))));
+  }
+}

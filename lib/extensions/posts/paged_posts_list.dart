@@ -9,7 +9,8 @@ import 'package:eliud_core/tools/etc.dart';
 import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_core/tools/widgets/dialog_helper.dart';
 import 'package:eliud_pkg_feed/extensions/new_post/feed_post_dialog.dart';
-import 'package:eliud_pkg_feed/extensions/posts/quick_message_dialog.dart';
+import 'package:eliud_pkg_feed/extensions/posts/post_button.dart';
+import 'package:eliud_pkg_feed/extensions/quick_message/quick_message_dialog.dart';
 import 'package:eliud_pkg_feed/extensions/util/media_buttons.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
@@ -17,6 +18,7 @@ import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:eliud_pkg_feed/platform/medium_platform.dart';
 import 'package:eliud_pkg_text/extensions/rich_text_dialog.dart';
+import 'package:flutter/scheduler.dart';
 import '../postlist_paged/postlist_paged_bloc.dart';
 import '../postlist_paged/postlist_paged_event.dart';
 import '../postlist_paged/postlist_paged_state.dart';
@@ -47,6 +49,8 @@ class PagedPostsList extends StatefulWidget {
 class _PagedPostsListState extends State<PagedPostsList> {
   late PostListPagedBloc _postBloc;
   AppModel? _app;
+  double? photoUploadingProgress = null;
+  double? videoUploadingProgress = null;
 
   @override
   void initState() {
@@ -55,8 +59,11 @@ class _PagedPostsListState extends State<PagedPostsList> {
     _app = AccessBloc.app(context);
   }
 
-  void _photoUploading(double progress) {}
-  void _videoUploading(double progress) {}
+  void _videoUploading(double progress) {
+    setState(_) {
+      videoUploadingProgress = progress;
+    };
+  }
 
   Widget _getIcon(Widget child) {
     return Container(
@@ -91,19 +98,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
 
     // Photo
     if (widget.feedModel!.photoPost!) {
-      var photo = Image.asset("assets/images/segoshvishna.fiverr.com/photo.png",
-          package: "eliud_pkg_feed");
-
-      widgets.add(MediaButtons.mediaButtons(
-          context,
-          widget.feedModel.appId!,
-          widget.switchFeedHelper.memberOfFeed.documentID!,
-          widget.switchFeedHelper.defaultReadAccess,
-          allowCrop: false,
-          tooltip: 'Photo', photoFeedbackFunction: (photo) {
-        _addPost(postMemberMedia: [PostMediumModel(documentID: newRandomKey(), memberMedium: photo)]);
-      }, photoFeedbackProgress: _photoUploading, icon: _getIcon(photo)));
-
+      widgets.add(PostButton(widget.feedModel, widget.switchFeedHelper));
       widgets.add(Spacer());
     }
 
@@ -121,6 +116,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
           tooltip: 'Video',
           videoFeedbackFunction: (video) {
         _addPost(postMemberMedia: [PostMediumModel(documentID: newRandomKey(), memberMedium: video)]);
+        videoUploadingProgress = null;
       }, videoFeedbackProgress: _videoUploading, icon: _getIcon(video)));
 
       widgets.add(Spacer());
