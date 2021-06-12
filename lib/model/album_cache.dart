@@ -131,7 +131,7 @@ class AlbumCache implements AlbumRepository {
     PostModel? postHolder;
     if (model.post != null) {
       try {
-        await postRepository(appId: model.post!.appId)!.get(model.post!.documentID).then((val) {
+        await postRepository(appId: model.appId)!.get(model.post!.documentID).then((val) {
           postHolder = val;
         }).catchError((error) {});
       } catch (_) {}

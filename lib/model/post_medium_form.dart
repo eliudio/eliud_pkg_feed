@@ -93,7 +93,7 @@ class PostMediumForm extends StatelessWidget {
           );
     } else {
       return Scaffold(
-        appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().constructAppBar(context, formAction == FormAction.UpdateAction ? 'Update PostMedium' : 'Add PostMedium'),
+        appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().appBarWithString(context, title: formAction == FormAction.UpdateAction ? 'Update PostMedium' : 'Add PostMedium'),
         body: BlocProvider<PostMediumFormBloc >(
             create: (context) => PostMediumFormBloc(AccessBloc.appId(context),
                                        
@@ -183,7 +183,7 @@ class _MyPostMediumFormState extends State<MyPostMediumForm> {
 
 
         if ((formAction != FormAction.ShowData) && (formAction != FormAction.ShowPreloadedData))
-          children.add(StyleRegistry.registry().styleWithContext(context).adminFormStyle().submitButton(context, 'Submit',
+          children.add(StyleRegistry.registry().styleWithContext(context).adminFormStyle().button(context, label: 'Submit',
                   onPressed: _readOnly(accessState, state) ? null : () {
                     if (state is PostMediumFormError) {
                       return null;

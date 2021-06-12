@@ -131,7 +131,7 @@ class HeaderCache implements HeaderRepository {
     FeedModel? feedHolder;
     if (model.feed != null) {
       try {
-        await feedRepository(appId: model.feed!.appId)!.get(model.feed!.documentID).then((val) {
+        await feedRepository(appId: model.appId)!.get(model.feed!.documentID).then((val) {
           feedHolder = val;
         }).catchError((error) {});
       } catch (_) {}

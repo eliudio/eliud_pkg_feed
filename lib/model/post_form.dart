@@ -100,7 +100,7 @@ class PostForm extends StatelessWidget {
           );
     } else {
       return Scaffold(
-        appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().constructAppBar(context, formAction == FormAction.UpdateAction ? 'Update Post' : 'Add Post'),
+        appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().appBarWithString(context, title: formAction == FormAction.UpdateAction ? 'Update Post' : 'Add Post'),
         body: BlocProvider<PostFormBloc >(
             create: (context) => PostFormBloc(AccessBloc.appId(context),
                                        formAction: formAction,
@@ -252,53 +252,53 @@ class _MyPostFormState extends State<MyPostForm> {
 
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, 'Document ID', Icons.vpn_key, (formAction == FormAction.UpdateAction), _documentIDController, FieldType.String, validator: (_) => state is DocumentIDPostFormError ? state.message : null, hintText: 'null')
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Document ID', icon: Icons.vpn_key, readOnly: (formAction == FormAction.UpdateAction), textEditingController: _documentIDController, keyboardType: TextInputType.text, validator: (_) => state is DocumentIDPostFormError ? state.message : null, hintText: null)
           );
 
 
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, 'App Identifier', Icons.text_format, _readOnly(accessState, state), _appIdController, FieldType.String, validator: (_) => state is AppIdPostFormError ? state.message : null, hintText: 'This is the identifier of the app to which this feed belongs')
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'App Identifier', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _appIdController, keyboardType: TextInputType.text, validator: (_) => state is AppIdPostFormError ? state.message : null, hintText: 'field.remark')
           );
 
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, 'Feed Identifier', Icons.text_format, _readOnly(accessState, state), _feedIdController, FieldType.String, validator: (_) => state is FeedIdPostFormError ? state.message : null, hintText: 'This is the identifier of the feed (optional as a post can also be used in an album)')
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Feed Identifier', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _feedIdController, keyboardType: TextInputType.text, validator: (_) => state is FeedIdPostFormError ? state.message : null, hintText: 'field.remark')
           );
 
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, 'Post App Identifier', Icons.text_format, _readOnly(accessState, state), _postAppIdController, FieldType.String, validator: (_) => state is PostAppIdPostFormError ? state.message : null, hintText: 'This is the identifier of the app to where this feed points to')
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Post App Identifier', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _postAppIdController, keyboardType: TextInputType.text, validator: (_) => state is PostAppIdPostFormError ? state.message : null, hintText: 'field.remark')
           );
 
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, 'Post Page Identifier', Icons.text_format, _readOnly(accessState, state), _postPageIdController, FieldType.String, validator: (_) => state is PostPageIdPostFormError ? state.message : null, hintText: 'This is the identifier of the page to where this feed points to')
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Post Page Identifier', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _postPageIdController, keyboardType: TextInputType.text, validator: (_) => state is PostPageIdPostFormError ? state.message : null, hintText: 'field.remark')
           );
 
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, 'Rich Text', Icons.text_format, _readOnly(accessState, state), _htmlController, FieldType.String, validator: (_) => state is HtmlPostFormError ? state.message : null, hintText: 'null')
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Rich Text', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _htmlController, keyboardType: TextInputType.text, validator: (_) => state is HtmlPostFormError ? state.message : null, hintText: null)
           );
 
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, 'Description', Icons.text_format, _readOnly(accessState, state), _descriptionController, FieldType.String, validator: (_) => state is DescriptionPostFormError ? state.message : null, hintText: 'null')
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Description', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _descriptionController, keyboardType: TextInputType.text, validator: (_) => state is DescriptionPostFormError ? state.message : null, hintText: null)
           );
 
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, 'Likes', Icons.text_format, _readOnly(accessState, state), _likesController, FieldType.Int, validator: (_) => state is LikesPostFormError ? state.message : null, hintText: 'null')
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Likes', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _likesController, keyboardType: TextInputType.number, validator: (_) => state is LikesPostFormError ? state.message : null, hintText: null)
           );
 
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, 'Dislikes', Icons.text_format, _readOnly(accessState, state), _dislikesController, FieldType.Int, validator: (_) => state is DislikesPostFormError ? state.message : null, hintText: 'null')
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Dislikes', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _dislikesController, keyboardType: TextInputType.number, validator: (_) => state is DislikesPostFormError ? state.message : null, hintText: null)
           );
 
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, 'externalLink', Icons.text_format, _readOnly(accessState, state), _externalLinkController, FieldType.String, validator: (_) => state is ExternalLinkPostFormError ? state.message : null, hintText: 'null')
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'externalLink', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _externalLinkController, keyboardType: TextInputType.text, validator: (_) => state is ExternalLinkPostFormError ? state.message : null, hintText: null)
           );
 
 
@@ -342,7 +342,7 @@ class _MyPostFormState extends State<MyPostForm> {
 
 
         if ((formAction != FormAction.ShowData) && (formAction != FormAction.ShowPreloadedData))
-          children.add(StyleRegistry.registry().styleWithContext(context).adminFormStyle().submitButton(context, 'Submit',
+          children.add(StyleRegistry.registry().styleWithContext(context).adminFormStyle().button(context, label: 'Submit',
                   onPressed: _readOnly(accessState, state) ? null : () {
                     if (state is PostFormError) {
                       return null;

@@ -131,7 +131,7 @@ class FeedMenuCache implements FeedMenuRepository {
     MenuDefModel? menuHolder;
     if (model.menu != null) {
       try {
-        await menuDefRepository(appId: model.menu!.appId)!.get(model.menu!.documentID).then((val) {
+        await menuDefRepository(appId: model.appId)!.get(model.menu!.documentID).then((val) {
           menuHolder = val;
         }).catchError((error) {});
       } catch (_) {}

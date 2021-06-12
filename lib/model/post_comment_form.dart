@@ -100,7 +100,7 @@ class PostCommentForm extends StatelessWidget {
           );
     } else {
       return Scaffold(
-        appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().constructAppBar(context, formAction == FormAction.UpdateAction ? 'Update PostComment' : 'Add PostComment'),
+        appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().appBarWithString(context, title: formAction == FormAction.UpdateAction ? 'Update PostComment' : 'Add PostComment'),
         body: BlocProvider<PostCommentFormBloc >(
             create: (context) => PostCommentFormBloc(AccessBloc.appId(context),
                                        formAction: formAction,
@@ -208,43 +208,43 @@ class _MyPostCommentFormState extends State<MyPostCommentForm> {
 
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, 'Document ID', Icons.vpn_key, (formAction == FormAction.UpdateAction), _documentIDController, FieldType.String, validator: (_) => state is DocumentIDPostCommentFormError ? state.message : null, hintText: 'null')
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Document ID', icon: Icons.vpn_key, readOnly: (formAction == FormAction.UpdateAction), textEditingController: _documentIDController, keyboardType: TextInputType.text, validator: (_) => state is DocumentIDPostCommentFormError ? state.message : null, hintText: null)
           );
 
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, 'Document ID of the post', Icons.vpn_key, _readOnly(accessState, state), _postIdController, FieldType.String, validator: (_) => state is PostIdPostCommentFormError ? state.message : null, hintText: 'null')
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Document ID of the post', icon: Icons.vpn_key, readOnly: _readOnly(accessState, state), textEditingController: _postIdController, keyboardType: TextInputType.text, validator: (_) => state is PostIdPostCommentFormError ? state.message : null, hintText: null)
           );
 
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, 'Document ID of the comment (in case of a comment on comment)', Icons.vpn_key, _readOnly(accessState, state), _postCommentIdController, FieldType.String, validator: (_) => state is PostCommentIdPostCommentFormError ? state.message : null, hintText: 'null')
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Document ID of the comment (in case of a comment on comment)', icon: Icons.vpn_key, readOnly: _readOnly(accessState, state), textEditingController: _postCommentIdController, keyboardType: TextInputType.text, validator: (_) => state is PostCommentIdPostCommentFormError ? state.message : null, hintText: null)
           );
 
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, 'Member', Icons.text_format, _readOnly(accessState, state), _memberIdController, FieldType.String, validator: (_) => state is MemberIdPostCommentFormError ? state.message : null, hintText: 'null')
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Member', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _memberIdController, keyboardType: TextInputType.text, validator: (_) => state is MemberIdPostCommentFormError ? state.message : null, hintText: null)
           );
 
 
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, 'App Identifier', Icons.text_format, _readOnly(accessState, state), _appIdController, FieldType.String, validator: (_) => state is AppIdPostCommentFormError ? state.message : null, hintText: 'This is the identifier of the app to which this feed belongs')
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'App Identifier', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _appIdController, keyboardType: TextInputType.text, validator: (_) => state is AppIdPostCommentFormError ? state.message : null, hintText: 'field.remark')
           );
 
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, 'Comment', Icons.text_format, _readOnly(accessState, state), _commentController, FieldType.String, validator: (_) => state is CommentPostCommentFormError ? state.message : null, hintText: 'null')
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Comment', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _commentController, keyboardType: TextInputType.text, validator: (_) => state is CommentPostCommentFormError ? state.message : null, hintText: null)
           );
 
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, 'Likes', Icons.text_format, _readOnly(accessState, state), _likesController, FieldType.Int, validator: (_) => state is LikesPostCommentFormError ? state.message : null, hintText: 'null')
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Likes', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _likesController, keyboardType: TextInputType.number, validator: (_) => state is LikesPostCommentFormError ? state.message : null, hintText: null)
           );
 
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, 'Dislikes', Icons.text_format, _readOnly(accessState, state), _dislikesController, FieldType.Int, validator: (_) => state is DislikesPostCommentFormError ? state.message : null, hintText: 'null')
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Dislikes', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _dislikesController, keyboardType: TextInputType.number, validator: (_) => state is DislikesPostCommentFormError ? state.message : null, hintText: null)
           );
 
 
@@ -283,7 +283,7 @@ class _MyPostCommentFormState extends State<MyPostCommentForm> {
 
 
         if ((formAction != FormAction.ShowData) && (formAction != FormAction.ShowPreloadedData))
-          children.add(StyleRegistry.registry().styleWithContext(context).adminFormStyle().submitButton(context, 'Submit',
+          children.add(StyleRegistry.registry().styleWithContext(context).adminFormStyle().button(context, label: 'Submit',
                   onPressed: _readOnly(accessState, state) ? null : () {
                     if (state is PostCommentFormError) {
                       return null;

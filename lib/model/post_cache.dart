@@ -136,7 +136,7 @@ class PostCache implements PostRepository {
     MemberPublicInfoModel? authorHolder;
     if (model.author != null) {
       try {
-        await memberPublicInfoRepository()!.get(model.author!.documentID).then((val) {
+        await memberPublicInfoRepository(appId: model.appId)!.get(model.author!.documentID).then((val) {
           authorHolder = val;
         }).catchError((error) {});
       } catch (_) {}

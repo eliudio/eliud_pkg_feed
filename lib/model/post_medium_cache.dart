@@ -131,7 +131,7 @@ class PostMediumCache implements PostMediumRepository {
     MemberMediumModel? memberMediumHolder;
     if (model.memberMedium != null) {
       try {
-        await memberMediumRepository(appId: model.memberMedium!.appId)!.get(model.memberMedium!.documentID).then((val) {
+        await memberMediumRepository()!.get(model.memberMedium!.documentID).then((val) {
           memberMediumHolder = val;
         }).catchError((error) {});
       } catch (_) {}

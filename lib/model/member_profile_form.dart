@@ -95,7 +95,7 @@ class MemberProfileForm extends StatelessWidget {
           );
     } else {
       return Scaffold(
-        appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().constructAppBar(context, formAction == FormAction.UpdateAction ? 'Update MemberProfile' : 'Add MemberProfile'),
+        appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().appBarWithString(context, title: formAction == FormAction.UpdateAction ? 'Update MemberProfile' : 'Add MemberProfile'),
         body: BlocProvider<MemberProfileFormBloc >(
             create: (context) => MemberProfileFormBloc(AccessBloc.appId(context),
                                        formAction: formAction,
@@ -220,17 +220,17 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
 
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, 'Document ID', Icons.vpn_key, (formAction == FormAction.UpdateAction), _documentIDController, FieldType.String, validator: (_) => state is DocumentIDMemberProfileFormError ? state.message : null, hintText: 'null')
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Document ID', icon: Icons.vpn_key, readOnly: (formAction == FormAction.UpdateAction), textEditingController: _documentIDController, keyboardType: TextInputType.text, validator: (_) => state is DocumentIDMemberProfileFormError ? state.message : null, hintText: null)
           );
 
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, 'Feed Identifier', Icons.text_format, _readOnly(accessState, state), _feedIdController, FieldType.String, validator: (_) => state is FeedIdMemberProfileFormError ? state.message : null, hintText: 'This is the identifier of the feed')
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Feed Identifier', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _feedIdController, keyboardType: TextInputType.text, validator: (_) => state is FeedIdMemberProfileFormError ? state.message : null, hintText: 'field.remark')
           );
 
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, 'Profile', Icons.text_format, _readOnly(accessState, state), _profileController, FieldType.String, validator: (_) => state is ProfileMemberProfileFormError ? state.message : null, hintText: 'null')
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Profile', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _profileController, keyboardType: TextInputType.text, validator: (_) => state is ProfileMemberProfileFormError ? state.message : null, hintText: null)
           );
 
 
@@ -261,7 +261,7 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
 
 
         if ((formAction != FormAction.ShowData) && (formAction != FormAction.ShowPreloadedData))
-          children.add(StyleRegistry.registry().styleWithContext(context).adminFormStyle().submitButton(context, 'Submit',
+          children.add(StyleRegistry.registry().styleWithContext(context).adminFormStyle().button(context, label: 'Submit',
                   onPressed: _readOnly(accessState, state) ? null : () {
                     if (state is MemberProfileFormError) {
                       return null;

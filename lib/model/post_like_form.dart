@@ -100,7 +100,7 @@ class PostLikeForm extends StatelessWidget {
           );
     } else {
       return Scaffold(
-        appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().constructAppBar(context, formAction == FormAction.UpdateAction ? 'Update PostLike' : 'Add PostLike'),
+        appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().appBarWithString(context, title: formAction == FormAction.UpdateAction ? 'Update PostLike' : 'Add PostLike'),
         body: BlocProvider<PostLikeFormBloc >(
             create: (context) => PostLikeFormBloc(AccessBloc.appId(context),
                                        formAction: formAction,
@@ -216,23 +216,23 @@ class _MyPostLikeFormState extends State<MyPostLikeForm> {
 
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, 'Document ID', Icons.vpn_key, (formAction == FormAction.UpdateAction), _documentIDController, FieldType.String, validator: (_) => state is DocumentIDPostLikeFormError ? state.message : null, hintText: 'null')
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Document ID', icon: Icons.vpn_key, readOnly: (formAction == FormAction.UpdateAction), textEditingController: _documentIDController, keyboardType: TextInputType.text, validator: (_) => state is DocumentIDPostLikeFormError ? state.message : null, hintText: null)
           );
 
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, 'Document ID of the post', Icons.vpn_key, _readOnly(accessState, state), _postIdController, FieldType.String, validator: (_) => state is PostIdPostLikeFormError ? state.message : null, hintText: 'null')
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Document ID of the post', icon: Icons.vpn_key, readOnly: _readOnly(accessState, state), textEditingController: _postIdController, keyboardType: TextInputType.text, validator: (_) => state is PostIdPostLikeFormError ? state.message : null, hintText: null)
           );
 
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, 'Document ID of the comment (in case of a like on a comment)', Icons.vpn_key, _readOnly(accessState, state), _postCommentIdController, FieldType.String, validator: (_) => state is PostCommentIdPostLikeFormError ? state.message : null, hintText: 'null')
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Document ID of the comment (in case of a like on a comment)', icon: Icons.vpn_key, readOnly: _readOnly(accessState, state), textEditingController: _postCommentIdController, keyboardType: TextInputType.text, validator: (_) => state is PostCommentIdPostLikeFormError ? state.message : null, hintText: null)
           );
 
 
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, 'App Identifier', Icons.text_format, _readOnly(accessState, state), _appIdController, FieldType.String, validator: (_) => state is AppIdPostLikeFormError ? state.message : null, hintText: 'This is the identifier of the app to which this feed belongs')
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'App Identifier', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _appIdController, keyboardType: TextInputType.text, validator: (_) => state is AppIdPostLikeFormError ? state.message : null, hintText: 'field.remark')
           );
 
 
@@ -248,7 +248,7 @@ class _MyPostLikeFormState extends State<MyPostLikeForm> {
 
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, 'Member', Icons.text_format, _readOnly(accessState, state), _memberIdController, FieldType.String, validator: (_) => state is MemberIdPostLikeFormError ? state.message : null, hintText: 'null')
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Member', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _memberIdController, keyboardType: TextInputType.text, validator: (_) => state is MemberIdPostLikeFormError ? state.message : null, hintText: null)
           );
 
 
@@ -257,7 +257,7 @@ class _MyPostLikeFormState extends State<MyPostLikeForm> {
 
 
         if ((formAction != FormAction.ShowData) && (formAction != FormAction.ShowPreloadedData))
-          children.add(StyleRegistry.registry().styleWithContext(context).adminFormStyle().submitButton(context, 'Submit',
+          children.add(StyleRegistry.registry().styleWithContext(context).adminFormStyle().button(context, label: 'Submit',
                   onPressed: _readOnly(accessState, state) ? null : () {
                     if (state is PostLikeFormError) {
                       return null;
