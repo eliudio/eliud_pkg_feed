@@ -24,6 +24,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:eliud_core/tools/common_tools.dart';
+import 'package:eliud_core/style/style_registry.dart';
+import 'package:eliud_core/style/admin/admin_form_style.dart';
 
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
@@ -93,17 +95,7 @@ class FeedForm extends StatelessWidget {
           );
     } else {
       return Scaffold(
-        appBar: formAction == FormAction.UpdateAction ?
-                AppBar(
-                    title: Text("Update Feed", style: TextStyle(color: RgbHelper.color(rgbo: app.formAppBarTextColor))),
-                    flexibleSpace: Container(
-                        decoration: BoxDecorationHelper.boxDecoration(accessState, app.formAppBarBackground)),
-                  ) :
-                AppBar(
-                    title: Text("Add Feed", style: TextStyle(color: RgbHelper.color(rgbo: app.formAppBarTextColor))),
-                    flexibleSpace: Container(
-                        decoration: BoxDecorationHelper.boxDecoration(accessState, app.formAppBarBackground)),
-                ),
+        appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().constructAppBar(context, formAction == FormAction.UpdateAction ? 'Update Feed' : 'Add Feed'),
         body: BlocProvider<FeedFormBloc >(
             create: (context) => FeedFormBloc(AccessBloc.appId(context),
                                        formAction: formAction,
@@ -218,188 +210,93 @@ class _MyFeedFormState extends State<MyFeedForm> {
          children.add(Container(
                   alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                  child: Text('General',
-                      style: TextStyle(
-                          color: RgbHelper.color(rgbo: app.formGroupTitleColor), fontWeight: FontWeight.bold)),
+                  child: StyleRegistry.registry().styleWithContext(context).adminFormStyle().groupTitle(context, 'General')
                 ));
 
         children.add(
 
-                RadioListTile(
-                    value: 0,
-                    activeColor: RgbHelper.color(rgbo: app.formFieldTextColor),
-                    groupValue: _thumbImageSelectedRadioTile,
-                    title: Text("Thumbs", style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor))),
-                    subtitle: Text("Thumbs", style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor))),
-                    onChanged: !accessState.memberIsOwner() ? null : (dynamic val) {
-                      setSelectionThumbImage(val);
-                    },
-                ),
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().radioListTile(context, 0, _thumbImageSelectedRadioTile, 'Thumbs', 'Thumbs', !accessState.memberIsOwner() ? null : (dynamic val) => setSelectionThumbImage(val))
           );
         children.add(
 
-                RadioListTile(
-                    value: 1,
-                    activeColor: RgbHelper.color(rgbo: app.formFieldTextColor),
-                    groupValue: _thumbImageSelectedRadioTile,
-                    title: Text("Banana", style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor))),
-                    subtitle: Text("Banana", style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor))),
-                    onChanged: !accessState.memberIsOwner() ? null : (dynamic val) {
-                      setSelectionThumbImage(val);
-                    },
-                ),
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().radioListTile(context, 0, _thumbImageSelectedRadioTile, 'Banana', 'Banana', !accessState.memberIsOwner() ? null : (dynamic val) => setSelectionThumbImage(val))
           );
 
         children.add(
 
-                CheckboxListTile(
-                    title: Text('Photo Post', style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor))),
-                    value: _photoPostSelection,
-                    onChanged: _readOnly(accessState, state) ? null : (dynamic val) {
-                      setSelectionPhotoPost(val);
-                    }),
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().checkboxListTile(context, 'Photo Post', _photoPostSelection, _readOnly(accessState, state) ? null : (dynamic val) => setSelectionPhotoPost(val))
           );
 
         children.add(
 
-                CheckboxListTile(
-                    title: Text('Video Post', style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor))),
-                    value: _videoPostSelection,
-                    onChanged: _readOnly(accessState, state) ? null : (dynamic val) {
-                      setSelectionVideoPost(val);
-                    }),
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().checkboxListTile(context, 'Video Post', _videoPostSelection, _readOnly(accessState, state) ? null : (dynamic val) => setSelectionVideoPost(val))
           );
 
         children.add(
 
-                CheckboxListTile(
-                    title: Text('Message Post', style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor))),
-                    value: _messagePostSelection,
-                    onChanged: _readOnly(accessState, state) ? null : (dynamic val) {
-                      setSelectionMessagePost(val);
-                    }),
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().checkboxListTile(context, 'Message Post', _messagePostSelection, _readOnly(accessState, state) ? null : (dynamic val) => setSelectionMessagePost(val))
           );
 
         children.add(
 
-                CheckboxListTile(
-                    title: Text('Audio Post', style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor))),
-                    value: _audioPostSelection,
-                    onChanged: _readOnly(accessState, state) ? null : (dynamic val) {
-                      setSelectionAudioPost(val);
-                    }),
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().checkboxListTile(context, 'Audio Post', _audioPostSelection, _readOnly(accessState, state) ? null : (dynamic val) => setSelectionAudioPost(val))
           );
 
         children.add(
 
-                CheckboxListTile(
-                    title: Text('Album Post', style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor))),
-                    value: _albumPostSelection,
-                    onChanged: _readOnly(accessState, state) ? null : (dynamic val) {
-                      setSelectionAlbumPost(val);
-                    }),
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().checkboxListTile(context, 'Album Post', _albumPostSelection, _readOnly(accessState, state) ? null : (dynamic val) => setSelectionAlbumPost(val))
           );
 
         children.add(
 
-                CheckboxListTile(
-                    title: Text('Article Post', style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor))),
-                    value: _articlePostSelection,
-                    onChanged: _readOnly(accessState, state) ? null : (dynamic val) {
-                      setSelectionArticlePost(val);
-                    }),
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().checkboxListTile(context, 'Article Post', _articlePostSelection, _readOnly(accessState, state) ? null : (dynamic val) => setSelectionArticlePost(val))
           );
 
 
         children.add(Container(height: 20.0));
-        children.add(Divider(height: 1.0, thickness: 1.0, color: RgbHelper.color(rgbo: app.dividerColor)));
+        children.add(StyleRegistry.registry().styleWithContext(context).adminFormStyle().divider(context));
 
 
          children.add(Container(
                   alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                  child: Text('General',
-                      style: TextStyle(
-                          color: RgbHelper.color(rgbo: app.formGroupTitleColor), fontWeight: FontWeight.bold)),
+                  child: StyleRegistry.registry().styleWithContext(context).adminFormStyle().groupTitle(context, 'General')
                 ));
 
         children.add(
 
-                TextFormField(
-                style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor)),
-                  readOnly: (formAction == FormAction.UpdateAction),
-                  controller: _documentIDController,
-                  decoration: InputDecoration(
-                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldTextColor))),                    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldFocusColor))),                    icon: Icon(Icons.vpn_key, color: RgbHelper.color(rgbo: app.formFieldHeaderColor)),
-                    labelText: 'Document ID',
-                  ),
-                  keyboardType: TextInputType.text,
-                  autovalidate: true,
-                  validator: (_) {
-                    return state is DocumentIDFeedFormError ? state.message : null;
-                  },
-                ),
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, 'Document ID', Icons.vpn_key, (formAction == FormAction.UpdateAction), _documentIDController, FieldType.String, validator: (_) => state is DocumentIDFeedFormError ? state.message : null, hintText: 'null')
           );
 
         children.add(
 
-                TextFormField(
-                style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor)),
-                  readOnly: _readOnly(accessState, state),
-                  controller: _appIdController,
-                  decoration: InputDecoration(
-                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldTextColor))),                    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldFocusColor))),                    icon: Icon(Icons.text_format, color: RgbHelper.color(rgbo: app.formFieldHeaderColor)),
-                    labelText: 'App Identifier',
-                    hintText: "This is the identifier of the app to which this feed belongs",
-                  ),
-                  keyboardType: TextInputType.text,
-                  autovalidate: true,
-                  validator: (_) {
-                    return state is AppIdFeedFormError ? state.message : null;
-                  },
-                ),
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, 'App Identifier', Icons.text_format, _readOnly(accessState, state), _appIdController, FieldType.String, validator: (_) => state is AppIdFeedFormError ? state.message : null, hintText: 'This is the identifier of the app to which this feed belongs')
           );
 
         children.add(
 
-                TextFormField(
-                style: TextStyle(color: RgbHelper.color(rgbo: app.formFieldTextColor)),
-                  readOnly: _readOnly(accessState, state),
-                  controller: _descriptionController,
-                  decoration: InputDecoration(
-                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldTextColor))),                    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: RgbHelper.color(rgbo: app.formFieldFocusColor))),                    icon: Icon(Icons.text_format, color: RgbHelper.color(rgbo: app.formFieldHeaderColor)),
-                    labelText: 'Description',
-                  ),
-                  keyboardType: TextInputType.text,
-                  autovalidate: true,
-                  validator: (_) {
-                    return state is DescriptionFeedFormError ? state.message : null;
-                  },
-                ),
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, 'Description', Icons.text_format, _readOnly(accessState, state), _descriptionController, FieldType.String, validator: (_) => state is DescriptionFeedFormError ? state.message : null, hintText: 'null')
           );
 
 
         children.add(Container(height: 20.0));
-        children.add(Divider(height: 1.0, thickness: 1.0, color: RgbHelper.color(rgbo: app.dividerColor)));
+        children.add(StyleRegistry.registry().styleWithContext(context).adminFormStyle().divider(context));
 
 
          children.add(Container(
                   alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                  child: Text('Conditions',
-                      style: TextStyle(
-                          color: RgbHelper.color(rgbo: app.formGroupTitleColor), fontWeight: FontWeight.bold)),
+                  child: StyleRegistry.registry().styleWithContext(context).adminFormStyle().groupTitle(context, 'Conditions')
                 ));
 
 
 
         children.add(Container(height: 20.0));
-        children.add(Divider(height: 1.0, thickness: 1.0, color: RgbHelper.color(rgbo: app.dividerColor)));
+        children.add(StyleRegistry.registry().styleWithContext(context).adminFormStyle().divider(context));
 
 
         if ((formAction != FormAction.ShowData) && (formAction != FormAction.ShowPreloadedData))
-          children.add(RaisedButton(
-                  color: RgbHelper.color(rgbo: app.formSubmitButtonColor),
+          children.add(StyleRegistry.registry().styleWithContext(context).adminFormStyle().submitButton(context, 'Submit',
                   onPressed: _readOnly(accessState, state) ? null : () {
                     if (state is FeedFormError) {
                       return null;
@@ -442,22 +339,16 @@ class _MyFeedFormState extends State<MyFeedForm> {
                       }
                     }
                   },
-                  child: Text('Submit', style: TextStyle(color: RgbHelper.color(rgbo: app.formSubmitButtonTextColor))),
                 ));
 
-        return Container(
-          color: ((formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData)) ? Colors.transparent : null,
-          decoration: ((formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData)) ? null : BoxDecorationHelper.boxDecoration(accessState, app.formBackground),
-          padding:
-          const EdgeInsets.symmetric(vertical: 0.0, horizontal: 20.0),
-            child: Form(
+        return StyleRegistry.registry().styleWithContext(context).adminFormStyle().container(context, Form(
             child: ListView(
               padding: const EdgeInsets.all(8),
               physics: ((formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData)) ? NeverScrollableScrollPhysics() : null,
               shrinkWrap: ((formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData)),
               children: children as List<Widget>
             ),
-          )
+          ), formAction!
         );
       } else {
         return DelayedCircularProgressIndicator();
