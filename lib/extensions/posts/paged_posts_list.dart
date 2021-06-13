@@ -5,13 +5,14 @@ import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/model/rgb_model.dart';
+import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/etc.dart';
 import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_core/tools/widgets/dialog_helper.dart';
+import 'package:eliud_core/tools/widgets/quick_message_dialog.dart';
 import 'package:eliud_pkg_etc/tools/formatter/format_helpere.dart';
 import 'package:eliud_pkg_feed/extensions/new_post/feed_post_dialog.dart';
 import 'package:eliud_pkg_feed/extensions/posts/post_button.dart';
-import 'package:eliud_pkg_feed/extensions/quick_message/quick_message_dialog.dart';
 import 'package:eliud_pkg_feed/extensions/util/media_buttons.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
@@ -63,7 +64,9 @@ class _PagedPostsListState extends State<PagedPostsList> {
   void _videoUploading(double progress) {
     setState(_) {
       videoUploadingProgress = progress;
-    };
+    }
+
+    ;
   }
 
   Widget _getIcon(Widget child) {
@@ -77,7 +80,10 @@ class _PagedPostsListState extends State<PagedPostsList> {
                 child: child))));
   }
 
-  void _addPost({String? html, String? description, List<PostMediumModel>? postMemberMedia}) {
+  void _addPost(
+      {String? html,
+      String? description,
+      List<PostMediumModel>? postMemberMedia}) {
     BlocProvider.of<PostListPagedBloc>(context).add(AddPostPaged(
         value: PostModel(
             documentID: newRandomKey(),
@@ -99,13 +105,15 @@ class _PagedPostsListState extends State<PagedPostsList> {
 
     // Photo
     if (widget.feedModel!.photoPost!) {
-      widgets.add(PostButton(widget.feedModel, widget.switchFeedHelper, PostType.PostPhoto));
+      widgets.add(PostButton(
+          widget.feedModel, widget.switchFeedHelper, PostType.PostPhoto));
       widgets.add(Spacer());
     }
 
     // Video
     if (widget.feedModel!.videoPost != null && widget.feedModel!.videoPost!) {
-      widgets.add(PostButton(widget.feedModel, widget.switchFeedHelper, PostType.PostVideo));
+      widgets.add(PostButton(
+          widget.feedModel, widget.switchFeedHelper, PostType.PostVideo));
       widgets.add(Spacer());
     }
 
@@ -115,19 +123,20 @@ class _PagedPostsListState extends State<PagedPostsList> {
       var message = Image.asset(
           "assets/images/segoshvishna.fiverr.com/message.png",
           package: "eliud_pkg_feed");
-      widgets.add(FormatHelper.getFormattedRoundedShape(
-          IconButton(icon: message,
-              tooltip: 'Message',
-              onPressed: () {
-                DialogStatefulWidgetHelper.openIt(
-                  context!,
-                  QuickMessageDialog(yesFunction: (value) {
-                    if (value != null) {
-                      _addPost(description: value);
-                    }
-                  },value: 'Say something')
-                );
-              })));
+      widgets.add(FormatHelper.getFormattedRoundedShape(IconButton(
+          icon: message,
+          tooltip: 'Message',
+          onPressed: () {
+            DialogStatefulWidgetHelper.openIt(
+                context!,
+                QuickMessageDialog(
+                    yesFunction: (value) {
+                      if (value != null) {
+                        _addPost(description: value);
+                      }
+                    },
+                    value: 'Say something'));
+          })));
       widgets.add(Spacer());
     }
 
@@ -136,9 +145,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
       var audio = Image.asset("assets/images/segoshvishna.fiverr.com/audio.png",
           package: "eliud_pkg_feed");
       widgets.add(FormatHelper.getFormattedRoundedShape(
-          IconButton(icon: audio,
-              tooltip: 'Audio',
-              onPressed: () {})));
+          IconButton(icon: audio, tooltip: 'Audio', onPressed: () {})));
       widgets.add(Spacer());
     }
 
@@ -169,11 +176,9 @@ class _PagedPostsListState extends State<PagedPostsList> {
                 widget.feedModel.appId!,
                 widget.switchFeedHelper.memberOfFeed.documentID!,
                 widget.switchFeedHelper.defaultReadAccess,
-                "Article",
-                (newArticle) {
-                  _addPost(html: newArticle);
-                },
-                'Say something');
+                "Article", (newArticle) {
+              _addPost(html: newArticle);
+            }, 'Say something');
           })));
       widgets.add(Spacer());
     }
@@ -232,7 +237,6 @@ class _PagedPostsListState extends State<PagedPostsList> {
   Widget _buttonNextPage(bool mightHaveMore) {
     if (mightHaveMore) {
       return MyButton(
-        buttonColor: _app!.formSubmitButtonColor,
         onClickFunction: _onClick,
       );
     } else {
@@ -264,10 +268,10 @@ class _PagedPostsListState extends State<PagedPostsList> {
 typedef OnClickFunction();
 
 class MyButton extends StatefulWidget {
-  final RgbModel? buttonColor;
+  //final RgbModel? buttonColor;
   final OnClickFunction? onClickFunction;
 
-  const MyButton({Key? key, this.buttonColor, this.onClickFunction})
+  const MyButton({Key? key, /*this.buttonColor, */ this.onClickFunction})
       : super(key: key);
 
   @override
@@ -286,27 +290,36 @@ class _MyButtonState extends State<MyButton> {
   @override
   Widget build(BuildContext context) {
     if (!clicked) {
-      return RaisedButton(
-          color: RgbHelper.color(rgbo: widget.buttonColor),
-          onPressed: () {
-            setState(() {
-              clicked = true;
-            });
-            widget.onClickFunction!();
-          },
-          child: Text('More...'));
+      return StyleRegistry.registry()
+          .styleWithContext(context)
+          .frontEndStyle()
+          .button(
+        context,
+        label: 'More...',
+        onPressed: () {
+          setState(() {
+            clicked = true;
+          });
+          widget.onClickFunction!();
+        },
+      );
     } else {
-      return RaisedButton(
-          color: RgbHelper.color(rgbo: widget.buttonColor),
-          onPressed: () {
-            setState(() {
-              clicked = true;
-            });
-            widget.onClickFunction!();
-          },
-          child: Center(
-              child: SizedBox(
-                  width: 30, height: 30, child: CircularProgressIndicator())));
+
+      return StyleRegistry.registry()
+          .styleWithContext(context)
+          .frontEndStyle()
+          .buttonWithChild(
+        context,
+        child: Center(
+          child: SizedBox(
+              width: 30, height: 30, child: CircularProgressIndicator())),
+        onPressed: () {
+          setState(() {
+            clicked = true;
+          });
+          widget.onClickFunction!();
+        },
+      );
     }
   }
 }
