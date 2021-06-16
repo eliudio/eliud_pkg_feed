@@ -3,7 +3,7 @@ import 'package:eliud_core/core/navigate/navigate_bloc.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/package/package.dart';
-import 'package:eliud_core/tools/registry.dart';
+import 'package:eliud_core/core/registry.dart';
 import 'package:eliud_pkg_feed/tools/action/post_action_entity.dart';
 import 'package:eliud_pkg_feed/tools/action/post_action_handler.dart';
 import 'package:eliud_pkg_feed/tools/action/post_action_model.dart';

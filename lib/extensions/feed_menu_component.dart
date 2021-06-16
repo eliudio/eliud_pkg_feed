@@ -1,12 +1,6 @@
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
-import 'package:eliud_core/core/access/bloc/access_state.dart';
-import 'package:eliud_core/core/components/util/page_helper.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:eliud_core/tools/etc.dart';
-import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 import 'package:eliud_core/core/widgets/alert_widget.dart';
 import 'package:eliud_core/tools/component_constructor.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';

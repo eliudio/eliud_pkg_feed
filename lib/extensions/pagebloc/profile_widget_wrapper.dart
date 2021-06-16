@@ -1,5 +1,5 @@
-import 'package:eliud_core/core/components/util/component_info.dart';
-import 'package:eliud_core/core/components/util/page_body.dart';
+import 'package:eliud_core/core/tools/component_info.dart';
+import 'package:eliud_core/core/tools/page_body.dart';
 import 'package:eliud_core/tools/component_constructor.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
