@@ -1,8 +1,8 @@
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
+import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/random.dart';
-import 'package:eliud_pkg_etc/tools/formatter/format_helpere.dart';
 import 'package:eliud_pkg_feed/extensions/util/media_buttons.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
@@ -136,7 +136,7 @@ class _PostButtonState extends State<PostButton> {
   Widget _getOriginalIcon(Widget child, {double? width}) {
     return Container(
         padding: const EdgeInsets.only(top: 22.5, bottom: 22.5),
-        child: FormatHelper.getFormattedRoundedShape(Center(
+        child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().actionContainer(context, child:Center(
             child: Container(
                 padding: EdgeInsets.all(2.0),
                 width: width == null ? 45 : width,

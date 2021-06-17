@@ -1,7 +1,7 @@
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/tools/page_helper.dart';
-import 'package:eliud_pkg_etc/tools/formatter/format_helpere.dart';
+import 'package:eliud_core/style/style_registry.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:eliud_core/tools/etc.dart';
@@ -54,7 +54,7 @@ class _FeedMenuState extends State<FeedMenu> {
 
           return Align(
               alignment: Alignment.center,
-              child: FormatHelper.getFormattedRoundedShape(Container(
+              child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().actionContainer(context, child:Container(
                   padding: const EdgeInsets.all(10.0),
                   child: DropdownButton(
                       value: selectedPage,

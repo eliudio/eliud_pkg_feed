@@ -1,6 +1,7 @@
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/widgets/alert_widget.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
+import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/component_constructor.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/album_component.dart';
@@ -36,12 +37,12 @@ class AlbumComponent extends AbstractAlbumComponent {
     if (postModel == null) {
       return Text("No post");
     } else {
-      return PostContentsWidget(
+      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().topicContainer(context, children: [PostContentsWidget(
         memberID: member!.documentID!,
         postModel: postModel,
         accessBloc: accessBloc,
         parentPageId: null,
-      );
+      )]);
     }
   }
 

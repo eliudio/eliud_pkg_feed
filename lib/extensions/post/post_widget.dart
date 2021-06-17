@@ -1,7 +1,7 @@
 import 'package:eliud_core/model/member_medium_model.dart';
+import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/storage/fb_storage_image.dart';
 import 'package:eliud_core/tools/storage/medium_base.dart';
-import 'package:eliud_pkg_etc/tools/formatter/format_helpere.dart';
 import 'package:eliud_pkg_feed/extensions/post/embedded_page.dart';
 import 'package:eliud_pkg_feed/extensions/post/post_contents_widget.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_bloc.dart';
@@ -96,7 +96,7 @@ class _PostWidgetState extends State<PostWidget> {
     widgets.add(_aBitSpace());
     widgets.add(_postComments(context, widget.details, memberId));
 
-    return FormatHelper.getFormattedPost(widgets);
+    return StyleRegistry.registry().styleWithContext(context).frontEndStyle().topicContainer(context, children: widgets);
   }
 
 
@@ -124,7 +124,7 @@ class _PostWidgetState extends State<PostWidget> {
             child: widget.switchFeedHelper.gestured(
                 context,
                 widget.switchFeedHelper.memberCurrent!.documentID!,
-                AvatarHelper.avatar(widget.switchFeedHelper.memberCurrent!, widget.appId, widget.feedId))),
+                AvatarHelper.avatar(context, 20, widget.switchFeedHelper.pageId, widget.switchFeedHelper.memberCurrent!, widget.appId, widget.feedId))),
         Container(width: 8),
         Flexible(
           child: Container(
@@ -211,7 +211,7 @@ class _PostWidgetState extends State<PostWidget> {
           child: widget.switchFeedHelper.gestured(
               context,
               postModel.author!.documentID!,
-              AvatarHelper.avatar(postModel.author, widget.appId, widget.feedId))),
+              AvatarHelper.avatar(context, 25, widget.switchFeedHelper.pageId, postModel.author, widget.appId, widget.feedId))),
       Container(
         width: 8,
       ),
@@ -364,7 +364,7 @@ class _PostWidgetState extends State<PostWidget> {
 
     var rowChildren = [
       widget.switchFeedHelper.gestured(context, data.member!.documentID!,
-          AvatarHelper.avatar2(data.member, widget.appId, widget.feedId, 8)),
+          AvatarHelper.avatar(context, 20, widget.switchFeedHelper.pageId, data.member, widget.appId, widget.feedId)),
       Container(width: 8),
       Expanded(
           child: Container(
@@ -517,7 +517,7 @@ class _PostWidgetState extends State<PostWidget> {
     return Row(
       children: <Widget>[
         Spacer(),
-        FormatHelper.getFormattedRoundedShape(IconButton(
+        StyleRegistry.registry().styleWithContext(context).frontEndStyle().actionContainer(context, child:IconButton(
           icon: ImageIcon(_assetThumbUp(thisMemberLikeType)
           ),
           onPressed: () => _like(context, postDetails),
@@ -526,7 +526,7 @@ class _PostWidgetState extends State<PostWidget> {
           "$likes",
         ),
         Spacer(flex: 3),
-        FormatHelper.getFormattedRoundedShape(IconButton(
+        StyleRegistry.registry().styleWithContext(context).frontEndStyle().actionContainer(context, child: IconButton(
           icon: ImageIcon(_assetThumbDown(thisMemberLikeType)
           ),
           onPressed: () => _dislike(context, postDetails),

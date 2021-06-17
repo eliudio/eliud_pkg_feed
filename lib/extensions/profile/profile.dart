@@ -1,5 +1,5 @@
 import 'package:eliud_core/core/widgets/progress_indicator.dart';
-import 'package:eliud_pkg_etc/tools/formatter/format_helpere.dart';
+import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_pkg_feed/extensions/util/editable_widget.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +28,7 @@ class _ProfileState extends State<Profile> {
       if (state is ProfileError) return Text("No profile");
       if (state is ProfileInitialised) {
         return EditableWidget(
-          child: FormatHelper.getFormattedPost([HtmlWidget(state.html())]),
+          child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().topicContainer(context, children:([HtmlWidget(state.html())])),
             button: getEditIcon(onPressed: () {
               RichTextDialog.open(
                   context,

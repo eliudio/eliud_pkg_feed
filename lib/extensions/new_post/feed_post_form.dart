@@ -4,12 +4,14 @@ import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
+import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/widgets/dialog_helper.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/media_buttons.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_media_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
+import 'package:eliud_pkg_feed/extensions/util/switch_member.dart';
 import 'package:eliud_pkg_feed/platform/medium_platform.dart';
 import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 import 'package:flutter/material.dart';
@@ -143,7 +145,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
 
   Widget _row1(AppModel app, MemberPublicInfoModel member,
       FeedPostFormInitialized state, LoggedIn accessState) {
-    var avatar = widget.switchFeedHelper.gestured(context, member.documentID!, AvatarHelper.avatar(member, app.documentID!, widget.feedId, ));
+    var avatar = widget.switchFeedHelper.gestured(context, member.documentID!, AvatarHelper.avatar(context, 60, widget.switchFeedHelper.pageId, member, app.documentID!, widget.feedId, ));
     return Row(children: [
       Container(
           height: 60, width: 60, child: avatar == null ? Container() : avatar),

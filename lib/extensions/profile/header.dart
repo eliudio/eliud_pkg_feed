@@ -1,5 +1,5 @@
+import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/storage/upload_info.dart';
-import 'package:eliud_pkg_etc/tools/formatter/format_helpere.dart';
 import 'package:eliud_pkg_feed/extensions/profile/bloc/profile_event.dart';
 import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
 import 'package:eliud_core/core/widgets/progress_indicator.dart';
@@ -79,8 +79,8 @@ class _HeaderState extends State<Header> {
                     child: ConstrainedBox(
                       constraints:
                           BoxConstraints(maxWidth: 110, maxHeight: 110),
-                      child: AvatarHelper.avatarProfile(
-                          switchFeedHelper.feedMember(), memberProfileModel),
+                      child: AvatarHelper.avatar(context, 55, switchFeedHelper.pageId,
+                          switchFeedHelper.feedMember(), switchFeedHelper.appId, switchFeedHelper.feedId ),
                     )), progressProfilePhoto, 110, 70,),
                 Align(
                   alignment: Alignment.topRight,
@@ -143,7 +143,7 @@ class _HeaderState extends State<Header> {
         // Add the background photo
         allRows.add(EditableWidget(
             child: _progress(
-                FormatHelper.getFormattedPost(rows,
+                StyleRegistry.registry().styleWithContext(context).frontEndStyle().topicContainer(context, children:rows,
                     image: _background(context, state.memberProfileModel)),
                 progressProfileVideo,
                 heightBackgroundPhoto(context),
@@ -160,7 +160,7 @@ class _HeaderState extends State<Header> {
         // Add the name
         allRows.add(Align(
             alignment: Alignment.bottomCenter,
-            child: FormatHelper.getFormattedRoundedShape(Container(
+            child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().actionContainer(context, child:Container(
                 padding: EdgeInsets.all(10.0),
                 child: Text(
                   state.switchFeedHelper.memberOfFeed.name!,

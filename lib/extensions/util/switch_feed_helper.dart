@@ -2,6 +2,8 @@ import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/navigate/page_param_helper.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
+import 'package:eliud_pkg_feed/extensions/util/switch_member.dart';
+import 'package:eliud_pkg_feed/extensions/util/switch_member.dart';
 import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 import 'package:eliud_pkg_follow/tools/follower_helper.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,7 +17,6 @@ import 'avatar_helper.dart';
 enum WhichFeed { MyFeed, OnlyMyFeed, SomeoneIFollow, SomeoneElse, PublicFeed }
 
 class SwitchFeedHelper {
-  static String switchMemberFeedPageParameter = 'memberId';
   final String appId;
   final String feedId;
   final String pageId;
@@ -30,24 +31,9 @@ class SwitchFeedHelper {
       BuildContext context, String switchToThisMemberId, Widget avatar) {
     return GestureDetector(
         onTap: () {
-          _switchMember(context, pageId, switchToThisMemberId);
+          SwitchMember.switchMember(context, pageId, switchToThisMemberId);
         },
         child: avatar);
-  }
-
-  Widget getFeedWidget(
-    BuildContext context,
-  ) {
-    return gestured(
-        context, feedMember().documentID!, AvatarHelper.avatar(feedMember, appId, feedId));
-  }
-
-  static void _switchMember(
-      BuildContext context, String pageId, String memberId) {
-    var _navigatorBloc = BlocProvider.of<NavigatorBloc>(context);
-    _navigatorBloc.add(GoToPageEvent(pageId, parameters: {
-      SwitchFeedHelper.switchMemberFeedPageParameter: memberId
-    }));
   }
 
   bool allowNewPost() => currentMember() == feedMember();
@@ -85,7 +71,7 @@ class SwitchFeedHelper {
       if (pageContextInfo.parameters == null) {
         _memberOfFeed = _memberCurrent;
       } else {
-        var param = pageContextInfo.parameters![switchMemberFeedPageParameter];
+        var param = pageContextInfo.parameters![SwitchMember.switchMemberFeedPageParameter];
         if (param == null) {
           _memberOfFeed = _memberCurrent;
         } else {
@@ -97,7 +83,7 @@ class SwitchFeedHelper {
         throw Exception(
             "Looking at a feed without argument, without being logged in");
       } else {
-        var param = pageContextInfo.parameters![switchMemberFeedPageParameter];
+        var param = pageContextInfo.parameters![SwitchMember.switchMemberFeedPageParameter];
         if (param == null) {
           throw Exception(
               "Looking at a feed without argument, without being logged in");
