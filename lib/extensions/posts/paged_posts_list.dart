@@ -1,34 +1,26 @@
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/widgets/progress_indicator.dart';
-import 'package:eliud_core/model/app_model.dart';
-import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
-import 'package:eliud_core/model/rgb_model.dart';
 import 'package:eliud_core/style/style_registry.dart';
-import 'package:eliud_core/tools/etc.dart';
 import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_core/tools/widgets/dialog_helper.dart';
 import 'package:eliud_core/tools/widgets/quick_message_dialog.dart';
 import 'package:eliud_pkg_etc/tools/formatter/format_helpere.dart';
 import 'package:eliud_pkg_feed/extensions/new_post/feed_post_dialog.dart';
 import 'package:eliud_pkg_feed/extensions/posts/post_button.dart';
-import 'package:eliud_pkg_feed/extensions/util/media_buttons.dart';
-import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
-import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_feed/model/feed_model.dart';
 import 'package:eliud_pkg_feed/model/post_medium_model.dart';
-import 'package:eliud_pkg_feed/platform/medium_platform.dart';
+import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:eliud_pkg_text/extensions/rich_text_dialog.dart';
-import 'package:flutter/scheduler.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../post/post_widget.dart';
 import '../postlist_paged/postlist_paged_bloc.dart';
 import '../postlist_paged/postlist_paged_event.dart';
 import '../postlist_paged/postlist_paged_state.dart';
-import 'package:eliud_pkg_feed/model/feed_model.dart';
-import '../post/post_widget.dart';
-import 'package:eliud_pkg_feed/model/post_model.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PagedPostsList extends StatefulWidget {
   //final String? parentPageId;
@@ -50,15 +42,13 @@ class PagedPostsList extends StatefulWidget {
 
 class _PagedPostsListState extends State<PagedPostsList> {
   late PostListPagedBloc _postBloc;
-  AppModel? _app;
-  double? photoUploadingProgress = null;
-  double? videoUploadingProgress = null;
+  double? photoUploadingProgress;
+  double? videoUploadingProgress;
 
   @override
   void initState() {
     super.initState();
     _postBloc = BlocProvider.of<PostListPagedBloc>(context);
-    _app = AccessBloc.app(context);
   }
 
   void _videoUploading(double progress) {
@@ -104,22 +94,22 @@ class _PagedPostsListState extends State<PagedPostsList> {
     widgets.add(Spacer());
 
     // Photo
-    if (widget.feedModel!.photoPost!) {
+    if (widget.feedModel.photoPost!) {
       widgets.add(PostButton(
           widget.feedModel, widget.switchFeedHelper, PostType.PostPhoto));
       widgets.add(Spacer());
     }
 
     // Video
-    if (widget.feedModel!.videoPost != null && widget.feedModel!.videoPost!) {
+    if (widget.feedModel.videoPost != null && widget.feedModel.videoPost!) {
       widgets.add(PostButton(
           widget.feedModel, widget.switchFeedHelper, PostType.PostVideo));
       widgets.add(Spacer());
     }
 
     // Message
-    if (widget.feedModel!.messagePost != null &&
-        widget.feedModel!.messagePost!) {
+    if (widget.feedModel.messagePost != null &&
+        widget.feedModel.messagePost!) {
       var message = Image.asset(
           "assets/images/segoshvishna.fiverr.com/message.png",
           package: "eliud_pkg_feed");
@@ -128,7 +118,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
           tooltip: 'Message',
           onPressed: () {
             DialogStatefulWidgetHelper.openIt(
-                context!,
+                context,
                 QuickMessageDialog(
                     yesFunction: (value) {
                       if (value != null) {
@@ -141,7 +131,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
     }
 
     // Audio
-    if (widget.feedModel!.audioPost != null && widget.feedModel!.audioPost!) {
+    if (widget.feedModel.audioPost != null && widget.feedModel.audioPost!) {
       var audio = Image.asset("assets/images/segoshvishna.fiverr.com/audio.png",
           package: "eliud_pkg_feed");
       widgets.add(FormatHelper.getFormattedRoundedShape(
@@ -150,7 +140,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
     }
 
     // Album
-    if (widget.feedModel!.albumPost != null && widget.feedModel!.albumPost!) {
+    if (widget.feedModel.albumPost != null && widget.feedModel.albumPost!) {
       var album = Image.asset("assets/images/segoshvishna.fiverr.com/album.png",
           package: "eliud_pkg_feed");
       widgets.add(FormatHelper.getFormattedRoundedShape(IconButton(
@@ -162,8 +152,8 @@ class _PagedPostsListState extends State<PagedPostsList> {
     }
 
     // Article
-    if (widget.feedModel!.articlePost != null &&
-        widget.feedModel!.articlePost!) {
+    if (widget.feedModel.articlePost != null &&
+        widget.feedModel.articlePost!) {
       var article = Image.asset(
           "assets/images/segoshvishna.fiverr.com/article.png",
           package: "eliud_pkg_feed");
@@ -200,7 +190,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
             }
             for (int i = 0; i < theState.values.length; i++) {
               widgets.add(post(
-                  context, _accessState.app.documentID!, theState.values[i]!));
+                  context, _accessState.app.documentID!, theState.values[i]));
             }
             widgets.add(_buttonNextPage(!theState.hasReachedMax));
             return ListView(
@@ -228,7 +218,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
     return PostWidget(
       thumbStyle: widget.feedModel.thumbImage,
       appId: appId,
-      feedId: widget.feedModel!.documentID!,
+      feedId: widget.feedModel.documentID!,
       switchFeedHelper: widget.switchFeedHelper,
       details: postDetails,
     );

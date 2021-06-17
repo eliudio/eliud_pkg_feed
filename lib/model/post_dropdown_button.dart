@@ -66,8 +66,8 @@ class PostDropdownButtonWidgetState extends State<PostDropdownButtonWidget> {
 
 List<Widget> widgets(PostModel pm) {
 var widgets = <Widget>[];
-if (pm.timestamp.toString() != null) widgets.add(new Text(pm.timestamp.toString()!));
-if (pm.documentID != null) widgets.add(new Text(pm.documentID!));
+if (pm.timestamp.toString() != null) widgets.add(new Text(pm.timestamp.toString()));
+if (pm.documentID! != null) widgets.add(new Text(pm.documentID!));
 return widgets;
 }
 

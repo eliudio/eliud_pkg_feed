@@ -1,7 +1,6 @@
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/tools/page_helper.dart';
-import 'package:eliud_core/model/menu_item_model.dart';
 import 'package:eliud_pkg_etc/tools/formatter/format_helpere.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -46,8 +45,7 @@ class _FeedMenuState extends State<FeedMenu> {
               popupMenuItems.add(
                 DropdownMenuItem<int>(
                     child: Text(
-                      item!.text!,
-                      style: GoogleFonts.annieUseYourTelescope(fontSize: 35),
+                      item.text!,
                     ),
                     value: i),
               );
@@ -63,7 +61,7 @@ class _FeedMenuState extends State<FeedMenu> {
                       items: popupMenuItems,
                       onChanged: (choice) {
                         eliudrouter.Router.navigateTo(
-                            context, items[choice as int]!.action!);
+                            context, items[choice as int].action!);
                       }))));
         } else {
           return Center(child: DelayedCircularProgressIndicator());

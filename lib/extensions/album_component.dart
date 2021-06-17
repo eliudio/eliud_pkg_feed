@@ -34,17 +34,15 @@ class AlbumComponent extends AbstractAlbumComponent {
     var member = AccessBloc.memberFor(AccessBloc.getState(context));
     var postModel = albumModel.post;
     if (postModel == null) {
-      print("postModel is null");
+      return Text("No post");
     } else {
-      print("postModel is not null");
+      return PostContentsWidget(
+        memberID: member!.documentID!,
+        postModel: postModel,
+        accessBloc: accessBloc,
+        parentPageId: null,
+      );
     }
-
-    return PostContentsWidget(
-      memberID: member!.documentID!,
-      postModel: postModel,
-      accessBloc: accessBloc,
-      parentPageId: null,
-    );
   }
 
   @override

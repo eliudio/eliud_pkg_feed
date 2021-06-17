@@ -57,7 +57,7 @@ class ProfileInitialised extends ProfileState {
   }
 
   List<String> readAccess() {
-    return _readAccess == null ? ['PUBLIC'] : _readAccess!;
+    return _readAccess;
   }
 
   ProfileInitialised copyWith({required MemberProfileModel newMemberProfileModel}) {

@@ -1,25 +1,19 @@
-import 'package:eliud_core/core/widgets/progress_indicator.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
-import 'package:eliud_core/tools/query/query_tools.dart';
-import 'package:eliud_core/tools/storage/fb_storage_image.dart';
 import 'package:eliud_pkg_etc/tools/formatter/format_helpere.dart';
-import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/member_profile_model.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:flutter/material.dart';
 
 class AvatarHelper {
-
   static Future<String?> _getFuture(String memberId, String authorId, String appId, String feedId) async {
     var key = authorId + "-" + feedId;
     var memberProfileModel = await memberProfileRepository(appId: appId)!.get(key);
     if (memberProfileModel != null) {
       // In theory a person can create multiple profiles. However, we use the first only.
       var value = memberProfileModel;
-      if (value!.profileOverride == null) return null;
-      return value!.profileOverride!.url;
+      if (value.profileOverride == null) return null;
+      return value.profileOverride!.url;
     } else {
       return null;
     }
@@ -81,7 +75,6 @@ class AvatarHelper {
 
   static Widget avatar2(memberModel, String appId, String feedId, double radius,
       {Color? backgroundColor, Color? backgroundColor2}) {
-    var avatar;
     if (memberModel == null) {
       return Text("No avatar");
     } else {
@@ -92,13 +85,13 @@ class AvatarHelper {
               return _getIt(snapshot.data!, radius, backgroundColor, backgroundColor2);
             } else if (memberModel.photoURL == null) {
               return CircleAvatar(
-                radius: radius == null ? 12 : radius,
+                radius: radius,
                 backgroundColor: backgroundColor == null
                     ? Colors.transparent
                     : backgroundColor,
                 backgroundImage: Image.asset(
-                        "assets/images/undraw.co/undraw_profile_pic_ic5t.png",
-                        package: "eliud_pkg_feed")
+                        'assets/images/undraw.co/undraw_profile_pic_ic5t.png',
+                        package: 'eliud_pkg_feed')
                     .image,
               );
             } else {
@@ -111,21 +104,18 @@ class AvatarHelper {
 
   static Widget _defaultAvatar() {
     return FormatHelper.getFormattedCircleShape(Image.asset(
-        "assets/images/undraw.co/undraw_profile_pic_ic5t.png",
-        package: "eliud_pkg_feed"));
+        'assets/images/undraw.co/undraw_profile_pic_ic5t.png',
+        package: 'eliud_pkg_feed'));
   }
 
   static Widget avatarProfile(MemberPublicInfoModel memberModel,
       MemberProfileModel memberProfileModel) {
-    var avatar;
-    if ((memberModel == null) ||
-        (memberModel.photoURL == null) && (memberProfileModel == null) ||
+    if ((memberModel.photoURL == null) ||
         (memberProfileModel.profileOverride == null) ||
         (memberProfileModel.profileOverride!.ref == null)) {
       return _defaultAvatar();
     } else {
-      if ((memberProfileModel == null) ||
-          (memberProfileModel.profileOverride == null) ||
+      if ((memberProfileModel.profileOverride == null) ||
           (memberProfileModel.profileOverride!.ref == null)) {
         return FormatHelper.getFormattedCircleShape(FadeInImage.memoryNetwork(
           placeholder: kTransparentImage,

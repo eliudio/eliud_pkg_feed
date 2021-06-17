@@ -103,7 +103,7 @@
  ],
   "listFields": {
     "title": "timestamp.toString()",
-    "subTitle": "documentID"
+    "subTitle": "documentID!"
   },
   "depends": ["eliud_core", "eliud_pkg_membership"]
 }

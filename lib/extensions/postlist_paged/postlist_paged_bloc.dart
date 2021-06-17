@@ -22,8 +22,7 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
   EliudQuery eliudQuery;
 
   PostListPagedBloc(this.memberId, this.eliudQuery,
-      {required PostRepository postRepository})
-      : assert(postRepository != null),
+      {required PostRepository postRepository}):
         _postRepository = postRepository,
         super(const PostListPagedState());
 
@@ -49,10 +48,7 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
       List<PostDetails> newListOfValues = [];
       newListOfValues.add(details);
       newListOfValues.addAll(state.values);
-      var previousState = state;
-      var newState = state.copyWith(values: newListOfValues);
-      bool isEqual = newState == previousState;
-      yield newState;
+      yield state.copyWith(values: newListOfValues);
     } else if (event is DeletePostPaged) {
       await _mapDeletePost(event);
 
@@ -61,7 +57,6 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
       newListOfValues.remove(event.value);
       final extraValues =
           await _fetchPosts(lastRowFetched: state.lastRowFetched, limit: 1);
-      if (extraValues != null) {
         var newState = extraValues.isEmpty
             ? state.copyWith(hasReachedMax: true)
             : state.copyWith(
@@ -72,7 +67,6 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
                     _hasReachedMax(newListOfValues.length + extraValues.length),
               );
         yield newState;
-      }
     } else if (event is LikePostEvent) {
       yield await _updateEmotion(state, null, event.likeType, event.postDetail);
     } else if (event is LikeCommentPostEvent) {
@@ -101,7 +95,7 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
   }
 
   Future<void> _mapAddPost(AddPostPaged event) async {
-    await _postRepository.add(event.value!);
+    await _postRepository.add(event.value);
   }
 
   Future<PostListPagedState?> _mapPostFetchedToState(
@@ -110,18 +104,16 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
     try {
       if (state.status == PostListPagedStatus.initial) {
         final values = await _fetchPosts(limit: 5);
-        if (values != null) {
           return state.copyWith(
             status: PostListPagedStatus.success,
             values: values,
             lastRowFetched: lastRowFetched,
             hasReachedMax: _hasReachedMax(values.length),
           );
-        }
       } else {
         final values =
             await _fetchPosts(lastRowFetched: state.lastRowFetched, limit: 5);
-        return values == null || values.isEmpty
+        return values.isEmpty
             ? state.copyWith(hasReachedMax: true)
             : state.copyWith(
                 status: PostListPagedStatus.success,
@@ -185,7 +177,6 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
   ) async {
     if (sourceComments == null) return null;
     if (sourceComments.length == 0) return null;
-    if (postId == null) return null;
 
     List<PostCommentContainer> comments = [];
     for (int i = 0; i < sourceComments.length; i++) {
@@ -275,9 +266,7 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
     var toCopy = postDetail.comments;
     if ((toCopy != null) && (toCopy.length > 0)) {
       for (int i = 0; i < toCopy.length; i++) {
-        if (toCopy[i] != null) {
-          newComments.add(toCopy[i]!.copyWith());
-        }
+        newComments.add(toCopy[i].copyWith());
       }
     }
     PostDetails newPostDetail = postDetail.copyWith(comments: newComments);
@@ -326,14 +315,12 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
           toCopy[i]!.postCommentContainer, toAdd);
       if (toCopy[i]!.postComment!.documentID == toAdd.postCommentId) {
         // is this the comment the parent of the item to be added then add it at the front
-        PostCommentContainer? container =
+        PostCommentContainer container =
             await construct(toAdd.appId!, toAdd, null, false);
-        if (container != null) {
-          if (theCopy != null) {
-            theCopy.insert(0, container);
-          } else {
-            theCopy = [container];
-          }
+        if (theCopy != null) {
+          theCopy.insert(0, container);
+        } else {
+          theCopy = [container];
         }
       }
       newComments.add(toCopy[i]!.copyWith(postCommentContainer: theCopy));
@@ -387,7 +374,7 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
     postCommentRepository(appId: postDetails.postModel.appId)!
         .update(updateThis.copyWith(comment: newValue));
 
-    var newComments = await _copyCommentsAndUpdateComment(postDetails.comments, updateThis.documentID, newValue);
+    var newComments = _copyCommentsAndUpdateComment(postDetails.comments, updateThis.documentID, newValue);
     var newPostDetail = postDetails.copyWith(comments: newComments);
     var newState = theState.replacePost(newPostDetail);
     return newState;
@@ -437,7 +424,7 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
       LikeType? likePressed,
       PostDetails postDetail) async {
     PostModel postModel = postDetail.postModel;
-    String appId = postDetail.postModel!.appId!;
+    String appId = postDetail.postModel.appId!;
     // We have firebase functions to update the post collection. One reason is performance, we shouldn't do this work on the client.
     // Second reason is security: the client, except the owner, can update the post.
     // We allow the firebase function to do it's thing in the background, async. In the meantime we determine the value here
@@ -501,7 +488,7 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
           likesExtra = -1;
         }
 
-        // upate the like / dislike
+        // update the like / dislike
         postLikeRepository(appId: appId)!
             .update(like.copyWith(likeType: likePressed));
       } else {
@@ -517,7 +504,6 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
         await postLikeRepository(appId: appId)!.delete(like);
       }
     }
-    var newPostModel;
     if (postCommentContainer == null) {
       // update the state without having to retrieving it from the db
       var newPostDetail = postDetail.copyWith(
@@ -525,7 +511,7 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
               likes: postModel.likes == null
                   ? likesExtra
                   : postModel.likes! + likesExtra,
-              dislikes: postModel!.dislikes == null
+              dislikes: postModel.dislikes == null
                   ? dislikesExtra
                   : postModel.dislikes! + dislikesExtra),
           thisMembersLikeType: thisMembersLikeType);

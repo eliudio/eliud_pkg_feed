@@ -65,7 +65,7 @@ class _FeedState extends State<Feed> {
             .withCondition(EliudQueryCondition('archived',
             isEqualTo: PostArchiveStatus.Active.index))
             .withCondition(
-            EliudQueryCondition('feedId', isEqualTo: feedModel!.documentID))
+            EliudQueryCondition('feedId', isEqualTo: feedModel.documentID))
             .withCondition(EliudQueryCondition('readAccess', arrayContainsAny: [
           switchFeedHelper.currentMember()!.documentID
         ]));
@@ -78,7 +78,7 @@ class _FeedState extends State<Feed> {
             .withCondition(EliudQueryCondition('authorId',
             isEqualTo: switchFeedHelper.currentMember()!.documentID))
             .withCondition(EliudQueryCondition('feedId',
-            isEqualTo: feedModel!.documentID));
+            isEqualTo: feedModel.documentID));
         break;
       case WhichFeed.SomeoneIFollow:
       // query where that person is the author and I'm in the readAccess
@@ -88,7 +88,7 @@ class _FeedState extends State<Feed> {
             .withCondition(EliudQueryCondition('authorId',
             isEqualTo: switchFeedHelper.feedMember().documentID))
             .withCondition(
-            EliudQueryCondition('feedId', isEqualTo: feedModel!.documentID))
+            EliudQueryCondition('feedId', isEqualTo: feedModel.documentID))
             .withCondition(EliudQueryCondition('readAccess', arrayContainsAny: [
           switchFeedHelper.currentMember()!.documentID
         ]));
@@ -102,7 +102,7 @@ class _FeedState extends State<Feed> {
             .withCondition(EliudQueryCondition('authorId',
             isEqualTo: switchFeedHelper.feedMember().documentID))
             .withCondition(
-            EliudQueryCondition('feedId', isEqualTo: feedModel!.documentID))
+            EliudQueryCondition('feedId', isEqualTo: feedModel.documentID))
             .withCondition(EliudQueryCondition('readAccess',
             arrayContainsAny: ['PUBLIC']));
         break;
@@ -121,7 +121,7 @@ class _FeedState extends State<Feed> {
   Widget _postPagedBloc(
       String? parentPageId,
       BuildContext context,
-      FeedModel? feedModel,
+      FeedModel feedModel,
       EliudQuery eliudQuery,
       SwitchFeedHelper switchFeedHelper) {
     var app = AccessBloc.app(context);
@@ -133,10 +133,10 @@ class _FeedState extends State<Feed> {
       return BlocProvider(
         create: (_) =>
         PostListPagedBloc(switchFeedHelper.memberOfFeed.documentID!, eliudQuery,
-            postRepository: posts.postRepository(appId: feedModel!.appId)!)
+            postRepository: posts.postRepository(appId: feedModel.appId)!)
           ..add(PostListPagedFetched()),
         child:
-        PagedPostsList(feedModel!, memberPublicInfoModel, switchFeedHelper),
+        PagedPostsList(feedModel, memberPublicInfoModel, switchFeedHelper),
       );
     }
   }

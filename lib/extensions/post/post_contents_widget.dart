@@ -13,14 +13,14 @@ import 'package:eliud_pkg_feed/platform/medium_platform.dart';
 
 class PostContentsWidget extends StatefulWidget {
   final String? memberID;
-  final PostModel? postModel;
+  final PostModel postModel;
   final AccessBloc? accessBloc;
   final String? parentPageId;
 
   const PostContentsWidget(
       {Key? key,
       this.memberID,
-      this.postModel,
+      required this.postModel,
       this.accessBloc,
       this.parentPageId})
       : super(key: key);
@@ -43,21 +43,21 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
 
   @override
   Widget _contents({String? memberID,
-    PostModel? postModel,
+    required PostModel postModel,
     AccessBloc? accessBloc,
     String? parentPageId}) {
     List<Tab> tabs = [];
 
-    if (postModel!.postPageId != null) {
+    if (postModel.postPageId != null) {
       if (memberID != null) {
         return EmbeddedPageHelper.postDetails(memberID, postModel,
             accessBloc, context, parentPageId!
         );
       }
-    } else if ((postModel!.memberMedia != null) &&
-        (postModel!.memberMedia!.length > 0)) {
-      if (postModel!.memberMedia!.length == 1) {
-        var medium = postModel!.memberMedia![0];
+    } else if ((postModel.memberMedia != null) &&
+        (postModel.memberMedia!.length > 0)) {
+      if (postModel.memberMedia!.length == 1) {
+        var medium = postModel.memberMedia![0];
         var width;
         if (medium.memberMedium!.mediumType == MediumType.Photo) {
           width = _width(context) * .7;
@@ -72,7 +72,7 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
               _action([medium], 0);
             });
       } else {
-        List<PostMediumModel> memberMedia = postModel!.memberMedia!;
+        List<PostMediumModel> memberMedia = postModel.memberMedia!;
         List<Widget> widgets = [];
         // Photos & videos
         //widgets.add(PostMediaHelper.videoAndPhotoDivider(context));
@@ -82,7 +82,7 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
         }));
         return Column(children: widgets);
       }
-    } else if (postModel!.externalLink != null) {
+    } else if (postModel.externalLink != null) {
 /*
       return WebView(
         initialUrl: state.postModel.externalLink,
@@ -90,8 +90,8 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
       );
 */
       return Text("External link not supported yet");
-    } else if (postModel!.html != null) {
-      return HtmlWidget(postModel!.html!);
+    } else if (postModel.html != null) {
+      return HtmlWidget(postModel.html!);
     }
 
     return Container(height: 1); // nothing

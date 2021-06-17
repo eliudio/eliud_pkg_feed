@@ -8,7 +8,6 @@ import 'package:eliud_core/tools/widgets/dialog_helper.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/media_buttons.dart';
-import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_media_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
 import 'package:eliud_pkg_feed/platform/medium_platform.dart';
@@ -115,9 +114,9 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         _descriptionController.text = "";
       }
 
-      if (state.postModelDetails!.postPrivilege != null)
+      if (state.postModelDetails.postPrivilege != null)
         _postPrivilegeSelectedRadioTile =
-            state.postModelDetails!.postPrivilege!.index;
+            state.postModelDetails.postPrivilege.index;
       else
         _postPrivilegeSelectedRadioTile = 0;
     }
@@ -126,7 +125,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
       rows.add(_row1(app, pubMember, state, theState));
       if ((state is SubmittableFeedPostFormWithMediumUploading) ||
           ((state.postModelDetails.memberMedia != null) &&
-              (state.postModelDetails.memberMedia!.isNotEmpty))) {
+              (state.postModelDetails.memberMedia.isNotEmpty))) {
         rows.add(_row2(state));
         rows.add(PostMediaHelper.videoAndPhotoDivider(context));
       }
@@ -263,7 +262,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
       setState(() {
         _postPrivilegeSelectedRadioTile = val;
       });
-      BlocProvider.of<FeedPostFormBloc>(context).add(ChangedFeedPostPrivilege(value: toPostPrivilege(val!)));
+      BlocProvider.of<FeedPostFormBloc>(context).add(ChangedFeedPostPrivilege(value: toPostPrivilege(val)));
     }
   }
 

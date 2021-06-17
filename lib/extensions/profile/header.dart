@@ -2,13 +2,11 @@ import 'package:eliud_core/tools/storage/upload_info.dart';
 import 'package:eliud_pkg_etc/tools/formatter/format_helpere.dart';
 import 'package:eliud_pkg_feed/extensions/profile/bloc/profile_event.dart';
 import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:eliud_core/core/widgets/progress_indicator.dart';
 import 'package:eliud_pkg_feed/extensions/profile/bloc/profile_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/profile/bloc/profile_state.dart';
 import 'package:eliud_pkg_feed/extensions/util/editable_widget.dart';
 import 'package:eliud_pkg_feed/extensions/util/media_buttons.dart';
-import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
 import 'package:eliud_pkg_feed/model/member_profile_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -46,7 +44,7 @@ class _HeaderState extends State<Header> {
 
   bool _hasProfileBackground(MemberProfileModel? memberProfileModel) {
     return ((memberProfileModel != null) &&
-        (memberProfileModel!.profileBackground != null) &&
+        (memberProfileModel.profileBackground != null) &&
         (memberProfileModel.profileBackground!.url != null));
   }
 
@@ -166,7 +164,6 @@ class _HeaderState extends State<Header> {
                 padding: EdgeInsets.all(10.0),
                 child: Text(
                   state.switchFeedHelper.memberOfFeed.name!,
-                  style: GoogleFonts.annieUseYourTelescope(fontSize: 35),
                 )))));
         return Column(children: allRows);
       }

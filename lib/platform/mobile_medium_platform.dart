@@ -87,7 +87,7 @@ class MobileMediumPlatform extends AbstractMediumPlatform {
     var _result = await FilePicker.platform.pickFiles(type: FileType.image, allowMultiple: false);
     if (_result != null) {
       if ((allowCrop != null) && (allowCrop)) {
-        var path = _result!.paths[0];
+        var path = _result.paths[0];
         if (path == null) return;
         var _image = await ImageCropper.cropImage(
             sourcePath: path,

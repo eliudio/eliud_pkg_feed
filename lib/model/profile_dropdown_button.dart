@@ -66,8 +66,8 @@ class ProfileDropdownButtonWidgetState extends State<ProfileDropdownButtonWidget
 
 List<Widget> widgets(ProfileModel pm) {
 var widgets = <Widget>[];
-if (pm.documentID != null) widgets.add(new Text(pm.documentID!));
-if (pm.description != null) widgets.add(new Text(pm.description!));
+if (pm.documentID! != null) widgets.add(new Text(pm.documentID!));
+if (pm.description! != null) widgets.add(new Text(pm.description!));
 return widgets;
 }
 

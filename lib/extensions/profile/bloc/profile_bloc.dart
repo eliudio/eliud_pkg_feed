@@ -57,6 +57,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       memberProfileModel = MemberProfileModel(documentID: key, readAccess: switchFeedHelper.defaultReadAccess, profile: "");
     }
     return ProfileInitialised(event.feedId, app.documentID!, switchFeedHelper.defaultReadAccess,
-        memberProfileModel!, switchFeedHelper);
+        memberProfileModel, switchFeedHelper);
   }
 }

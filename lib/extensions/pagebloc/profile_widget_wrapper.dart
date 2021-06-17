@@ -51,7 +51,7 @@ class ProfileWidgetWrapper extends ComponentWidgetWrapper {
         create: (context) =>
         ProfileBloc()
           ..add(InitialiseProfileEvent(
-              feedId!, _accessState, modalRoute)),
+              feedId, _accessState, modalRoute)),
         child: PageBody(componentInfo: componentInfo,));
     } else {
       return Text("App not loaded");
