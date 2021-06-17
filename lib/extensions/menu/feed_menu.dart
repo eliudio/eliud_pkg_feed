@@ -1,17 +1,14 @@
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
+import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 import 'package:eliud_core/core/tools/page_helper.dart';
 import 'package:eliud_core/style/style_registry.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:eliud_core/tools/etc.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
-import 'package:eliud_pkg_feed/model/feed_menu_model.dart';
-import 'package:eliud_core/core/widgets/progress_indicator.dart';
 import 'package:eliud_pkg_feed/extensions/profile/bloc/profile_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/profile/bloc/profile_state.dart';
+import 'package:eliud_pkg_feed/model/feed_menu_model.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FeedMenu extends StatefulWidget {
@@ -64,7 +61,7 @@ class _FeedMenuState extends State<FeedMenu> {
                             context, items[choice as int].action!);
                       }))));
         } else {
-          return Center(child: DelayedCircularProgressIndicator());
+          return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
         }
       });
     } else {

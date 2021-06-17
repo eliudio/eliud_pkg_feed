@@ -1,28 +1,13 @@
-import 'package:eliud_core/core/tools/component_info.dart';
-import 'package:eliud_core/core/tools/page_body.dart';
-import 'package:eliud_core/tools/component_constructor.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
-import 'package:eliud_core/core/widgets/alert_widget.dart';
-import 'package:eliud_core/core/widgets/progress_indicator.dart';
+import 'package:eliud_core/core/tools/component_info.dart';
+import 'package:eliud_core/core/tools/page_body.dart';
 import 'package:eliud_core/tools/component_constructor.dart';
 import 'package:eliud_pkg_feed/extensions/profile/bloc/profile_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/profile/bloc/profile_event.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:eliud_core/core/widgets/progress_indicator.dart';
-
-import 'package:eliud_pkg_feed/model/feed_component_bloc.dart';
-import 'package:eliud_pkg_feed/model/feed_component_event.dart';
-import 'package:eliud_pkg_feed/model/feed_model.dart';
-import 'package:eliud_pkg_feed/model/feed_repository.dart';
-import 'package:eliud_pkg_feed/model/feed_component_state.dart';
-import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_feed/model/profile_component.dart';
-import 'package:eliud_pkg_feed/model/profile_model.dart';
-import 'package:eliud_pkg_feed/model/profile_repository.dart';
-import 'package:flutter/material.dart';
 
 /*
  * Every feed-component, e.g. Header, Profile, ... could all have a BlocProvider as below.

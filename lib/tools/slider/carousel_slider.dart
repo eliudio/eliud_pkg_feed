@@ -1,15 +1,12 @@
 import 'dart:typed_data';
-
-import 'package:eliud_core/core/widgets/progress_indicator.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
+import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/storage/fb_storage_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:flutter_carousel_slider/carousel_slider_indicators.dart';
 import 'package:flutter_carousel_slider/carousel_slider_transforms.dart';
-import 'package:photo_view/photo_view.dart' as pv;
-import 'package:photo_view/photo_view.dart';
 import 'package:pinch_zoom/pinch_zoom.dart';
 
 abstract class SlideImageProvider {
@@ -102,7 +99,7 @@ class _AlbumSliderState extends State<AlbumSlider> {
       slideBuilder: (index) {
         return Stack(
           children: <Widget>[
-            Center(child: DelayedCircularProgressIndicator()),
+            StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context),
             Center(
                 child: Container(
               height: MediaQuery.of(context).size.height - height,

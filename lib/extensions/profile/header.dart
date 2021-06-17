@@ -2,7 +2,6 @@ import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/storage/upload_info.dart';
 import 'package:eliud_pkg_feed/extensions/profile/bloc/profile_event.dart';
 import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
-import 'package:eliud_core/core/widgets/progress_indicator.dart';
 import 'package:eliud_pkg_feed/extensions/profile/bloc/profile_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/profile/bloc/profile_state.dart';
 import 'package:eliud_pkg_feed/extensions/util/editable_widget.dart';
@@ -167,7 +166,7 @@ class _HeaderState extends State<Header> {
                 )))));
         return Column(children: allRows);
       }
-      return Center(child: DelayedCircularProgressIndicator());
+      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
     });
   }
 

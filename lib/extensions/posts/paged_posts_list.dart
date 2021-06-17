@@ -1,6 +1,5 @@
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
-import 'package:eliud_core/core/widgets/progress_indicator.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/random.dart';
@@ -195,9 +194,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
             return ListView(
                 shrinkWrap: true, physics: ScrollPhysics(), children: widgets);
           } else {
-            return Center(
-              child: DelayedCircularProgressIndicator(),
-            );
+            return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
           }
         },
       );

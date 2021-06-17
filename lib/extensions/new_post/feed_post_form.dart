@@ -1,6 +1,5 @@
-import 'package:eliud_core/core/widgets/progress_indicator.dart';
-import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
+import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
@@ -11,12 +10,12 @@ import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/media_buttons.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_media_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
-import 'package:eliud_pkg_feed/extensions/util/switch_member.dart';
 import 'package:eliud_pkg_feed/platform/medium_platform.dart';
 import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter/foundation.dart';
+
 import 'bloc/feed_post_form_bloc.dart';
 import 'bloc/feed_post_form_event.dart';
 import 'bloc/feed_post_form_state.dart';
@@ -139,7 +138,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
       );
 
     } else {
-      return Center(child: DelayedCircularProgressIndicator());
+      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
     }
   }
 

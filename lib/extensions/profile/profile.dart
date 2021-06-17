@@ -1,4 +1,3 @@
-import 'package:eliud_core/core/widgets/progress_indicator.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_pkg_feed/extensions/util/editable_widget.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
@@ -57,7 +56,7 @@ class _ProfileState extends State<Profile> {
 */
         );
       }
-      return Center(child: DelayedCircularProgressIndicator());
+      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
     });
   }
 }

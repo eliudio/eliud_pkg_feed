@@ -1,26 +1,16 @@
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
-import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/style/style_registry.dart';
-import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_pkg_feed/extensions/util/media_buttons.dart';
-import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
 import 'package:eliud_pkg_feed/model/post_medium_model.dart';
-import 'package:eliud_pkg_feed/platform/medium_platform.dart';
+import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:eliud_core/core/widgets/progress_indicator.dart';
-import 'package:eliud_pkg_feed/extensions/profile/bloc/profile_bloc.dart';
-import 'package:eliud_pkg_feed/extensions/profile/bloc/profile_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../posts/paged_posts_list.dart';
+
 import '../postlist_paged/postlist_paged_bloc.dart';
 import '../postlist_paged/postlist_paged_event.dart';
-import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart'
-    as posts;
-import 'package:eliud_pkg_feed/model/post_model.dart';
 
 enum PostType { PostPhoto, PostVideo}
 
