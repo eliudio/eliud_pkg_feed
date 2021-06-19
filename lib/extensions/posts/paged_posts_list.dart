@@ -114,7 +114,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
           icon: message,
           tooltip: 'Message',
           onPressed: () {
-            SimpleDialogApi.openEntryDialog(context, title: 'Confirm', onPressed: (value) {
+            SimpleDialogApi.openEntryDialog(context, title: 'Same something', onPressed: (value) {
               if (value != null) {
                 _addPost(description: value);
               }
@@ -161,7 +161,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
                 widget.switchFeedHelper.defaultReadAccess,
                 "Article", (newArticle) {
               _addPost(html: newArticle);
-            }, 'Say something');
+            }, 'Add article');
           })));
       widgets.add(Spacer());
     }
