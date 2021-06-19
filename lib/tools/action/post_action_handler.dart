@@ -5,8 +5,7 @@ import 'package:eliud_core/core/navigate/router.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/tools/action/action_model.dart';
 import 'package:eliud_core/tools/random.dart';
-import 'package:eliud_core/tools/widgets/dialog_helper.dart';
-import 'package:eliud_core/tools/widgets/dialog_with_options.dart';
+import 'package:eliud_core/tools/widgets/simple_dialog_api.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/tools/action/post_action_model.dart';
 import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
@@ -24,33 +23,37 @@ class PostActionHandler extends PackageActionHandler {
       var accessState = AccessBloc.getState(context);
       if (accessState is LoggedIn) {
         String name = action.appID!;
-        DialogStatefulWidgetHelper.openIt(
-            context,
-            DialogWithOptions(title: 'Add page to feed ' + name)
-                .withOption(
-                    'Only me', () => addToMe(context, action, accessState))
-                .withOption('My followers',
-                    () => addToFollowers(context, action, accessState))
-                .withOptionConditional(accessState.memberIsOwner(), 'Public',
-                    () => addToPublic(context, action, accessState)));
+
+        SimpleDialogApi.openSelectionDialog(context,
+            title: 'Add page to feed ' + name,
+            options: ['Only Me', 'My followers', 'Public'],
+            onSelection: (int choice) {
+              switch (choice) {
+                case 0: addToMe(context, action, accessState); break;
+                case 1: addToFollowers(context, action, accessState); break;
+                case 2: addToPublic(context, action, accessState); break;
+              }
+            });
       }
     }
   }
 
   void addToMe(
       BuildContext context, PostActionModel action, LoggedIn accessState) {
-    executePostIt(
-        context, action, PostFollowersHelper.asMe(accessState.member.documentID!), accessState);
+    executePostIt(context, action,
+        PostFollowersHelper.asMe(accessState.member.documentID!), accessState);
   }
 
   Future<void> addToFollowers(BuildContext context, PostActionModel action,
       LoggedIn accessState) async {
-    executePostIt(context, action, await PostFollowersHelper.asFollowers(accessState), accessState);
+    executePostIt(context, action,
+        await PostFollowersHelper.asFollowers(accessState), accessState);
   }
 
-  Future<void> addToPublic(
-      BuildContext context, PostActionModel action, LoggedIn accessState) async {
-    executePostIt(context, action, await PostFollowersHelper.asPublic(accessState), accessState);
+  Future<void> addToPublic(BuildContext context, PostActionModel action,
+      LoggedIn accessState) async {
+    executePostIt(context, action,
+        await PostFollowersHelper.asPublic(accessState), accessState);
   }
 
   Future<void> executePostIt(BuildContext context, PostActionModel action,
@@ -64,8 +67,8 @@ class PostActionHandler extends PackageActionHandler {
 
     postRepository(appId: action.appID)!.add(PostModel(
       documentID: newRandomKey(),
-      author: await memberPublicInfoRepository(appId: action.appID)!.get(
-          accessState.member.documentID),
+      author: await memberPublicInfoRepository(appId: action.appID)!
+          .get(accessState.member.documentID),
       appId: action.appID,
       postAppId: postAppId,
       feedId: action.feed!.documentID,

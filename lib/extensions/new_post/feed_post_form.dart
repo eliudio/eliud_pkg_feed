@@ -5,6 +5,7 @@ import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/widgets/dialog_helper.dart';
+import 'package:eliud_core/tools/widgets/simple_dialog_api.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/media_buttons.dart';
@@ -26,7 +27,12 @@ class FeedPostForm extends StatelessWidget {
   //final String parentPageId;
   final SwitchFeedHelper switchFeedHelper;
   final PostListPagedBloc postListPagedBloc;
-  FeedPostForm({Key? key, required this.feedId, required this.switchFeedHelper, required this.postListPagedBloc}) : super(key: key);
+  FeedPostForm(
+      {Key? key,
+      required this.feedId,
+      required this.switchFeedHelper,
+      required this.postListPagedBloc})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +50,6 @@ class MyFeedPostForm extends StatefulWidget {
 }
 
 class _MyFeedPostFormState extends State<MyFeedPostForm> {
-  final DialogStateHelper dialogHelper = DialogStateHelper();
   final TextEditingController _descriptionController = TextEditingController();
   int? _postPrivilegeSelectedRadioTile;
 
@@ -90,16 +95,14 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
       if (app == null) return Text('No app available');
       return BlocBuilder<FeedPostFormBloc, FeedPostFormState>(
           builder: (context, state) {
-            return dialogHelper.build(
-                dialogButtonPosition: DialogButtonPosition.TopRight,
-                title: 'New Album',
-                contents: _contents(context, state, app, pubMember, theState),
-                buttons: dialogHelper.getYesNoButtons(context, () {
-                  BlocProvider.of<FeedPostFormBloc>(context).add(SubmitPost());
-                  Navigator.pop(context);
-                }, () {
-                  Navigator.pop(context);
-                }, yesButtonLabel: "Ok", noButtonLabel: "Cancel"));
+        return SimpleDialogApi.complexAckNackDialog(context,
+            title: 'New Album',
+            child: _contents(context, state, app, pubMember, theState),
+            onSelection: (value) {
+          if (value == 0) {
+            BlocProvider.of<FeedPostFormBloc>(context).add(SubmitPost());
+          }
+        });
       });
     } else {
       return Text("Not logged in");
@@ -136,15 +139,27 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: rows,
       );
-
     } else {
-      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
+      return StyleRegistry.registry()
+          .styleWithContext(context)
+          .frontEndStyle()
+          .progressIndicator(context);
     }
   }
 
   Widget _row1(AppModel app, MemberPublicInfoModel member,
       FeedPostFormInitialized state, LoggedIn accessState) {
-    var avatar = widget.switchFeedHelper.gestured(context, member.documentID!, AvatarHelper.avatar(context, 60, widget.switchFeedHelper.pageId, member, app.documentID!, widget.feedId, ));
+    var avatar = widget.switchFeedHelper.gestured(
+        context,
+        member.documentID!,
+        AvatarHelper.avatar(
+          context,
+          60,
+          widget.switchFeedHelper.pageId,
+          member,
+          app.documentID!,
+          widget.feedId,
+        ));
     return Row(children: [
       Container(
           height: 60, width: 60, child: avatar == null ? Container() : avatar),
@@ -158,16 +173,17 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
       Container(width: 8),
       _mediaButtons(context, app, state, member.documentID!),
     ]);
-
   }
 
   void _photoUploading(double progress) {
-    BlocProvider.of<FeedPostFormBloc>(context).add(UploadingMedium(progress: progress));
+    BlocProvider.of<FeedPostFormBloc>(context)
+        .add(UploadingMedium(progress: progress));
     setState(() {});
   }
 
   void _videoUploading(double progress) {
-    BlocProvider.of<FeedPostFormBloc>(context).add(UploadingMedium(progress: progress));
+    BlocProvider.of<FeedPostFormBloc>(context)
+        .add(UploadingMedium(progress: progress));
     setState(() {});
   }
 
@@ -176,21 +192,20 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
     List<String> readAccess = state.postModelDetails.readAccess;
 
     return MediaButtons.mediaButtons(
-        context,
-        app.documentID!,
-        memberId,
-        readAccess,
+        context, app.documentID!, memberId, readAccess,
         tooltip: 'Add video or photo',
         photoFeedbackFunction: (photo) {
           var memberMedia = state.postModelDetails.memberMedia;
           memberMedia.add(photo);
-          BlocProvider.of<FeedPostFormBloc>(context).add(ChangedMedia(memberMedia: memberMedia));
+          BlocProvider.of<FeedPostFormBloc>(context)
+              .add(ChangedMedia(memberMedia: memberMedia));
         },
         photoFeedbackProgress: _photoUploading,
         videoFeedbackFunction: (video) {
           var memberMedia = state.postModelDetails.memberMedia;
           memberMedia.add(video);
-          BlocProvider.of<FeedPostFormBloc>(context).add(ChangedMedia(memberMedia: memberMedia));
+          BlocProvider.of<FeedPostFormBloc>(context)
+              .add(ChangedMedia(memberMedia: memberMedia));
         },
         videoFeedbackProgress: _videoUploading);
   }
@@ -206,7 +221,8 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         progressExtra: progressValue, deleteAction: (index) {
       var memberMedia = state.postModelDetails.memberMedia;
       memberMedia.removeAt(index);
-      BlocProvider.of<FeedPostFormBloc>(context).add(ChangedMedia(memberMedia: memberMedia));
+      BlocProvider.of<FeedPostFormBloc>(context)
+          .add(ChangedMedia(memberMedia: memberMedia));
     }, viewAction: (index) {
       var medium = state.postModelDetails.memberMedia[index];
       if (medium.mediumType == MediumType.Photo) {
@@ -263,7 +279,8 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
       setState(() {
         _postPrivilegeSelectedRadioTile = val;
       });
-      BlocProvider.of<FeedPostFormBloc>(context).add(ChangedFeedPostPrivilege(value: toPostPrivilege(val)));
+      BlocProvider.of<FeedPostFormBloc>(context)
+          .add(ChangedFeedPostPrivilege(value: toPostPrivilege(val)));
     }
   }
 

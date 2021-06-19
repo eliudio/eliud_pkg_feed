@@ -3,8 +3,7 @@ import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/random.dart';
-import 'package:eliud_core/tools/widgets/dialog_helper.dart';
-import 'package:eliud_core/tools/widgets/quick_message_dialog.dart';
+import 'package:eliud_core/tools/widgets/simple_dialog_api.dart';
 import 'package:eliud_pkg_feed/extensions/new_post/feed_post_dialog.dart';
 import 'package:eliud_pkg_feed/extensions/posts/post_button.dart';
 import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
@@ -115,15 +114,11 @@ class _PagedPostsListState extends State<PagedPostsList> {
           icon: message,
           tooltip: 'Message',
           onPressed: () {
-            DialogStatefulWidgetHelper.openIt(
-                context,
-                QuickMessageDialog(
-                    yesFunction: (value) {
-                      if (value != null) {
-                        _addPost(description: value);
-                      }
-                    },
-                    value: 'Say something'));
+            SimpleDialogApi.openEntryDialog(context, title: 'Confirm', onPressed: (value) {
+              if (value != null) {
+                _addPost(description: value);
+              }
+            });
           })));
       widgets.add(Spacer());
     }

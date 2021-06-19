@@ -1,25 +1,16 @@
-import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/style/style_registry.dart';
-import 'package:eliud_core/tools/storage/fb_storage_image.dart';
 import 'package:eliud_core/tools/storage/medium_base.dart';
-import 'package:eliud_pkg_feed/extensions/post/embedded_page.dart';
+import 'package:eliud_core/tools/widgets/simple_dialog_api.dart';
 import 'package:eliud_pkg_feed/extensions/post/post_contents_widget.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_event.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_state.dart';
 import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
-import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
-import 'package:eliud_pkg_feed/extensions/util/post_media_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
-import 'package:eliud_core/tools/widgets/dialog_helper.dart';
-import 'package:eliud_core/tools/widgets/request_value_dialog.dart';
-import 'package:eliud_core/tools/widgets/yes_no_dialog.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
 import 'package:eliud_pkg_feed/model/post_like_model.dart';
-import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
-import 'package:eliud_pkg_feed/platform/medium_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -33,7 +24,12 @@ class PostWidget extends StatefulWidget {
   final SwitchFeedHelper switchFeedHelper;
 
   const PostWidget(
-      {Key? key, required this.appId, required this.feedId, required this.thumbStyle, required this.switchFeedHelper, required this.details})
+      {Key? key,
+      required this.appId,
+      required this.feedId,
+      required this.thumbStyle,
+      required this.switchFeedHelper,
+      required this.details})
       : super(key: key);
 
   @override
@@ -89,16 +85,17 @@ class _PostWidgetState extends State<PostWidget> {
     ));
     widgets.add(_aBitSpace());
 
-    widgets.add(_postActionBtns(
-        context, widget.details, memberId));
+    widgets.add(_postActionBtns(context, widget.details, memberId));
     widgets.add(_aBitSpace());
     widgets.add(_enterComment(context, widget.details));
     widgets.add(_aBitSpace());
     widgets.add(_postComments(context, widget.details, memberId));
 
-    return StyleRegistry.registry().styleWithContext(context).frontEndStyle().topicContainer(context, children: widgets);
+    return StyleRegistry.registry()
+        .styleWithContext(context)
+        .frontEndStyle()
+        .topicContainer(context, children: widgets);
   }
-
 
   static double _width(BuildContext context) =>
       MediaQuery.of(context).size.width;
@@ -124,7 +121,13 @@ class _PostWidgetState extends State<PostWidget> {
             child: widget.switchFeedHelper.gestured(
                 context,
                 widget.switchFeedHelper.memberCurrent!.documentID!,
-                AvatarHelper.avatar(context, 20, widget.switchFeedHelper.pageId, widget.switchFeedHelper.memberCurrent!, widget.appId, widget.feedId))),
+                AvatarHelper.avatar(
+                    context,
+                    20,
+                    widget.switchFeedHelper.pageId,
+                    widget.switchFeedHelper.memberCurrent!,
+                    widget.appId,
+                    widget.feedId))),
         Container(width: 8),
         Flexible(
           child: Container(
@@ -211,7 +214,8 @@ class _PostWidgetState extends State<PostWidget> {
           child: widget.switchFeedHelper.gestured(
               context,
               postModel.author!.documentID!,
-              AvatarHelper.avatar(context, 25, widget.switchFeedHelper.pageId, postModel.author, widget.appId, widget.feedId))),
+              AvatarHelper.avatar(context, 25, widget.switchFeedHelper.pageId,
+                  postModel.author, widget.appId, widget.feedId))),
       Container(
         width: 8,
       ),
@@ -259,76 +263,61 @@ class _PostWidgetState extends State<PostWidget> {
 
   void allowToAddComment(
       BuildContext context, PostDetails postDetail, String memberId) {
-    DialogStatefulWidgetHelper.openIt(
+    SimpleDialogApi.openEntryDialog(
       context,
-      RequestValueDialog(
-          title: 'Reply to comment',
-          yesButtonText: 'Reply',
-          noButtonText: 'Discard',
-          hintText: 'Comment',
-          yesFunction: (comment) {
-            if (comment != null) {
-              BlocProvider.of<PostListPagedBloc>(context)
-                  .add(AddCommentEvent(postDetail, comment));
-            }
-            Navigator.pop(context);
-          },
-          noFunction: () => Navigator.pop(context)),
+      title: 'Reply to comment',
+      ackButtonLabel: 'Reply',
+      nackButtonLabel: 'Discard',
+      onPressed: (comment) {
+        if (comment != null) {
+          BlocProvider.of<PostListPagedBloc>(context)
+              .add(AddCommentEvent(postDetail, comment));
+        }
+      },
     );
   }
 
   void allowToAddCommentComment(BuildContext context, PostDetails postDetail,
       PostCommentContainer postCommentContainer, String memberId) {
-    DialogStatefulWidgetHelper.openIt(
-      context,
-      RequestValueDialog(
-          title: 'Reply to comment',
-          yesButtonText: 'Reply',
-          noButtonText: 'Discard',
-          hintText: 'Comment',
-          yesFunction: (comment) {
-            if (comment != null) {
-              BlocProvider.of<PostListPagedBloc>(context).add(AddCommentCommentEvent(
-                  postDetail, postCommentContainer, comment));
-            }
-            Navigator.pop(context);
-          },
-          noFunction: () => Navigator.pop(context)),
-    );
+    SimpleDialogApi.openEntryDialog(context,
+        title: 'Reply to comment',
+        hintText: 'Reply',
+        ackButtonLabel: 'Reply',
+        nackButtonLabel: 'Discard', onPressed: (comment) {
+      if (comment != null) {
+        BlocProvider.of<PostListPagedBloc>(context).add(
+            AddCommentCommentEvent(postDetail, postCommentContainer, comment));
+      }
+    });
   }
 
   void allowToUpdateComment(BuildContext context, PostDetails postDetail,
       String? memberId, PostCommentContainer? postCommentContainer) {
-    DialogStatefulWidgetHelper.openIt(
-      context,
-      RequestValueDialog(
-          title: 'Update comment',
-          yesButtonText: 'Update comment',
-          noButtonText: 'Discard',
-          hintText: 'Comment',
-          initialValue: postCommentContainer!.comment,
-          yesFunction: (comment) {
+    SimpleDialogApi.openEntryDialog(context,
+        title: 'Update comment',
+        hintText: 'Comment',
+        ackButtonLabel: 'Reply',
+        nackButtonLabel: 'Discard',
+        onPressed: (comment) {
+          if (comment != null) {
             BlocProvider.of<PostListPagedBloc>(context).add(UpdateCommentEvent(
-                postDetail, postCommentContainer.postComment!, comment!));
-            Navigator.pop(context);
-          },
-          noFunction: () => Navigator.pop(context)),
-    );
+                postDetail, postCommentContainer!.postComment!, comment));
+          }
+        });
   }
 
   void allowToDeleteComment(BuildContext context, PostDetails postDetail,
       String? memberId, PostCommentContainer? postCommentContainer) {
-    DialogStatefulWidgetHelper.openIt(
-        context,
-        YesNoDialog.confirmDialog(
+    SimpleDialogApi.openAckNackDialog(context,
           message: "Do you want to delete this comment",
-          yesFunction: () async {
-            Navigator.pop(context);
-            BlocProvider.of<PostListPagedBloc>(context).add(DeleteCommentEvent(
-                postDetail, postCommentContainer!.postComment!));
-          },
-          noFunction: () => Navigator.pop(context),
-        ));
+          onSelection: (value) async {
+            if (value == 0) {
+              BlocProvider.of<PostListPagedBloc>(context).add(
+                  DeleteCommentEvent(
+                      postDetail, postCommentContainer!.postComment!));
+            }
+          }, title: 'Confirm'
+        );
   }
 
   Widget _postComments(
@@ -342,13 +331,12 @@ class _PostWidgetState extends State<PostWidget> {
         itemBuilder: (context, i) {
           if (i == 0) return _dividerLight();
           var postComment = comments[i - 1];
-          return getCommentTreeWidget(
-              context, postDetail, postComment);
+          return getCommentTreeWidget(context, postDetail, postComment);
         });
   }
 
-  Widget getCommentTreeWidget(
-      BuildContext context, PostDetails postDetail, PostCommentContainer? data) {
+  Widget getCommentTreeWidget(BuildContext context, PostDetails postDetail,
+      PostCommentContainer? data) {
     if (data == null) return Text("No Comments");
 
     var name;
@@ -363,8 +351,11 @@ class _PostWidgetState extends State<PostWidget> {
     }
 
     var rowChildren = [
-      widget.switchFeedHelper.gestured(context, data.member!.documentID!,
-          AvatarHelper.avatar(context, 20, widget.switchFeedHelper.pageId, data.member, widget.appId, widget.feedId)),
+      widget.switchFeedHelper.gestured(
+          context,
+          data.member!.documentID!,
+          AvatarHelper.avatar(context, 20, widget.switchFeedHelper.pageId,
+              data.member, widget.appId, widget.feedId)),
       Container(width: 8),
       Expanded(
           child: Container(
@@ -408,7 +399,8 @@ class _PostWidgetState extends State<PostWidget> {
         ),
       )),
     ];
-    if (widget.switchFeedHelper.memberCurrent!.documentID! == data.member!.documentID) {
+    if (widget.switchFeedHelper.memberCurrent!.documentID! ==
+        data.member!.documentID) {
       rowChildren.add(_optionsPostComments(
           context, postDetail, data.member!.documentID, data));
     }
@@ -453,8 +445,8 @@ class _PostWidgetState extends State<PostWidget> {
                   height: 0, //wraps child's height
                   child: TextButton(
                       child: Text('Reply'),
-                      onPressed: () => allowToAddCommentComment(
-                          context, postDetail, data, data.member!.documentID!))),
+                      onPressed: () => allowToAddCommentComment(context,
+                          postDetail, data, data.member!.documentID!))),
             ]),
           ],
         ));
@@ -517,20 +509,26 @@ class _PostWidgetState extends State<PostWidget> {
     return Row(
       children: <Widget>[
         Spacer(),
-        StyleRegistry.registry().styleWithContext(context).frontEndStyle().actionContainer(context, child:IconButton(
-          icon: ImageIcon(_assetThumbUp(thisMemberLikeType)
-          ),
-          onPressed: () => _like(context, postDetails),
-        )),
+        StyleRegistry.registry()
+            .styleWithContext(context)
+            .frontEndStyle()
+            .actionContainer(context,
+                child: IconButton(
+                  icon: ImageIcon(_assetThumbUp(thisMemberLikeType)),
+                  onPressed: () => _like(context, postDetails),
+                )),
         Text(
           "$likes",
         ),
         Spacer(flex: 3),
-        StyleRegistry.registry().styleWithContext(context).frontEndStyle().actionContainer(context, child: IconButton(
-          icon: ImageIcon(_assetThumbDown(thisMemberLikeType)
-          ),
-          onPressed: () => _dislike(context, postDetails),
-        )),
+        StyleRegistry.registry()
+            .styleWithContext(context)
+            .frontEndStyle()
+            .actionContainer(context,
+                child: IconButton(
+                  icon: ImageIcon(_assetThumbDown(thisMemberLikeType)),
+                  onPressed: () => _dislike(context, postDetails),
+                )),
         Text(
           "$dislikes",
         ),
@@ -567,7 +565,8 @@ class _PostWidgetState extends State<PostWidget> {
     if (widget.thumbStyle == ThumbStyle.Thumbs) {
       if ((thisMemberLikeType == null) ||
           (thisMemberLikeType != LikeType.Dislike)) {
-        return AssetImage("assets/images/segoshvishna.fiverr.com/thumbs-down.png",
+        return AssetImage(
+            "assets/images/segoshvishna.fiverr.com/thumbs-down.png",
             package: "eliud_pkg_feed");
       } else {
         return AssetImage(
@@ -577,7 +576,8 @@ class _PostWidgetState extends State<PostWidget> {
     } else {
       if ((thisMemberLikeType == null) ||
           (thisMemberLikeType != LikeType.Dislike)) {
-        return AssetImage("assets/images/segoshvishna.fiverr.com/bananapeel.png",
+        return AssetImage(
+            "assets/images/segoshvishna.fiverr.com/bananapeel.png",
             package: "eliud_pkg_feed");
       } else {
         return AssetImage(
@@ -588,19 +588,22 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   Future<void> _like(BuildContext context, PostDetails postDetail) async {
-      BlocProvider.of<PostListPagedBloc>(context)
-          .add(LikePostEvent(postDetail, LikeType.Like));
+    BlocProvider.of<PostListPagedBloc>(context)
+        .add(LikePostEvent(postDetail, LikeType.Like));
   }
 
   Future<void> _likeComment(BuildContext context, PostDetails postDetail,
       PostCommentContainer postCommentContainer) async {
-      BlocProvider.of<PostListPagedBloc>(context).add(
-          LikeCommentPostEvent(postDetail, postCommentContainer, LikeType.Like));
+    BlocProvider.of<PostListPagedBloc>(context).add(
+        LikeCommentPostEvent(postDetail, postCommentContainer, LikeType.Like));
   }
 
-  void _dislike(BuildContext context, PostDetails postDetail,) async {
-      BlocProvider.of<PostListPagedBloc>(context)
-          .add(LikePostEvent(postDetail, LikeType.Dislike));
+  void _dislike(
+    BuildContext context,
+    PostDetails postDetail,
+  ) async {
+    BlocProvider.of<PostListPagedBloc>(context)
+        .add(LikePostEvent(postDetail, LikeType.Dislike));
   }
 
   Widget _postLikes(int? likes, int? dislikes) {

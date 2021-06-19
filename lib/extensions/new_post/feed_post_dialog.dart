@@ -39,9 +39,6 @@ class FeedPostDialog extends StatefulWidget {
 }
 
 class _FeedPostDialogState extends State<FeedPostDialog> {
-/*
-  final DialogStateHelper dialogHelper = DialogStateHelper();
-*/
   final PostListPagedBloc postListPagedBloc;
 
   _FeedPostDialogState(this.postListPagedBloc);
