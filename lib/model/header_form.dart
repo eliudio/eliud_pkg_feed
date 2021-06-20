@@ -146,7 +146,7 @@ class _MyHeaderFormState extends State<MyHeaderForm> {
     var accessState = AccessBloc.getState(context);
     return BlocBuilder<HeaderFormBloc, HeaderFormState>(builder: (context, state) {
       if (state is HeaderFormUninitialized) return Center(
-        child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context),
+        child: StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context),
       );
 
       if (state is HeaderFormLoaded) {
@@ -256,7 +256,7 @@ class _MyHeaderFormState extends State<MyHeaderForm> {
           ), formAction!
         );
       } else {
-        return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
+        return StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context);
       }
     });
   }

@@ -160,7 +160,7 @@ class _MyPostCommentFormState extends State<MyPostCommentForm> {
     var accessState = AccessBloc.getState(context);
     return BlocBuilder<PostCommentFormBloc, PostCommentFormState>(builder: (context, state) {
       if (state is PostCommentFormUninitialized) return Center(
-        child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context),
+        child: StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context),
       );
 
       if (state is PostCommentFormLoaded) {
@@ -335,7 +335,7 @@ class _MyPostCommentFormState extends State<MyPostCommentForm> {
           ), formAction!
         );
       } else {
-        return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
+        return StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context);
       }
     });
   }

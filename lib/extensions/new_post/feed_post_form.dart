@@ -93,7 +93,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
       if (app == null) return Text('No app available');
       return BlocBuilder<FeedPostFormBloc, FeedPostFormState>(
           builder: (context, state) {
-        return StyleRegistry.registry().styleWithContext(context).frontEndStyle().complexAckNackDialog(context,
+        return StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogWidgetStyle().complexAckNackDialog(context,
             title: 'New Album',
             child: _contents(context, state, app, pubMember, theState),
             onSelection: (value) {
@@ -140,7 +140,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
     } else {
       return StyleRegistry.registry()
           .styleWithContext(context)
-          .frontEndStyle()
+          .frontEndStyle().progressIndicatorStyle()
           .progressIndicator(context);
     }
   }

@@ -100,7 +100,7 @@ class ProfileListWidgetState extends State<ProfileListWidget> {
     if (accessState is AppLoaded) {
       return BlocBuilder<ProfileListBloc, ProfileListState>(builder: (context, state) {
         if (state is ProfileListLoading) {
-          return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
+          return StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context);
         } else if (state is ProfileListLoaded) {
           final values = state.values;
           if ((widget.isEmbedded != null) && widget.isEmbedded!) {
@@ -130,7 +130,7 @@ class ProfileListWidgetState extends State<ProfileListWidget> {
             return theList(context, values, accessState);
           }
         } else {
-          return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
+          return StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context);
         }
       });
     } else {

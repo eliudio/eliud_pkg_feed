@@ -167,7 +167,7 @@ class _MyPostFormState extends State<MyPostForm> {
     var accessState = AccessBloc.getState(context);
     return BlocBuilder<PostFormBloc, PostFormState>(builder: (context, state) {
       if (state is PostFormUninitialized) return Center(
-        child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context),
+        child: StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context),
       );
 
       if (state is PostFormLoaded) {
@@ -406,7 +406,7 @@ class _MyPostFormState extends State<MyPostForm> {
           ), formAction!
         );
       } else {
-        return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
+        return StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context);
       }
     });
   }

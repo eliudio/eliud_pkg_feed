@@ -27,7 +27,7 @@ class _ProfileState extends State<Profile> {
       if (state is ProfileError) return Text("No profile");
       if (state is ProfileInitialised) {
         return EditableWidget(
-          child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().topicContainer(context, children:([HtmlWidget(state.html())])),
+          child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().containerStyle().topicContainer(context, children:([HtmlWidget(state.html())])),
             button: getEditIcon(onPressed: () {
               RichTextDialog.open(
                   context,
@@ -56,7 +56,7 @@ class _ProfileState extends State<Profile> {
 */
         );
       }
-      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
+      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicatorStyle().progressIndicator(context);
     });
   }
 }

@@ -156,7 +156,7 @@ class _MyPostLikeFormState extends State<MyPostLikeForm> {
     var accessState = AccessBloc.getState(context);
     return BlocBuilder<PostLikeFormBloc, PostLikeFormState>(builder: (context, state) {
       if (state is PostLikeFormUninitialized) return Center(
-        child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context),
+        child: StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context),
       );
 
       if (state is PostLikeFormLoaded) {
@@ -303,7 +303,7 @@ class _MyPostLikeFormState extends State<MyPostLikeForm> {
           ), formAction!
         );
       } else {
-        return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
+        return StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context);
       }
     });
   }

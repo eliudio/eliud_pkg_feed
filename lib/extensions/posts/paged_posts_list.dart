@@ -58,7 +58,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
   Widget _getIcon(Widget child) {
     return Container(
         padding: const EdgeInsets.only(top: 22.5, bottom: 22.5),
-        child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().actionContainer(context, child:Center(
+        child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().containerStyle().actionContainer(context, child:Center(
             child: Container(
                 padding: EdgeInsets.all(2.0),
                 width: 45,
@@ -109,11 +109,11 @@ class _PagedPostsListState extends State<PagedPostsList> {
       var message = Image.asset(
           "assets/images/segoshvishna.fiverr.com/message.png",
           package: "eliud_pkg_feed");
-      widgets.add(StyleRegistry.registry().styleWithContext(context).frontEndStyle().actionContainer(context, child:IconButton(
+      widgets.add(StyleRegistry.registry().styleWithContext(context).frontEndStyle().containerStyle().actionContainer(context, child:IconButton(
           icon: message,
           tooltip: 'Message',
           onPressed: () {
-            StyleRegistry.registry().styleWithContext(context).frontEndStyle().openEntryDialog(context, title: 'Same something', onPressed: (value) {
+            StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogStyle().openEntryDialog(context, title: 'Same something', onPressed: (value) {
               if (value != null) {
                 _addPost(description: value);
               }
@@ -126,7 +126,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
     if (widget.feedModel.audioPost != null && widget.feedModel.audioPost!) {
       var audio = Image.asset("assets/images/segoshvishna.fiverr.com/audio.png",
           package: "eliud_pkg_feed");
-      widgets.add(StyleRegistry.registry().styleWithContext(context).frontEndStyle().actionContainer(context, child:
+      widgets.add(StyleRegistry.registry().styleWithContext(context).frontEndStyle().containerStyle().actionContainer(context, child:
           IconButton(icon: audio, tooltip: 'Audio', onPressed: () {})));
       widgets.add(Spacer());
     }
@@ -135,7 +135,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
     if (widget.feedModel.albumPost != null && widget.feedModel.albumPost!) {
       var album = Image.asset("assets/images/segoshvishna.fiverr.com/album.png",
           package: "eliud_pkg_feed");
-      widgets.add(StyleRegistry.registry().styleWithContext(context).frontEndStyle().actionContainer(context, child:IconButton(
+      widgets.add(StyleRegistry.registry().styleWithContext(context).frontEndStyle().containerStyle().actionContainer(context, child:IconButton(
           icon: album,
           tooltip: 'Album',
           onPressed: () => FeedPostDialog.open(context,
@@ -149,7 +149,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
       var article = Image.asset(
           "assets/images/segoshvishna.fiverr.com/article.png",
           package: "eliud_pkg_feed");
-      widgets.add(StyleRegistry.registry().styleWithContext(context).frontEndStyle().actionContainer(context, child:IconButton(
+      widgets.add(StyleRegistry.registry().styleWithContext(context).frontEndStyle().containerStyle().actionContainer(context, child:IconButton(
           icon: article,
           tooltip: 'Article',
           onPressed: () {
@@ -188,7 +188,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
             return ListView(
                 shrinkWrap: true, physics: ScrollPhysics(), children: widgets);
           } else {
-            return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
+            return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicatorStyle().progressIndicator(context);
           }
         },
       );
@@ -272,7 +272,7 @@ class _MyButtonState extends State<MyButton> {
     if (!clicked) {
       return StyleRegistry.registry()
           .styleWithContext(context)
-          .frontEndStyle()
+          .frontEndStyle().buttonStyle()
           .button(
         context,
         label: 'More...',
@@ -284,22 +284,10 @@ class _MyButtonState extends State<MyButton> {
         },
       );
     } else {
-
       return StyleRegistry.registry()
           .styleWithContext(context)
-          .frontEndStyle()
-          .buttonWithChild(
-        context,
-        child: Center(
-          child: SizedBox(
-              width: 30, height: 30, child: CircularProgressIndicator())),
-        onPressed: () {
-          setState(() {
-            clicked = true;
-          });
-          widget.onClickFunction!();
-        },
-      );
+          .frontEndStyle().progressIndicatorStyle()
+          .progressIndicator(context);
     }
   }
 }

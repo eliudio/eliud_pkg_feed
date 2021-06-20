@@ -100,7 +100,7 @@ class PostLikeListWidgetState extends State<PostLikeListWidget> {
     if (accessState is AppLoaded) {
       return BlocBuilder<PostLikeListBloc, PostLikeListState>(builder: (context, state) {
         if (state is PostLikeListLoading) {
-          return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
+          return StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context);
         } else if (state is PostLikeListLoaded) {
           final values = state.values;
           if ((widget.isEmbedded != null) && widget.isEmbedded!) {
@@ -130,7 +130,7 @@ class PostLikeListWidgetState extends State<PostLikeListWidget> {
             return theList(context, values, accessState);
           }
         } else {
-          return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
+          return StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context);
         }
       });
     } else {

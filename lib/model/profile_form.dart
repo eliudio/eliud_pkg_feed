@@ -146,7 +146,7 @@ class _MyProfileFormState extends State<MyProfileForm> {
     var accessState = AccessBloc.getState(context);
     return BlocBuilder<ProfileFormBloc, ProfileFormState>(builder: (context, state) {
       if (state is ProfileFormUninitialized) return Center(
-        child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context),
+        child: StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context),
       );
 
       if (state is ProfileFormLoaded) {
@@ -256,7 +256,7 @@ class _MyProfileFormState extends State<MyProfileForm> {
           ), formAction!
         );
       } else {
-        return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
+        return StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context);
       }
     });
   }

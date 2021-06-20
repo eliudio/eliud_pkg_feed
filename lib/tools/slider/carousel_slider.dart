@@ -15,7 +15,8 @@ abstract class SlideImageProvider {
 }
 
 class UrlSlideImageProvider extends SlideImageProvider {
-  static String videoImage = 'packages/eliud_pkg_feed/assets/undraw_co/undraw_online_video_ivvq.png';
+  static String videoImage =
+      'packages/eliud_pkg_feed/assets/undraw_co/undraw_online_video_ivvq.png';
   final List<String> urls;
 
   UrlSlideImageProvider(this.urls);
@@ -24,7 +25,9 @@ class UrlSlideImageProvider extends SlideImageProvider {
   Widget getImage(int index) {
     var widget = Image.network(urls[index]);
     if (widget == null) {
-      return Image.asset("assets/images/manypixels.co/404_Page_Not_Found _Flatline.png",  package: "eliud_pkg_feed");
+      return Image.asset(
+          "assets/images/manypixels.co/404_Page_Not_Found _Flatline.png",
+          package: "eliud_pkg_feed");
     } else {
       return widget;
     }
@@ -41,7 +44,13 @@ class MemberMediumSlideImageProvider extends SlideImageProvider {
 
   @override
   Widget getImage(int index) {
-    return MemberImageModelWidget(memberMediumModel: media[index], showThumbnail: false, defaultWidget: Image.asset("assets/images/manypixels.co/404_Page_Not_Found _Flatline.png",  package: "eliud_pkg_feed"),);
+    return MemberImageModelWidget(
+      memberMediumModel: media[index],
+      showThumbnail: false,
+      defaultWidget: Image.asset(
+          "assets/images/manypixels.co/404_Page_Not_Found _Flatline.png",
+          package: "eliud_pkg_feed"),
+    );
   }
 
   @override
@@ -99,7 +108,11 @@ class _AlbumSliderState extends State<AlbumSlider> {
       slideBuilder: (index) {
         return Stack(
           children: <Widget>[
-            StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context),
+            StyleRegistry.registry()
+                .styleWithContext(context)
+                .frontEndStyle()
+                .progressIndicatorStyle()
+                .progressIndicator(context),
             Center(
                 child: Container(
               height: MediaQuery.of(context).size.height - height,
@@ -108,10 +121,8 @@ class _AlbumSliderState extends State<AlbumSlider> {
                 zoomedBackgroundColor: Colors.black.withOpacity(0.5),
                 resetDuration: const Duration(milliseconds: 100),
                 maxScale: 2.5,
-                onZoomStart: () {
-                },
-                onZoomEnd: () {
-                },
+                onZoomStart: () {},
+                onZoomEnd: () {},
               ),
             )),
           ],

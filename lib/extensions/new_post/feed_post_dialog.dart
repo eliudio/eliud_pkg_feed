@@ -25,7 +25,7 @@ class FeedPostDialog extends StatefulWidget {
   static void open(
       BuildContext context, String feedId, SwitchFeedHelper switchFeedHelper) {
     var postListPagedBloc = BlocProvider.of<PostListPagedBloc>(context);
-    StyleRegistry.registry().styleWithContext(context).frontEndStyle().openWidgetDialog(
+    StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogStyle().openWidgetDialog(
         context,
         child: FeedPostDialog(
           feedId: feedId,

@@ -159,7 +159,7 @@ class _MyFeedFormState extends State<MyFeedForm> {
     var accessState = AccessBloc.getState(context);
     return BlocBuilder<FeedFormBloc, FeedFormState>(builder: (context, state) {
       if (state is FeedFormUninitialized) return Center(
-        child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context),
+        child: StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context),
       );
 
       if (state is FeedFormLoaded) {
@@ -350,7 +350,7 @@ class _MyFeedFormState extends State<MyFeedForm> {
           ), formAction!
         );
       } else {
-        return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
+        return StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context);
       }
     });
   }

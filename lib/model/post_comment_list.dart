@@ -100,7 +100,7 @@ class PostCommentListWidgetState extends State<PostCommentListWidget> {
     if (accessState is AppLoaded) {
       return BlocBuilder<PostCommentListBloc, PostCommentListState>(builder: (context, state) {
         if (state is PostCommentListLoading) {
-          return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
+          return StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context);
         } else if (state is PostCommentListLoaded) {
           final values = state.values;
           if ((widget.isEmbedded != null) && widget.isEmbedded!) {
@@ -130,7 +130,7 @@ class PostCommentListWidgetState extends State<PostCommentListWidget> {
             return theList(context, values, accessState);
           }
         } else {
-          return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
+          return StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context);
         }
       });
     } else {

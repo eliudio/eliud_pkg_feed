@@ -1,4 +1,4 @@
-import 'package:eliud_core/style/shared/has_profile_photo.dart';
+import 'package:eliud_core/style/frontend/has_profile_photo.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_pkg_feed/extensions/util/switch_member.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
@@ -23,7 +23,7 @@ class AvatarHelper {
       String appId, String feedId) {
     return StyleRegistry.registry()
         .styleWithContext(context)
-        .frontEndStyle()
+        .frontEndStyle().profilePhotoStyle()
         .getProfilePhotoButtonFromExternalProvider(context,
         radius: radius,
             fallBackURLProvider: () => member.photoURL,

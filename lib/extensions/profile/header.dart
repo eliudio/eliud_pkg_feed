@@ -73,14 +73,24 @@ class _HeaderState extends State<Header> {
             constraints: BoxConstraints(maxWidth: 110, maxHeight: 110),
             child: Stack(
               children: [
-                _progress(Align(
-                    alignment: Alignment.bottomCenter,
-                    child: ConstrainedBox(
-                      constraints:
-                          BoxConstraints(maxWidth: 110, maxHeight: 110),
-                      child: AvatarHelper.avatar(context, 55, switchFeedHelper.pageId,
-                          switchFeedHelper.feedMember(), switchFeedHelper.appId, switchFeedHelper.feedId ),
-                    )), progressProfilePhoto, 110, 70,),
+                _progress(
+                  Align(
+                      alignment: Alignment.bottomCenter,
+                      child: ConstrainedBox(
+                        constraints:
+                            BoxConstraints(maxWidth: 110, maxHeight: 110),
+                        child: AvatarHelper.avatar(
+                            context,
+                            55,
+                            switchFeedHelper.pageId,
+                            switchFeedHelper.feedMember(),
+                            switchFeedHelper.appId,
+                            switchFeedHelper.feedId),
+                      )),
+                  progressProfilePhoto,
+                  110,
+                  70,
+                ),
                 Align(
                   alignment: Alignment.topRight,
                   child: EditableButton(
@@ -115,14 +125,17 @@ class _HeaderState extends State<Header> {
     if (progress == null) {
       return original;
     } else {
-      return Stack(children: [original, Container(
-          height: height,
-          child: Align(
-              alignment: Alignment.center,
-              child: Container(
-                  width: width,
-                  child:
-                      LinearProgressIndicator(value: progressProfileVideo))))]);
+      return Stack(children: [
+        original,
+        Container(
+            height: height,
+            child: Align(
+                alignment: Alignment.center,
+                child: Container(
+                    width: width,
+                    child:
+                        LinearProgressIndicator(value: progressProfileVideo))))
+      ]);
     }
   }
 
@@ -142,8 +155,13 @@ class _HeaderState extends State<Header> {
         // Add the background photo
         allRows.add(EditableWidget(
             child: _progress(
-                StyleRegistry.registry().styleWithContext(context).frontEndStyle().topicContainer(context, children:rows,
-                    image: _background(context, state.memberProfileModel)),
+                StyleRegistry.registry()
+                    .styleWithContext(context)
+                    .frontEndStyle()
+                    .containerStyle()
+                    .topicContainer(context,
+                        children: rows,
+                        image: _background(context, state.memberProfileModel)),
                 progressProfileVideo,
                 heightBackgroundPhoto(context),
                 width(context) / 2),
@@ -159,14 +177,23 @@ class _HeaderState extends State<Header> {
         // Add the name
         allRows.add(Align(
             alignment: Alignment.bottomCenter,
-            child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().actionContainer(context, child:Container(
-                padding: EdgeInsets.all(10.0),
-                child: Text(
-                  state.switchFeedHelper.memberOfFeed.name!,
-                )))));
+            child: StyleRegistry.registry()
+                .styleWithContext(context)
+                .frontEndStyle()
+                .containerStyle()
+                .actionContainer(context,
+                    child: Container(
+                        padding: EdgeInsets.all(10.0),
+                        child: Text(
+                          state.switchFeedHelper.memberOfFeed.name!,
+                        )))));
         return Column(children: allRows);
       }
-      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
+      return StyleRegistry.registry()
+          .styleWithContext(context)
+          .frontEndStyle()
+          .progressIndicatorStyle()
+          .progressIndicator(context);
     });
   }
 

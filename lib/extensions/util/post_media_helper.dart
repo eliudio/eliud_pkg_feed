@@ -71,16 +71,11 @@ class PostMediaHelper {
           .add(_getPopupMenuButton(name, image, i, deleteAction, viewAction));
     }
     if (progressExtra != null) {
-      widgets.add(Center(child:/*CircularProgressIndicator(
-        value: progressExtra,
-        semanticsLabel: progressLabel,
-      )*/
-      CircularPercentIndicator(
+      widgets.add(Center(child:CircularPercentIndicator(
         radius: 60.0,
         lineWidth: 5.0,
         percent: progressExtra,
         center: new Text("100%"),
-//        progressColor: Colors.green,
       )
       ));
     }

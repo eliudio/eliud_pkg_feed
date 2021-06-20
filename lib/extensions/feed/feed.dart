@@ -35,7 +35,7 @@ class _FeedState extends State<Feed> {
         if (state is ProfileInitialised) {
           return _getIt(context, widget.feedModel, state.switchFeedHelper);
         } else {
-          return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
+          return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicatorStyle().progressIndicator(context);
         }
       });
     } else {

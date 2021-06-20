@@ -12,7 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../postlist_paged/postlist_paged_bloc.dart';
 import '../postlist_paged/postlist_paged_event.dart';
 
-enum PostType { PostPhoto, PostVideo}
+enum PostType { PostPhoto, PostVideo }
 
 class PostButton extends StatefulWidget {
   final FeedModel feedModel;
@@ -31,7 +31,8 @@ class _PostButtonState extends State<PostButton> {
   @override
   Widget build(BuildContext context) {
     if (widget.postType == PostType.PostPhoto) {
-      var _photo = Image.asset("assets/images/segoshvishna.fiverr.com/photo.png",
+      var _photo = Image.asset(
+          "assets/images/segoshvishna.fiverr.com/photo.png",
           package: "eliud_pkg_feed");
       return MediaButtons.mediaButtons(
           context,
@@ -39,21 +40,19 @@ class _PostButtonState extends State<PostButton> {
           widget.switchFeedHelper.memberOfFeed.documentID!,
           widget.switchFeedHelper.defaultReadAccess,
           allowCrop: false,
-          tooltip: 'Add photo',
-          photoFeedbackFunction: (photo) {
-            _addPost(postMemberMedia: [
-              PostMediumModel(documentID: newRandomKey(), memberMedium: photo)
-            ]);
-            photoUploadingProgress = null;
-          },
-          photoFeedbackProgress: (progress) {
-            setState(() {
-              photoUploadingProgress = progress;
-            });
-          },
-          icon: _getIcon(_photo));
+          tooltip: 'Add photo', photoFeedbackFunction: (photo) {
+        _addPost(postMemberMedia: [
+          PostMediumModel(documentID: newRandomKey(), memberMedium: photo)
+        ]);
+        photoUploadingProgress = null;
+      }, photoFeedbackProgress: (progress) {
+        setState(() {
+          photoUploadingProgress = progress;
+        });
+      }, icon: _getIcon(_photo));
     } else {
-      var _video = Image.asset("assets/images/segoshvishna.fiverr.com/video.png",
+      var _video = Image.asset(
+          "assets/images/segoshvishna.fiverr.com/video.png",
           package: "eliud_pkg_feed");
       return MediaButtons.mediaButtons(
           context,
@@ -61,19 +60,16 @@ class _PostButtonState extends State<PostButton> {
           widget.switchFeedHelper.memberOfFeed.documentID!,
           widget.switchFeedHelper.defaultReadAccess,
           allowCrop: false,
-          tooltip: 'Add video',
-          videoFeedbackFunction: (photo) {
-            _addPost(postMemberMedia: [
-              PostMediumModel(documentID: newRandomKey(), memberMedium: photo)
-            ]);
-            photoUploadingProgress = null;
-          },
-          videoFeedbackProgress: (progress) {
-            setState(() {
-              photoUploadingProgress = progress;
-            });
-          },
-          icon: _getIcon(_video));
+          tooltip: 'Add video', videoFeedbackFunction: (photo) {
+        _addPost(postMemberMedia: [
+          PostMediumModel(documentID: newRandomKey(), memberMedium: photo)
+        ]);
+        photoUploadingProgress = null;
+      }, videoFeedbackProgress: (progress) {
+        setState(() {
+          photoUploadingProgress = progress;
+        });
+      }, icon: _getIcon(_video));
     }
   }
 
@@ -126,11 +122,16 @@ class _PostButtonState extends State<PostButton> {
   Widget _getOriginalIcon(Widget child, {double? width}) {
     return Container(
         padding: const EdgeInsets.only(top: 22.5, bottom: 22.5),
-        child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().actionContainer(context, child:Center(
-            child: Container(
-                padding: EdgeInsets.all(2.0),
-                width: width == null ? 45 : width,
-                height: 40,
-                child: child))));
+        child: StyleRegistry.registry()
+            .styleWithContext(context)
+            .frontEndStyle()
+            .containerStyle()
+            .actionContainer(context,
+                child: Center(
+                    child: Container(
+                        padding: EdgeInsets.all(2.0),
+                        width: width == null ? 45 : width,
+                        height: 40,
+                        child: child))));
   }
 }

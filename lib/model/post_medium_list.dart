@@ -100,7 +100,7 @@ class PostMediumListWidgetState extends State<PostMediumListWidget> {
     if (accessState is AppLoaded) {
       return BlocBuilder<PostMediumListBloc, PostMediumListState>(builder: (context, state) {
         if (state is PostMediumListLoading) {
-          return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
+          return StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context);
         } else if (state is PostMediumListLoaded) {
           final values = state.values;
           if ((widget.isEmbedded != null) && widget.isEmbedded!) {
@@ -130,7 +130,7 @@ class PostMediumListWidgetState extends State<PostMediumListWidget> {
             return theList(context, values, accessState);
           }
         } else {
-          return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
+          return StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context);
         }
       });
     } else {

@@ -139,7 +139,7 @@ class _MyPostMediumFormState extends State<MyPostMediumForm> {
     var accessState = AccessBloc.getState(context);
     return BlocBuilder<PostMediumFormBloc, PostMediumFormState>(builder: (context, state) {
       if (state is PostMediumFormUninitialized) return Center(
-        child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context),
+        child: StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context),
       );
 
       if (state is PostMediumFormLoaded) {
@@ -219,7 +219,7 @@ class _MyPostMediumFormState extends State<MyPostMediumForm> {
           ), formAction!
         );
       } else {
-        return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
+        return StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context);
       }
     });
   }

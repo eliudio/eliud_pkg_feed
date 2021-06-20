@@ -146,7 +146,7 @@ class _MyAlbumFormState extends State<MyAlbumForm> {
     var accessState = AccessBloc.getState(context);
     return BlocBuilder<AlbumFormBloc, AlbumFormState>(builder: (context, state) {
       if (state is AlbumFormUninitialized) return Center(
-        child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context),
+        child: StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context),
       );
 
       if (state is AlbumFormLoaded) {
@@ -267,7 +267,7 @@ class _MyAlbumFormState extends State<MyAlbumForm> {
           ), formAction!
         );
       } else {
-        return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
+        return StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context);
       }
     });
   }

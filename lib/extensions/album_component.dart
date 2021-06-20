@@ -37,7 +37,7 @@ class AlbumComponent extends AbstractAlbumComponent {
     if (postModel == null) {
       return Text("No post");
     } else {
-      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().topicContainer(context, children: [PostContentsWidget(
+      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().containerStyle().topicContainer(context, children: [PostContentsWidget(
         memberID: member!.documentID!,
         postModel: postModel,
         accessBloc: accessBloc,

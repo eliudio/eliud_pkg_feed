@@ -72,7 +72,7 @@ class _VideoViewState extends State<VideoView> {
                                   controller: chewieController!,
                                 )),
                           )
-                        : new CircularProgressIndicator(),
+                        : new Center(child: CircularProgressIndicator()),
                   );
                 })
           ]),

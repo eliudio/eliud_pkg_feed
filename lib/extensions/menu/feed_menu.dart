@@ -51,7 +51,7 @@ class _FeedMenuState extends State<FeedMenu> {
 
           return Align(
               alignment: Alignment.center,
-              child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().actionContainer(context, child:Container(
+              child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().containerStyle().actionContainer(context, child:Container(
                   padding: const EdgeInsets.all(10.0),
                   child: DropdownButton(
                       value: selectedPage,
@@ -61,7 +61,7 @@ class _FeedMenuState extends State<FeedMenu> {
                             context, items[choice as int].action!);
                       }))));
         } else {
-          return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
+          return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicatorStyle().progressIndicator(context);
         }
       });
     } else {

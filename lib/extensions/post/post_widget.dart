@@ -92,7 +92,7 @@ class _PostWidgetState extends State<PostWidget> {
 
     return StyleRegistry.registry()
         .styleWithContext(context)
-        .frontEndStyle()
+        .frontEndStyle().containerStyle()
         .topicContainer(context, children: widgets);
   }
 
@@ -262,7 +262,7 @@ class _PostWidgetState extends State<PostWidget> {
 
   void allowToAddComment(
       BuildContext context, PostDetails postDetail, String memberId) {
-    StyleRegistry.registry().styleWithContext(context).frontEndStyle().openEntryDialog(
+    StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogStyle().openEntryDialog(
       context,
       title: 'Reply to comment',
       ackButtonLabel: 'Reply',
@@ -278,7 +278,7 @@ class _PostWidgetState extends State<PostWidget> {
 
   void allowToAddCommentComment(BuildContext context, PostDetails postDetail,
       PostCommentContainer postCommentContainer, String memberId) {
-    StyleRegistry.registry().styleWithContext(context).frontEndStyle().openEntryDialog(context,
+    StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogStyle().openEntryDialog(context,
         title: 'Reply to comment',
         hintText: 'Reply',
         ackButtonLabel: 'Reply',
@@ -292,7 +292,7 @@ class _PostWidgetState extends State<PostWidget> {
 
   void allowToUpdateComment(BuildContext context, PostDetails postDetail,
       String? memberId, PostCommentContainer? postCommentContainer) {
-    StyleRegistry.registry().styleWithContext(context).frontEndStyle().openEntryDialog(context,
+    StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogStyle().openEntryDialog(context,
         title: 'Update comment',
         hintText: 'Comment',
         ackButtonLabel: 'Reply',
@@ -307,7 +307,7 @@ class _PostWidgetState extends State<PostWidget> {
 
   void allowToDeleteComment(BuildContext context, PostDetails postDetail,
       String? memberId, PostCommentContainer? postCommentContainer) {
-    StyleRegistry.registry().styleWithContext(context).frontEndStyle().openAckNackDialog(context,
+    StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogStyle().openAckNackDialog(context,
           message: "Do you want to delete this comment",
           onSelection: (value) async {
             if (value == 0) {
@@ -510,7 +510,7 @@ class _PostWidgetState extends State<PostWidget> {
         Spacer(),
         StyleRegistry.registry()
             .styleWithContext(context)
-            .frontEndStyle()
+            .frontEndStyle().containerStyle()
             .actionContainer(context,
                 child: IconButton(
                   icon: ImageIcon(_assetThumbUp(thisMemberLikeType)),
@@ -522,7 +522,7 @@ class _PostWidgetState extends State<PostWidget> {
         Spacer(flex: 3),
         StyleRegistry.registry()
             .styleWithContext(context)
-            .frontEndStyle()
+            .frontEndStyle().containerStyle()
             .actionContainer(context,
                 child: IconButton(
                   icon: ImageIcon(_assetThumbDown(thisMemberLikeType)),
