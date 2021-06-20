@@ -1,6 +1,6 @@
 import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
-import 'package:eliud_core/tools/widgets/dialog_helper.dart';
+import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
 import 'package:flutter/material.dart';
@@ -25,9 +25,9 @@ class FeedPostDialog extends StatefulWidget {
   static void open(
       BuildContext context, String feedId, SwitchFeedHelper switchFeedHelper) {
     var postListPagedBloc = BlocProvider.of<PostListPagedBloc>(context);
-    DialogStatefulWidgetHelper.openIt(
+    StyleRegistry.registry().styleWithContext(context).frontEndStyle().openWidgetDialog(
         context,
-        FeedPostDialog(
+        child: FeedPostDialog(
           feedId: feedId,
           switchFeedHelper: switchFeedHelper,
           postListPagedBloc: postListPagedBloc,

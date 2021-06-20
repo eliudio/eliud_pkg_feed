@@ -4,8 +4,6 @@ import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/style/style_registry.dart';
-import 'package:eliud_core/tools/widgets/dialog_helper.dart';
-import 'package:eliud_core/tools/widgets/simple_dialog_api.dart';
 import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/media_buttons.dart';
@@ -95,7 +93,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
       if (app == null) return Text('No app available');
       return BlocBuilder<FeedPostFormBloc, FeedPostFormState>(
           builder: (context, state) {
-        return SimpleDialogApi.complexAckNackDialog(context,
+        return StyleRegistry.registry().styleWithContext(context).frontEndStyle().complexAckNackDialog(context,
             title: 'New Album',
             child: _contents(context, state, app, pubMember, theState),
             onSelection: (value) {
