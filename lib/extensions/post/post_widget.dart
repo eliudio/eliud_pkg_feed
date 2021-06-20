@@ -134,15 +134,8 @@ class _PostWidgetState extends State<PostWidget> {
         ),
         Container(width: 8),
         //PostHelper.mediaButtons(context, _photoAvailable, _videoAvailable),
-        Container(
-            height: 30,
-            child: RaisedButton(
-                color: Colors.grey,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Text('Ok'),
-                onPressed: () => _addComment(context, postDetail))),
+        StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().button(context, label: 'Ok',
+                onPressed: () => _addComment(context, postDetail)),
       ]);
     }
   }
