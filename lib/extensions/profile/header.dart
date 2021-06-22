@@ -184,8 +184,10 @@ class _HeaderState extends State<Header> {
                 .actionContainer(context,
                     child: Container(
                         padding: EdgeInsets.all(10.0),
-                        child: Text(
-                          state.switchFeedHelper.memberOfFeed.name!,
+                        child: StyleRegistry.registry()
+                            .styleWithContext(context)
+                            .frontEndStyle().textStyle()
+                            .h1(context, state.switchFeedHelper.memberOfFeed.name!,
                         )))));
         return Column(children: allRows);
       }
