@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:eliud_core/style/style_registry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
@@ -291,6 +292,7 @@ class _EliudCameraState extends State<EliudCamera>
   }
 
   /// Display a bar with buttons to change the flash and exposure modes
+/*
   Widget _modeControlRowWidget() {
     return Column(
       children: [
@@ -298,28 +300,28 @@ class _EliudCameraState extends State<EliudCamera>
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
-            IconButton(
+            StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().iconButton(context,
               icon: Icon(Icons.flash_on),
               color: Colors.blue,
               onPressed: controller != null ? onFlashModeButtonPressed : null,
             ),
-            IconButton(
+            StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().iconButton(context,
               icon: Icon(Icons.exposure),
               color: Colors.blue,
               onPressed:
                   controller != null ? onExposureModeButtonPressed : null,
             ),
-            IconButton(
+            StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().iconButton(context,
               icon: Icon(Icons.filter_center_focus),
               color: Colors.blue,
               onPressed: controller != null ? onFocusModeButtonPressed : null,
             ),
-            IconButton(
+            StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().iconButton(context,
               icon: Icon(enableAudio ? Icons.volume_up : Icons.volume_mute),
               color: Colors.blue,
               onPressed: controller != null ? onAudioModeButtonPressed : null,
             ),
-            IconButton(
+            StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().iconButton(context,
               icon: Icon(controller?.value.isCaptureOrientationLocked ?? false
                   ? Icons.screen_lock_rotation
                   : Icons.screen_rotation),
@@ -336,6 +338,7 @@ class _EliudCameraState extends State<EliudCamera>
       ],
     );
   }
+*/
 
   Widget _flashModeControlRowWidget() {
     return SizeTransition(
@@ -345,7 +348,7 @@ class _EliudCameraState extends State<EliudCamera>
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           mainAxisSize: MainAxisSize.max,
           children: [
-            IconButton(
+            StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().iconButton(context,
               icon: Icon(Icons.flash_off),
               color: controller?.value.flashMode == FlashMode.off
                   ? Colors.orange
@@ -354,7 +357,7 @@ class _EliudCameraState extends State<EliudCamera>
                   ? () => onSetFlashModeButtonPressed(FlashMode.off)
                   : null,
             ),
-            IconButton(
+            StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().iconButton(context,
               icon: Icon(Icons.flash_auto),
               color: controller?.value.flashMode == FlashMode.auto
                   ? Colors.orange
@@ -363,7 +366,7 @@ class _EliudCameraState extends State<EliudCamera>
                   ? () => onSetFlashModeButtonPressed(FlashMode.auto)
                   : null,
             ),
-            IconButton(
+            StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().iconButton(context,
               icon: Icon(Icons.flash_on),
               color: controller?.value.flashMode == FlashMode.always
                   ? Colors.orange
@@ -372,7 +375,7 @@ class _EliudCameraState extends State<EliudCamera>
                   ? () => onSetFlashModeButtonPressed(FlashMode.always)
                   : null,
             ),
-            IconButton(
+            StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().iconButton(context,
               icon: Icon(Icons.highlight),
               color: controller?.value.flashMode == FlashMode.torch
                   ? Colors.orange
@@ -386,7 +389,7 @@ class _EliudCameraState extends State<EliudCamera>
       ),
     );
   }
-
+/*
   Widget _exposureModeControlRowWidget() {
     final ButtonStyle styleAuto = TextButton.styleFrom(
       primary: controller?.value.exposureMode == ExposureMode.auto
@@ -516,7 +519,7 @@ class _EliudCameraState extends State<EliudCamera>
         ),
       ),
     );
-  }
+  }*/
 
   /// Display the control bar with buttons to take pictures and record videos.
   Widget _captureControlRowWidget() {
@@ -532,12 +535,13 @@ class _EliudCameraState extends State<EliudCamera>
 
     if (cameraController != null && cameraController.value.isInitialized) {
       if (cameraController.value.isRecordingVideo) {
-        return IconButton(
+        return             StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().iconButton(context,
+
             icon: const Icon(Icons.stop, size: 40),
             color: Colors.red,
             onPressed: onStopButtonPressed);
       } else {
-        return IconButton(
+        return             StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().iconButton(context,
             icon: const Icon(Icons.videocam_sharp, size: 40),
             color: Colors.white,
             onPressed: onVideoRecordButtonPressed);
@@ -545,58 +549,6 @@ class _EliudCameraState extends State<EliudCamera>
     } else {
       return Text("Select camera");
     }
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      mainAxisSize: MainAxisSize.max,
-      children: <Widget>[
-        /*
-        IconButton(
-          icon: const Icon(Icons.camera_alt),
-          color: Colors.blue,
-          onPressed: cameraController != null &&
-              cameraController.value.isInitialized &&
-              !cameraController.value.isRecordingVideo
-              ? onTakePictureButtonPressed
-              : null,
-        ),
-        */
-        IconButton(
-          icon: const Icon(Icons.videocam),
-          color: Colors.blue,
-          onPressed: cameraController != null &&
-                  cameraController.value.isInitialized &&
-                  !cameraController.value.isRecordingVideo
-              ? onVideoRecordButtonPressed
-              : null,
-        ),
-/*
-        IconButton(
-          icon: cameraController != null &&
-                  cameraController.value.isRecordingPaused
-              ? Icon(Icons.play_arrow)
-              : Icon(Icons.pause),
-          color: Colors.blue,
-          onPressed: cameraController != null &&
-                  cameraController.value.isInitialized &&
-                  cameraController.value.isRecordingVideo
-              ? (cameraController.value.isRecordingPaused)
-                  ? onResumeButtonPressed
-                  : onPauseButtonPressed
-              : null,
-        ),
-*/
-        IconButton(
-          icon: const Icon(Icons.stop),
-          color: Colors.red,
-          onPressed: cameraController != null &&
-                  cameraController.value.isInitialized &&
-                  cameraController.value.isRecordingVideo
-              ? onStopButtonPressed
-              : null,
-        )
-      ],
-    );
   }
 
   void selectFirstCamera() {
@@ -954,6 +906,7 @@ class _EliudCameraState extends State<EliudCamera>
     }
   }
 
+/*
   Future<void> _startVideoPlayer() async {
     if (videoFile == null) {
       return;
@@ -980,6 +933,7 @@ class _EliudCameraState extends State<EliudCamera>
     }
     await vController.play();
   }
+*/
 
   Future<XFile?> takePicture() async {
     final CameraController? cameraController = controller;
@@ -1013,48 +967,4 @@ class _EliudCameraState extends State<EliudCamera>
       widget.videoError(e.description!);
     }
   }
-}
-
-class CameraApp extends StatelessWidget {
-  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorKey: navigatorKey,
-      title: 'Welcome to Flutter',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Welcome to Flutter'),
-        ),
-        body: Center(
-          child: FlatButton(
-            onPressed: () {
-              EliudCamera.openVideoRecorder(context, videoSaved, videoError);
-            },
-            child: Text("Record something"),
-          ),
-        ),
-      ),
-    );
-  }
-
-  void videoSaved(XFile file) {
-    print('video saved to ' + file.path);
-  }
-
-  void videoError(String message) {
-    print('error ' + message);
-  }
-}
-
-Future<void> main() async {
-  // Fetch the available cameras before initializing the app.
-  try {
-    WidgetsFlutterBinding.ensureInitialized();
-    //cameras = await availableCameras();
-  } on CameraException catch (e) {
-    logError(e.code, e.description);
-  }
-  runApp(CameraApp());
 }

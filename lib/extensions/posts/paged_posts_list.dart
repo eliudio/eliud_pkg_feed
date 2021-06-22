@@ -58,12 +58,17 @@ class _PagedPostsListState extends State<PagedPostsList> {
   Widget _getIcon(Widget child) {
     return Container(
         padding: const EdgeInsets.only(top: 22.5, bottom: 22.5),
-        child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().containerStyle().actionContainer(context, child:Center(
-            child: Container(
-                padding: EdgeInsets.all(2.0),
-                width: 45,
-                height: 40,
-                child: child))));
+        child: StyleRegistry.registry()
+            .styleWithContext(context)
+            .frontEndStyle()
+            .containerStyle()
+            .actionContainer(context,
+                child: Center(
+                    child: Container(
+                        padding: EdgeInsets.all(2.0),
+                        width: 45,
+                        height: 40,
+                        child: child))));
   }
 
   void _addPost(
@@ -104,21 +109,27 @@ class _PagedPostsListState extends State<PagedPostsList> {
     }
 
     // Message
-    if (widget.feedModel.messagePost != null &&
-        widget.feedModel.messagePost!) {
+    if (widget.feedModel.messagePost != null && widget.feedModel.messagePost!) {
       var message = Image.asset(
           "assets/images/segoshvishna.fiverr.com/message.png",
           package: "eliud_pkg_feed");
-      widgets.add(StyleRegistry.registry().styleWithContext(context).frontEndStyle().containerStyle().actionContainer(context, child:IconButton(
-          icon: message,
-          tooltip: 'Message',
-          onPressed: () {
-            StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogStyle().openEntryDialog(context, title: 'Same something', onPressed: (value) {
-              if (value != null) {
-                _addPost(description: value);
-              }
-            });
-          })));
+      widgets.add(StyleRegistry.registry()
+          .styleWithContext(context)
+          .frontEndStyle()
+          .buttonStyle()
+          .iconButton(context, icon: message, tooltip: 'Message',
+              onPressed: () {
+        StyleRegistry.registry()
+            .styleWithContext(context)
+            .frontEndStyle()
+            .dialogStyle()
+            .openEntryDialog(context, title: 'Same something',
+                onPressed: (value) {
+          if (value != null) {
+            _addPost(description: value);
+          }
+        });
+      }));
       widgets.add(Spacer());
     }
 
@@ -126,8 +137,12 @@ class _PagedPostsListState extends State<PagedPostsList> {
     if (widget.feedModel.audioPost != null && widget.feedModel.audioPost!) {
       var audio = Image.asset("assets/images/segoshvishna.fiverr.com/audio.png",
           package: "eliud_pkg_feed");
-      widgets.add(StyleRegistry.registry().styleWithContext(context).frontEndStyle().containerStyle().actionContainer(context, child:
-          IconButton(icon: audio, tooltip: 'Audio', onPressed: () {})));
+      widgets.add(StyleRegistry.registry()
+          .styleWithContext(context)
+          .frontEndStyle()
+          .buttonStyle()
+          .iconButton(context,
+              icon: audio, tooltip: 'Audio', onPressed: () {}));
       widgets.add(Spacer());
     }
 
@@ -135,33 +150,38 @@ class _PagedPostsListState extends State<PagedPostsList> {
     if (widget.feedModel.albumPost != null && widget.feedModel.albumPost!) {
       var album = Image.asset("assets/images/segoshvishna.fiverr.com/album.png",
           package: "eliud_pkg_feed");
-      widgets.add(StyleRegistry.registry().styleWithContext(context).frontEndStyle().containerStyle().actionContainer(context, child:IconButton(
-          icon: album,
-          tooltip: 'Album',
-          onPressed: () => FeedPostDialog.open(context,
-              widget.feedModel.documentID!, widget.switchFeedHelper))));
+      widgets.add(StyleRegistry.registry()
+          .styleWithContext(context)
+          .frontEndStyle()
+          .buttonStyle()
+          .iconButton(context,
+              icon: album,
+              tooltip: 'Album',
+              onPressed: () => FeedPostDialog.open(context,
+                  widget.feedModel.documentID!, widget.switchFeedHelper)));
       widgets.add(Spacer());
     }
 
     // Article
-    if (widget.feedModel.articlePost != null &&
-        widget.feedModel.articlePost!) {
+    if (widget.feedModel.articlePost != null && widget.feedModel.articlePost!) {
       var article = Image.asset(
           "assets/images/segoshvishna.fiverr.com/article.png",
           package: "eliud_pkg_feed");
-      widgets.add(StyleRegistry.registry().styleWithContext(context).frontEndStyle().containerStyle().actionContainer(context, child:IconButton(
-          icon: article,
-          tooltip: 'Article',
-          onPressed: () {
-            RichTextDialog.open(
-                context,
-                widget.feedModel.appId!,
-                widget.switchFeedHelper.memberOfFeed.documentID!,
-                widget.switchFeedHelper.defaultReadAccess,
-                "Article", (newArticle) {
-              _addPost(html: newArticle);
-            }, 'Add article');
-          })));
+      widgets.add(StyleRegistry.registry()
+          .styleWithContext(context)
+          .frontEndStyle()
+          .buttonStyle()
+          .iconButton(context, icon: article, tooltip: 'Article',
+              onPressed: () {
+        RichTextDialog.open(
+            context,
+            widget.feedModel.appId!,
+            widget.switchFeedHelper.memberOfFeed.documentID!,
+            widget.switchFeedHelper.defaultReadAccess,
+            "Article", (newArticle) {
+          _addPost(html: newArticle);
+        }, 'Add article');
+      }));
       widgets.add(Spacer());
     }
 
@@ -188,20 +208,17 @@ class _PagedPostsListState extends State<PagedPostsList> {
             return ListView(
                 shrinkWrap: true, physics: ScrollPhysics(), children: widgets);
           } else {
-            return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicatorStyle().progressIndicator(context);
+            return StyleRegistry.registry()
+                .styleWithContext(context)
+                .frontEndStyle()
+                .progressIndicatorStyle()
+                .progressIndicator(context);
           }
         },
       );
     } else {
       return Text("App not loaded");
     }
-  }
-
-  Widget simplePost(BuildContext context, PostModel postModel) {
-    return TextButton(
-        child: Text(postModel.documentID!),
-        onPressed: () => BlocProvider.of<PostListPagedBloc>(context)
-            .add(DeletePostPaged(value: postModel)));
   }
 
   Widget post(BuildContext context, String appId, PostDetails postDetails) {
@@ -272,7 +289,8 @@ class _MyButtonState extends State<MyButton> {
     if (!clicked) {
       return StyleRegistry.registry()
           .styleWithContext(context)
-          .frontEndStyle().buttonStyle()
+          .frontEndStyle()
+          .buttonStyle()
           .button(
         context,
         label: 'More...',
@@ -286,7 +304,8 @@ class _MyButtonState extends State<MyButton> {
     } else {
       return StyleRegistry.registry()
           .styleWithContext(context)
-          .frontEndStyle().progressIndicatorStyle()
+          .frontEndStyle()
+          .progressIndicatorStyle()
           .progressIndicator(context);
     }
   }

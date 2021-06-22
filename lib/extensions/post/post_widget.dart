@@ -92,7 +92,8 @@ class _PostWidgetState extends State<PostWidget> {
 
     return StyleRegistry.registry()
         .styleWithContext(context)
-        .frontEndStyle().containerStyle()
+        .frontEndStyle()
+        .containerStyle()
         .topicContainer(context, children: widgets);
   }
 
@@ -134,8 +135,12 @@ class _PostWidgetState extends State<PostWidget> {
         ),
         Container(width: 8),
         //PostHelper.mediaButtons(context, _photoAvailable, _videoAvailable),
-        StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().button(context, label: 'Ok',
-                onPressed: () => _addComment(context, postDetail)),
+        StyleRegistry.registry()
+            .styleWithContext(context)
+            .frontEndStyle()
+            .buttonStyle()
+            .button(context,
+                label: 'Ok', onPressed: () => _addComment(context, postDetail)),
       ]);
     }
   }
@@ -255,7 +260,11 @@ class _PostWidgetState extends State<PostWidget> {
 
   void allowToAddComment(
       BuildContext context, PostDetails postDetail, String memberId) {
-    StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogStyle().openEntryDialog(
+    StyleRegistry.registry()
+        .styleWithContext(context)
+        .frontEndStyle()
+        .dialogStyle()
+        .openEntryDialog(
       context,
       title: 'Reply to comment',
       ackButtonLabel: 'Reply',
@@ -271,11 +280,15 @@ class _PostWidgetState extends State<PostWidget> {
 
   void allowToAddCommentComment(BuildContext context, PostDetails postDetail,
       PostCommentContainer postCommentContainer, String memberId) {
-    StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogStyle().openEntryDialog(context,
-        title: 'Reply to comment',
-        hintText: 'Reply',
-        ackButtonLabel: 'Reply',
-        nackButtonLabel: 'Discard', onPressed: (comment) {
+    StyleRegistry.registry()
+        .styleWithContext(context)
+        .frontEndStyle()
+        .dialogStyle()
+        .openEntryDialog(context,
+            title: 'Reply to comment',
+            hintText: 'Reply',
+            ackButtonLabel: 'Reply',
+            nackButtonLabel: 'Discard', onPressed: (comment) {
       if (comment != null) {
         BlocProvider.of<PostListPagedBloc>(context).add(
             AddCommentCommentEvent(postDetail, postCommentContainer, comment));
@@ -285,31 +298,36 @@ class _PostWidgetState extends State<PostWidget> {
 
   void allowToUpdateComment(BuildContext context, PostDetails postDetail,
       String? memberId, PostCommentContainer? postCommentContainer) {
-    StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogStyle().openEntryDialog(context,
-        title: 'Update comment',
-        hintText: 'Comment',
-        ackButtonLabel: 'Reply',
-        nackButtonLabel: 'Discard',
-        onPressed: (comment) {
-          if (comment != null) {
-            BlocProvider.of<PostListPagedBloc>(context).add(UpdateCommentEvent(
-                postDetail, postCommentContainer!.postComment!, comment));
-          }
-        });
+    StyleRegistry.registry()
+        .styleWithContext(context)
+        .frontEndStyle()
+        .dialogStyle()
+        .openEntryDialog(context,
+            title: 'Update comment',
+            hintText: 'Comment',
+            ackButtonLabel: 'Reply',
+            nackButtonLabel: 'Discard', onPressed: (comment) {
+      if (comment != null) {
+        BlocProvider.of<PostListPagedBloc>(context).add(UpdateCommentEvent(
+            postDetail, postCommentContainer!.postComment!, comment));
+      }
+    });
   }
 
   void allowToDeleteComment(BuildContext context, PostDetails postDetail,
       String? memberId, PostCommentContainer? postCommentContainer) {
-    StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogStyle().openAckNackDialog(context,
-          message: "Do you want to delete this comment",
-          onSelection: (value) async {
-            if (value == 0) {
-              BlocProvider.of<PostListPagedBloc>(context).add(
-                  DeleteCommentEvent(
-                      postDetail, postCommentContainer!.postComment!));
-            }
-          }, title: 'Confirm'
-        );
+    StyleRegistry.registry()
+        .styleWithContext(context)
+        .frontEndStyle()
+        .dialogStyle()
+        .openAckNackDialog(context,
+            message: "Do you want to delete this comment",
+            onSelection: (value) async {
+      if (value == 0) {
+        BlocProvider.of<PostListPagedBloc>(context).add(
+            DeleteCommentEvent(postDetail, postCommentContainer!.postComment!));
+      }
+    }, title: 'Confirm');
   }
 
   Widget _postComments(
@@ -419,11 +437,8 @@ class _PostWidgetState extends State<PostWidget> {
                     .shrinkWrap, //limits the touch area to the button area
                 minWidth: 0, //wraps child's width
                 height: 0, //wraps child's height
-                child: TextButton(
-                    child: Text('Like',
-                        style: data.thisMemberLikesThisComment!
-                            ? TextStyle(fontWeight: FontWeight.w900)
-                            : null),
+                child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().dialogButton(context, label: 'Like',
+                    selected: data.thisMemberLikesThisComment!,
                     onPressed: () => _likeComment(
                         context, postDetail, data)), //your original button
               ),
@@ -435,8 +450,7 @@ class _PostWidgetState extends State<PostWidget> {
                       .shrinkWrap, //limits the touch area to the button area
                   minWidth: 0, //wraps child's width
                   height: 0, //wraps child's height
-                  child: TextButton(
-                      child: Text('Reply'),
+                  child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().dialogButton(context, label: 'Reply',
                       onPressed: () => allowToAddCommentComment(context,
                           postDetail, data, data.member!.documentID!))),
             ]),
@@ -502,25 +516,27 @@ class _PostWidgetState extends State<PostWidget> {
       children: <Widget>[
         Spacer(),
         StyleRegistry.registry()
-            .styleWithContext(context)
-            .frontEndStyle().containerStyle()
-            .actionContainer(context,
-                child: IconButton(
-                  icon: ImageIcon(_assetThumbUp(thisMemberLikeType)),
-                  onPressed: () => _like(context, postDetails),
-                )),
+                    .styleWithContext(context)
+                    .frontEndStyle()
+                    .buttonStyle()
+                    .iconButton(
+                      context,
+                      icon: ImageIcon(_assetThumbUp(thisMemberLikeType)),
+                      onPressed: () => _like(context, postDetails),
+                    ),
         Text(
           "$likes",
         ),
         Spacer(flex: 3),
         StyleRegistry.registry()
-            .styleWithContext(context)
-            .frontEndStyle().containerStyle()
-            .actionContainer(context,
-                child: IconButton(
-                  icon: ImageIcon(_assetThumbDown(thisMemberLikeType)),
-                  onPressed: () => _dislike(context, postDetails),
-                )),
+                    .styleWithContext(context)
+                    .frontEndStyle()
+                    .buttonStyle()
+                    .iconButton(
+                      context,
+                      icon: ImageIcon(_assetThumbDown(thisMemberLikeType)),
+                      onPressed: () => _dislike(context, postDetails),
+                    ),
         Text(
           "$dislikes",
         ),
