@@ -210,13 +210,8 @@ class _EliudCameraState extends State<EliudCamera>
     final CameraController? cameraController = controller;
 
     if (cameraController == null || !cameraController.value.isInitialized) {
-      return const Text(
+      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().h5(context,
         'Tap a camera',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 24.0,
-          fontWeight: FontWeight.w900,
-        ),
       );
     } else {
       return Listener(
@@ -547,7 +542,7 @@ class _EliudCameraState extends State<EliudCamera>
             onPressed: onVideoRecordButtonPressed);
       }
     } else {
-      return Text("Select camera");
+      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'Select camera');
     }
   }
 
@@ -572,7 +567,7 @@ class _EliudCameraState extends State<EliudCamera>
     };
 
     if (widget.cameras.isEmpty) {
-      return const Text('No camera found');
+      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'No camera found');
     } else {
       for (CameraDescription cameraDescription in widget.cameras) {
         toggles.add(Theme(
@@ -605,7 +600,7 @@ class _EliudCameraState extends State<EliudCamera>
 
   void showInSnackBar(String message) {
     // ignore: deprecated_member_use
-    _scaffoldKey.currentState?.showSnackBar(SnackBar(content: Text(message)));
+    _scaffoldKey.currentState?.showSnackBar(SnackBar(content: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, message)));
   }
 
   void onViewFinderTap(TapDownDetails details, BoxConstraints constraints) {

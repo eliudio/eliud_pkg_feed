@@ -24,7 +24,7 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
-      if (state is ProfileError) return Text("No profile");
+      if (state is ProfileError) return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'No profile');
       if (state is ProfileInitialised) {
         return EditableWidget(
           child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().containerStyle().topicContainer(context, children:([HtmlWidget(state.html())])),

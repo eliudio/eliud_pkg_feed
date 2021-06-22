@@ -142,7 +142,7 @@ class _HeaderState extends State<Header> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
-      if (state is ProfileError) return Text("No profile");
+      if (state is ProfileError) return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().h5(context, 'No profile');
       if (state is ProfileInitialised) {
         List<Widget> allRows = [];
         var isEditable = state.allowedToUpdate();

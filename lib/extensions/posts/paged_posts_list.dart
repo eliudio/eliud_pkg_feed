@@ -217,7 +217,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
         },
       );
     } else {
-      return Text("App not loaded");
+      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'App not loaded');
     }
   }
 
@@ -248,9 +248,8 @@ class _PagedPostsListState extends State<PagedPostsList> {
               );
             } else {
               return Center(
-                  child: Text(
-                "That's all folks",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().h5(context,
+                    "That's all folks",
               ));
             }
           });

@@ -1,6 +1,7 @@
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/widgets/alert_widget.dart';
+import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/component_constructor.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/profile_component.dart';
@@ -32,7 +33,7 @@ class ProfileComponent extends AbstractProfileComponent {
     if (_accessState is AppLoaded) {
       return Profile(appId: _accessState.app.documentID!);
     } else {
-      return Text("No app loaded");
+      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'No app loaded');
     }
   }
 

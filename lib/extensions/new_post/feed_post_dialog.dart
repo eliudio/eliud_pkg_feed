@@ -49,7 +49,7 @@ class _FeedPostDialogState extends State<FeedPostDialog> {
     if (theState is LoggedIn) {
       var memberPublicInfoModel = theState.memberPublicInfoModel;
       var app = AccessBloc.app(context);
-      if (app == null) return Text("No app available");
+      if (app == null) return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'No app available');
       return BlocProvider<FeedPostFormBloc>(
           create: (context) => FeedPostFormBloc(app.documentID!,
               postListPagedBloc, memberPublicInfoModel, widget.feedId, theState)
@@ -59,7 +59,7 @@ class _FeedPostDialogState extends State<FeedPostDialog> {
                   widget.switchFeedHelper,
                   ));
     } else {
-      return Text("Not logged in");
+      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'Not logged in');
     }
   }
 }

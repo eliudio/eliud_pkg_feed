@@ -1,3 +1,4 @@
+import 'package:eliud_core/style/style_registry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
@@ -50,8 +51,8 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
 
     if (postModel.postPageId != null) {
       if (memberID != null) {
-        return EmbeddedPageHelper.postDetails(memberID, postModel,
-            accessBloc, context, parentPageId!
+        return EmbeddedPageHelper.postDetails(context, memberID, postModel,
+            accessBloc, parentPageId!
         );
       }
     } else if ((postModel.memberMedia != null) &&
@@ -76,7 +77,7 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
         List<Widget> widgets = [];
         // Photos & videos
         //widgets.add(PostMediaHelper.videoAndPhotoDivider(context));
-        widgets.add(PostMediaHelper.staggeredMemberMediumModelFromPostMedia(
+        widgets.add(PostMediaHelper.staggeredMemberMediumModelFromPostMedia(context,
             memberMedia, viewAction: (index) {
           _action(memberMedia, index);
         }));
@@ -89,7 +90,7 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
         javascriptMode: JavascriptMode.unrestricted,
       );
 */
-      return Text("External link not supported yet");
+      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'External link not supported yet');
     } else if (postModel.html != null) {
       return HtmlWidget(postModel.html!);
     }

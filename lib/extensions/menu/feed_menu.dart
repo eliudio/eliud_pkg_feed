@@ -41,7 +41,7 @@ class _FeedMenuState extends State<FeedMenu> {
               }
               popupMenuItems.add(
                 DropdownMenuItem<int>(
-                    child: Text(
+                    child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context,
                       item.text!,
                     ),
                     value: i),
@@ -65,7 +65,7 @@ class _FeedMenuState extends State<FeedMenu> {
         }
       });
     } else {
-      return Text("App not loaded");
+      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'App not loaded');
     }
   }
 }

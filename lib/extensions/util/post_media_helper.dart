@@ -1,4 +1,5 @@
 import 'package:eliud_core/model/member_medium_model.dart';
+import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/storage/fb_storage_image.dart';
 import 'package:eliud_core/tools/storage/medium_base.dart';
 import 'package:eliud_pkg_feed/model/post_medium_model.dart';
@@ -21,7 +22,7 @@ class PostMediaHelper {
     );
   }
 
-  static Widget staggeredPhotosWithThumbnail(List<PhotoWithThumbnail> photos,
+  static Widget staggeredPhotosWithThumbnail(BuildContext context, List<PhotoWithThumbnail> photos,
       {PostMediumAction? deleteAction, PostMediumAction? viewAction}) {
     List<Widget> widgets = [];
     for (int i = 0; i < photos.length; i++) {
@@ -31,12 +32,12 @@ class PostMediaHelper {
       name = medium.photoData.baseName;
 
       widgets
-          .add(_getPopupMenuButton(name, image, i, deleteAction, viewAction));
+          .add(_getPopupMenuButton(context, name, image, i, deleteAction, viewAction));
     }
     return _getContainer(widgets);
   }
 
-  static Widget staggeredVideosWithThumbnail(List<VideoWithThumbnail> videos,
+  static Widget staggeredVideosWithThumbnail(BuildContext context, List<VideoWithThumbnail> videos,
       {PostMediumAction? deleteAction, PostMediumAction? viewAction}) {
     List<Widget> widgets = [];
     for (int i = 0; i < videos.length; i++) {
@@ -46,19 +47,19 @@ class PostMediaHelper {
       name = medium.videoData.baseName;
 
       widgets
-          .add(_getPopupMenuButton(name, image, i, deleteAction, viewAction));
+          .add(_getPopupMenuButton(context, name, image, i, deleteAction, viewAction));
     }
     return _getContainer(widgets);
   }
 
-  static Widget staggeredMemberMediumModelFromPostMedia(List<PostMediumModel> media,
+  static Widget staggeredMemberMediumModelFromPostMedia(BuildContext context, List<PostMediumModel> media,
       {PostMediumAction? deleteAction, PostMediumAction? viewAction}) {
     var mmm = media.map((pm) => pm.memberMedium!).toList();
-    return staggeredMemberMediumModel(mmm,
+    return staggeredMemberMediumModel(context, mmm,
         deleteAction: deleteAction, viewAction: viewAction);
   }
 
-  static Widget staggeredMemberMediumModel(List<MemberMediumModel> media,
+  static Widget staggeredMemberMediumModel(BuildContext context, List<MemberMediumModel> media,
       {PostMediumAction? deleteAction, PostMediumAction? viewAction, double? progressExtra, String? progressLabel}) {
     List<Widget> widgets = [];
     for (int i = 0; i < media.length; i++) {
@@ -68,21 +69,21 @@ class PostMediaHelper {
       name = medium.urlThumbnail!;
 
       widgets
-          .add(_getPopupMenuButton(name, image, i, deleteAction, viewAction));
+          .add(_getPopupMenuButton(context, name, image, i, deleteAction, viewAction));
     }
     if (progressExtra != null) {
       widgets.add(Center(child:CircularPercentIndicator(
         radius: 60.0,
         lineWidth: 5.0,
         percent: progressExtra,
-        center: new Text("100%"),
+        center: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, '100%'),
       )
       ));
     }
     return _getContainer(widgets);
   }
 
-  static Widget _getPopupMenuButton(String name, Widget image, int index,
+  static Widget _getPopupMenuButton(BuildContext context, String name, Widget image, int index,
       PostMediumAction? deleteAction, PostMediumAction? viewAction) {
     if (deleteAction == null) {
       if (viewAction == null) {
@@ -98,10 +99,10 @@ class PostMediaHelper {
       List<PopupMenuItem<int>> menuItems = [];
       if (viewAction != null) {
         menuItems.add(new PopupMenuItem<int>(
-            child: const Text('View'), value: POPUP_MENU_VIEW));
+            child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'View'), value: POPUP_MENU_VIEW));
       }
       menuItems.add(new PopupMenuItem<int>(
-          child: const Text('Delete'), value: POPUP_MENU_DELETE_VALUE));
+          child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'Delete'), value: POPUP_MENU_DELETE_VALUE));
 
       return PopupMenuButton(
           color: Colors.red,

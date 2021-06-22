@@ -102,7 +102,7 @@ class _PostWidgetState extends State<PostWidget> {
 
   Widget _description(PostModel? postModel) {
     if ((postModel != null) && (postModel.description != null)) {
-      return Text(postModel.description!);
+      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, postModel.description!);
     } else {
       return Container(
         height: 0,
@@ -188,8 +188,8 @@ class _PostWidgetState extends State<PostWidget> {
 
   Widget _heading(
       BuildContext context, PostModel? postModel, String? memberId) {
-    if (postModel == null) return Text("No post");
-    if (postModel.author == null) return Text("No author");
+    if (postModel == null) return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'No post');
+    if (postModel.author == null) return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'No author');
 
     var name;
     if (postModel.author!.name != null) {
@@ -220,11 +220,10 @@ class _PostWidgetState extends State<PostWidget> {
         Container(
           height: 4,
         ),
-        Text(name,
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+        StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().h5(context, name,
             textAlign: TextAlign.left),
-        Text(timeStamp,
-            style: TextStyle(fontSize: 12), textAlign: TextAlign.left),
+        StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().h5(context, timeStamp,
+            textAlign: TextAlign.left),
       ])
     ];
     if (memberId == postModel.author!.documentID) {
@@ -245,7 +244,7 @@ class _PostWidgetState extends State<PostWidget> {
         icon: Icon(Icons.more_horiz),
         itemBuilder: (_) => <PopupMenuItem<int>>[
               new PopupMenuItem<int>(
-                  child: const Text('Delete post'), value: 0),
+                  child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'Delete post'), value: 0),
             ],
         onSelected: (choice) {
           if (choice == 0) {
@@ -347,7 +346,7 @@ class _PostWidgetState extends State<PostWidget> {
 
   Widget getCommentTreeWidget(BuildContext context, PostDetails postDetail,
       PostCommentContainer? data) {
-    if (data == null) return Text("No Comments");
+    if (data == null) return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'No Comments');
 
     var name;
     if (data.member == null) {
@@ -376,34 +375,24 @@ class _PostWidgetState extends State<PostWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().h5(context,
               '${name}',
-              style: Theme.of(context)
-                  .textTheme
-                  .caption!
-                  .copyWith(fontWeight: FontWeight.w600, color: Colors.black),
             ),
             SizedBox(
               height: 4,
             ),
-            Text(
+            StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().h5(context,
               '${data.comment}',
-              style: Theme.of(context)
-                  .textTheme
-                  .caption!
-                  .copyWith(fontWeight: FontWeight.w300, color: Colors.black),
             ),
             SizedBox(
               height: 4,
             ),
             Align(
                 alignment: Alignment.bottomRight,
-                child: Text(
+                child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().h5(context,
                   data.postComment == null || data.postComment!.likes == null
                       ? 'no likes'
                       : '${data.postComment!.likes} likes',
-                  style: Theme.of(context).textTheme.caption!.copyWith(
-                      fontWeight: FontWeight.w300, color: Colors.black),
                 )),
           ],
         ),
@@ -489,9 +478,9 @@ class _PostWidgetState extends State<PostWidget> {
         icon: Icon(Icons.more_horiz),
         itemBuilder: (_) => <PopupMenuItem<int>>[
               new PopupMenuItem<int>(
-                  child: const Text('Update comment'), value: 0),
+                  child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'Update comment'), value: 0),
               new PopupMenuItem<int>(
-                  child: const Text('Delete comment'), value: 1),
+                  child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'Delete comment'), value: 1),
             ],
         onSelected: (choice) {
           if (choice == 0)
@@ -524,7 +513,7 @@ class _PostWidgetState extends State<PostWidget> {
                       icon: ImageIcon(_assetThumbUp(thisMemberLikeType)),
                       onPressed: () => _like(context, postDetails),
                     ),
-        Text(
+    StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context,
           "$likes",
         ),
         Spacer(flex: 3),
@@ -537,7 +526,7 @@ class _PostWidgetState extends State<PostWidget> {
                       icon: ImageIcon(_assetThumbDown(thisMemberLikeType)),
                       onPressed: () => _dislike(context, postDetails),
                     ),
-        Text(
+        StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context,
           "$dislikes",
         ),
         Spacer(),
@@ -619,7 +608,7 @@ class _PostWidgetState extends State<PostWidget> {
     if (dislikes == null) dislikes = 0;
     return Padding(
       padding: const EdgeInsets.only(left: 14.0),
-      child: Text(
+      child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context,
         "$likes likes $dislikes dislikes",
         //style: TextStyle(fontWeight: FontWeight.bold),
       ),

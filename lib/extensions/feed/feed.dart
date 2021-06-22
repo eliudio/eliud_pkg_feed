@@ -39,7 +39,7 @@ class _FeedState extends State<Feed> {
         }
       });
     } else {
-      return Text("App not loaded");
+      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'App not loaded');
     }
   }
 
@@ -124,11 +124,10 @@ class _FeedState extends State<Feed> {
       FeedModel feedModel,
       EliudQuery eliudQuery,
       SwitchFeedHelper switchFeedHelper) {
-    var app = AccessBloc.app(context);
     var state = AccessBloc.getState(context);
     var memberPublicInfoModel = AccessBloc.memberPublicInfoModel(state);
     if (memberPublicInfoModel == null) {
-      return Text("No member public info for member");
+      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'No member public info for member');
     } else {
       return BlocProvider(
         create: (_) =>

@@ -1,3 +1,4 @@
+import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/storage/upload_info.dart';
 import 'package:eliud_pkg_feed/platform/medium_platform.dart';
 import 'package:flutter/material.dart';
@@ -20,20 +21,20 @@ class MediaButtons {
     if (photoFeedbackFunction != null) {
       if (AbstractMediumPlatform.platform!.hasCamera()) {
         items.add(
-          PopupMenuItem<int>(child: const Text('Take photo'), value: 0),
+          PopupMenuItem<int>(child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'Take photo'), value: 0),
         );
       }
       items.add(
-          new PopupMenuItem<int>(child: const Text('Upload photo'), value: 1));
+          new PopupMenuItem<int>(child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'Upload photo'), value: 1));
     }
     if (videoFeedbackFunction != null) {
       if (AbstractMediumPlatform.platform!.hasCamera()) {
         items.add(
-          PopupMenuItem<int>(child: const Text('Take video'), value: 2),
+          PopupMenuItem<int>(child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'Take video'), value: 2),
         );
       }
       items.add(
-          new PopupMenuItem<int>(child: const Text('Upload video'), value: 3));
+          new PopupMenuItem<int>(child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'Upload video'), value: 3));
     }
     return PopupMenuButton(
         tooltip: tooltip,

@@ -2,6 +2,7 @@ import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/tools/component_info.dart';
 import 'package:eliud_core/core/tools/page_body.dart';
+import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/component_constructor.dart';
 import 'package:eliud_pkg_feed/extensions/profile/bloc/profile_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/profile/bloc/profile_event.dart';
@@ -39,7 +40,7 @@ class ProfileWidgetWrapper extends ComponentWidgetWrapper {
               feedId, _accessState, modalRoute)),
         child: PageBody(componentInfo: componentInfo,));
     } else {
-      return Text("App not loaded");
+      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'App not loaded');
     }
   }
 }

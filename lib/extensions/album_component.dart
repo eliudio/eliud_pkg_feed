@@ -30,12 +30,12 @@ class AlbumComponent extends AbstractAlbumComponent {
 
   @override
   Widget yourWidget(BuildContext context, AlbumModel? albumModel) {
-    if (albumModel == null) return Text("Album is not avalable");
+    if (albumModel == null) return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, "Album is not avalable");
     var accessBloc = AccessBloc.getBloc(context);
     var member = AccessBloc.memberFor(AccessBloc.getState(context));
     var postModel = albumModel.post;
     if (postModel == null) {
-      return Text("No post");
+      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'No post');
     } else {
       return StyleRegistry.registry().styleWithContext(context).frontEndStyle().containerStyle().topicContainer(context, children: [PostContentsWidget(
         memberID: member!.documentID!,

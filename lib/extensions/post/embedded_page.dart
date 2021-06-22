@@ -16,16 +16,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class EmbeddedPageHelper {
   static Widget postDetails(
+      BuildContext context,
       String? memberId,
       PostModel? postModel,
       AccessBloc? originalAccessBloc,
-      BuildContext? context,
       String parentPageId) {
     if (postModel == null)
-      return Text("Can't construct post details without postModel");
+      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, "Can't construct post details without postModel");
     if ((postModel.appId == postModel.postAppId) &&
         (postModel.postPageId == parentPageId))
-      return Text("Not showing recursive posts");
+      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'Not showing recursive posts');
     String? appId = postModel.postAppId;
     String? pageId = postModel.postPageId;
     var parameters = postModel.pageParameters;
@@ -60,7 +60,7 @@ class EmbeddedPageHelper {
       String? appId,
       String? pageId,
       Map<String, dynamic>? parameters) {
-    if (accessState == null) return Text("Access state is not available");
+    if (accessState == null) return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'Access state is not available');
     if (accessState is AppLoaded) {
       return Stack(
         children: <Widget>[
@@ -121,7 +121,7 @@ class EmbeddedPageHelper {
         ],
       );
     } else {
-      return Text("App loaded");
+      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'App loaded');
     }
   }
 }

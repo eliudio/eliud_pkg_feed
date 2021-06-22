@@ -67,7 +67,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
       child: RadioListTile(
           value: value,
           groupValue: _postPrivilegeSelectedRadioTile,
-          title: Text(text),
+          title: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, text),
           onChanged: feedPostModelDetails.memberMedia.length == 0
               ? (dynamic value) {
                   _setPostSelectedRadioTile(value);
@@ -90,7 +90,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
     if (theState is LoggedIn) {
       var pubMember = theState.memberPublicInfoModel;
       var app = AccessBloc.app(context);
-      if (app == null) return Text('No app available');
+      if (app == null) return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'No app available');
       return BlocBuilder<FeedPostFormBloc, FeedPostFormState>(
           builder: (context, state) {
         return StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogWidgetStyle().complexAckNackDialog(context,
@@ -103,7 +103,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         });
       });
     } else {
-      return Text("Not logged in");
+      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'Not logged in');
     }
   }
 
@@ -128,7 +128,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
       if ((state is SubmittableFeedPostFormWithMediumUploading) ||
           ((state.postModelDetails.memberMedia != null) &&
               (state.postModelDetails.memberMedia.isNotEmpty))) {
-        rows.add(_row2(state));
+        rows.add(_row2(context, state));
         rows.add(PostMediaHelper.videoAndPhotoDivider(context));
       }
       rows.add(_rowAudience(state.postModelDetails));
@@ -208,12 +208,12 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         videoFeedbackProgress: _videoUploading);
   }
 
-  Widget _row2(FeedPostFormInitialized state) {
+  Widget _row2(BuildContext context, FeedPostFormInitialized state) {
     double? progressValue;
     if (state is SubmittableFeedPostFormWithMediumUploading) {
       progressValue = state.progress;
     }
-    return PostMediaHelper.staggeredMemberMediumModel(
+    return PostMediaHelper.staggeredMemberMediumModel(context,
         state.postModelDetails.memberMedia,
         progressLabel: 'Uploading...',
         progressExtra: progressValue, deleteAction: (index) {
