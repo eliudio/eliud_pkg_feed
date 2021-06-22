@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:eliud_core/core/navigate/page_param_helper.dart';
+import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
@@ -48,15 +49,33 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     var app = accessState.app;
     var pageContextInfo =
         PageParamHelper.getPagaContextInfoWithRoutAndApp(event.modalRoute, app);
-    var switchFeedHelper = await SwitchFeedHelper.construct(pageContextInfo,
-        app.documentID!, event.feedId, member == null ? null : member.documentID);
+    var switchFeedHelper = await SwitchFeedHelper.construct(
+        pageContextInfo,
+        app.documentID!,
+        event.feedId,
+        member == null ? null : member.documentID);
     var key = switchFeedHelper.memberOfFeed.documentID! + "-" + event.feedId;
-    var memberProfileModel = await memberProfileRepository(appId: app.documentID)!.get(key);
+    var memberProfileModel =
+        await memberProfileRepository(appId: app.documentID)!.get(key);
     if (memberProfileModel == null) {
+      var pubMember = await memberPublicInfoRepository(appId: app.documentID)!
+          .get(member!.documentID);
       // create default profile
-      memberProfileModel = MemberProfileModel(documentID: key, readAccess: switchFeedHelper.defaultReadAccess, profile: "");
+      memberProfileModel = MemberProfileModel(
+          documentID: key,
+          appId: app.documentID,
+          feedId: event.feedId,
+          author: pubMember,
+          readAccess: switchFeedHelper.defaultReadAccess,
+          profile: "");
+      await memberProfileRepository(appId: app.documentID)!
+          .add(memberProfileModel);
     }
-    return ProfileInitialised(event.feedId, app.documentID!, switchFeedHelper.defaultReadAccess,
-        memberProfileModel, switchFeedHelper);
+    return ProfileInitialised(
+        event.feedId,
+        app.documentID!,
+        switchFeedHelper.defaultReadAccess,
+        memberProfileModel,
+        switchFeedHelper);
   }
 }

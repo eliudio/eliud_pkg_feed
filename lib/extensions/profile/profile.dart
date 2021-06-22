@@ -24,21 +24,41 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
-      if (state is ProfileError) return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'No profile');
+      if (state is ProfileError)
+        return StyleRegistry.registry()
+            .styleWithContext(context)
+            .frontEndStyle()
+            .textStyle()
+            .text(context, 'No profile');
       if (state is ProfileInitialised) {
+        String html = state.html();
         return EditableWidget(
-          child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().containerStyle().topicContainer(context, children:([HtmlWidget(state.html())])),
-            button: getEditIcon(onPressed: () {
-              RichTextDialog.open(
-                  context,
-                  widget.appId,
-                  state.ownerId(),
-                  state.readAccess(),
-                  "Profile",
-                      (value) => BlocProvider.of<ProfileBloc>(context)
-                      .add(ProfileChangedProfileEvent(value)),
-                  state.html());
-            },)
+            child: StyleRegistry.registry()
+                .styleWithContext(context)
+                .frontEndStyle()
+                .containerStyle()
+                .topicContainer(context,
+                    children: ([
+                      html == null || html.length == 0
+                          ? Container(
+                              width: double.infinity,
+                              height: 50,
+                              child: Text("No profile"))
+                          : HtmlWidget(html)
+                    ])),
+            button: getEditIcon(
+              onPressed: () {
+                RichTextDialog.open(
+                    context,
+                    widget.appId,
+                    state.ownerId(),
+                    state.readAccess(),
+                    "Profile",
+                    (value) => BlocProvider.of<ProfileBloc>(context)
+                        .add(ProfileChangedProfileEvent(value)),
+                    state.html());
+              },
+            )
 /*
           editFunction: state.allowedToUpdate()
               ? () {
@@ -54,9 +74,13 @@ class _ProfileState extends State<Profile> {
                 }
               : null,
 */
-        );
+            );
       }
-      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicatorStyle().progressIndicator(context);
+      return StyleRegistry.registry()
+          .styleWithContext(context)
+          .frontEndStyle()
+          .progressIndicatorStyle()
+          .progressIndicator(context);
     });
   }
 }
