@@ -3,11 +3,11 @@ import 'package:eliud_core/core/widgets/alert_widget.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/component_constructor.dart';
+import 'package:eliud_pkg_feed/extensions/util/post_contents_widget.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/album_component.dart';
 import 'package:eliud_pkg_feed/model/album_model.dart';
 import 'package:eliud_pkg_feed/model/album_repository.dart';
-import 'post/post_contents_widget.dart';
 import 'package:flutter/material.dart';
 
 class AlbumComponentConstructorDefault implements ComponentConstructor {

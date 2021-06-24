@@ -1,10 +1,11 @@
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
+import 'package:eliud_core/core/navigate/page_param_helper.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 import 'package:eliud_core/core/tools/page_helper.dart';
 import 'package:eliud_core/style/style_registry.dart';
-import 'package:eliud_pkg_feed/extensions/profile/bloc/profile_bloc.dart';
-import 'package:eliud_pkg_feed/extensions/profile/bloc/profile_state.dart';
+import 'package:eliud_pkg_feed/extensions/bloc/profile_bloc.dart';
+import 'package:eliud_pkg_feed/extensions/bloc/profile_state.dart';
 import 'package:eliud_pkg_feed/model/feed_menu_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,7 @@ class _FeedMenuState extends State<FeedMenu> {
 
   @override
   Widget build(BuildContext context) {
+    var pageContextInfo = PageParamHelper.getPagaContextInfo(context);
     var theState = AccessBloc.getState(context);
     if (theState is AppLoaded) {
       return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
@@ -35,7 +37,7 @@ class _FeedMenuState extends State<FeedMenu> {
             var item = items[i];
             if (theState.menuItemHasAccess(item)) {
               var isActive = PageHelper.isActivePage(
-                  state.switchFeedHelper.pageId, item.action);
+                  pageContextInfo.pageId, item.action);
               if (isActive) {
                 selectedPage = i;
               }

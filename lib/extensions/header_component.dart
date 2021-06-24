@@ -1,17 +1,14 @@
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
-import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/widgets/alert_widget.dart';
 import 'package:eliud_core/tools/component_constructor.dart';
-import 'package:eliud_pkg_feed/extensions/profile/bloc/profile_bloc.dart';
-import 'package:eliud_pkg_feed/extensions/profile/bloc/profile_event.dart';
-import 'package:eliud_pkg_feed/extensions/profile/header.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:flutter/material.dart';
 import 'package:eliud_pkg_feed/model/header_component.dart';
 import 'package:eliud_pkg_feed/model/header_model.dart';
 import 'package:eliud_pkg_feed/model/header_repository.dart';
+
+import 'header/header.dart';
 
 class HeaderComponentConstructorDefault implements ComponentConstructor {
   HeaderComponentConstructorDefault();

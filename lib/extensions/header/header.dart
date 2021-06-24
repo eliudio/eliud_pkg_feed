@@ -1,9 +1,10 @@
+import 'package:eliud_core/core/navigate/page_param_helper.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/storage/upload_info.dart';
-import 'package:eliud_pkg_feed/extensions/profile/bloc/profile_event.dart';
+import 'package:eliud_pkg_feed/extensions/bloc/profile_bloc.dart';
+import 'package:eliud_pkg_feed/extensions/bloc/profile_event.dart';
+import 'package:eliud_pkg_feed/extensions/bloc/profile_state.dart';
 import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
-import 'package:eliud_pkg_feed/extensions/profile/bloc/profile_bloc.dart';
-import 'package:eliud_pkg_feed/extensions/profile/bloc/profile_state.dart';
 import 'package:eliud_pkg_feed/extensions/util/editable_widget.dart';
 import 'package:eliud_pkg_feed/extensions/util/media_buttons.dart';
 import 'package:eliud_pkg_feed/model/member_profile_model.dart';
@@ -11,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
 
 class Header extends StatefulWidget {
   Header({Key? key}) : super(key: key);
@@ -47,8 +47,9 @@ class _HeaderState extends State<Header> {
         (memberProfileModel.profileBackground!.url != null));
   }
 
-  DecorationImage _background(
+  DecorationImage? _background(
       BuildContext context, MemberProfileModel? memberProfileModel) {
+    if (memberProfileModel == null) return null;
     if (!_hasProfileBackground(memberProfileModel)) {
       return DecorationImage(
           image: _defaultBackgroundPhoto(context), fit: BoxFit.cover);
@@ -58,66 +59,6 @@ class _HeaderState extends State<Header> {
               context, memberProfileModel!.profileBackground!.url),
           fit: BoxFit.cover);
     }
-  }
-
-  // Profile photo
-  Widget _profileWidget(
-      BuildContext context,
-      MemberProfileModel memberProfileModel,
-      SwitchFeedHelper switchFeedHelper,
-      bool isEditable,
-      ProfileInitialised profileInitialised) {
-    return Align(
-        alignment: Alignment.bottomCenter,
-        child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 110, maxHeight: 110),
-            child: Stack(
-              children: [
-                _progress(
-                  Align(
-                      alignment: Alignment.bottomCenter,
-                      child: ConstrainedBox(
-                        constraints:
-                            BoxConstraints(maxWidth: 110, maxHeight: 110),
-                        child: AvatarHelper.avatar(
-                            context,
-                            55,
-                            switchFeedHelper.pageId,
-                            switchFeedHelper.feedMember(),
-                            switchFeedHelper.appId,
-                            switchFeedHelper.feedId),
-                      )),
-                  progressProfilePhoto,
-                  110,
-                  70,
-                ),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: EditableButton(
-                      button: _button(
-                          context,
-                          profileInitialised,
-                          false,
-                          'Update profile photo',
-                          (progress) => setState(() {
-                                progressProfilePhoto = progress;
-                              }))),
-                ) // EditableButton(editFunction: () {})
-              ],
-            )));
-  }
-
-  //
-  Widget _container(
-      BuildContext context,
-      MemberProfileModel memberProfileModel,
-      SwitchFeedHelper switchFeedHelper,
-      bool isEditable,
-      ProfileInitialised profileInitialised) {
-    return Container(
-        height: heightBackgroundPhoto(context),
-        child: _profileWidget(context, memberProfileModel, switchFeedHelper,
-            isEditable, profileInitialised));
   }
 
   Widget _progress(
@@ -141,16 +82,60 @@ class _HeaderState extends State<Header> {
 
   @override
   Widget build(BuildContext context) {
+    var pageContextInfo = PageParamHelper.getPagaContextInfo(context);
+    var pageId = pageContextInfo.pageId;
     return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
-      if (state is ProfileError) return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().h5(context, 'No profile');
+      if (state is ProfileError)
+        return StyleRegistry.registry()
+            .styleWithContext(context)
+            .frontEndStyle()
+            .textStyle()
+            .h5(context, 'No profile');
       if (state is ProfileInitialised) {
         List<Widget> allRows = [];
-        var isEditable = state.allowedToUpdate();
 
         // Add profile photo
         List<Widget> rows = [];
-        rows.add(_container(context, state.memberProfileModel,
-            state.switchFeedHelper, isEditable, state));
+
+        var progress = _progress(
+          Align(
+              alignment: Alignment.bottomCenter,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 110, maxHeight: 110),
+                child: AvatarHelper.avatar(
+                    context, 55, pageId, state.memberId()!, state.profileUrl(), state.appId, state.feedId),
+              )),
+          progressProfilePhoto,
+          110,
+          70,
+        );
+        var container = Container(
+            height: heightBackgroundPhoto(context),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 110, maxHeight: 110),
+                  child: state.canEditThisProfile()
+                      ? Stack(
+                          children: [
+                            progress,
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: EditableButton(
+                                  button: _button(
+                                      context,
+                                      state,
+                                      false,
+                                      'Update profile photo',
+                                      (progress) => setState(() {
+                                            progressProfilePhoto = progress;
+                                          }))),
+                            ) // EditableButton(editFunction: () {})
+                          ],
+                        )
+                      : progress),
+            ));
+        rows.add(container);
 
         // Add the background photo
         allRows.add(EditableWidget(
@@ -161,7 +146,7 @@ class _HeaderState extends State<Header> {
                     .containerStyle()
                     .topicContainer(context,
                         children: rows,
-                        image: _background(context, state.memberProfileModel)),
+                        image: _background(context, state.watchingThisProfile())),
                 progressProfileVideo,
                 heightBackgroundPhoto(context),
                 width(context) / 2),
@@ -174,6 +159,12 @@ class _HeaderState extends State<Header> {
                       progressProfileVideo = progress;
                     }))));
 
+        var name;
+        if ((state.watchingThisProfile()!.author != null) && (state.watchingThisProfile() != null)) {
+          name = state.watchingThisProfile()!.author!.name!;
+        } else {
+          name = 'PUBLIC';
+        }
         // Add the name
         allRows.add(Align(
             alignment: Alignment.bottomCenter,
@@ -186,9 +177,12 @@ class _HeaderState extends State<Header> {
                         padding: EdgeInsets.all(10.0),
                         child: StyleRegistry.registry()
                             .styleWithContext(context)
-                            .frontEndStyle().textStyle()
-                            .h1(context, state.switchFeedHelper.memberOfFeed.name!,
-                        )))));
+                            .frontEndStyle()
+                            .textStyle()
+                            .h1(
+                              context,
+                              name,
+                            )))));
         return Column(children: allRows);
       }
       return StyleRegistry.registry()
@@ -204,8 +198,8 @@ class _HeaderState extends State<Header> {
     return MediaButtons.mediaButtons(
         context,
         profileInitialised.appId,
-        profileInitialised.switchFeedHelper.memberOfFeed.documentID!,
-        profileInitialised.readAccess(),
+        profileInitialised.watchingThisProfile()!.documentID!,
+        profileInitialised!.watchingThisProfile()!.readAccess!,
         allowCrop: !isBG,
         tooltip: tooltip, photoFeedbackFunction: (photo) {
       if (!isBG) {

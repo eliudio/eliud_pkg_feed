@@ -7,10 +7,11 @@ import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/tools/storage/fb_storage_image.dart';
 import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
-import 'package:eliud_pkg_feed/extensions/post/embedded_page.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_media_helper.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:eliud_pkg_feed/platform/medium_platform.dart';
+
+import 'embedded_page.dart';
 
 class PostContentsWidget extends StatefulWidget {
   final String? memberID;

@@ -8,7 +8,7 @@ import 'package:eliud_pkg_feed/model/feed_menu_component.dart';
 import 'package:eliud_pkg_feed/model/feed_menu_model.dart';
 import 'package:eliud_pkg_feed/model/feed_menu_repository.dart';
 
-import 'menu/feed_menu.dart';
+import 'feed_menu/feed_menu.dart';
 
 class FeedMenuComponentConstructorDefault implements ComponentConstructor {
   FeedMenuComponentConstructorDefault();

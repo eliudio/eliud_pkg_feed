@@ -1,4 +1,4 @@
-import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_state.dart';
+import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_state.dart';
 import 'package:eliud_pkg_feed/model/post_comment_model.dart';
 import 'package:eliud_pkg_feed/model/post_like_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';

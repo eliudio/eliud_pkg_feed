@@ -1,8 +1,9 @@
 import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
+import 'package:eliud_core/core/navigate/page_param_helper.dart';
+import 'package:eliud_core/default_style/frontend/impl/dialog/dialog_helper.dart';
 import 'package:eliud_core/style/style_registry.dart';
-import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_bloc.dart';
-import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
+import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
@@ -12,25 +13,30 @@ import 'feed_post_form.dart';
 
 class FeedPostDialog extends StatefulWidget {
   final String feedId;
-  final SwitchFeedHelper switchFeedHelper;
   final PostListPagedBloc postListPagedBloc;
+  final String memberId;
+  final String photoURL;
+  final PageContextInfo pageContextInfo;
 
   FeedPostDialog(
       {Key? key,
-      required this.switchFeedHelper,
       required this.feedId,
-      required this.postListPagedBloc})
+      required this.postListPagedBloc,
+      required this.memberId,
+      required this.photoURL, required this.pageContextInfo,
+      })
       : super(key: key);
 
   static void open(
-      BuildContext context, String feedId, SwitchFeedHelper switchFeedHelper) {
+      BuildContext context, String feedId, String memberId, String photoURL, PageContextInfo pageContextInfo) {
     var postListPagedBloc = BlocProvider.of<PostListPagedBloc>(context);
-    StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogStyle().openWidgetDialog(
+        StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogStyle().openWidgetDialog(
         context,
         child: FeedPostDialog(
           feedId: feedId,
-          switchFeedHelper: switchFeedHelper,
           postListPagedBloc: postListPagedBloc,
+          memberId: memberId,
+          photoURL: photoURL, pageContextInfo: pageContextInfo,
         ));
   }
 
@@ -56,7 +62,9 @@ class _FeedPostDialogState extends State<FeedPostDialog> {
             ..add(InitialiseNewFeedPostFormEvent()),
           child: MyFeedPostForm(
                   widget.feedId,
-                  widget.switchFeedHelper,
+            widget.memberId,
+            widget.photoURL,
+            widget.pageContextInfo,
                   ));
     } else {
       return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'Not logged in');

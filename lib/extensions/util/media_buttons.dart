@@ -8,7 +8,7 @@ class MediaButtons {
     BuildContext context,
     String appId,
     String ownerId,
-    List<String> readAccess, {
+    List<String>? readAccess, {
     MemberMediumAvailable? photoFeedbackFunction,
     FeedbackProgress? photoFeedbackProgress,
     MemberMediumAvailable? videoFeedbackFunction,
@@ -17,24 +17,47 @@ class MediaButtons {
     bool? allowCrop,
     String? tooltip,
   }) {
+    if (readAccess == null) throw Exception('readAccess is null');
     var items = <PopupMenuItem<int>>[];
     if (photoFeedbackFunction != null) {
       if (AbstractMediumPlatform.platform!.hasCamera()) {
         items.add(
-          PopupMenuItem<int>(child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'Take photo'), value: 0),
+          PopupMenuItem<int>(
+              child: StyleRegistry.registry()
+                  .styleWithContext(context)
+                  .frontEndStyle()
+                  .textStyle()
+                  .text(context, 'Take photo'),
+              value: 0),
         );
       }
-      items.add(
-          new PopupMenuItem<int>(child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'Upload photo'), value: 1));
+      items.add(new PopupMenuItem<int>(
+          child: StyleRegistry.registry()
+              .styleWithContext(context)
+              .frontEndStyle()
+              .textStyle()
+              .text(context, 'Upload photo'),
+          value: 1));
     }
     if (videoFeedbackFunction != null) {
       if (AbstractMediumPlatform.platform!.hasCamera()) {
         items.add(
-          PopupMenuItem<int>(child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'Take video'), value: 2),
+          PopupMenuItem<int>(
+              child: StyleRegistry.registry()
+                  .styleWithContext(context)
+                  .frontEndStyle()
+                  .textStyle()
+                  .text(context, 'Take video'),
+              value: 2),
         );
       }
-      items.add(
-          new PopupMenuItem<int>(child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'Upload video'), value: 3));
+      items.add(new PopupMenuItem<int>(
+          child: StyleRegistry.registry()
+              .styleWithContext(context)
+              .frontEndStyle()
+              .textStyle()
+              .text(context, 'Upload video'),
+          value: 3));
     }
     return PopupMenuButton(
         tooltip: tooltip,
@@ -45,8 +68,12 @@ class MediaButtons {
           if (photoFeedbackFunction != null) {
             if (choice == 0) {
               AbstractMediumPlatform.platform!.takePhoto(
-                  context, appId, ownerId,
-                  readAccess, photoFeedbackFunction, photoFeedbackProgress,
+                  context,
+                  appId,
+                  ownerId,
+                  readAccess,
+                  photoFeedbackFunction,
+                  photoFeedbackProgress,
                   allowCrop: allowCrop);
             }
             if (choice == 1) {
@@ -56,7 +83,8 @@ class MediaButtons {
                   ownerId,
                   readAccess,
                   photoFeedbackFunction,
-                  photoFeedbackProgress, allowCrop: allowCrop);
+                  photoFeedbackProgress,
+                  allowCrop: allowCrop);
             }
           }
           if (videoFeedbackFunction != null) {

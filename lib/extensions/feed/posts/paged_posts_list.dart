@@ -1,11 +1,15 @@
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
-import 'package:eliud_core/core/access/bloc/access_state.dart';
+import 'package:eliud_core/core/navigate/page_param_helper.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/random.dart';
-import 'package:eliud_pkg_feed/extensions/new_post/feed_post_dialog.dart';
-import 'package:eliud_pkg_feed/extensions/posts/post_button.dart';
-import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
+import 'package:eliud_pkg_feed/extensions/bloc/profile_bloc.dart';
+import 'package:eliud_pkg_feed/extensions/bloc/profile_state.dart';
+import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_bloc.dart';
+import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_event.dart';
+import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_state.dart';
+import 'package:eliud_pkg_feed/extensions/feed/posts/post_button.dart';
+import 'package:eliud_pkg_feed/extensions/feed/posts/post_widget.dart';
+import 'new_post/feed_post_dialog.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
 import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
@@ -13,22 +17,12 @@ import 'package:eliud_pkg_text/extensions/rich_text_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../post/post_widget.dart';
-import '../postlist_paged/postlist_paged_bloc.dart';
-import '../postlist_paged/postlist_paged_event.dart';
-import '../postlist_paged/postlist_paged_state.dart';
 
 class PagedPostsList extends StatefulWidget {
-  //final String? parentPageId;
   final FeedModel feedModel;
-  final MemberPublicInfoModel memberPublicInfoModel;
-  //final bool allowNewPost;
-  final SwitchFeedHelper switchFeedHelper;
 
   const PagedPostsList(
-    this.feedModel,
-    this.memberPublicInfoModel,
-    this.switchFeedHelper, {
+    this.feedModel, {
     Key? key,
   }) : super(key: key);
 
@@ -74,37 +68,44 @@ class _PagedPostsListState extends State<PagedPostsList> {
   void _addPost(
       {String? html,
       String? description,
+      MemberPublicInfoModel? author,
+      List<String>? readAccess,
       List<PostMediumModel>? postMemberMedia}) {
     BlocProvider.of<PostListPagedBloc>(context).add(AddPostPaged(
         value: PostModel(
             documentID: newRandomKey(),
-            author: widget.switchFeedHelper.memberCurrent,
+            author: author,
             appId: widget.feedModel.appId!,
             feedId: widget.feedModel.documentID!,
             likes: 0,
             dislikes: 0,
             description: description,
-            readAccess: widget.switchFeedHelper.defaultReadAccess,
+            readAccess: readAccess,
             archived: PostArchiveStatus.Active,
             html: html,
             memberMedia: postMemberMedia)));
   }
 
-  Widget _newPostForm() {
+  Widget _newPostForm(
+    MemberPublicInfoModel author,
+    List<String> readAccess,
+      LoggedInProfileInitialized profileInitialized,
+      PageContextInfo pageContextInfo
+  ) {
     List<Widget> widgets = [];
     widgets.add(Spacer());
 
     // Photo
     if (widget.feedModel.photoPost!) {
-      widgets.add(PostButton(
-          widget.feedModel, widget.switchFeedHelper, PostType.PostPhoto));
+      widgets.add(
+          PostButton(widget.feedModel, PostType.PostPhoto, readAccess, author));
       widgets.add(Spacer());
     }
 
     // Video
     if (widget.feedModel.videoPost != null && widget.feedModel.videoPost!) {
-      widgets.add(PostButton(
-          widget.feedModel, widget.switchFeedHelper, PostType.PostVideo));
+      widgets.add(
+          PostButton(widget.feedModel, PostType.PostVideo, readAccess, author));
       widgets.add(Spacer());
     }
 
@@ -157,8 +158,8 @@ class _PagedPostsListState extends State<PagedPostsList> {
           .iconButton(context,
               icon: album,
               tooltip: 'Album',
-              onPressed: () => FeedPostDialog.open(context,
-                  widget.feedModel.documentID!, widget.switchFeedHelper)));
+              onPressed: () =>
+                  FeedPostDialog.open(context, widget.feedModel.documentID!, profileInitialized.watchingThisProfile()!.author!.documentID!, profileInitialized.profileUrl(), pageContextInfo)));
       widgets.add(Spacer());
     }
 
@@ -173,12 +174,8 @@ class _PagedPostsListState extends State<PagedPostsList> {
           .buttonStyle()
           .iconButton(context, icon: article, tooltip: 'Article',
               onPressed: () {
-        RichTextDialog.open(
-            context,
-            widget.feedModel.appId!,
-            widget.switchFeedHelper.memberOfFeed.documentID!,
-            widget.switchFeedHelper.defaultReadAccess,
-            "Article", (newArticle) {
+        RichTextDialog.open(context, widget.feedModel.appId!,
+            author.documentID!, readAccess, "Article", (newArticle) {
           _addPost(html: newArticle);
         }, 'Add article');
       }));
@@ -190,45 +187,56 @@ class _PagedPostsListState extends State<PagedPostsList> {
 
   @override
   Widget build(BuildContext context) {
-    var _accessState = AccessBloc.getState(context);
-    if (_accessState is AppLoaded) {
-      return BlocBuilder<PostListPagedBloc, PostListPagedState>(
-        builder: (context, state) {
-          if (state is PostListPagedState) {
-            var theState = state;
-            List<Widget> widgets = [];
-            if (widget.switchFeedHelper.allowNewPost()) {
-              widgets.add(_newPostForm());
+    var pageContextInfo = PageParamHelper.getPagaContextInfo(context);
+    var pageId = pageContextInfo.pageId;
+    return BlocBuilder<ProfileBloc, ProfileState>(
+        builder: (context, profileState) {
+      if (profileState is ProfileInitialised) {
+        var appId = profileState.appId;
+        return BlocBuilder<PostListPagedBloc, PostListPagedState>(
+          builder: (context, state) {
+            if (state is PostListPagedState) {
+              var memberId = profileState.memberId();
+              var photoURL = profileState.profileUrl();
+              List<Widget> widgets = [];
+              if (profileState is LoggedInProfileInitialized) {
+                widgets.add(_newPostForm(profileState.currentPublicMemberInfo,
+                    profileState.defaultReadAccess, profileState, pageContextInfo));
+              }
+              for (int i = 0; i < state.values.length; i++) {
+                widgets.add(PostWidget(
+                  thumbStyle: widget.feedModel.thumbImage,
+                  appId: appId,
+                  feedId: widget.feedModel.documentID!,
+                  details: state.values[i],
+                  pageId: pageId,
+                  memberId: memberId,
+                  isEditable: profileState.canEditThisProfile(),
+                  photoURL: photoURL,
+                ));
+              }
+              widgets.add(_buttonNextPage(!state.hasReachedMax));
+              return ListView(
+                  shrinkWrap: true,
+                  physics: ScrollPhysics(),
+                  children: widgets);
+            } else {
+              return StyleRegistry.registry()
+                  .styleWithContext(context)
+                  .frontEndStyle()
+                  .progressIndicatorStyle()
+                  .progressIndicator(context);
             }
-            for (int i = 0; i < theState.values.length; i++) {
-              widgets.add(post(
-                  context, _accessState.app.documentID!, theState.values[i]));
-            }
-            widgets.add(_buttonNextPage(!theState.hasReachedMax));
-            return ListView(
-                shrinkWrap: true, physics: ScrollPhysics(), children: widgets);
-          } else {
-            return StyleRegistry.registry()
-                .styleWithContext(context)
-                .frontEndStyle()
-                .progressIndicatorStyle()
-                .progressIndicator(context);
-          }
-        },
-      );
-    } else {
-      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'App not loaded');
-    }
-  }
-
-  Widget post(BuildContext context, String appId, PostDetails postDetails) {
-    return PostWidget(
-      thumbStyle: widget.feedModel.thumbImage,
-      appId: appId,
-      feedId: widget.feedModel.documentID!,
-      switchFeedHelper: widget.switchFeedHelper,
-      details: postDetails,
-    );
+          },
+        );
+      } else {
+        return StyleRegistry.registry()
+            .styleWithContext(context)
+            .frontEndStyle()
+            .progressIndicatorStyle()
+            .progressIndicator(context);
+      }
+    });
   }
 
   Widget _buttonNextPage(bool mightHaveMore) {
@@ -248,9 +256,14 @@ class _PagedPostsListState extends State<PagedPostsList> {
               );
             } else {
               return Center(
-                  child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().h5(context,
-                    "That's all folks",
-              ));
+                  child: StyleRegistry.registry()
+                      .styleWithContext(context)
+                      .frontEndStyle()
+                      .textStyle()
+                      .h5(
+                        context,
+                        "That's all folks",
+                      ));
             }
           });
     }

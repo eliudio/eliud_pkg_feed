@@ -14,7 +14,8 @@ import 'package:eliud_pkg_feed/model/repository_singleton.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliud_router;
 import 'package:eliud_core/tools/action/action_model.dart';
 import 'package:eliud_pkg_feed/model/component_registry.dart';
-import 'extensions/pagebloc/profile_widget_wrapper.dart';
+
+import 'extensions/util/profile_widget_wrapper.dart';
 
 abstract class FeedPackage extends Package {
   @override

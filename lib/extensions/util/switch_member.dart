@@ -17,6 +17,14 @@ enum WhichFeed { MyFeed, OnlyMyFeed, SomeoneIFollow, SomeoneElse, PublicFeed }
 class SwitchMember {
   static String switchMemberFeedPageParameter = 'memberId';
 
+  static Widget gestured(BuildContext context, String switchToThisMemberId, String pageId, Widget avatar) {
+    return GestureDetector(
+        onTap: () {
+          SwitchMember.switchMember(context, pageId, switchToThisMemberId);
+        },
+        child: avatar);
+  }
+
   static void switchMember(
       BuildContext context, String pageId, String memberId) {
     var _navigatorBloc = BlocProvider.of<NavigatorBloc>(context);

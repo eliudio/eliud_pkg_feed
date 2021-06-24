@@ -1,14 +1,15 @@
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
+import 'package:eliud_core/core/navigate/page_param_helper.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/style/style_registry.dart';
-import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_bloc.dart';
+import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/media_buttons.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_media_helper.dart';
-import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
+import 'package:eliud_pkg_feed/extensions/util/switch_member.dart';
 import 'package:eliud_pkg_feed/platform/medium_platform.dart';
 import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 import 'package:flutter/foundation.dart';
@@ -20,29 +21,13 @@ import 'bloc/feed_post_form_event.dart';
 import 'bloc/feed_post_form_state.dart';
 import 'bloc/feed_post_model_details.dart';
 
-class FeedPostForm extends StatelessWidget {
-  final String feedId;
-  //final String parentPageId;
-  final SwitchFeedHelper switchFeedHelper;
-  final PostListPagedBloc postListPagedBloc;
-  FeedPostForm(
-      {Key? key,
-      required this.feedId,
-      required this.switchFeedHelper,
-      required this.postListPagedBloc})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MyFeedPostForm(feedId, switchFeedHelper);
-  }
-}
-
 class MyFeedPostForm extends StatefulWidget {
   final String feedId;
-  //final String parentPageId;
-  final SwitchFeedHelper switchFeedHelper;
-  MyFeedPostForm(this.feedId, this.switchFeedHelper);
+  final String memberId;
+  final String photoURL;
+  final PageContextInfo pageContextInfo;
+
+  MyFeedPostForm(this.feedId, this.memberId, this.photoURL, this.pageContextInfo);
 
   _MyFeedPostFormState createState() => _MyFeedPostFormState();
 }
@@ -95,7 +80,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
           builder: (context, state) {
         return StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogWidgetStyle().complexAckNackDialog(context,
             title: 'New Album',
-            child: _contents(context, state, app, pubMember, theState),
+            child: _contents(context, widget.pageContextInfo, state, app, pubMember, theState),
             onSelection: (value) {
           if (value == 0) {
             BlocProvider.of<FeedPostFormBloc>(context).add(SubmitPost());
@@ -107,7 +92,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
     }
   }
 
-  Widget _contents(context, state, app, pubMember, theState) {
+  Widget _contents(BuildContext context, PageContextInfo pageContextInfo, FeedPostFormState state, AppModel app, MemberPublicInfoModel pubMember, AccessState theState) {
     if (state is FeedPostFormLoaded) {
       if (state.postModelDetails.description != null) {
         _descriptionController.text =
@@ -124,7 +109,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
     }
     if (state is FeedPostFormInitialized) {
       List<Widget> rows = [];
-      rows.add(_row1(app, pubMember, state, theState));
+      rows.add(_row1(pageContextInfo.pageId, app, state));
       if ((state is SubmittableFeedPostFormWithMediumUploading) ||
           ((state.postModelDetails.memberMedia != null) &&
               (state.postModelDetails.memberMedia.isNotEmpty))) {
@@ -145,19 +130,16 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
     }
   }
 
-  Widget _row1(AppModel app, MemberPublicInfoModel member,
-      FeedPostFormInitialized state, LoggedIn accessState) {
-    var avatar = widget.switchFeedHelper.gestured(
-        context,
-        member.documentID!,
-        AvatarHelper.avatar(
+  Widget _row1(String pageId, AppModel app, FeedPostFormInitialized state) {
+    var avatar = AvatarHelper.avatar(
           context,
           60,
-          widget.switchFeedHelper.pageId,
-          member,
+          pageId,
+          widget.memberId,
+          widget.photoURL,
           app.documentID!,
           widget.feedId,
-        ));
+        );
     return Row(children: [
       Container(
           height: 60, width: 60, child: avatar == null ? Container() : avatar),
@@ -169,7 +151,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
             child: _textField(app, state)),
       ),
       Container(width: 8),
-      _mediaButtons(context, app, state, member.documentID!),
+      _mediaButtons(context, app, state, widget.memberId),
     ]);
   }
 
@@ -231,21 +213,6 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
       }
     });
   }
-/*
-
-  Widget _row3(FeedPostFormInitialized state) {
-    return PostMediaHelper.staggeredVideosWithThumbnail(
-        state.postModelDetails.videoWithThumbnails, deleteAction: (index) {
-      var videos = state.postModelDetails.videoWithThumbnails;
-      videos.removeAt(index);
-      _myFormBloc.add(ChangedFeedVideos(videoWithThumbnails: videos));
-    }, viewAction: (index) {
-      var videos = state.postModelDetails.videoWithThumbnails;
-      var medium = videos[index];
-      AbstractMediumPlatform.platform!.showVideo(context, medium);
-    });
-  }
-*/
 
   Widget _textField(
     AppModel app,

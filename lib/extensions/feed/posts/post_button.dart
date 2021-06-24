@@ -1,7 +1,9 @@
+import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/random.dart';
+import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_bloc.dart';
+import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_event.dart';
 import 'package:eliud_pkg_feed/extensions/util/media_buttons.dart';
-import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
 import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
@@ -9,17 +11,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../postlist_paged/postlist_paged_bloc.dart';
-import '../postlist_paged/postlist_paged_event.dart';
 
 enum PostType { PostPhoto, PostVideo }
 
+/*
+ * PostButton is used to be able to add photos or videos to the feed.
+ * It's a photo or video button which allows to do just that.
+ */
 class PostButton extends StatefulWidget {
   final FeedModel feedModel;
-  final SwitchFeedHelper switchFeedHelper;
   final PostType postType;
+  List<String> readAccess;
+  MemberPublicInfoModel author;
 
-  PostButton(this.feedModel, this.switchFeedHelper, this.postType);
+  PostButton(this.feedModel, this.postType, this.readAccess, this.author);
 
   _PostButtonState createState() => _PostButtonState();
 }
@@ -37,8 +42,8 @@ class _PostButtonState extends State<PostButton> {
       return MediaButtons.mediaButtons(
           context,
           widget.feedModel.appId!,
-          widget.switchFeedHelper.memberOfFeed.documentID!,
-          widget.switchFeedHelper.defaultReadAccess,
+          widget.author.documentID!,
+          widget.readAccess,
           allowCrop: false,
           tooltip: 'Add photo', photoFeedbackFunction: (photo) {
         _addPost(postMemberMedia: [
@@ -57,8 +62,8 @@ class _PostButtonState extends State<PostButton> {
       return MediaButtons.mediaButtons(
           context,
           widget.feedModel.appId!,
-          widget.switchFeedHelper.memberOfFeed.documentID!,
-          widget.switchFeedHelper.defaultReadAccess,
+          widget.author.documentID!,
+          widget.readAccess,
           allowCrop: false,
           tooltip: 'Add video', videoFeedbackFunction: (photo) {
         _addPost(postMemberMedia: [
@@ -80,13 +85,13 @@ class _PostButtonState extends State<PostButton> {
     BlocProvider.of<PostListPagedBloc>(context).add(AddPostPaged(
         value: PostModel(
             documentID: newRandomKey(),
-            author: widget.switchFeedHelper.memberCurrent,
+            author: widget.author,
             appId: widget.feedModel.appId!,
             feedId: widget.feedModel.documentID!,
             likes: 0,
             dislikes: 0,
             description: description,
-            readAccess: widget.switchFeedHelper.defaultReadAccess,
+            readAccess: widget.readAccess,
             archived: PostArchiveStatus.Active,
             html: html,
             memberMedia: postMemberMedia)));

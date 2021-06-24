@@ -1,12 +1,11 @@
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/storage/medium_base.dart';
-import 'package:eliud_pkg_feed/extensions/post/post_contents_widget.dart';
-import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_bloc.dart';
-import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_event.dart';
-import 'package:eliud_pkg_feed/extensions/postlist_paged/postlist_paged_state.dart';
+import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_bloc.dart';
+import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_event.dart';
+import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_state.dart';
 import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
-import 'package:eliud_pkg_feed/extensions/util/switch_feed_helper.dart';
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
+import 'package:eliud_pkg_feed/extensions/util/post_contents_widget.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
 import 'package:eliud_pkg_feed/model/post_like_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
@@ -17,18 +16,24 @@ class PostWidget extends StatefulWidget {
   //final MemberModel? member;
   //final String parentPageId;
   final String appId;
+  final String pageId;
+  final String? memberId;
+  final String? photoURL;
   final String feedId;
   final ThumbStyle? thumbStyle;
   final PostDetails details;
-  final SwitchFeedHelper switchFeedHelper;
+  final bool isEditable;
 
   const PostWidget(
       {Key? key,
       required this.appId,
+      required this.pageId,
+      required this.memberId,
+      required this.photoURL,
       required this.feedId,
       required this.thumbStyle,
-      required this.switchFeedHelper,
-      required this.details})
+      required this.details,
+      required this.isEditable})
       : super(key: key);
 
   @override
@@ -62,13 +67,12 @@ class _PostWidgetState extends State<PostWidget> {
   @override
   Widget build(BuildContext context) {
     var postModel = widget.details.postModel;
-    var memberId = widget.switchFeedHelper.memberCurrent!.documentID!;
     if (size == null) size = MediaQuery.of(context).size;
     var originalAccessBloc = BlocProvider.of<AccessBloc>(context);
 
     List<Widget> widgets = [];
 
-    widgets.add(_heading(context, postModel, memberId));
+    widgets.add(_heading(context, postModel));
 
     widgets.add(_aBitSpace());
     if ((postModel.description != null) &&
@@ -77,18 +81,18 @@ class _PostWidgetState extends State<PostWidget> {
       widgets.add(_aBitSpace());
     }
     widgets.add(PostContentsWidget(
-      memberID: widget.switchFeedHelper.memberCurrent!.documentID!,
+      memberID: widget.memberId,
       postModel: postModel,
       accessBloc: originalAccessBloc,
-      parentPageId: widget.switchFeedHelper.pageId,
+      parentPageId: widget.pageId,
     ));
     widgets.add(_aBitSpace());
 
-    widgets.add(_postActionBtns(context, widget.details, memberId));
+    widgets.add(_postActionBtns(context, widget.details, widget.memberId));
     widgets.add(_aBitSpace());
     widgets.add(_enterComment(context, widget.details));
     widgets.add(_aBitSpace());
-    widgets.add(_postComments(context, widget.details, memberId));
+    widgets.add(_postComments(context, widget.details, widget.memberId));
 
     return StyleRegistry.registry()
         .styleWithContext(context)
@@ -111,23 +115,21 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   Widget _enterComment(BuildContext context, PostDetails postDetail) {
-    if (widget.switchFeedHelper.memberCurrent == null) {
+    if (widget.isEditable) {
       return Container();
     } else {
       return Row(children: [
         Container(
             height: 40,
             width: 40,
-            child: widget.switchFeedHelper.gestured(
-                context,
-                widget.switchFeedHelper.memberCurrent!.documentID!,
-                AvatarHelper.avatar(
+            child: AvatarHelper.avatar(
                     context,
                     20,
-                    widget.switchFeedHelper.pageId,
-                    widget.switchFeedHelper.memberCurrent!,
+                    widget.pageId,
+                    widget.memberId!,
+                    widget.photoURL!,
                     widget.appId,
-                    widget.feedId))),
+                    widget.feedId)),
         Container(width: 8),
         Flexible(
           child: Container(
@@ -187,7 +189,7 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   Widget _heading(
-      BuildContext context, PostModel? postModel, String? memberId) {
+      BuildContext context, PostModel? postModel) {
     if (postModel == null) return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'No post');
     if (postModel.author == null) return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'No author');
 
@@ -208,11 +210,8 @@ class _PostWidgetState extends State<PostWidget> {
       Container(
           height: 50,
           width: 50,
-          child: widget.switchFeedHelper.gestured(
-              context,
-              postModel.author!.documentID!,
-              AvatarHelper.avatar(context, 25, widget.switchFeedHelper.pageId,
-                  postModel.author, widget.appId, widget.feedId))),
+          child: AvatarHelper.avatar(context, 25, widget.pageId,
+                  postModel.author!.documentID!, postModel.author!.photoURL!, widget.appId, widget.feedId)),
       Container(
         width: 8,
       ),
@@ -226,11 +225,13 @@ class _PostWidgetState extends State<PostWidget> {
             textAlign: TextAlign.left),
       ])
     ];
+/*
     if (memberId == postModel.author!.documentID) {
 //      children.add(Spacer());
 //      currently no options, delete not implemented
 //      children.add(_optionsPost(context, postModel, memberId));
     }
+*/
 
     var row =
         Row(crossAxisAlignment: CrossAxisAlignment.start, children: children);
@@ -359,12 +360,9 @@ class _PostWidgetState extends State<PostWidget> {
       }
     }
 
-    var rowChildren = [
-      widget.switchFeedHelper.gestured(
-          context,
-          data.member!.documentID!,
-          AvatarHelper.avatar(context, 20, widget.switchFeedHelper.pageId,
-              data.member, widget.appId, widget.feedId)),
+    List<Widget> rowChildren = [
+      AvatarHelper.avatar(context, 20, widget.pageId,
+              data.member!.documentID!, data.member!.photoURL!, widget.appId, widget.feedId),
       Container(width: 8),
       Expanded(
           child: Container(
@@ -398,7 +396,7 @@ class _PostWidgetState extends State<PostWidget> {
         ),
       )),
     ];
-    if (widget.switchFeedHelper.memberCurrent!.documentID! ==
+    if (widget.memberId ==
         data.member!.documentID) {
       rowChildren.add(_optionsPostComments(
           context, postDetail, data.member!.documentID, data));

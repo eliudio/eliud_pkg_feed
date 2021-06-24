@@ -1,3 +1,4 @@
+import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/style/frontend/has_profile_photo.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_pkg_feed/extensions/util/switch_member.dart';
@@ -19,18 +20,19 @@ class AvatarHelper {
     return ProfileAttributes(null);
   }
 
-  static Widget avatar(BuildContext context, double radius, String pageId, member,
-      String appId, String feedId) {
+  static Widget avatar(BuildContext context, double radius, String pageId,
+      String memberId, String url, String appId, String feedId) {
     return StyleRegistry.registry()
         .styleWithContext(context)
-        .frontEndStyle().profilePhotoStyle()
+        .frontEndStyle()
+        .profilePhotoStyle()
         .getProfilePhotoButtonFromExternalProvider(context,
-        radius: radius,
-            fallBackURLProvider: () => member.photoURL,
-            externalProfileURLProvider: () => _getFutureProfileAttributes(
-                member.documentID!, member.documentID!, appId, feedId),
+            radius: radius,
+            fallBackURLProvider: () => url,
+            externalProfileURLProvider: () =>
+                _getFutureProfileAttributes(memberId, memberId, appId, feedId),
             onPressed: () {
-              SwitchMember.switchMember(context, pageId, member.documentID!);
+              SwitchMember.switchMember(context, pageId, memberId);
             });
   }
 }
