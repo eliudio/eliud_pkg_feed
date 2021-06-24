@@ -76,23 +76,22 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
       var pubMember = theState.memberPublicInfoModel;
       var app = AccessBloc.app(context);
       if (app == null) return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'No app available');
-      return BlocBuilder<FeedPostFormBloc, FeedPostFormState>(
-          builder: (context, state) {
         return StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogWidgetStyle().complexAckNackDialog(context,
             title: 'New Album',
-            child: _contents(context, widget.pageContextInfo, state, app, pubMember, theState),
+            child: _contents(context, widget.pageContextInfo, app, pubMember, theState),
             onSelection: (value) {
           if (value == 0) {
             BlocProvider.of<FeedPostFormBloc>(context).add(SubmitPost());
           }
-        });
       });
     } else {
       return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'Not logged in');
     }
   }
 
-  Widget _contents(BuildContext context, PageContextInfo pageContextInfo, FeedPostFormState state, AppModel app, MemberPublicInfoModel pubMember, AccessState theState) {
+  Widget _contents(BuildContext context, PageContextInfo pageContextInfo, AppModel app, MemberPublicInfoModel pubMember, AccessState theState) {
+    return BlocBuilder<FeedPostFormBloc, FeedPostFormState>(
+        builder: (context, state) {
     if (state is FeedPostFormLoaded) {
       if (state.postModelDetails.description != null) {
         _descriptionController.text =
@@ -128,6 +127,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
           .frontEndStyle().progressIndicatorStyle()
           .progressIndicator(context);
     }
+        });
   }
 
   Widget _row1(String pageId, AppModel app, FeedPostFormInitialized state) {
