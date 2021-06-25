@@ -176,8 +176,10 @@ class _PagedPostsListState extends State<PagedPostsList> {
               onPressed: () {
         RichTextDialog.open(context, widget.feedModel.appId!,
             author.documentID!, readAccess, "Article", (newArticle) {
-          _addPost(html: newArticle);
-        }, 'Add article');
+          _addPost(html: newArticle, );
+        }, 'Add article', StyleRegistry.registry()
+                .styleWithContext(context)
+                .frontEndStyle());
       }));
       widgets.add(Spacer());
     }
