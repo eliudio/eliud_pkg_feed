@@ -62,9 +62,7 @@ class _ProfileState extends State<Profile> {
                           (value) =>
                           BlocProvider.of<ProfileBloc>(context)
                               .add(ProfileChangedProfileEvent(value)),
-                      html, StyleRegistry.registry()
-                      .styleWithContext(context)
-                      .frontEndStyle());
+                      html);
                 },
               )
           );

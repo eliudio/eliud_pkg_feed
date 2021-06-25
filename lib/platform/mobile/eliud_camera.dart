@@ -295,28 +295,28 @@ class _EliudCameraState extends State<EliudCamera>
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
-            StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().iconButton(context,
+            IconButton(
               icon: Icon(Icons.flash_on),
               color: Colors.blue,
               onPressed: controller != null ? onFlashModeButtonPressed : null,
             ),
-            StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().iconButton(context,
+            IconButton(
               icon: Icon(Icons.exposure),
               color: Colors.blue,
               onPressed:
                   controller != null ? onExposureModeButtonPressed : null,
             ),
-            StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().iconButton(context,
+            IconButton(
               icon: Icon(Icons.filter_center_focus),
               color: Colors.blue,
               onPressed: controller != null ? onFocusModeButtonPressed : null,
             ),
-            StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().iconButton(context,
+            IconButton(
               icon: Icon(enableAudio ? Icons.volume_up : Icons.volume_mute),
               color: Colors.blue,
               onPressed: controller != null ? onAudioModeButtonPressed : null,
             ),
-            StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().iconButton(context,
+            IconButton(
               icon: Icon(controller?.value.isCaptureOrientationLocked ?? false
                   ? Icons.screen_lock_rotation
                   : Icons.screen_rotation),
@@ -343,7 +343,7 @@ class _EliudCameraState extends State<EliudCamera>
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           mainAxisSize: MainAxisSize.max,
           children: [
-            StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().iconButton(context,
+            IconButton(
               icon: Icon(Icons.flash_off),
               color: controller?.value.flashMode == FlashMode.off
                   ? Colors.orange
@@ -352,7 +352,7 @@ class _EliudCameraState extends State<EliudCamera>
                   ? () => onSetFlashModeButtonPressed(FlashMode.off)
                   : null,
             ),
-            StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().iconButton(context,
+            IconButton(
               icon: Icon(Icons.flash_auto),
               color: controller?.value.flashMode == FlashMode.auto
                   ? Colors.orange
@@ -361,7 +361,7 @@ class _EliudCameraState extends State<EliudCamera>
                   ? () => onSetFlashModeButtonPressed(FlashMode.auto)
                   : null,
             ),
-            StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().iconButton(context,
+            IconButton(
               icon: Icon(Icons.flash_on),
               color: controller?.value.flashMode == FlashMode.always
                   ? Colors.orange
@@ -370,7 +370,7 @@ class _EliudCameraState extends State<EliudCamera>
                   ? () => onSetFlashModeButtonPressed(FlashMode.always)
                   : null,
             ),
-            StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().iconButton(context,
+            IconButton(
               icon: Icon(Icons.highlight),
               color: controller?.value.flashMode == FlashMode.torch
                   ? Colors.orange
@@ -530,14 +530,12 @@ class _EliudCameraState extends State<EliudCamera>
 
     if (cameraController != null && cameraController.value.isInitialized) {
       if (cameraController.value.isRecordingVideo) {
-        return             StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().iconButton(context,
-
+        return IconButton(
             icon: const Icon(Icons.stop, size: 40),
             color: Colors.red,
             onPressed: onStopButtonPressed);
       } else {
-        return             StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().iconButton(context,
-            icon: const Icon(Icons.videocam_sharp, size: 40),
+        return IconButton(icon: const Icon(Icons.videocam_sharp, size: 40),
             color: Colors.white,
             onPressed: onVideoRecordButtonPressed);
       }

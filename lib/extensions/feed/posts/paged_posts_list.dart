@@ -127,7 +127,10 @@ class _PagedPostsListState extends State<PagedPostsList> {
             .openEntryDialog(context, title: 'Same something',
                 onPressed: (value) {
           if (value != null) {
-            _addPost(description: value);
+            _addPost(description: value,
+                author: author,
+                readAccess: readAccess,
+            );
           }
         });
       }));
@@ -176,10 +179,11 @@ class _PagedPostsListState extends State<PagedPostsList> {
               onPressed: () {
         RichTextDialog.open(context, widget.feedModel.appId!,
             author.documentID!, readAccess, "Article", (newArticle) {
-          _addPost(html: newArticle, );
-        }, 'Add article', StyleRegistry.registry()
-                .styleWithContext(context)
-                .frontEndStyle());
+          _addPost(html: newArticle,
+            author: author,
+            readAccess: readAccess,
+          );
+        }, 'Add article');
       }));
       widgets.add(Spacer());
     }
