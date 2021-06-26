@@ -15,12 +15,12 @@ import 'feed_post_model_details.dart';
 class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
   final String appId;
   final PostListPagedBloc postListPagedBloc;
-  final MemberPublicInfoModel memberPublicInfoModel;
+  final String memberId;
   final String feedId;
   final LoggedIn accessState;
 
   FeedPostFormBloc(this.appId, this.postListPagedBloc,
-      this.memberPublicInfoModel, this.feedId, this.accessState)
+      this.memberId, this.feedId, this.accessState)
       : super(FeedPostFormUninitialized());
 
   @override
@@ -74,7 +74,7 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
 
     PostModel postModel = PostModel(
         documentID: newRandomKey(),
-        author: memberPublicInfoModel,
+        authorId: memberId,
         appId: appId,
         feedId: feedId,
         description: feedPostModelDetails.description,

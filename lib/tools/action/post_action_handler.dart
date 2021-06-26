@@ -67,8 +67,7 @@ class PostActionHandler extends PackageActionHandler {
 
     postRepository(appId: action.appID)!.add(PostModel(
       documentID: newRandomKey(),
-      author: await memberPublicInfoRepository(appId: action.appID)!
-          .get(accessState.member.documentID),
+      authorId: accessState.member.documentID,
       appId: action.appID,
       postAppId: postAppId,
       feedId: action.feed!.documentID,

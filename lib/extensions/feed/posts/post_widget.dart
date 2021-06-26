@@ -127,7 +127,6 @@ class _PostWidgetState extends State<PostWidget> {
                     20,
                     widget.pageId,
                     widget.memberId!,
-                    widget.photoURL!,
                     widget.appId,
                     widget.feedId)),
         Container(width: 8),
@@ -191,14 +190,8 @@ class _PostWidgetState extends State<PostWidget> {
   Widget _heading(
       BuildContext context, PostModel? postModel) {
     if (postModel == null) return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'No post');
-    if (postModel.author == null) return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'No author');
+    if (postModel.authorId == null) return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'No author');
 
-    var name;
-    if (postModel.author!.name != null) {
-      name = postModel.author!.name!;
-    } else {
-      name = "";
-    }
     var timeStamp;
     if (postModel.timestamp == null) {
       timeStamp = "?";
@@ -211,7 +204,7 @@ class _PostWidgetState extends State<PostWidget> {
           height: 50,
           width: 50,
           child: AvatarHelper.avatar(context, 25, widget.pageId,
-                  postModel.author!.documentID!, postModel.author!.photoURL!, widget.appId, widget.feedId)),
+                  postModel.authorId!, widget.appId, widget.feedId)),
       Container(
         width: 8,
       ),
@@ -219,8 +212,7 @@ class _PostWidgetState extends State<PostWidget> {
         Container(
           height: 4,
         ),
-        StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().h5(context, name,
-            textAlign: TextAlign.left),
+        AvatarHelper.name(context, postModel.authorId!, widget.appId, widget.feedId),
         StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().h5(context, timeStamp,
             textAlign: TextAlign.left),
       ])
@@ -362,7 +354,7 @@ class _PostWidgetState extends State<PostWidget> {
 
     List<Widget> rowChildren = [
       AvatarHelper.avatar(context, 20, widget.pageId,
-              data.member!.documentID!, data.member!.photoURL!, widget.appId, widget.feedId),
+              data.member!.documentID!, widget.appId, widget.feedId),
       Container(width: 8),
       Expanded(
           child: Container(

@@ -133,15 +133,6 @@ class PostCache implements PostRepository {
 
   static Future<PostModel> refreshRelations(PostModel model) async {
 
-    MemberPublicInfoModel? authorHolder;
-    if (model.author != null) {
-      try {
-        await memberPublicInfoRepository(appId: model.appId)!.get(model.author!.documentID).then((val) {
-          authorHolder = val;
-        }).catchError((error) {});
-      } catch (_) {}
-    }
-
     List<PostMediumModel>? memberMediaHolder;
     if (model.memberMedia != null) {
       memberMediaHolder = List<PostMediumModel>.from(await Future.wait(await model.memberMedia!.map((element) async {
@@ -150,8 +141,6 @@ class PostCache implements PostRepository {
     }
 
     return model.copyWith(
-        author: authorHolder,
-
         memberMedia: memberMediaHolder,
 
 

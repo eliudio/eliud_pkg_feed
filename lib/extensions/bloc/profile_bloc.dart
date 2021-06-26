@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:eliud_core/core/navigate/page_param_helper.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
+import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_pkg_feed/extensions/util/switch_member.dart';
@@ -81,8 +82,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       // Determine current member
       var currentMemberProfileModel = await getMemberProfileModel(
           appId, feedId, currentMemberModel.documentID!, defaultReadAccess);
-      var currentPublicMemberInfo =
-          await getMemberPublicInfo(currentMemberModel.documentID!);
       var param;
       if (pageContextInfo.parameters != null) {
         param = pageContextInfo
@@ -93,7 +92,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             feedId: feedId,
             appId: appId,
             currentMemberProfileModel: currentMemberProfileModel,
-            currentPublicMemberInfo: currentPublicMemberInfo,
+            currentMember: currentMemberModel,
             defaultReadAccess: defaultReadAccess,
             onlyMyPosts: false);
       } else {
@@ -106,7 +105,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             feedId: feedId,
             appId: appId,
             currentMemberProfileModel: currentMemberProfileModel,
-            currentPublicMemberInfo: currentPublicMemberInfo,
+            currentMember: currentMemberModel,
             defaultReadAccess: defaultReadAccess,
             feedProfileModel: feedProfileModel,
             feedPublicInfoModel: feedPublicInfoModel,
@@ -140,7 +139,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           feedId: feedId,
           author: pubMember,
           readAccess: readAccess,
-          profile: "");
+          profile: pubMember!.photoURL);
       memberProfileRepository(appId: appId)!.add(memberProfileModel);
     }
     return memberProfileModel;
@@ -168,14 +167,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             .withCondition(
                 EliudQueryCondition('feedId', isEqualTo: state.feedId))
             .withCondition(EliudQueryCondition('readAccess',
-                arrayContainsAny: [state.currentPublicMemberInfo.documentID!, 'PUBLIC']));
+                arrayContainsAny: [state.currentMember.documentID!, 'PUBLIC']));
       } else {
         // query where I'm the author. We could include that we're part of the readAccess but that's obsolete
         return EliudQuery()
             .withCondition(EliudQueryCondition('archived',
                 isEqualTo: PostArchiveStatus.Active.index))
             .withCondition(EliudQueryCondition('authorId',
-                isEqualTo: state.currentPublicMemberInfo.documentID!))
+                isEqualTo: state.currentMember.documentID!))
             .withCondition(
                 EliudQueryCondition('feedId', isEqualTo: state.feedId));
       }
@@ -190,7 +189,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             .withCondition(
                 EliudQueryCondition('feedId', isEqualTo: state.feedId))
             .withCondition(EliudQueryCondition('readAccess',
-                arrayContainsAny: [state.currentPublicMemberInfo.documentID!]));
+                arrayContainsAny: [state.currentMember.documentID!]));
       } else {
         // query where that person is the author and PUBLIC in the readAccess
         return publicQueryForAuthor(
@@ -214,7 +213,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         .withCondition(EliudQueryCondition('feedId', isEqualTo: feedId))
         .withCondition(
             EliudQueryCondition('readAccess', arrayContainsAny: ['PUBLIC']));
-    ;
   }
 
   static EliudQuery publicQuery(String feedId) {

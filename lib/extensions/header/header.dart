@@ -109,7 +109,6 @@ class _HeaderState extends State<Header> {
                       55,
                       pageId,
                       memberId,
-                      state.profileUrl(),
                       state.appId,
                       state.feedId),
                 )),

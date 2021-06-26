@@ -53,12 +53,11 @@ class _FeedPostDialogState extends State<FeedPostDialog> {
   Widget build(BuildContext context) {
     var theState = AccessBloc.getState(context);
     if (theState is LoggedIn) {
-      var memberPublicInfoModel = theState.memberPublicInfoModel;
       var app = AccessBloc.app(context);
       if (app == null) return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'No app available');
       return BlocProvider<FeedPostFormBloc>(
           create: (context) => FeedPostFormBloc(app.documentID!,
-              postListPagedBloc, memberPublicInfoModel, widget.feedId, theState)
+              postListPagedBloc, theState.member.documentID!, widget.feedId, theState)
             ..add(InitialiseNewFeedPostFormEvent()),
           child: MyFeedPostForm(
                   widget.feedId,

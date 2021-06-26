@@ -57,6 +57,7 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
       if (event is InitialiseNewPostFormEvent) {
         PostFormLoaded loaded = PostFormLoaded(value: PostModel(
                                                documentID: "",
+                                 authorId: "",
                                  appId: "",
                                  feedId: "",
                                  postAppId: "",
@@ -99,28 +100,8 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
 
         return;
       }
-      if (event is ChangedPostAuthor) {
-        if (event.value != null)
-          newValue = currentState.value!.copyWith(author: await memberPublicInfoRepository(appId: appId)!.get(event.value));
-        else
-          newValue = new PostModel(
-                                 documentID: currentState.value!.documentID,
-                                 author: null,
-                                 timestamp: currentState.value!.timestamp,
-                                 appId: currentState.value!.appId,
-                                 feedId: currentState.value!.feedId,
-                                 postAppId: currentState.value!.postAppId,
-                                 postPageId: currentState.value!.postPageId,
-                                 pageParameters: currentState.value!.pageParameters,
-                                 html: currentState.value!.html,
-                                 description: currentState.value!.description,
-                                 likes: currentState.value!.likes,
-                                 dislikes: currentState.value!.dislikes,
-                                 readAccess: currentState.value!.readAccess,
-                                 archived: currentState.value!.archived,
-                                 externalLink: currentState.value!.externalLink,
-                                 memberMedia: currentState.value!.memberMedia,
-          );
+      if (event is ChangedPostAuthorId) {
+        newValue = currentState.value!.copyWith(authorId: event.value);
         yield SubmittablePostForm(value: newValue);
 
         return;

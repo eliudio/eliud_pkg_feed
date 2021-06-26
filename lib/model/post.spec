@@ -29,10 +29,9 @@
       "group": "general"
     },
     {
-      "fieldName": "author",
-      "displayName": "Author",
-      "fieldType": "MemberPublicInfo",
-      "association": true,
+      "fieldName": "authorId",
+      "displayName": "Author ID",
+      "fieldType": "String",
       "group": "member"
     },
     {

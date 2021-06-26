@@ -79,15 +79,15 @@ class DocumentIDPostFormError extends PostFormError {
 }
 
 
-class AuthorPostFormError extends PostFormError { 
-  const AuthorPostFormError({ String? message, PostModel? value }): super(message: message, value: value);
+class AuthorIdPostFormError extends PostFormError { 
+  const AuthorIdPostFormError({ String? message, PostModel? value }): super(message: message, value: value);
 
   @override
   List<Object?> get props => [ message, value ];
 
   @override
   String toString() {
-    return '''AuthorPostFormError {
+    return '''AuthorIdPostFormError {
       value: $value,
       message: $message,
     }''';

@@ -127,7 +127,7 @@ class _MyPostFormState extends State<MyPostForm> {
   late PostFormBloc _myFormBloc;
 
   final TextEditingController _documentIDController = TextEditingController();
-  String? _author;
+  final TextEditingController _authorIdController = TextEditingController();
   final TextEditingController _appIdController = TextEditingController();
   final TextEditingController _feedIdController = TextEditingController();
   final TextEditingController _postAppIdController = TextEditingController();
@@ -147,6 +147,7 @@ class _MyPostFormState extends State<MyPostForm> {
     super.initState();
     _myFormBloc = BlocProvider.of<PostFormBloc>(context);
     _documentIDController.addListener(_onDocumentIDChanged);
+    _authorIdController.addListener(_onAuthorIdChanged);
     _appIdController.addListener(_onAppIdChanged);
     _feedIdController.addListener(_onFeedIdChanged);
     _postAppIdController.addListener(_onPostAppIdChanged);
@@ -174,10 +175,10 @@ class _MyPostFormState extends State<MyPostForm> {
           _documentIDController.text = state.value!.documentID.toString();
         else
           _documentIDController.text = "";
-        if (state.value!.author != null)
-          _author= state.value!.author!.documentID;
+        if (state.value!.authorId != null)
+          _authorIdController.text = state.value!.authorId.toString();
         else
-          _author= "";
+          _authorIdController.text = "";
         if (state.value!.appId != null)
           _appIdController.text = state.value!.appId.toString();
         else
@@ -312,7 +313,7 @@ class _MyPostFormState extends State<MyPostForm> {
 
         children.add(
 
-                DropdownButtonComponentFactory().createNew(id: "memberPublicInfos", value: _author, trigger: _onAuthorSelected, optional: false),
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Author ID', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _authorIdController, keyboardType: TextInputType.text, validator: (_) => state is AuthorIdPostFormError ? state.message : null, hintText: null)
           );
 
 
@@ -349,7 +350,7 @@ class _MyPostFormState extends State<MyPostForm> {
                         BlocProvider.of<PostListBloc>(context).add(
                           UpdatePostList(value: state.value!.copyWith(
                               documentID: state.value!.documentID, 
-                              author: state.value!.author, 
+                              authorId: state.value!.authorId, 
                               timestamp: state.value!.timestamp, 
                               appId: state.value!.appId, 
                               feedId: state.value!.feedId, 
@@ -369,7 +370,7 @@ class _MyPostFormState extends State<MyPostForm> {
                         BlocProvider.of<PostListBloc>(context).add(
                           AddPostList(value: PostModel(
                               documentID: state.value!.documentID, 
-                              author: state.value!.author, 
+                              authorId: state.value!.authorId, 
                               timestamp: state.value!.timestamp, 
                               appId: state.value!.appId, 
                               feedId: state.value!.feedId, 
@@ -415,11 +416,8 @@ class _MyPostFormState extends State<MyPostForm> {
   }
 
 
-  void _onAuthorSelected(String? val) {
-    setState(() {
-      _author = val;
-    });
-    _myFormBloc.add(ChangedPostAuthor(value: val));
+  void _onAuthorIdChanged() {
+    _myFormBloc.add(ChangedPostAuthorId(value: _authorIdController.text));
   }
 
 
@@ -492,6 +490,7 @@ class _MyPostFormState extends State<MyPostForm> {
   @override
   void dispose() {
     _documentIDController.dispose();
+    _authorIdController.dispose();
     _appIdController.dispose();
     _feedIdController.dispose();
     _postAppIdController.dispose();

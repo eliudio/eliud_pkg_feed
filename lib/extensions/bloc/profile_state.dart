@@ -1,3 +1,4 @@
+import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_pkg_feed/model/member_profile_model.dart';
 import 'package:equatable/equatable.dart';
@@ -49,19 +50,19 @@ abstract class ProfileInitialised extends ProfileState {
 
 abstract class LoggedInProfileInitialized extends ProfileInitialised {
   final MemberProfileModel currentMemberProfileModel;
-  final MemberPublicInfoModel currentPublicMemberInfo;
+  final MemberModel currentMember;
   final List<String> defaultReadAccess;
 
   LoggedInProfileInitialized(
       String feedId,
       String appId,
       this.currentMemberProfileModel,
-      this.currentPublicMemberInfo,
+      this.currentMember,
       this.defaultReadAccess)
       : super(feedId, appId);
 
   @override
-  String? memberId() => currentMemberProfileModel.author != null ? currentMemberProfileModel.author!.documentID : '';
+  String? memberId() => currentMember.documentID!;
 }
 
 class LoggedInWatchingMyProfile extends LoggedInProfileInitialized {
@@ -71,10 +72,10 @@ class LoggedInWatchingMyProfile extends LoggedInProfileInitialized {
       {required String feedId,
       required String appId,
       required MemberProfileModel currentMemberProfileModel,
-      required MemberPublicInfoModel currentPublicMemberInfo,
+      required MemberModel currentMember,
       required List<String> defaultReadAccess,
       required this.onlyMyPosts})
-      : super(feedId, appId, currentMemberProfileModel, currentPublicMemberInfo,
+      : super(feedId, appId, currentMemberProfileModel, currentMember,
             defaultReadAccess);
 
   @override
@@ -82,12 +83,12 @@ class LoggedInWatchingMyProfile extends LoggedInProfileInitialized {
         feedId,
         appId,
         currentMemberProfileModel,
-        currentPublicMemberInfo,
+    currentMember,
         defaultReadAccess
       ];
 
   LoggedInWatchingMyProfile copyWith({required MemberProfileModel newMemberProfileModel}) {
-    return LoggedInWatchingMyProfile(feedId: this.feedId, appId: this.appId, currentMemberProfileModel: newMemberProfileModel, currentPublicMemberInfo: this.currentPublicMemberInfo, defaultReadAccess: this.defaultReadAccess, onlyMyPosts: this.onlyMyPosts, );
+    return LoggedInWatchingMyProfile(feedId: this.feedId, appId: this.appId, currentMemberProfileModel: newMemberProfileModel, currentMember: this.currentMember, defaultReadAccess: this.defaultReadAccess, onlyMyPosts: this.onlyMyPosts, );
   }
 
   @override
@@ -110,7 +111,7 @@ class LoggedInWatchingMyProfile extends LoggedInProfileInitialized {
     if ((currentMemberProfileModel.profileOverride != null) && (currentMemberProfileModel.profileOverride!.urlThumbnail != null)) {
       return currentMemberProfileModel.profileOverride!.urlThumbnail!;
     } else {
-      return currentPublicMemberInfo.photoURL!;
+      return currentMember.photoURL!;
     }
   }
 }
@@ -124,12 +125,12 @@ class LoggedInAndWatchingOtherProfile extends LoggedInProfileInitialized {
       {required String feedId,
       required String appId,
       required MemberProfileModel currentMemberProfileModel,
-      required MemberPublicInfoModel currentPublicMemberInfo,
+      required MemberModel currentMember,
       required List<String> defaultReadAccess,
       required this.feedProfileModel,
       required this.feedPublicInfoModel,
       required this.iFollowThisPerson})
-      : super(feedId, appId, currentMemberProfileModel, currentPublicMemberInfo,
+      : super(feedId, appId, currentMemberProfileModel, currentMember,
             defaultReadAccess);
 
   @override
@@ -137,7 +138,7 @@ class LoggedInAndWatchingOtherProfile extends LoggedInProfileInitialized {
         feedId,
         appId,
         currentMemberProfileModel,
-        currentPublicMemberInfo,
+    currentMember,
         defaultReadAccess,
         iFollowThisPerson,
         feedProfileModel,

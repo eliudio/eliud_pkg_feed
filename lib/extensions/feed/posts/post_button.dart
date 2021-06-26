@@ -1,3 +1,4 @@
+import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/random.dart';
@@ -22,7 +23,7 @@ class PostButton extends StatefulWidget {
   final FeedModel feedModel;
   final PostType postType;
   List<String> readAccess;
-  MemberPublicInfoModel author;
+  MemberModel author;
 
   PostButton(this.feedModel, this.postType, this.readAccess, this.author);
 
@@ -85,7 +86,7 @@ class _PostButtonState extends State<PostButton> {
     BlocProvider.of<PostListPagedBloc>(context).add(AddPostPaged(
         value: PostModel(
             documentID: newRandomKey(),
-            author: widget.author,
+            authorId: widget.author.documentID,
             appId: widget.feedModel.appId!,
             feedId: widget.feedModel.documentID!,
             likes: 0,

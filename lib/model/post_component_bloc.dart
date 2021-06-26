@@ -22,7 +22,6 @@ import 'package:eliud_pkg_feed/model/post_component_state.dart';
 import 'package:eliud_pkg_feed/model/post_repository.dart';
 import 'package:flutter/services.dart';
 
-
 class PostComponentBloc extends Bloc<PostComponentEvent, PostComponentState> {
   final PostRepository? postRepository;
 

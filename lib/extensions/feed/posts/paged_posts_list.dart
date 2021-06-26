@@ -1,4 +1,5 @@
 import 'package:eliud_core/core/navigate/page_param_helper.dart';
+import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/random.dart';
@@ -68,13 +69,13 @@ class _PagedPostsListState extends State<PagedPostsList> {
   void _addPost(
       {String? html,
       String? description,
-      MemberPublicInfoModel? author,
+      required String authorId,
       List<String>? readAccess,
       List<PostMediumModel>? postMemberMedia}) {
     BlocProvider.of<PostListPagedBloc>(context).add(AddPostPaged(
         value: PostModel(
             documentID: newRandomKey(),
-            author: author,
+            authorId: authorId,
             appId: widget.feedModel.appId!,
             feedId: widget.feedModel.documentID!,
             likes: 0,
@@ -87,7 +88,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
   }
 
   Widget _newPostForm(
-    MemberPublicInfoModel author,
+    MemberModel author,
     List<String> readAccess,
       LoggedInProfileInitialized profileInitialized,
       PageContextInfo pageContextInfo
@@ -128,7 +129,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
                 onPressed: (value) {
           if (value != null) {
             _addPost(description: value,
-                author: author,
+              authorId: author.documentID!,
                 readAccess: readAccess,
             );
           }
@@ -180,7 +181,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
         RichTextDialog.open(context, widget.feedModel.appId!,
             author.documentID!, readAccess, "Article", (newArticle) {
           _addPost(html: newArticle,
-            author: author,
+            authorId: author.documentID!,
             readAccess: readAccess,
           );
         }, 'Add article');
@@ -206,7 +207,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
               var photoURL = profileState.profileUrl();
               List<Widget> widgets = [];
               if (profileState is LoggedInProfileInitialized) {
-                widgets.add(_newPostForm(profileState.currentPublicMemberInfo,
+                widgets.add(_newPostForm(profileState.currentMember,
                     profileState.defaultReadAccess, profileState, pageContextInfo));
               }
               for (int i = 0; i < state.values.length; i++) {

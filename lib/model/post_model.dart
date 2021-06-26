@@ -53,7 +53,7 @@ PostArchiveStatus toPostArchiveStatus(int? index) {
 
 class PostModel {
   String? documentID;
-  MemberPublicInfoModel? author;
+  String? authorId;
   String? timestamp;
 
   // This is the identifier of the app to which this feed belongs
@@ -77,16 +77,16 @@ class PostModel {
   String? externalLink;
   List<PostMediumModel>? memberMedia;
 
-  PostModel({this.documentID, this.author, this.timestamp, this.appId, this.feedId, this.postAppId, this.postPageId, this.pageParameters, this.html, this.description, this.likes, this.dislikes, this.readAccess, this.archived, this.externalLink, this.memberMedia, })  {
+  PostModel({this.documentID, this.authorId, this.timestamp, this.appId, this.feedId, this.postAppId, this.postPageId, this.pageParameters, this.html, this.description, this.likes, this.dislikes, this.readAccess, this.archived, this.externalLink, this.memberMedia, })  {
     assert(documentID != null);
   }
 
-  PostModel copyWith({String? documentID, MemberPublicInfoModel? author, String? timestamp, String? appId, String? feedId, String? postAppId, String? postPageId, Map<String, dynamic>? pageParameters, String? html, String? description, int? likes, int? dislikes, List<String>? readAccess, PostArchiveStatus? archived, String? externalLink, List<PostMediumModel>? memberMedia, }) {
-    return PostModel(documentID: documentID ?? this.documentID, author: author ?? this.author, timestamp: timestamp ?? this.timestamp, appId: appId ?? this.appId, feedId: feedId ?? this.feedId, postAppId: postAppId ?? this.postAppId, postPageId: postPageId ?? this.postPageId, pageParameters: pageParameters ?? this.pageParameters, html: html ?? this.html, description: description ?? this.description, likes: likes ?? this.likes, dislikes: dislikes ?? this.dislikes, readAccess: readAccess ?? this.readAccess, archived: archived ?? this.archived, externalLink: externalLink ?? this.externalLink, memberMedia: memberMedia ?? this.memberMedia, );
+  PostModel copyWith({String? documentID, String? authorId, String? timestamp, String? appId, String? feedId, String? postAppId, String? postPageId, Map<String, dynamic>? pageParameters, String? html, String? description, int? likes, int? dislikes, List<String>? readAccess, PostArchiveStatus? archived, String? externalLink, List<PostMediumModel>? memberMedia, }) {
+    return PostModel(documentID: documentID ?? this.documentID, authorId: authorId ?? this.authorId, timestamp: timestamp ?? this.timestamp, appId: appId ?? this.appId, feedId: feedId ?? this.feedId, postAppId: postAppId ?? this.postAppId, postPageId: postPageId ?? this.postPageId, pageParameters: pageParameters ?? this.pageParameters, html: html ?? this.html, description: description ?? this.description, likes: likes ?? this.likes, dislikes: dislikes ?? this.dislikes, readAccess: readAccess ?? this.readAccess, archived: archived ?? this.archived, externalLink: externalLink ?? this.externalLink, memberMedia: memberMedia ?? this.memberMedia, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ author.hashCode ^ timestamp.hashCode ^ appId.hashCode ^ feedId.hashCode ^ postAppId.hashCode ^ postPageId.hashCode ^ pageParameters.hashCode ^ html.hashCode ^ description.hashCode ^ likes.hashCode ^ dislikes.hashCode ^ readAccess.hashCode ^ archived.hashCode ^ externalLink.hashCode ^ memberMedia.hashCode;
+  int get hashCode => documentID.hashCode ^ authorId.hashCode ^ timestamp.hashCode ^ appId.hashCode ^ feedId.hashCode ^ postAppId.hashCode ^ postPageId.hashCode ^ pageParameters.hashCode ^ html.hashCode ^ description.hashCode ^ likes.hashCode ^ dislikes.hashCode ^ readAccess.hashCode ^ archived.hashCode ^ externalLink.hashCode ^ memberMedia.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -94,7 +94,7 @@ class PostModel {
           other is PostModel &&
           runtimeType == other.runtimeType && 
           documentID == other.documentID &&
-          author == other.author &&
+          authorId == other.authorId &&
           timestamp == other.timestamp &&
           appId == other.appId &&
           feedId == other.feedId &&
@@ -115,12 +115,12 @@ class PostModel {
     String readAccessCsv = (readAccess == null) ? '' : readAccess!.join(', ');
     String memberMediaCsv = (memberMedia == null) ? '' : memberMedia!.join(', ');
 
-    return 'PostModel{documentID: $documentID, author: $author, timestamp: $timestamp, appId: $appId, feedId: $feedId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, html: $html, description: $description, likes: $likes, dislikes: $dislikes, readAccess: String[] { $readAccessCsv }, archived: $archived, externalLink: $externalLink, memberMedia: PostMedium[] { $memberMediaCsv }}';
+    return 'PostModel{documentID: $documentID, authorId: $authorId, timestamp: $timestamp, appId: $appId, feedId: $feedId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, html: $html, description: $description, likes: $likes, dislikes: $dislikes, readAccess: String[] { $readAccessCsv }, archived: $archived, externalLink: $externalLink, memberMedia: PostMedium[] { $memberMediaCsv }}';
   }
 
   PostEntity toEntity({String? appId}) {
     return PostEntity(
-          authorId: (author != null) ? author!.documentID : null, 
+          authorId: (authorId != null) ? authorId : null, 
           timestamp: timestamp, 
           appId: (appId != null) ? appId : null, 
           feedId: (feedId != null) ? feedId : null, 
@@ -144,6 +144,7 @@ class PostModel {
     if (entity == null) return null;
     return PostModel(
           documentID: documentID, 
+          authorId: entity.authorId, 
           timestamp: entity.timestamp.toString(), 
           appId: entity.appId, 
           feedId: entity.feedId, 
@@ -168,20 +169,9 @@ class PostModel {
   static Future<PostModel?> fromEntityPlus(String documentID, PostEntity? entity, { String? appId}) async {
     if (entity == null) return null;
 
-    MemberPublicInfoModel? authorHolder;
-    if (entity.authorId != null) {
-      try {
-          authorHolder = await memberPublicInfoRepository(appId: appId)!.get(entity.authorId);
-      } on Exception catch(e) {
-        print('Error whilst trying to initialise author');
-        print('Error whilst retrieving memberPublicInfo with id ${entity.authorId}');
-        print('Exception: $e');
-      }
-    }
-
     return PostModel(
           documentID: documentID, 
-          author: authorHolder, 
+          authorId: entity.authorId, 
           timestamp: entity.timestamp.toString(), 
           appId: entity.appId, 
           feedId: entity.feedId, 

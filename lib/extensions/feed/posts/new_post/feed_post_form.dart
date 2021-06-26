@@ -73,12 +73,11 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
   Widget build(BuildContext context) {
     var theState = AccessBloc.getState(context);
     if (theState is LoggedIn) {
-      var pubMember = theState.memberPublicInfoModel;
       var app = AccessBloc.app(context);
       if (app == null) return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'No app available');
         return StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogWidgetStyle().complexAckNackDialog(context,
             title: 'New Album',
-            child: _contents(context, widget.pageContextInfo, app, pubMember, theState),
+            child: _contents(context, widget.pageContextInfo, app, theState),
             onSelection: (value) {
           if (value == 0) {
             BlocProvider.of<FeedPostFormBloc>(context).add(SubmitPost());
@@ -89,7 +88,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
     }
   }
 
-  Widget _contents(BuildContext context, PageContextInfo pageContextInfo, AppModel app, MemberPublicInfoModel pubMember, AccessState theState) {
+  Widget _contents(BuildContext context, PageContextInfo pageContextInfo, AppModel app, AccessState theState) {
     return BlocBuilder<FeedPostFormBloc, FeedPostFormState>(
         builder: (context, state) {
     if (state is FeedPostFormLoaded) {
@@ -136,7 +135,6 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
           60,
           pageId,
           widget.memberId,
-          widget.photoURL,
           app.documentID!,
           widget.feedId,
         );

@@ -75,16 +75,16 @@ class ChangedPostDocumentID extends PostFormEvent {
   String toString() => 'ChangedPostDocumentID{ value: $value }';
 }
 
-class ChangedPostAuthor extends PostFormEvent {
+class ChangedPostAuthorId extends PostFormEvent {
   final String? value;
 
-  ChangedPostAuthor({this.value});
+  ChangedPostAuthorId({this.value});
 
   @override
   List<Object?> get props => [ value ];
 
   @override
-  String toString() => 'ChangedPostAuthor{ value: $value }';
+  String toString() => 'ChangedPostAuthorId{ value: $value }';
 }
 
 class ChangedPostTimestamp extends PostFormEvent {
