@@ -76,7 +76,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         return WatchingPublicProfile(feedId: feedId, appId: appId);
       }
     } else {
-      var defaultReadAccess = await PostFollowersMemberHelper.asFollowers(
+      var defaultReadAccess = await PostFollowersMemberHelper.asPublic(
           appId, currentMemberModel.documentID!);
       // Determine current member
       var currentMemberProfileModel = await getMemberProfileModel(
@@ -141,6 +141,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           author: pubMember,
           readAccess: readAccess,
           profile: "");
+      memberProfileRepository(appId: appId)!.add(memberProfileModel);
     }
     return memberProfileModel;
   }
