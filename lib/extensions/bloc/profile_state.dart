@@ -91,7 +91,7 @@ class LoggedInWatchingMyProfile extends LoggedInProfileInitialized {
   }
 
   @override
-  bool canEditThisProfile() => false;
+  bool canEditThisProfile() => true;
 
   @override
   MemberProfileModel? watchingThisProfile() => currentMemberProfileModel;

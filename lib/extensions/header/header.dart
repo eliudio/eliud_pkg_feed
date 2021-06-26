@@ -56,7 +56,7 @@ class _HeaderState extends State<Header> {
     } else {
       return DecorationImage(
           image: _backgroundPhoto(
-              context, memberProfileModel!.profileBackground!.url),
+              context, memberProfileModel.profileBackground!.url),
           fit: BoxFit.cover);
     }
   }
@@ -97,45 +97,54 @@ class _HeaderState extends State<Header> {
         // Add profile photo
         List<Widget> rows = [];
 
-        var progress = _progress(
-          Align(
-              alignment: Alignment.bottomCenter,
-              child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 110, maxHeight: 110),
-                child: AvatarHelper.avatar(
-                    context, 55, pageId, state.memberId()!, state.profileUrl(), state.appId, state.feedId),
-              )),
-          progressProfilePhoto,
-          110,
-          70,
-        );
-        var container = Container(
-            height: heightBackgroundPhoto(context),
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: ConstrainedBox(
+        var memberId = state.memberId();
+        if (memberId != null) {
+          var avatarWidget = _progress(
+            Align(
+                alignment: Alignment.bottomCenter,
+                child: ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 110, maxHeight: 110),
-                  child: state.canEditThisProfile()
-                      ? Stack(
-                          children: [
-                            progress,
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: EditableButton(
-                                  button: _button(
-                                      context,
-                                      state,
-                                      false,
-                                      'Update profile photo',
-                                      (progress) => setState(() {
-                                            progressProfilePhoto = progress;
-                                          }))),
-                            ) // EditableButton(editFunction: () {})
-                          ],
-                        )
-                      : progress),
-            ));
-        rows.add(container);
+                  child: AvatarHelper.avatar(
+                      context,
+                      55,
+                      pageId,
+                      memberId,
+                      state.profileUrl(),
+                      state.appId,
+                      state.feedId),
+                )),
+            progressProfilePhoto,
+            110,
+            70,
+          );
+          var container = Container(
+              height: heightBackgroundPhoto(context),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 110, maxHeight: 110),
+                    child: state.canEditThisProfile()
+                        ? Stack(
+                      children: [
+                        avatarWidget,
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: EditableButton(
+                              button: _button(
+                                  context,
+                                  state,
+                                  false,
+                                  'Update profile photo',
+                                      (progress) =>
+                                      setState(() {
+                                        progressProfilePhoto = progress;
+                                      }))),
+                        ) // EditableButton(editFunction: () {})
+                      ],
+                    )
+                        : avatarWidget),
+              ));
+          rows.add(container);
 
         // Add the background photo
         allRows.add(EditableWidget(
@@ -158,10 +167,12 @@ class _HeaderState extends State<Header> {
                 (progress) => setState(() {
                       progressProfileVideo = progress;
                     }))));
+        }
 
         var name;
-        if ((state.watchingThisProfile()!.author != null) && (state.watchingThisProfile() != null)) {
-          name = state.watchingThisProfile()!.author!.name!;
+        var watchingThisProfile = state.watchingThisProfile();
+        if ((watchingThisProfile != null) && (watchingThisProfile.author != null)) {
+          name = watchingThisProfile.author!.name!;
         } else {
           name = 'PUBLIC';
         }
@@ -198,8 +209,8 @@ class _HeaderState extends State<Header> {
     return MediaButtons.mediaButtons(
         context,
         profileInitialised.appId,
-        profileInitialised.watchingThisProfile()!.documentID!,
-        profileInitialised!.watchingThisProfile()!.readAccess!,
+        profileInitialised.watchingThisProfile()!.author!.documentID!,
+        profileInitialised.watchingThisProfile()!.readAccess!,
         allowCrop: !isBG,
         tooltip: tooltip, photoFeedbackFunction: (photo) {
       if (!isBG) {

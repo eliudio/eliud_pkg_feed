@@ -57,7 +57,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     var feedId = event.feedId;
     var appId = app.documentID!;
     if (currentMemberModel == null) {
-      if (pageContextInfo.parameters == null) {
+      if (pageContextInfo.parameters != null) {
         var param = pageContextInfo
             .parameters![SwitchMember.switchMemberFeedPageParameter];
         if (param == null) {
@@ -129,7 +129,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       String feedId, String memberId, List<String>? readAccess) async {
     var key = memberId + "-" + feedId;
     var memberProfileModel =
-        await memberProfileRepository(appId: appId)!.get(key);
+        await memberProfileRepository(appId: appId)!.get(key, onError: (exception) {} );
     if (memberProfileModel == null) {
       var pubMember =
           await memberPublicInfoRepository(appId: appId)!.get(memberId);
@@ -167,7 +167,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             .withCondition(
                 EliudQueryCondition('feedId', isEqualTo: state.feedId))
             .withCondition(EliudQueryCondition('readAccess',
-                arrayContainsAny: [state.currentPublicMemberInfo.documentID!]));
+                arrayContainsAny: [state.currentPublicMemberInfo.documentID!, 'PUBLIC']));
       } else {
         // query where I'm the author. We could include that we're part of the readAccess but that's obsolete
         return EliudQuery()

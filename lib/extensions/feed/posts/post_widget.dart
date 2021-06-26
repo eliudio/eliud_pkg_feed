@@ -115,7 +115,7 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   Widget _enterComment(BuildContext context, PostDetails postDetail) {
-    if (widget.isEditable) {
+    if (!widget.isEditable) {
       return Container();
     } else {
       return Row(children: [

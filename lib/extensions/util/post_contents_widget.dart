@@ -39,7 +39,7 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return _contents(memberID: widget.memberID!, postModel: widget.postModel,
+    return _contents(memberID: widget.memberID, postModel: widget.postModel,
         accessBloc: widget.accessBloc, parentPageId: widget.parentPageId);
   }
 

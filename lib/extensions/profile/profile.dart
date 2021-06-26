@@ -34,23 +34,24 @@ class _ProfileState extends State<Profile> {
       if (state is ProfileInitialised) {
         var profile = state.watchingThisProfile();
         var html = state.profileHTML();
+        var child = StyleRegistry.registry()
+            .styleWithContext(context)
+            .frontEndStyle()
+            .containerStyle()
+            .topicContainer(context,
+            children: ([
+              html == null || html.length == 0
+                  ? Container(
+                  width: double.infinity,
+                  height: 50,
+                  child: Text("No profile"))
+                  : HtmlWidget(html)
+            ]));
         if ((profile != null) && (profile.author != null) && (profile.author!.documentID != null) && (state.canEditThisProfile())) {
           var ownerId = profile.author!.documentID!;
           var readAccess = state.watchingThisProfile()!.readAccess!;
           return EditableWidget(
-              child: StyleRegistry.registry()
-                  .styleWithContext(context)
-                  .frontEndStyle()
-                  .containerStyle()
-                  .topicContainer(context,
-                  children: ([
-                    html == null || html.length == 0
-                        ? Container(
-                        width: double.infinity,
-                        height: 50,
-                        child: Text("No profile"))
-                        : HtmlWidget(html)
-                  ])),
+              child: child,
               button: getEditIcon(
                 onPressed: () {
                   RichTextDialog.open(
@@ -67,7 +68,7 @@ class _ProfileState extends State<Profile> {
               )
           );
         } else {
-          return HtmlWidget(html);
+          return child;
         }
       }
       return StyleRegistry.registry()

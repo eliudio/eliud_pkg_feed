@@ -6,8 +6,7 @@ import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:flutter/material.dart';
 
 class AvatarHelper {
-  static Future<ProfileAttributes> _getFutureProfileAttributes(
-      String memberId, String authorId, String appId, String feedId) async {
+  static Future<ProfileAttributes> _getFutureProfileAttributes(String authorId, String appId, String feedId) async {
     var key = authorId + "-" + feedId;
     var memberProfileModel =
         await memberProfileRepository(appId: appId)!.get(key);
@@ -30,7 +29,7 @@ class AvatarHelper {
             radius: radius,
             fallBackURLProvider: () => url,
             externalProfileURLProvider: () =>
-                _getFutureProfileAttributes(memberId, memberId, appId, feedId),
+                _getFutureProfileAttributes(memberId, appId, feedId),
             onPressed: () {
               SwitchMember.switchMember(context, pageId, memberId);
             });
