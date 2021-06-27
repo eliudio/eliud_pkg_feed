@@ -175,6 +175,22 @@ class ProfileOverrideMemberProfileFormError extends MemberProfileFormError {
 }
 
 
+class NameOverrideMemberProfileFormError extends MemberProfileFormError { 
+  const NameOverrideMemberProfileFormError({ String? message, MemberProfileModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''NameOverrideMemberProfileFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
 class ReadAccessMemberProfileFormError extends MemberProfileFormError { 
   const ReadAccessMemberProfileFormError({ String? message, MemberProfileModel? value }): super(message: message, value: value);
 

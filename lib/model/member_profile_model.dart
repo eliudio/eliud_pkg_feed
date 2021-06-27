@@ -45,18 +45,19 @@ class MemberProfileModel {
   String? profile;
   MemberMediumModel? profileBackground;
   MemberMediumModel? profileOverride;
+  String? nameOverride;
   List<String>? readAccess;
 
-  MemberProfileModel({this.documentID, this.appId, this.feedId, this.author, this.profile, this.profileBackground, this.profileOverride, this.readAccess, })  {
+  MemberProfileModel({this.documentID, this.appId, this.feedId, this.author, this.profile, this.profileBackground, this.profileOverride, this.nameOverride, this.readAccess, })  {
     assert(documentID != null);
   }
 
-  MemberProfileModel copyWith({String? documentID, String? appId, String? feedId, MemberPublicInfoModel? author, String? profile, MemberMediumModel? profileBackground, MemberMediumModel? profileOverride, List<String>? readAccess, }) {
-    return MemberProfileModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, feedId: feedId ?? this.feedId, author: author ?? this.author, profile: profile ?? this.profile, profileBackground: profileBackground ?? this.profileBackground, profileOverride: profileOverride ?? this.profileOverride, readAccess: readAccess ?? this.readAccess, );
+  MemberProfileModel copyWith({String? documentID, String? appId, String? feedId, MemberPublicInfoModel? author, String? profile, MemberMediumModel? profileBackground, MemberMediumModel? profileOverride, String? nameOverride, List<String>? readAccess, }) {
+    return MemberProfileModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, feedId: feedId ?? this.feedId, author: author ?? this.author, profile: profile ?? this.profile, profileBackground: profileBackground ?? this.profileBackground, profileOverride: profileOverride ?? this.profileOverride, nameOverride: nameOverride ?? this.nameOverride, readAccess: readAccess ?? this.readAccess, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ appId.hashCode ^ feedId.hashCode ^ author.hashCode ^ profile.hashCode ^ profileBackground.hashCode ^ profileOverride.hashCode ^ readAccess.hashCode;
+  int get hashCode => documentID.hashCode ^ appId.hashCode ^ feedId.hashCode ^ author.hashCode ^ profile.hashCode ^ profileBackground.hashCode ^ profileOverride.hashCode ^ nameOverride.hashCode ^ readAccess.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -70,13 +71,14 @@ class MemberProfileModel {
           profile == other.profile &&
           profileBackground == other.profileBackground &&
           profileOverride == other.profileOverride &&
+          nameOverride == other.nameOverride &&
           ListEquality().equals(readAccess, other.readAccess);
 
   @override
   String toString() {
     String readAccessCsv = (readAccess == null) ? '' : readAccess!.join(', ');
 
-    return 'MemberProfileModel{documentID: $documentID, appId: $appId, feedId: $feedId, author: $author, profile: $profile, profileBackground: $profileBackground, profileOverride: $profileOverride, readAccess: String[] { $readAccessCsv }}';
+    return 'MemberProfileModel{documentID: $documentID, appId: $appId, feedId: $feedId, author: $author, profile: $profile, profileBackground: $profileBackground, profileOverride: $profileOverride, nameOverride: $nameOverride, readAccess: String[] { $readAccessCsv }}';
   }
 
   MemberProfileEntity toEntity({String? appId}) {
@@ -87,6 +89,7 @@ class MemberProfileModel {
           profile: (profile != null) ? profile : null, 
           profileBackgroundId: (profileBackground != null) ? profileBackground!.documentID : null, 
           profileOverrideId: (profileOverride != null) ? profileOverride!.documentID : null, 
+          nameOverride: (nameOverride != null) ? nameOverride : null, 
           readAccess: (readAccess != null) ? readAccess : null, 
     );
   }
@@ -98,6 +101,7 @@ class MemberProfileModel {
           appId: entity.appId, 
           feedId: entity.feedId, 
           profile: entity.profile, 
+          nameOverride: entity.nameOverride, 
           readAccess: entity.readAccess, 
     );
   }
@@ -146,6 +150,7 @@ class MemberProfileModel {
           profile: entity.profile, 
           profileBackground: profileBackgroundHolder, 
           profileOverride: profileOverrideHolder, 
+          nameOverride: entity.nameOverride, 
           readAccess: entity.readAccess, 
     );
   }

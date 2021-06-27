@@ -28,18 +28,19 @@ class MemberProfileEntity {
   final String? profile;
   final String? profileBackgroundId;
   final String? profileOverrideId;
+  final String? nameOverride;
   final List<String>? readAccess;
 
-  MemberProfileEntity({this.appId, this.feedId, this.authorId, this.profile, this.profileBackgroundId, this.profileOverrideId, this.readAccess, });
+  MemberProfileEntity({this.appId, this.feedId, this.authorId, this.profile, this.profileBackgroundId, this.profileOverrideId, this.nameOverride, this.readAccess, });
 
 
-  List<Object?> get props => [appId, feedId, authorId, profile, profileBackgroundId, profileOverrideId, readAccess, ];
+  List<Object?> get props => [appId, feedId, authorId, profile, profileBackgroundId, profileOverrideId, nameOverride, readAccess, ];
 
   @override
   String toString() {
     String readAccessCsv = (readAccess == null) ? '' : readAccess!.join(', ');
 
-    return 'MemberProfileEntity{appId: $appId, feedId: $feedId, authorId: $authorId, profile: $profile, profileBackgroundId: $profileBackgroundId, profileOverrideId: $profileOverrideId, readAccess: String[] { $readAccessCsv }}';
+    return 'MemberProfileEntity{appId: $appId, feedId: $feedId, authorId: $authorId, profile: $profile, profileBackgroundId: $profileBackgroundId, profileOverrideId: $profileOverrideId, nameOverride: $nameOverride, readAccess: String[] { $readAccessCsv }}';
   }
 
   static MemberProfileEntity? fromMap(Map? map) {
@@ -52,6 +53,7 @@ class MemberProfileEntity {
       profile: map['profile'], 
       profileBackgroundId: map['profileBackgroundId'], 
       profileOverrideId: map['profileOverrideId'], 
+      nameOverride: map['nameOverride'], 
       readAccess: map['readAccess'] == null ? null : List.from(map['readAccess']), 
     );
   }
@@ -70,6 +72,8 @@ class MemberProfileEntity {
       else theDocument["profileBackgroundId"] = null;
     if (profileOverrideId != null) theDocument["profileOverrideId"] = profileOverrideId;
       else theDocument["profileOverrideId"] = null;
+    if (nameOverride != null) theDocument["nameOverride"] = nameOverride;
+      else theDocument["nameOverride"] = null;
     if (readAccess != null) theDocument["readAccess"] = readAccess!.toList();
       else theDocument["readAccess"] = null;
     return theDocument;

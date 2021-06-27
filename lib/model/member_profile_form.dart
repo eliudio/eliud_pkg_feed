@@ -128,6 +128,7 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
   final TextEditingController _profileController = TextEditingController();
   String? _profileBackground;
   String? _profileOverride;
+  final TextEditingController _nameOverrideController = TextEditingController();
 
 
   _MyMemberProfileFormState(this.formAction);
@@ -140,6 +141,7 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
     _appIdController.addListener(_onAppIdChanged);
     _feedIdController.addListener(_onFeedIdChanged);
     _profileController.addListener(_onProfileChanged);
+    _nameOverrideController.addListener(_onNameOverrideChanged);
   }
 
   @override
@@ -181,6 +183,10 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
           _profileOverride= state.value!.profileOverride!.documentID;
         else
           _profileOverride= "";
+        if (state.value!.nameOverride != null)
+          _nameOverrideController.text = state.value!.nameOverride.toString();
+        else
+          _nameOverrideController.text = "";
       }
       if (state is MemberProfileFormInitialized) {
         List<Widget> children = [];
@@ -231,6 +237,11 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
                   StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Profile', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _profileController, keyboardType: TextInputType.text, validator: (_) => state is ProfileMemberProfileFormError ? state.message : null, hintText: null)
           );
 
+        children.add(
+
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Name override', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _nameOverrideController, keyboardType: TextInputType.text, validator: (_) => state is NameOverrideMemberProfileFormError ? state.message : null, hintText: null)
+          );
+
 
         children.add(Container(height: 20.0));
         children.add(StyleRegistry.registry().styleWithContext(context).adminFormStyle().divider(context));
@@ -274,6 +285,7 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
                               profile: state.value!.profile, 
                               profileBackground: state.value!.profileBackground, 
                               profileOverride: state.value!.profileOverride, 
+                              nameOverride: state.value!.nameOverride, 
                               readAccess: state.value!.readAccess, 
                         )));
                       } else {
@@ -286,6 +298,7 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
                               profile: state.value!.profile, 
                               profileBackground: state.value!.profileBackground, 
                               profileOverride: state.value!.profileOverride, 
+                              nameOverride: state.value!.nameOverride, 
                               readAccess: state.value!.readAccess, 
                           )));
                       }
@@ -357,6 +370,11 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
   }
 
 
+  void _onNameOverrideChanged() {
+    _myFormBloc.add(ChangedMemberProfileNameOverride(value: _nameOverrideController.text));
+  }
+
+
   void _onReadAccessChanged(value) {
     _myFormBloc.add(ChangedMemberProfileReadAccess(value: value));
     setState(() {});
@@ -370,6 +388,7 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
     _appIdController.dispose();
     _feedIdController.dispose();
     _profileController.dispose();
+    _nameOverrideController.dispose();
     super.dispose();
   }
 

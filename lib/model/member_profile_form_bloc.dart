@@ -56,6 +56,7 @@ class MemberProfileFormBloc extends Bloc<MemberProfileFormEvent, MemberProfileFo
                                  appId: "",
                                  feedId: "",
                                  profile: "",
+                                 nameOverride: "",
                                  readAccess: [],
 
         ));
@@ -105,6 +106,7 @@ class MemberProfileFormBloc extends Bloc<MemberProfileFormEvent, MemberProfileFo
                                  profile: currentState.value!.profile,
                                  profileBackground: currentState.value!.profileBackground,
                                  profileOverride: currentState.value!.profileOverride,
+                                 nameOverride: currentState.value!.nameOverride,
                                  readAccess: currentState.value!.readAccess,
           );
         yield SubmittableMemberProfileForm(value: newValue);
@@ -129,6 +131,7 @@ class MemberProfileFormBloc extends Bloc<MemberProfileFormEvent, MemberProfileFo
                                  profile: currentState.value!.profile,
                                  profileBackground: null,
                                  profileOverride: currentState.value!.profileOverride,
+                                 nameOverride: currentState.value!.nameOverride,
                                  readAccess: currentState.value!.readAccess,
           );
         yield SubmittableMemberProfileForm(value: newValue);
@@ -147,8 +150,15 @@ class MemberProfileFormBloc extends Bloc<MemberProfileFormEvent, MemberProfileFo
                                  profile: currentState.value!.profile,
                                  profileBackground: currentState.value!.profileBackground,
                                  profileOverride: null,
+                                 nameOverride: currentState.value!.nameOverride,
                                  readAccess: currentState.value!.readAccess,
           );
+        yield SubmittableMemberProfileForm(value: newValue);
+
+        return;
+      }
+      if (event is ChangedMemberProfileNameOverride) {
+        newValue = currentState.value!.copyWith(nameOverride: event.value);
         yield SubmittableMemberProfileForm(value: newValue);
 
         return;

@@ -72,6 +72,12 @@
       "optional": true
     },
     {
+      "fieldName": "nameOverride",
+      "displayName": "Name override",
+      "fieldType": "String",
+      "group": "general"
+    },
+    {
       "fieldName": "readAccess",
       "displayName": "Members that can read this profile. Array can contain 'PUBLIC'",
       "fieldType": "String",

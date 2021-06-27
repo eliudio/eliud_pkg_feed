@@ -15,6 +15,16 @@ import 'package:eliud_pkg_follow/tools/follower_helper.dart';
 import 'profile_event.dart';
 import 'profile_state.dart';
 
+/*
+ * Different member collections:
+ * - MemberRepository: core collection where all user data is stored. This data is only accessible to the member and the owner
+ * - MemberPublicInfoRepository: core collection where the user can store data he allows to share with others, public of followers only at his choice. This collection is created by firebase functions and is not guaranteed to exist
+ * - MemberProfileRepository: feed specific collection used to store profile information. The user can choose a different name and avatar for his feed.
+ *
+ * The rules for using member information:
+ * When logging on, the MemberRepository data is copied into the MemberProfileRepository. A reference to the MemberPubicInfoRepository is
+ * added, when available.
+ */
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ProfileBloc() : super(ProfileStateUninitialized());
 
@@ -66,7 +76,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         } else {
           var feedPublicInfoModel = await getMemberPublicInfo(param);
           var feedProfileModel =
-              await getMemberProfileModel(appId, feedId, param, null);
+              await getMemberProfileModelWithPublicInfo(false, appId, feedId, feedPublicInfoModel, null);
           return NotLoggedInWatchingSomeone(
               appId: appId,
               feedId: feedId,
@@ -80,14 +90,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       var defaultReadAccess = await PostFollowersMemberHelper.asPublic(
           appId, currentMemberModel.documentID!);
       // Determine current member
-      var currentMemberProfileModel = await getMemberProfileModel(
-          appId, feedId, currentMemberModel.documentID!, defaultReadAccess);
       var param;
       if (pageContextInfo.parameters != null) {
         param = pageContextInfo
             .parameters![SwitchMember.switchMemberFeedPageParameter];
       }
+
       if (param == null) {
+        var currentMemberProfileModel = await getMemberProfileModelWithCurrentMemberModel(true,
+            appId, feedId, currentMemberModel, defaultReadAccess);
         return LoggedInWatchingMyProfile(
             feedId: feedId,
             appId: appId,
@@ -96,11 +107,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             defaultReadAccess: defaultReadAccess,
             onlyMyPosts: false);
       } else {
+        var currentMemberProfileModel = await getMemberProfileModelWithCurrentMemberModel(false,
+            appId, feedId, currentMemberModel, defaultReadAccess);
         var following = await FollowerHelper.following(
             currentMemberModel.documentID!, appId);
         var feedPublicInfoModel = await getMemberPublicInfo(param);
-        var feedProfileModel = await getMemberProfileModel(
-            appId, feedId, param, defaultReadAccess);
+        var feedProfileModel = await getMemberProfileModelWithPublicInfo(false,
+            appId, feedId, param, null);
         return LoggedInAndWatchingOtherProfile(
             feedId: feedId,
             appId: appId,
@@ -124,14 +137,28 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     return member;
   }
 
-  static Future<MemberProfileModel> getMemberProfileModel(String appId,
-      String feedId, String memberId, List<String>? readAccess) async {
+  static Future<MemberProfileModel> getMemberProfileModelWithCurrentMemberModel(bool create, String appId,
+      String feedId, MemberModel member, List<String>? readAccess, {MemberPublicInfoModel? pubMemberModel}) async {
+    return getMemberProfileModel(create, appId, feedId, member.documentID!, member.photoURL!, member.name!, readAccess, pubMemberModel: pubMemberModel);
+  }
+
+  static Future<MemberProfileModel> getMemberProfileModelWithPublicInfo(bool create, String appId,
+      String feedId, MemberPublicInfoModel member, List<String>? readAccess) async {
+    return getMemberProfileModel(create, appId, feedId, member.documentID!, member.photoURL!, member.name!, readAccess, pubMemberModel: member);
+  }
+
+  static Future<MemberProfileModel> getMemberProfileModel(bool create, String appId,
+      String feedId, String memberId, String photoURL, String name, List<String>? readAccess, {MemberPublicInfoModel? pubMemberModel}) async {
     var key = memberId + "-" + feedId;
     var memberProfileModel =
         await memberProfileRepository(appId: appId)!.get(key, onError: (exception) {} );
     if (memberProfileModel == null) {
-      var pubMember =
-          await memberPublicInfoRepository(appId: appId)!.get(memberId);
+      var pubMember;
+      if (pubMemberModel == null) {
+        pubMember = await memberPublicInfoRepository(appId: appId)!.get(memberId);
+      } else {
+        pubMember = pubMemberModel;
+      }
       // create default profile
       memberProfileModel = MemberProfileModel(
           documentID: key,
@@ -139,8 +166,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           feedId: feedId,
           author: pubMember,
           readAccess: readAccess,
-          profile: pubMember!.photoURL);
-      memberProfileRepository(appId: appId)!.add(memberProfileModel);
+          profile: photoURL,
+          nameOverride: name
+      );
+      if (create) {
+        memberProfileRepository(appId: appId)!.add(memberProfileModel);
+      }
     }
     return memberProfileModel;
   }
