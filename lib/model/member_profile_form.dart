@@ -124,10 +124,10 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
   final TextEditingController _documentIDController = TextEditingController();
   final TextEditingController _appIdController = TextEditingController();
   final TextEditingController _feedIdController = TextEditingController();
-  String? _author;
+  final TextEditingController _authorIdController = TextEditingController();
   final TextEditingController _profileController = TextEditingController();
   String? _profileBackground;
-  String? _profileOverride;
+  final TextEditingController _profileOverrideController = TextEditingController();
   final TextEditingController _nameOverrideController = TextEditingController();
 
 
@@ -140,7 +140,9 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
     _documentIDController.addListener(_onDocumentIDChanged);
     _appIdController.addListener(_onAppIdChanged);
     _feedIdController.addListener(_onFeedIdChanged);
+    _authorIdController.addListener(_onAuthorIdChanged);
     _profileController.addListener(_onProfileChanged);
+    _profileOverrideController.addListener(_onProfileOverrideChanged);
     _nameOverrideController.addListener(_onNameOverrideChanged);
   }
 
@@ -167,10 +169,10 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
           _feedIdController.text = state.value!.feedId.toString();
         else
           _feedIdController.text = "";
-        if (state.value!.author != null)
-          _author= state.value!.author!.documentID;
+        if (state.value!.authorId != null)
+          _authorIdController.text = state.value!.authorId.toString();
         else
-          _author= "";
+          _authorIdController.text = "";
         if (state.value!.profile != null)
           _profileController.text = state.value!.profile.toString();
         else
@@ -180,9 +182,9 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
         else
           _profileBackground= "";
         if (state.value!.profileOverride != null)
-          _profileOverride= state.value!.profileOverride!.documentID;
+          _profileOverrideController.text = state.value!.profileOverride.toString();
         else
-          _profileOverride= "";
+          _profileOverrideController.text = "";
         if (state.value!.nameOverride != null)
           _nameOverrideController.text = state.value!.nameOverride.toString();
         else
@@ -198,7 +200,7 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
 
         children.add(
 
-                DropdownButtonComponentFactory().createNew(id: "memberPublicInfos", value: _author, trigger: _onAuthorSelected, optional: false),
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Author ID', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _authorIdController, keyboardType: TextInputType.text, validator: (_) => state is AuthorIdMemberProfileFormError ? state.message : null, hintText: null)
           );
 
         children.add(
@@ -208,7 +210,7 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
 
         children.add(
 
-                DropdownButtonComponentFactory().createNew(id: "memberMediums", value: _profileOverride, trigger: _onProfileOverrideSelected, optional: true),
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Profile Override', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _profileOverrideController, keyboardType: TextInputType.text, validator: (_) => state is ProfileOverrideMemberProfileFormError ? state.message : null, hintText: null)
           );
 
 
@@ -281,7 +283,7 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
                               documentID: state.value!.documentID, 
                               appId: state.value!.appId, 
                               feedId: state.value!.feedId, 
-                              author: state.value!.author, 
+                              authorId: state.value!.authorId, 
                               profile: state.value!.profile, 
                               profileBackground: state.value!.profileBackground, 
                               profileOverride: state.value!.profileOverride, 
@@ -294,7 +296,7 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
                               documentID: state.value!.documentID, 
                               appId: state.value!.appId, 
                               feedId: state.value!.feedId, 
-                              author: state.value!.author, 
+                              authorId: state.value!.authorId, 
                               profile: state.value!.profile, 
                               profileBackground: state.value!.profileBackground, 
                               profileOverride: state.value!.profileOverride, 
@@ -341,11 +343,8 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
   }
 
 
-  void _onAuthorSelected(String? val) {
-    setState(() {
-      _author = val;
-    });
-    _myFormBloc.add(ChangedMemberProfileAuthor(value: val));
+  void _onAuthorIdChanged() {
+    _myFormBloc.add(ChangedMemberProfileAuthorId(value: _authorIdController.text));
   }
 
 
@@ -362,11 +361,8 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
   }
 
 
-  void _onProfileOverrideSelected(String? val) {
-    setState(() {
-      _profileOverride = val;
-    });
-    _myFormBloc.add(ChangedMemberProfileProfileOverride(value: val));
+  void _onProfileOverrideChanged() {
+    _myFormBloc.add(ChangedMemberProfileProfileOverride(value: _profileOverrideController.text));
   }
 
 
@@ -387,7 +383,9 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
     _documentIDController.dispose();
     _appIdController.dispose();
     _feedIdController.dispose();
+    _authorIdController.dispose();
     _profileController.dispose();
+    _profileOverrideController.dispose();
     _nameOverrideController.dispose();
     super.dispose();
   }

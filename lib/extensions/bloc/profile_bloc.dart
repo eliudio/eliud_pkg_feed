@@ -41,7 +41,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         yield await _updated(
             myState,
             myState.currentMemberProfileModel
-                .copyWith(profileOverride: event.value));
+                .copyWith(profileOverride: event.value.url));
       } else if (event is ProfileBGPhotoChangedProfileEvent) {
         yield await _updated(
             myState,
@@ -138,39 +138,33 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   }
 
   static Future<MemberProfileModel> getMemberProfileModelWithCurrentMemberModel(bool create, String appId,
-      String feedId, MemberModel member, List<String>? readAccess, {MemberPublicInfoModel? pubMemberModel}) async {
-    return getMemberProfileModel(create, appId, feedId, member.documentID!, member.photoURL!, member.name!, readAccess, pubMemberModel: pubMemberModel);
+      String feedId, MemberModel member, List<String>? readAccess) async {
+    return getMemberProfileModel(create, appId, feedId, member.documentID!, member.photoURL!, member.name!, readAccess);
   }
 
   static Future<MemberProfileModel> getMemberProfileModelWithPublicInfo(bool create, String appId,
       String feedId, MemberPublicInfoModel member, List<String>? readAccess) async {
-    return getMemberProfileModel(create, appId, feedId, member.documentID!, member.photoURL!, member.name!, readAccess, pubMemberModel: member);
+    return getMemberProfileModel(create, appId, feedId, member.documentID!, member.photoURL!, member.name!, readAccess);
   }
 
   static Future<MemberProfileModel> getMemberProfileModel(bool create, String appId,
-      String feedId, String memberId, String photoURL, String name, List<String>? readAccess, {MemberPublicInfoModel? pubMemberModel}) async {
+      String feedId, String memberId, String photoURL, String name, List<String>? readAccess) async {
     var key = memberId + "-" + feedId;
     var memberProfileModel =
         await memberProfileRepository(appId: appId)!.get(key, onError: (exception) {} );
     if (memberProfileModel == null) {
-      var pubMember;
-      if (pubMemberModel == null) {
-        pubMember = await memberPublicInfoRepository(appId: appId)!.get(memberId);
-      } else {
-        pubMember = pubMemberModel;
-      }
       // create default profile
       memberProfileModel = MemberProfileModel(
           documentID: key,
           appId: appId,
           feedId: feedId,
-          author: pubMember,
+          authorId: memberId,
           readAccess: readAccess,
-          profile: photoURL,
+          profileOverride: photoURL,
           nameOverride: name
       );
       if (create) {
-        memberProfileRepository(appId: appId)!.add(memberProfileModel);
+        await memberProfileRepository(appId: appId)!.add(memberProfileModel);
       }
     }
     return memberProfileModel;

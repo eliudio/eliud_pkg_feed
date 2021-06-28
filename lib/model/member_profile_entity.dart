@@ -27,20 +27,20 @@ class MemberProfileEntity {
   final String? authorId;
   final String? profile;
   final String? profileBackgroundId;
-  final String? profileOverrideId;
+  final String? profileOverride;
   final String? nameOverride;
   final List<String>? readAccess;
 
-  MemberProfileEntity({this.appId, this.feedId, this.authorId, this.profile, this.profileBackgroundId, this.profileOverrideId, this.nameOverride, this.readAccess, });
+  MemberProfileEntity({this.appId, this.feedId, this.authorId, this.profile, this.profileBackgroundId, this.profileOverride, this.nameOverride, this.readAccess, });
 
 
-  List<Object?> get props => [appId, feedId, authorId, profile, profileBackgroundId, profileOverrideId, nameOverride, readAccess, ];
+  List<Object?> get props => [appId, feedId, authorId, profile, profileBackgroundId, profileOverride, nameOverride, readAccess, ];
 
   @override
   String toString() {
     String readAccessCsv = (readAccess == null) ? '' : readAccess!.join(', ');
 
-    return 'MemberProfileEntity{appId: $appId, feedId: $feedId, authorId: $authorId, profile: $profile, profileBackgroundId: $profileBackgroundId, profileOverrideId: $profileOverrideId, nameOverride: $nameOverride, readAccess: String[] { $readAccessCsv }}';
+    return 'MemberProfileEntity{appId: $appId, feedId: $feedId, authorId: $authorId, profile: $profile, profileBackgroundId: $profileBackgroundId, profileOverride: $profileOverride, nameOverride: $nameOverride, readAccess: String[] { $readAccessCsv }}';
   }
 
   static MemberProfileEntity? fromMap(Map? map) {
@@ -52,7 +52,7 @@ class MemberProfileEntity {
       authorId: map['authorId'], 
       profile: map['profile'], 
       profileBackgroundId: map['profileBackgroundId'], 
-      profileOverrideId: map['profileOverrideId'], 
+      profileOverride: map['profileOverride'], 
       nameOverride: map['nameOverride'], 
       readAccess: map['readAccess'] == null ? null : List.from(map['readAccess']), 
     );
@@ -70,8 +70,8 @@ class MemberProfileEntity {
       else theDocument["profile"] = null;
     if (profileBackgroundId != null) theDocument["profileBackgroundId"] = profileBackgroundId;
       else theDocument["profileBackgroundId"] = null;
-    if (profileOverrideId != null) theDocument["profileOverrideId"] = profileOverrideId;
-      else theDocument["profileOverrideId"] = null;
+    if (profileOverride != null) theDocument["profileOverride"] = profileOverride;
+      else theDocument["profileOverride"] = null;
     if (nameOverride != null) theDocument["nameOverride"] = nameOverride;
       else theDocument["nameOverride"] = null;
     if (readAccess != null) theDocument["readAccess"] = readAccess!.toList();

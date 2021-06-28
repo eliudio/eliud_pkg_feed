@@ -168,31 +168,23 @@ class _HeaderState extends State<Header> {
                     }))));
         }
 
-        var name;
+        var nameX;
         var watchingThisProfile = state.watchingThisProfile();
-        if ((watchingThisProfile != null) && (watchingThisProfile.author != null)) {
-          name = watchingThisProfile.author!.name!;
-        } else {
-          name = 'PUBLIC';
+        if (watchingThisProfile != null) {
+          // Add the name
+          allRows.add(Align(
+              alignment: Alignment.bottomCenter,
+              child: StyleRegistry.registry()
+                  .styleWithContext(context)
+                  .frontEndStyle()
+                  .containerStyle()
+                  .actionContainer(context,
+                  child: Container(
+                      padding: EdgeInsets.all(10.0),
+                      child: AvatarHelper.nameH1(
+                          context, watchingThisProfile.authorId!, state.appId,
+                          state.feedId)))));
         }
-        // Add the name
-        allRows.add(Align(
-            alignment: Alignment.bottomCenter,
-            child: StyleRegistry.registry()
-                .styleWithContext(context)
-                .frontEndStyle()
-                .containerStyle()
-                .actionContainer(context,
-                    child: Container(
-                        padding: EdgeInsets.all(10.0),
-                        child: StyleRegistry.registry()
-                            .styleWithContext(context)
-                            .frontEndStyle()
-                            .textStyle()
-                            .h1(
-                              context,
-                              name,
-                            )))));
         return Column(children: allRows);
       }
       return StyleRegistry.registry()
@@ -208,7 +200,7 @@ class _HeaderState extends State<Header> {
     return MediaButtons.mediaButtons(
         context,
         profileInitialised.appId,
-        profileInitialised.watchingThisProfile()!.author!.documentID!,
+        profileInitialised.watchingThisProfile()!.authorId!,
         profileInitialised.watchingThisProfile()!.readAccess!,
         allowCrop: !isBG,
         tooltip: tooltip, photoFeedbackFunction: (photo) {

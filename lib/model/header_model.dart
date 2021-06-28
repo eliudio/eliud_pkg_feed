@@ -81,6 +81,7 @@ class HeaderModel {
 
   static HeaderModel? fromEntity(String documentID, HeaderEntity? entity) {
     if (entity == null) return null;
+    var counter = 0;
     return HeaderModel(
           documentID: documentID, 
           appId: entity.appId, 
@@ -104,6 +105,7 @@ class HeaderModel {
       }
     }
 
+    var counter = 0;
     return HeaderModel(
           documentID: documentID, 
           appId: entity.appId, 

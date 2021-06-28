@@ -55,7 +55,9 @@ class MemberProfileFormBloc extends Bloc<MemberProfileFormEvent, MemberProfileFo
                                                documentID: "",
                                  appId: "",
                                  feedId: "",
+                                 authorId: "",
                                  profile: "",
+                                 profileOverride: "",
                                  nameOverride: "",
                                  readAccess: [],
 
@@ -94,21 +96,8 @@ class MemberProfileFormBloc extends Bloc<MemberProfileFormEvent, MemberProfileFo
 
         return;
       }
-      if (event is ChangedMemberProfileAuthor) {
-        if (event.value != null)
-          newValue = currentState.value!.copyWith(author: await memberPublicInfoRepository(appId: appId)!.get(event.value));
-        else
-          newValue = new MemberProfileModel(
-                                 documentID: currentState.value!.documentID,
-                                 appId: currentState.value!.appId,
-                                 feedId: currentState.value!.feedId,
-                                 author: null,
-                                 profile: currentState.value!.profile,
-                                 profileBackground: currentState.value!.profileBackground,
-                                 profileOverride: currentState.value!.profileOverride,
-                                 nameOverride: currentState.value!.nameOverride,
-                                 readAccess: currentState.value!.readAccess,
-          );
+      if (event is ChangedMemberProfileAuthorId) {
+        newValue = currentState.value!.copyWith(authorId: event.value);
         yield SubmittableMemberProfileForm(value: newValue);
 
         return;
@@ -127,7 +116,7 @@ class MemberProfileFormBloc extends Bloc<MemberProfileFormEvent, MemberProfileFo
                                  documentID: currentState.value!.documentID,
                                  appId: currentState.value!.appId,
                                  feedId: currentState.value!.feedId,
-                                 author: currentState.value!.author,
+                                 authorId: currentState.value!.authorId,
                                  profile: currentState.value!.profile,
                                  profileBackground: null,
                                  profileOverride: currentState.value!.profileOverride,
@@ -139,20 +128,7 @@ class MemberProfileFormBloc extends Bloc<MemberProfileFormEvent, MemberProfileFo
         return;
       }
       if (event is ChangedMemberProfileProfileOverride) {
-        if (event.value != null)
-          newValue = currentState.value!.copyWith(profileOverride: await memberMediumRepository(appId: appId)!.get(event.value));
-        else
-          newValue = new MemberProfileModel(
-                                 documentID: currentState.value!.documentID,
-                                 appId: currentState.value!.appId,
-                                 feedId: currentState.value!.feedId,
-                                 author: currentState.value!.author,
-                                 profile: currentState.value!.profile,
-                                 profileBackground: currentState.value!.profileBackground,
-                                 profileOverride: null,
-                                 nameOverride: currentState.value!.nameOverride,
-                                 readAccess: currentState.value!.readAccess,
-          );
+        newValue = currentState.value!.copyWith(profileOverride: event.value);
         yield SubmittableMemberProfileForm(value: newValue);
 
         return;

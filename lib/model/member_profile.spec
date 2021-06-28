@@ -43,10 +43,9 @@
       "group": "general"
     },
     {
-      "fieldName": "author",
-      "displayName": "Author",
-      "fieldType": "MemberPublicInfo",
-      "association": true,
+      "fieldName": "authorId",
+      "displayName": "Author ID",
+      "fieldType": "String",
       "group": "member"
     },
     {
@@ -65,11 +64,9 @@
     },
     {
       "fieldName": "profileOverride",
-      "displayName": "Image",
-      "fieldType": "MemberMedium",
-      "association": true,
-      "group": "image",
-      "optional": true
+      "displayName": "Profile Override",
+      "fieldType": "String",
+      "group": "image"
     },
     {
       "fieldName": "nameOverride",

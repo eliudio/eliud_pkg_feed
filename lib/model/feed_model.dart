@@ -123,6 +123,7 @@ class FeedModel {
 
   static FeedModel? fromEntity(String documentID, FeedEntity? entity) {
     if (entity == null) return null;
+    var counter = 0;
     return FeedModel(
           documentID: documentID, 
           appId: entity.appId, 
@@ -142,6 +143,7 @@ class FeedModel {
   static Future<FeedModel?> fromEntityPlus(String documentID, FeedEntity? entity, { String? appId}) async {
     if (entity == null) return null;
 
+    var counter = 0;
     return FeedModel(
           documentID: documentID, 
           appId: entity.appId, 

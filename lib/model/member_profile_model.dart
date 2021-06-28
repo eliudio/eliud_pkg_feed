@@ -41,23 +41,23 @@ class MemberProfileModel {
 
   // This is the identifier of the feed
   String? feedId;
-  MemberPublicInfoModel? author;
+  String? authorId;
   String? profile;
   MemberMediumModel? profileBackground;
-  MemberMediumModel? profileOverride;
+  String? profileOverride;
   String? nameOverride;
   List<String>? readAccess;
 
-  MemberProfileModel({this.documentID, this.appId, this.feedId, this.author, this.profile, this.profileBackground, this.profileOverride, this.nameOverride, this.readAccess, })  {
+  MemberProfileModel({this.documentID, this.appId, this.feedId, this.authorId, this.profile, this.profileBackground, this.profileOverride, this.nameOverride, this.readAccess, })  {
     assert(documentID != null);
   }
 
-  MemberProfileModel copyWith({String? documentID, String? appId, String? feedId, MemberPublicInfoModel? author, String? profile, MemberMediumModel? profileBackground, MemberMediumModel? profileOverride, String? nameOverride, List<String>? readAccess, }) {
-    return MemberProfileModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, feedId: feedId ?? this.feedId, author: author ?? this.author, profile: profile ?? this.profile, profileBackground: profileBackground ?? this.profileBackground, profileOverride: profileOverride ?? this.profileOverride, nameOverride: nameOverride ?? this.nameOverride, readAccess: readAccess ?? this.readAccess, );
+  MemberProfileModel copyWith({String? documentID, String? appId, String? feedId, String? authorId, String? profile, MemberMediumModel? profileBackground, String? profileOverride, String? nameOverride, List<String>? readAccess, }) {
+    return MemberProfileModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, feedId: feedId ?? this.feedId, authorId: authorId ?? this.authorId, profile: profile ?? this.profile, profileBackground: profileBackground ?? this.profileBackground, profileOverride: profileOverride ?? this.profileOverride, nameOverride: nameOverride ?? this.nameOverride, readAccess: readAccess ?? this.readAccess, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ appId.hashCode ^ feedId.hashCode ^ author.hashCode ^ profile.hashCode ^ profileBackground.hashCode ^ profileOverride.hashCode ^ nameOverride.hashCode ^ readAccess.hashCode;
+  int get hashCode => documentID.hashCode ^ appId.hashCode ^ feedId.hashCode ^ authorId.hashCode ^ profile.hashCode ^ profileBackground.hashCode ^ profileOverride.hashCode ^ nameOverride.hashCode ^ readAccess.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -67,7 +67,7 @@ class MemberProfileModel {
           documentID == other.documentID &&
           appId == other.appId &&
           feedId == other.feedId &&
-          author == other.author &&
+          authorId == other.authorId &&
           profile == other.profile &&
           profileBackground == other.profileBackground &&
           profileOverride == other.profileOverride &&
@@ -78,17 +78,17 @@ class MemberProfileModel {
   String toString() {
     String readAccessCsv = (readAccess == null) ? '' : readAccess!.join(', ');
 
-    return 'MemberProfileModel{documentID: $documentID, appId: $appId, feedId: $feedId, author: $author, profile: $profile, profileBackground: $profileBackground, profileOverride: $profileOverride, nameOverride: $nameOverride, readAccess: String[] { $readAccessCsv }}';
+    return 'MemberProfileModel{documentID: $documentID, appId: $appId, feedId: $feedId, authorId: $authorId, profile: $profile, profileBackground: $profileBackground, profileOverride: $profileOverride, nameOverride: $nameOverride, readAccess: String[] { $readAccessCsv }}';
   }
 
   MemberProfileEntity toEntity({String? appId}) {
     return MemberProfileEntity(
           appId: (appId != null) ? appId : null, 
           feedId: (feedId != null) ? feedId : null, 
-          authorId: (author != null) ? author!.documentID : null, 
+          authorId: (authorId != null) ? authorId : null, 
           profile: (profile != null) ? profile : null, 
           profileBackgroundId: (profileBackground != null) ? profileBackground!.documentID : null, 
-          profileOverrideId: (profileOverride != null) ? profileOverride!.documentID : null, 
+          profileOverride: (profileOverride != null) ? profileOverride : null, 
           nameOverride: (nameOverride != null) ? nameOverride : null, 
           readAccess: (readAccess != null) ? readAccess : null, 
     );
@@ -96,11 +96,14 @@ class MemberProfileModel {
 
   static MemberProfileModel? fromEntity(String documentID, MemberProfileEntity? entity) {
     if (entity == null) return null;
+    var counter = 0;
     return MemberProfileModel(
           documentID: documentID, 
           appId: entity.appId, 
           feedId: entity.feedId, 
+          authorId: entity.authorId, 
           profile: entity.profile, 
+          profileOverride: entity.profileOverride, 
           nameOverride: entity.nameOverride, 
           readAccess: entity.readAccess, 
     );
@@ -108,17 +111,6 @@ class MemberProfileModel {
 
   static Future<MemberProfileModel?> fromEntityPlus(String documentID, MemberProfileEntity? entity, { String? appId}) async {
     if (entity == null) return null;
-
-    MemberPublicInfoModel? authorHolder;
-    if (entity.authorId != null) {
-      try {
-          authorHolder = await memberPublicInfoRepository(appId: appId)!.get(entity.authorId);
-      } on Exception catch(e) {
-        print('Error whilst trying to initialise author');
-        print('Error whilst retrieving memberPublicInfo with id ${entity.authorId}');
-        print('Exception: $e');
-      }
-    }
 
     MemberMediumModel? profileBackgroundHolder;
     if (entity.profileBackgroundId != null) {
@@ -131,25 +123,15 @@ class MemberProfileModel {
       }
     }
 
-    MemberMediumModel? profileOverrideHolder;
-    if (entity.profileOverrideId != null) {
-      try {
-          profileOverrideHolder = await memberMediumRepository(appId: appId)!.get(entity.profileOverrideId);
-      } on Exception catch(e) {
-        print('Error whilst trying to initialise profileOverride');
-        print('Error whilst retrieving memberMedium with id ${entity.profileOverrideId}');
-        print('Exception: $e');
-      }
-    }
-
+    var counter = 0;
     return MemberProfileModel(
           documentID: documentID, 
           appId: entity.appId, 
           feedId: entity.feedId, 
-          author: authorHolder, 
+          authorId: entity.authorId, 
           profile: entity.profile, 
           profileBackground: profileBackgroundHolder, 
-          profileOverride: profileOverrideHolder, 
+          profileOverride: entity.profileOverride, 
           nameOverride: entity.nameOverride, 
           readAccess: entity.readAccess, 
     );

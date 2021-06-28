@@ -103,6 +103,7 @@ class PostLikeModel {
 
   static PostLikeModel? fromEntity(String documentID, PostLikeEntity? entity) {
     if (entity == null) return null;
+    var counter = 0;
     return PostLikeModel(
           documentID: documentID, 
           postId: entity.postId, 
@@ -117,6 +118,7 @@ class PostLikeModel {
   static Future<PostLikeModel?> fromEntityPlus(String documentID, PostLikeEntity? entity, { String? appId}) async {
     if (entity == null) return null;
 
+    var counter = 0;
     return PostLikeModel(
           documentID: documentID, 
           postId: entity.postId, 

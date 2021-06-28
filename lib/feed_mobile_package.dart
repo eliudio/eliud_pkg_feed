@@ -10,4 +10,14 @@ class FeedMobilePackage extends FeedPackage {
     // initialise the platform
     AbstractMediumPlatform.platform = MobileMediumPlatform();
   }
+
+  @override
+  List<Object?> get props => [
+  ];
+
+  @override
+  bool operator == (Object other) =>
+      identical(this, other) ||
+          other is FeedMobilePackage &&
+              runtimeType == other.runtimeType;
 }

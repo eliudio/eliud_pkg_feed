@@ -142,6 +142,7 @@ class PostModel {
 
   static PostModel? fromEntity(String documentID, PostEntity? entity) {
     if (entity == null) return null;
+    var counter = 0;
     return PostModel(
           documentID: documentID, 
           authorId: entity.authorId, 
@@ -161,7 +162,10 @@ class PostModel {
           memberMedia: 
             entity.memberMedia == null ? null :
             entity.memberMedia
-            !.map((item) => PostMediumModel.fromEntity(newRandomKey(), item)!)
+            !.map((item) {
+              counter++; 
+              return PostMediumModel.fromEntity(counter.toString(), item)!;
+            })
             .toList(), 
     );
   }
@@ -169,6 +173,7 @@ class PostModel {
   static Future<PostModel?> fromEntityPlus(String documentID, PostEntity? entity, { String? appId}) async {
     if (entity == null) return null;
 
+    var counter = 0;
     return PostModel(
           documentID: documentID, 
           authorId: entity.authorId, 
@@ -186,8 +191,10 @@ class PostModel {
           archived: toPostArchiveStatus(entity.archived), 
           externalLink: entity.externalLink, 
           memberMedia: 
-            entity. memberMedia == null ? null : new List<PostMediumModel>.from(await Future.wait(entity. memberMedia
-            !.map((item) => PostMediumModel.fromEntityPlus(newRandomKey(), item, appId: appId))
+            entity. memberMedia == null ? null : List<PostMediumModel>.from(await Future.wait(entity. memberMedia
+            !.map((item) {
+            counter++;
+            return PostMediumModel.fromEntityPlus(counter.toString(), item, appId: appId);})
             .toList())), 
     );
   }

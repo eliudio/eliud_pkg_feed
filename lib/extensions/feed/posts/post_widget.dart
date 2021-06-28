@@ -212,7 +212,7 @@ class _PostWidgetState extends State<PostWidget> {
         Container(
           height: 4,
         ),
-        AvatarHelper.name(context, postModel.authorId!, widget.appId, widget.feedId),
+        AvatarHelper.nameH5(context, postModel.authorId!, widget.appId, widget.feedId),
         StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().h5(context, timeStamp,
             textAlign: TextAlign.left),
       ])

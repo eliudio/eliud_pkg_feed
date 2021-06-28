@@ -47,8 +47,8 @@ class _ProfileState extends State<Profile> {
                   child: Text("No profile"))
                   : HtmlWidget(html)
             ]));
-        if ((profile != null) && (profile.author != null) && (profile.author!.documentID != null) && (state.canEditThisProfile())) {
-          var ownerId = profile.author!.documentID!;
+        if (state  is LoggedInProfileInitialized) {
+          var ownerId = profile!.authorId!;
           var readAccess = state.watchingThisProfile()!.readAccess!;
           return EditableWidget(
               child: child,

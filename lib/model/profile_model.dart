@@ -81,6 +81,7 @@ class ProfileModel {
 
   static ProfileModel? fromEntity(String documentID, ProfileEntity? entity) {
     if (entity == null) return null;
+    var counter = 0;
     return ProfileModel(
           documentID: documentID, 
           appId: entity.appId, 
@@ -104,6 +105,7 @@ class ProfileModel {
       }
     }
 
+    var counter = 0;
     return ProfileModel(
           documentID: documentID, 
           appId: entity.appId, 

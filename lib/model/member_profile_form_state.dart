@@ -111,15 +111,15 @@ class FeedIdMemberProfileFormError extends MemberProfileFormError {
 }
 
 
-class AuthorMemberProfileFormError extends MemberProfileFormError { 
-  const AuthorMemberProfileFormError({ String? message, MemberProfileModel? value }): super(message: message, value: value);
+class AuthorIdMemberProfileFormError extends MemberProfileFormError { 
+  const AuthorIdMemberProfileFormError({ String? message, MemberProfileModel? value }): super(message: message, value: value);
 
   @override
   List<Object?> get props => [ message, value ];
 
   @override
   String toString() {
-    return '''AuthorMemberProfileFormError {
+    return '''AuthorIdMemberProfileFormError {
       value: $value,
       message: $message,
     }''';

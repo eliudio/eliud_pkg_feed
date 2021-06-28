@@ -87,6 +87,7 @@ class FeedMenuModel {
 
   static FeedMenuModel? fromEntity(String documentID, FeedMenuEntity? entity) {
     if (entity == null) return null;
+    var counter = 0;
     return FeedMenuModel(
           documentID: documentID, 
           appId: entity.appId, 
@@ -114,6 +115,7 @@ class FeedMenuModel {
       }
     }
 
+    var counter = 0;
     return FeedMenuModel(
           documentID: documentID, 
           appId: entity.appId, 

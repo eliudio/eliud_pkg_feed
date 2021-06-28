@@ -3,6 +3,7 @@ import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_pkg_feed/model/member_profile_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'package:collection/collection.dart';
 
 @immutable
 abstract class ProfileState extends Equatable {
@@ -19,17 +20,29 @@ class ProfileError extends ProfileState {
 
   @override
   List<Object?> get props => [message];
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ProfileError &&
+          runtimeType == other.runtimeType &&
+          message == other.message;
 }
 
 // Startup: menu has not been initialised yet and so we should show a "loading indicator" or something
 class ProfileStateUninitialized extends ProfileState {
   @override
-  List<Object?> get props => [];
-
-  @override
   String toString() {
     return '''ProfileStateUninitialized()''';
   }
+
+  @override
+  List<Object?> get props => [];
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ProfileStateUninitialized && runtimeType == other.runtimeType;
 }
 
 abstract class ProfileInitialised extends ProfileState {
@@ -78,17 +91,16 @@ class LoggedInWatchingMyProfile extends LoggedInProfileInitialized {
       : super(feedId, appId, currentMemberProfileModel, currentMember,
             defaultReadAccess);
 
-  @override
-  List<Object?> get props => [
-        feedId,
-        appId,
-        currentMemberProfileModel,
-    currentMember,
-        defaultReadAccess
-      ];
-
-  LoggedInWatchingMyProfile copyWith({required MemberProfileModel newMemberProfileModel}) {
-    return LoggedInWatchingMyProfile(feedId: this.feedId, appId: this.appId, currentMemberProfileModel: newMemberProfileModel, currentMember: this.currentMember, defaultReadAccess: this.defaultReadAccess, onlyMyPosts: this.onlyMyPosts, );
+  LoggedInWatchingMyProfile copyWith(
+      {required MemberProfileModel newMemberProfileModel}) {
+    return LoggedInWatchingMyProfile(
+      feedId: this.feedId,
+      appId: this.appId,
+      currentMemberProfileModel: newMemberProfileModel,
+      currentMember: this.currentMember,
+      defaultReadAccess: this.defaultReadAccess,
+      onlyMyPosts: this.onlyMyPosts,
+    );
   }
 
   @override
@@ -108,12 +120,32 @@ class LoggedInWatchingMyProfile extends LoggedInProfileInitialized {
 
   @override
   String profileUrl() {
-    if ((currentMemberProfileModel.profileOverride != null) && (currentMemberProfileModel.profileOverride!.urlThumbnail != null)) {
-      return currentMemberProfileModel.profileOverride!.urlThumbnail!;
+    if (currentMemberProfileModel.profileOverride != null) {
+      return currentMemberProfileModel.profileOverride!;
     } else {
       return currentMember.photoURL!;
     }
   }
+
+  @override
+  List<Object?> get props => [
+        feedId,
+        appId,
+        currentMemberProfileModel,
+        currentMember,
+        defaultReadAccess
+      ];
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LoggedInWatchingMyProfile &&
+          runtimeType == other.runtimeType &&
+          feedId == other.feedId &&
+          appId == other.appId &&
+          currentMemberProfileModel == other.currentMemberProfileModel &&
+          currentMember == other.currentMember &&
+          ListEquality().equals(defaultReadAccess, other.defaultReadAccess);
 }
 
 class LoggedInAndWatchingOtherProfile extends LoggedInProfileInitialized {
@@ -134,18 +166,6 @@ class LoggedInAndWatchingOtherProfile extends LoggedInProfileInitialized {
             defaultReadAccess);
 
   @override
-  List<Object?> get props => [
-        feedId,
-        appId,
-        currentMemberProfileModel,
-    currentMember,
-        defaultReadAccess,
-        iFollowThisPerson,
-        feedProfileModel,
-        feedPublicInfoModel
-      ];
-
-  @override
   bool canEditThisProfile() => true;
 
   @override
@@ -162,12 +182,38 @@ class LoggedInAndWatchingOtherProfile extends LoggedInProfileInitialized {
 
   @override
   String profileUrl() {
-    if ((feedProfileModel.profileOverride != null) && (feedProfileModel.profileOverride!.urlThumbnail != null)) {
-      return feedProfileModel.profileOverride!.urlThumbnail!;
+    if (feedProfileModel.profileOverride != null) {
+      return feedProfileModel.profileOverride!;
     } else {
       return feedPublicInfoModel.photoURL!;
     }
   }
+
+  @override
+  List<Object?> get props => [
+        feedId,
+        appId,
+        currentMemberProfileModel,
+        currentMember,
+        defaultReadAccess,
+        iFollowThisPerson,
+        feedProfileModel,
+        feedPublicInfoModel
+      ];
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LoggedInAndWatchingOtherProfile &&
+          runtimeType == other.runtimeType &&
+          feedId == other.feedId &&
+          appId == other.appId &&
+          currentMemberProfileModel == other.currentMemberProfileModel &&
+          currentMember == other.currentMember &&
+          ListEquality().equals(defaultReadAccess, other.defaultReadAccess) &&
+          iFollowThisPerson == other.iFollowThisPerson &&
+          feedProfileModel == other.feedProfileModel &&
+          feedPublicInfoModel == other.feedPublicInfoModel;
 }
 
 class NotLoggedInWatchingSomeone extends ProfileInitialised {
@@ -180,14 +226,6 @@ class NotLoggedInWatchingSomeone extends ProfileInitialised {
       required this.feedProfileModel,
       required this.feedPublicInfoModel})
       : super(feedId, appId);
-
-  @override
-  List<Object?> get props => [
-        feedId,
-        appId,
-        feedProfileModel,
-        feedPublicInfoModel,
-      ];
 
   @override
   String? memberId() => null;
@@ -209,20 +247,34 @@ class NotLoggedInWatchingSomeone extends ProfileInitialised {
 
   @override
   String profileUrl() {
-    if ((feedProfileModel.profileOverride != null) && (feedProfileModel.profileOverride!.urlThumbnail != null)) {
-      return feedProfileModel.profileOverride!.urlThumbnail!;
+    if (feedProfileModel.profileOverride != null) {
+      return feedProfileModel.profileOverride!;
     } else {
       return feedPublicInfoModel.photoURL!;
     }
   }
+
+  @override
+  List<Object?> get props => [
+        feedId,
+        appId,
+        feedProfileModel,
+        feedPublicInfoModel,
+      ];
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is NotLoggedInWatchingSomeone &&
+          runtimeType == other.runtimeType &&
+          feedId == other.feedId &&
+          feedProfileModel == other.feedProfileModel &&
+          feedPublicInfoModel == other.feedPublicInfoModel;
 }
 
 class WatchingPublicProfile extends ProfileInitialised {
   WatchingPublicProfile({required String feedId, required String appId})
       : super(feedId, appId);
-
-  @override
-  List<Object?> get props => [feedId, appId];
 
   String? memberId() => null;
 
@@ -241,4 +293,15 @@ class WatchingPublicProfile extends ProfileInitialised {
   String profileUrl() {
     return '';
   }
+
+  @override
+  List<Object?> get props => [feedId, appId];
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WatchingPublicProfile &&
+          runtimeType == other.runtimeType &&
+          feedId == other.feedId &&
+          appId == other.appId;
 }

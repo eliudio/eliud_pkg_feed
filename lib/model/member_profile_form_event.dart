@@ -95,16 +95,16 @@ class ChangedMemberProfileFeedId extends MemberProfileFormEvent {
   String toString() => 'ChangedMemberProfileFeedId{ value: $value }';
 }
 
-class ChangedMemberProfileAuthor extends MemberProfileFormEvent {
+class ChangedMemberProfileAuthorId extends MemberProfileFormEvent {
   final String? value;
 
-  ChangedMemberProfileAuthor({this.value});
+  ChangedMemberProfileAuthorId({this.value});
 
   @override
   List<Object?> get props => [ value ];
 
   @override
-  String toString() => 'ChangedMemberProfileAuthor{ value: $value }';
+  String toString() => 'ChangedMemberProfileAuthorId{ value: $value }';
 }
 
 class ChangedMemberProfileProfile extends MemberProfileFormEvent {

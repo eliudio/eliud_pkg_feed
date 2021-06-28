@@ -163,7 +163,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
               icon: album,
               tooltip: 'Album',
               onPressed: () =>
-                  FeedPostDialog.open(context, widget.feedModel.documentID!, profileInitialized.watchingThisProfile()!.author!.documentID!, profileInitialized.profileUrl(), pageContextInfo)));
+                  FeedPostDialog.open(context, widget.feedModel.documentID!, profileInitialized.watchingThisProfile()!.authorId!, profileInitialized.profileUrl(), pageContextInfo)));
       widgets.add(Spacer());
     }
 

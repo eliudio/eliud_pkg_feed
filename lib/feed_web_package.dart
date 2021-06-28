@@ -10,4 +10,14 @@ class FeedWebPackage extends FeedPackage {
     // initialise the platform
     AbstractMediumPlatform.platform = WebMediumPlatform();
   }
+
+  @override
+  List<Object?> get props => [
+  ];
+
+  @override
+  bool operator == (Object other) =>
+      identical(this, other) ||
+          other is FeedWebPackage &&
+              runtimeType == other.runtimeType;
 }

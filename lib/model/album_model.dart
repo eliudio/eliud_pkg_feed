@@ -83,6 +83,7 @@ class AlbumModel {
 
   static AlbumModel? fromEntity(String documentID, AlbumEntity? entity) {
     if (entity == null) return null;
+    var counter = 0;
     return AlbumModel(
           documentID: documentID, 
           appId: entity.appId, 
@@ -106,6 +107,7 @@ class AlbumModel {
       }
     }
 
+    var counter = 0;
     return AlbumModel(
           documentID: documentID, 
           appId: entity.appId, 

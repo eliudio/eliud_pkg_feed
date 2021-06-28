@@ -70,6 +70,7 @@ class PostMediumModel {
 
   static PostMediumModel? fromEntity(String documentID, PostMediumEntity? entity) {
     if (entity == null) return null;
+    var counter = 0;
     return PostMediumModel(
           documentID: documentID, 
     );
@@ -89,6 +90,7 @@ class PostMediumModel {
       }
     }
 
+    var counter = 0;
     return PostMediumModel(
           documentID: documentID, 
           memberMedium: memberMediumHolder, 
