@@ -33,7 +33,7 @@ class EmbeddedPageHelper {
     var blocProviders = <BlocProvider>[];
     blocProviders.add(BlocProvider<AccessBloc>(
         create: (context) =>
-            AccessBloc(null)..add(InitApp(appId, asPlaystore))));
+            AccessBloc(null)..add(InitApp(appId!, asPlaystore))));
     return MultiBlocProvider(
         providers: blocProviders,
         child: Container(child: BlocBuilder<AccessBloc, AccessState>(

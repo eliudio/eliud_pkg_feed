@@ -61,7 +61,7 @@ class AvatarHelper {
             externalProfileURLProvider: () =>
                 _getProfileAttributes(memberId, appId, feedId),
             onPressed: () {
-              SwitchMember.switchMember(context, pageId, memberId);
+              SwitchMember.switchMember(context, appId, pageId, memberId);
             });
   }
 
