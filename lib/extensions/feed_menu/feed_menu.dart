@@ -72,27 +72,25 @@ class FeedMenuItems extends StatefulWidget {
 
   FeedMenuItems(this.items, this.actions, this.active, this.parameters);
 
-  _FeedMenuItemsState createState() => _FeedMenuItemsState();
+  _FeedMenuItemsState createState() => _FeedMenuItemsState(items, active, actions, parameters);
 }
 
 class _FeedMenuItemsState extends State<FeedMenuItems> with SingleTickerProviderStateMixin {
   TabController? _tabController;
-  List<TabItem>? tabItems;
-  _FeedMenuItemsState();
+  final List<String> items;
+  final int active;
+  final List<ActionModel> actions;
+  final Map<String, dynamic>? parameters;
+
+  _FeedMenuItemsState(this.items, this.active, this.actions, this.parameters);
 
   @override
   void initState() {
-    var size = widget.items.length;
+    var size = items.length;
     _tabController = TabController(vsync: this, length: size);
     _tabController!.addListener(_handleTabSelection);
-    _tabController!.index = widget.active;
+    _tabController!.index = active;
 
-    tabItems = <TabItem>[];
-    for (var item in widget.items) {
-      tabItems!.add(TabItem(color: Colors.black12, title: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context,
-        item,
-      )));
-    }
     super.initState();
   }
 
@@ -106,20 +104,20 @@ class _FeedMenuItemsState extends State<FeedMenuItems> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
-    if (tabItems != null) {
-      return ColorfulTabBar(
-        tabs: tabItems!,
-        controller: _tabController,
-      );
+    if (_tabController != null) {
+      return StyleRegistry.registry().styleWithContext(context)
+          .frontEndStyle()
+          .tabsStyle()
+          .tabBar(context, items: items, tabController: _tabController!);
     } else {
-      return Text("No menu");
+      return Text('No controller');
     }
   }
 
   void _handleTabSelection() {
     if ((_tabController != null) && (_tabController!.indexIsChanging)) {
-        var action = widget.actions[_tabController!.index];
-        eliudrouter.Router.navigateTo(context, action, parameters: widget.parameters);
+        var action = actions[_tabController!.index];
+        eliudrouter.Router.navigateTo(context, action, parameters: parameters);
     }
   }
 }
