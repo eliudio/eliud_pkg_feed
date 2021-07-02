@@ -144,28 +144,34 @@ class _HeaderState extends State<Header> {
                         : avatarWidget),
               ));
           rows.add(container);
+          var backgroundPhoto = StyleRegistry.registry()
+              .styleWithContext(context)
+              .frontEndStyle()
+              .containerStyle()
+              .topicContainer(context,
+              children: rows,
+              image: _background(context, state.watchingThisProfile()));
 
-        // Add the background photo
-        allRows.add(EditableWidget(
-            child: _progress(
-                StyleRegistry.registry()
-                    .styleWithContext(context)
-                    .frontEndStyle()
-                    .containerStyle()
-                    .topicContainer(context,
-                        children: rows,
-                        image: _background(context, state.watchingThisProfile())),
-                progressProfileVideo,
-                heightBackgroundPhoto(context),
-                width(context) / 2),
-            button: _button(
-                context,
-                state,
-                true,
-                'Update profile background',
-                (progress) => setState(() {
-                      progressProfileVideo = progress;
-                    }))));
+          // Add the background photo
+          if (state.canEditThisProfile()) {
+            allRows.add(EditableWidget(
+                child: _progress(
+                    backgroundPhoto,
+                    progressProfileVideo,
+                    heightBackgroundPhoto(context),
+                    width(context) / 2),
+                button: _button(
+                    context,
+                    state,
+                    true,
+                    'Update profile background',
+                        (progress) =>
+                        setState(() {
+                          progressProfileVideo = progress;
+                        }))));
+          } else {
+            allRows.add(backgroundPhoto);
+          }
         }
 
         var nameX;

@@ -9,6 +9,9 @@ import 'package:flutter/material.dart';
 class AvatarHelper {
   static Future<ProfileAttributes> _getProfileAttributes(
       String authorId, String appId, String feedId) async {
+    if (authorId.endsWith('feed')) {
+      int debugMe = 0;
+    }
     var key = authorId + "-" + feedId;
 
     // first try to get the information from memberProfileRepository

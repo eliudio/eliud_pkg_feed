@@ -173,7 +173,7 @@ class LoggedInAndWatchingOtherProfile extends LoggedInProfileInitialized {
             defaultReadAccess);
 
   @override
-  bool canEditThisProfile() => true;
+  bool canEditThisProfile() => false;
 
   @override
   MemberProfileModel? watchingThisProfile() => feedProfileModel;
@@ -225,7 +225,7 @@ class LoggedInAndWatchingOtherProfile extends LoggedInProfileInitialized {
 
   @override
   String? watchingThisMember() {
-    return feedProfileModel.documentID!;
+    return feedPublicInfoModel.documentID!;
   }
 }
 
