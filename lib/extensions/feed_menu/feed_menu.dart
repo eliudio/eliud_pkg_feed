@@ -28,6 +28,7 @@ class _FeedMenuState extends State<FeedMenu> with SingleTickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     var pageContextInfo = PageParamHelper.getPagaContextInfo(context);
+    var parameters = pageContextInfo.parameters;
     var theState = AccessBloc.getState(context);
     if (theState is AppLoaded) {
       return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
@@ -52,7 +53,7 @@ class _FeedMenuState extends State<FeedMenu> with SingleTickerProviderStateMixin
             }
           }
 
-          return FeedMenuItems(useTheseItems, actions, selectedPage);
+          return FeedMenuItems(useTheseItems, actions, selectedPage, parameters);
         } else {
           return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicatorStyle().progressIndicator(context);
         }
@@ -67,21 +68,31 @@ class FeedMenuItems extends StatefulWidget {
   final List<String> items;
   final List<ActionModel> actions;
   final int active;
+  final Map<String, dynamic>? parameters;
 
-  FeedMenuItems(this.items, this.actions, this.active);
+  FeedMenuItems(this.items, this.actions, this.active, this.parameters);
 
   _FeedMenuItemsState createState() => _FeedMenuItemsState();
 }
 
 class _FeedMenuItemsState extends State<FeedMenuItems> with SingleTickerProviderStateMixin {
   TabController? _tabController;
+  List<TabItem>? tabItems;
   _FeedMenuItemsState();
 
   @override
   void initState() {
-    _tabController = TabController(vsync: this, length: widget.items.length);
+    var size = widget.items.length;
+    _tabController = TabController(vsync: this, length: size);
     _tabController!.addListener(_handleTabSelection);
     _tabController!.index = widget.active;
+
+    tabItems = <TabItem>[];
+    for (var item in widget.items) {
+      tabItems!.add(TabItem(color: Colors.black12, title: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context,
+        item,
+      )));
+    }
     super.initState();
   }
 
@@ -95,23 +106,20 @@ class _FeedMenuItemsState extends State<FeedMenuItems> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
-    List<TabItem> tabItems = [];
-    for (var item in widget.items) {
-      tabItems.add(TabItem(color: Colors.black12, title: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context,
-        item,
-      )));
+    if (tabItems != null) {
+      return ColorfulTabBar(
+        tabs: tabItems!,
+        controller: _tabController,
+      );
+    } else {
+      return Text("No menu");
     }
-
-    return ColorfulTabBar(
-      tabs: tabItems,
-      controller: _tabController,
-    );
   }
 
   void _handleTabSelection() {
     if ((_tabController != null) && (_tabController!.indexIsChanging)) {
         var action = widget.actions[_tabController!.index];
-        eliudrouter.Router.navigateTo(context, action);
+        eliudrouter.Router.navigateTo(context, action, parameters: widget.parameters);
     }
   }
 }

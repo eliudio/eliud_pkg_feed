@@ -57,6 +57,8 @@ abstract class ProfileInitialised extends ProfileState {
 
   MemberProfileModel? watchingThisProfile();
 
+  String? watchingThisMember();
+
   String profileUrl();
   String profileHTML();
 }
@@ -146,6 +148,11 @@ class LoggedInWatchingMyProfile extends LoggedInProfileInitialized {
           currentMemberProfileModel == other.currentMemberProfileModel &&
           currentMember == other.currentMember &&
           ListEquality().equals(defaultReadAccess, other.defaultReadAccess);
+
+  @override
+  String? watchingThisMember() {
+    return currentMember.documentID!;
+  }
 }
 
 class LoggedInAndWatchingOtherProfile extends LoggedInProfileInitialized {
@@ -214,6 +221,12 @@ class LoggedInAndWatchingOtherProfile extends LoggedInProfileInitialized {
           iFollowThisPerson == other.iFollowThisPerson &&
           feedProfileModel == other.feedProfileModel &&
           feedPublicInfoModel == other.feedPublicInfoModel;
+
+
+  @override
+  String? watchingThisMember() {
+    return feedProfileModel.documentID!;
+  }
 }
 
 class NotLoggedInWatchingSomeone extends ProfileInitialised {
@@ -270,6 +283,11 @@ class NotLoggedInWatchingSomeone extends ProfileInitialised {
           feedId == other.feedId &&
           feedProfileModel == other.feedProfileModel &&
           feedPublicInfoModel == other.feedPublicInfoModel;
+
+  @override
+  String? watchingThisMember() {
+    return feedPublicInfoModel.documentID!;
+  }
 }
 
 class WatchingPublicProfile extends ProfileInitialised {
@@ -304,4 +322,9 @@ class WatchingPublicProfile extends ProfileInitialised {
           runtimeType == other.runtimeType &&
           feedId == other.feedId &&
           appId == other.appId;
+
+  @override
+  String? watchingThisMember() {
+    return null;
+  }
 }

@@ -113,7 +113,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             currentMemberModel.documentID!, appId);
         var feedPublicInfoModel = await getMemberPublicInfo(param);
         var feedProfileModel = await getMemberProfileModelWithPublicInfo(false,
-            appId, feedId, param, null);
+            appId, feedId, feedPublicInfoModel, null);
         return LoggedInAndWatchingOtherProfile(
             feedId: feedId,
             appId: appId,

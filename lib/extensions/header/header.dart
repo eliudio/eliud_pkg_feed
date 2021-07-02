@@ -97,7 +97,7 @@ class _HeaderState extends State<Header> {
         // Add profile photo
         List<Widget> rows = [];
 
-        var memberId = state.memberId();
+        var memberId = state.watchingThisMember();
         if (memberId != null) {
           var avatarWidget = _progress(
             Align(
