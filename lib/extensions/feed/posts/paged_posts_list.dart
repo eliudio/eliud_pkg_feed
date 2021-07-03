@@ -165,6 +165,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
                   context,
                   widget.feedModel.documentID!,
                   profileInitialized.watchingThisProfile()!.authorId!,
+                  profileInitialized.memberId(),
                   profileInitialized.profileUrl(),
                   pageContextInfo)));
       widgets.add(Spacer());
@@ -212,6 +213,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
           builder: (context, state) {
             if (state is PostListPagedState) {
               var memberId = profileState.memberId();
+              var currentMemberId = profileState.memberId();
               var photoURL = profileState.profileUrl();
               List<Widget> widgets = [];
               if (profileState is LoggedInProfileInitialized) {
@@ -228,7 +230,8 @@ class _PagedPostsListState extends State<PagedPostsList> {
                   feedId: widget.feedModel.documentID!,
                   details: state.values[i],
                   pageId: pageId,
-                  memberId: memberId,
+                  memberId: memberId!,
+                  currentMemberId: currentMemberId,
                   isEditable: profileState.canEditThisProfile(),
                   photoURL: photoURL,
                 ));

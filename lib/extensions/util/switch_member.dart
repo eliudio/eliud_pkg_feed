@@ -17,18 +17,18 @@ enum WhichFeed { MyFeed, OnlyMyFeed, SomeoneIFollow, SomeoneElse, PublicFeed }
 class SwitchMember {
   static String switchMemberFeedPageParameter = 'memberId';
 
-  static Widget gestured(BuildContext context, String switchToThisMemberId, String appId, String pageId, Widget avatar) {
+  static Widget gestured(BuildContext context, String switchToThisMemberId, String currentMemberId, String appId, String pageId, Widget avatar) {
     return GestureDetector(
         onTap: () {
-          SwitchMember.switchMember(context, appId, pageId, switchToThisMemberId);
+          SwitchMember.switchMember(context, appId, pageId, switchToThisMemberId, currentMemberId);
         },
         child: avatar);
   }
 
   static void switchMember(
-      BuildContext context, String appId, String pageId, String memberId) {
+      BuildContext context, String appId, String pageId, String memberId, String? currentMemberId) {
     var _navigatorBloc = BlocProvider.of<NavigatorBloc>(context);
-    _navigatorBloc.add(GoToPageEvent(appId, pageId, parameters: {
+    _navigatorBloc.add(GoToPageEvent(appId, pageId, parameters: currentMemberId == memberId ? null : {
       switchMemberFeedPageParameter: memberId
     }));
   }

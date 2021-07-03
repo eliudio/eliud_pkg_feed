@@ -24,10 +24,11 @@ import 'bloc/feed_post_model_details.dart';
 class MyFeedPostForm extends StatefulWidget {
   final String feedId;
   final String memberId;
+  final String? currentMemberId;
   final String photoURL;
   final PageContextInfo pageContextInfo;
 
-  MyFeedPostForm(this.feedId, this.memberId, this.photoURL, this.pageContextInfo);
+  MyFeedPostForm(this.feedId, this.memberId, this.currentMemberId, this.photoURL, this.pageContextInfo);
 
   _MyFeedPostFormState createState() => _MyFeedPostFormState();
 }
@@ -135,6 +136,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
           60,
           pageId,
           widget.memberId,
+          widget.currentMemberId,
           app.documentID!,
           widget.feedId,
         );

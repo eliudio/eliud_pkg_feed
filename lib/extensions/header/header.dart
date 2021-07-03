@@ -97,6 +97,7 @@ class _HeaderState extends State<Header> {
         // Add profile photo
         List<Widget> rows = [];
 
+        var currentMemberId = state.memberId();
         var memberId = state.watchingThisMember();
         if (memberId != null) {
           var avatarWidget = _progress(
@@ -109,6 +110,7 @@ class _HeaderState extends State<Header> {
                       55,
                       pageId,
                       memberId,
+                      currentMemberId,
                       state.appId,
                       state.feedId),
                 )),

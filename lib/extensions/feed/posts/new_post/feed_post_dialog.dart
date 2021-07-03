@@ -15,6 +15,7 @@ class FeedPostDialog extends StatefulWidget {
   final String feedId;
   final PostListPagedBloc postListPagedBloc;
   final String memberId;
+  final String? currentMemberId;
   final String photoURL;
   final PageContextInfo pageContextInfo;
 
@@ -23,12 +24,13 @@ class FeedPostDialog extends StatefulWidget {
       required this.feedId,
       required this.postListPagedBloc,
       required this.memberId,
+      required this.currentMemberId,
       required this.photoURL, required this.pageContextInfo,
       })
       : super(key: key);
 
   static void open(
-      BuildContext context, String feedId, String memberId, String photoURL, PageContextInfo pageContextInfo) {
+      BuildContext context, String feedId, String memberId, String? currentMemberId, String photoURL, PageContextInfo pageContextInfo) {
     var postListPagedBloc = BlocProvider.of<PostListPagedBloc>(context);
         StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogStyle().openWidgetDialog(
         context,
@@ -36,6 +38,7 @@ class FeedPostDialog extends StatefulWidget {
           feedId: feedId,
           postListPagedBloc: postListPagedBloc,
           memberId: memberId,
+          currentMemberId: currentMemberId,
           photoURL: photoURL, pageContextInfo: pageContextInfo,
         ));
   }
@@ -61,10 +64,11 @@ class _FeedPostDialogState extends State<FeedPostDialog> {
             ..add(InitialiseNewFeedPostFormEvent()),
           child: MyFeedPostForm(
                   widget.feedId,
-            widget.memberId,
-            widget.photoURL,
-            widget.pageContextInfo,
-                  ));
+                  widget.memberId,
+                  widget.currentMemberId,
+                  widget.photoURL,
+                  widget.pageContextInfo,
+                ));
     } else {
       return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'Not logged in');
     }

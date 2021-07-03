@@ -17,7 +17,8 @@ class PostWidget extends StatefulWidget {
   //final String parentPageId;
   final String appId;
   final String pageId;
-  final String? memberId;
+  final String memberId; // of the post
+  final String? currentMemberId;
   final String? photoURL;
   final String feedId;
   final ThumbStyle? thumbStyle;
@@ -29,6 +30,7 @@ class PostWidget extends StatefulWidget {
       required this.appId,
       required this.pageId,
       required this.memberId,
+      required this.currentMemberId,
       required this.photoURL,
       required this.feedId,
       required this.thumbStyle,
@@ -126,7 +128,8 @@ class _PostWidgetState extends State<PostWidget> {
                     context,
                     20,
                     widget.pageId,
-                    widget.memberId!,
+                    widget.memberId,
+                    widget.currentMemberId,
                     widget.appId,
                     widget.feedId)),
         Container(width: 8),
@@ -204,7 +207,7 @@ class _PostWidgetState extends State<PostWidget> {
           height: 50,
           width: 50,
           child: AvatarHelper.avatar(context, 25, widget.pageId,
-                  postModel.authorId!, widget.appId, widget.feedId)),
+                  postModel.authorId!, widget.currentMemberId, widget.appId, widget.feedId)),
       Container(
         width: 8,
       ),
@@ -354,7 +357,7 @@ class _PostWidgetState extends State<PostWidget> {
 
     List<Widget> rowChildren = [
       AvatarHelper.avatar(context, 20, widget.pageId,
-              data.member!.documentID!, widget.appId, widget.feedId),
+              data.member!.documentID!, widget.currentMemberId, widget.appId, widget.feedId),
       Container(width: 8),
       Expanded(
           child: Container(

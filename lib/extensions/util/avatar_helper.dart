@@ -54,7 +54,7 @@ class AvatarHelper {
   }
 
   static Widget avatar(BuildContext context, double radius, String pageId,
-      String memberId, String appId, String feedId) {
+      String profileMemberId, String? currentMemberId, String appId, String feedId) {
     return StyleRegistry.registry()
         .styleWithContext(context)
         .frontEndStyle()
@@ -62,9 +62,9 @@ class AvatarHelper {
         .getProfilePhotoButtonFromExternalProvider(context,
             radius: radius,
             externalProfileURLProvider: () =>
-                _getProfileAttributes(memberId, appId, feedId),
+                _getProfileAttributes(profileMemberId, appId, feedId),
             onPressed: () {
-              SwitchMember.switchMember(context, appId, pageId, memberId);
+              SwitchMember.switchMember(context, appId, pageId, profileMemberId, currentMemberId);
             });
   }
 
