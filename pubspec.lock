@@ -511,7 +511,7 @@ packages:
     source: hosted
     version: "1.0.8"
   flutter_colorful_tab:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_colorful_tab
       url: "https://pub.dartlang.org"

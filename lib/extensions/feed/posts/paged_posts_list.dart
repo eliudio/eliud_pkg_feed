@@ -10,14 +10,13 @@ import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_eve
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_state.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_button.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_widget.dart';
+import 'package:eliud_pkg_text/platform/text_platform.dart';
 import 'new_post/feed_post_dialog.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
 import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
-import 'package:eliud_pkg_text/extensions/rich_text_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 
 class PagedPostsList extends StatefulWidget {
   final FeedModel feedModel;
@@ -88,11 +87,10 @@ class _PagedPostsListState extends State<PagedPostsList> {
   }
 
   Widget _newPostForm(
-    MemberModel author,
-    List<String> readAccess,
+      MemberModel author,
+      List<String> readAccess,
       LoggedInProfileInitialized profileInitialized,
-      PageContextInfo pageContextInfo
-  ) {
+      PageContextInfo pageContextInfo) {
     List<Widget> widgets = [];
     widgets.add(Spacer());
 
@@ -128,9 +126,10 @@ class _PagedPostsListState extends State<PagedPostsList> {
             .openEntryDialog(context, title: 'Same something',
                 onPressed: (value) {
           if (value != null) {
-            _addPost(description: value,
+            _addPost(
+              description: value,
               authorId: author.documentID!,
-                readAccess: readAccess,
+              readAccess: readAccess,
             );
           }
         });
@@ -162,8 +161,12 @@ class _PagedPostsListState extends State<PagedPostsList> {
           .iconButton(context,
               icon: album,
               tooltip: 'Album',
-              onPressed: () =>
-                  FeedPostDialog.open(context, widget.feedModel.documentID!, profileInitialized.watchingThisProfile()!.authorId!, profileInitialized.profileUrl(), pageContextInfo)));
+              onPressed: () => FeedPostDialog.open(
+                  context,
+                  widget.feedModel.documentID!,
+                  profileInitialized.watchingThisProfile()!.authorId!,
+                  profileInitialized.profileUrl(),
+                  pageContextInfo)));
       widgets.add(Spacer());
     }
 
@@ -178,9 +181,14 @@ class _PagedPostsListState extends State<PagedPostsList> {
           .buttonStyle()
           .iconButton(context, icon: article, tooltip: 'Article',
               onPressed: () {
-        RichTextDialog.open(context, widget.feedModel.appId!,
-            author.documentID!, readAccess, "Article", (newArticle) {
-          _addPost(html: newArticle,
+        AbstractTextPlatform.platform!.updateHtml(
+            context,
+            widget.feedModel.appId!,
+            author.documentID!,
+            readAccess,
+            "Article", (newArticle) {
+          _addPost(
+            html: newArticle,
             authorId: author.documentID!,
             readAccess: readAccess,
           );
@@ -207,8 +215,11 @@ class _PagedPostsListState extends State<PagedPostsList> {
               var photoURL = profileState.profileUrl();
               List<Widget> widgets = [];
               if (profileState is LoggedInProfileInitialized) {
-                widgets.add(_newPostForm(profileState.currentMember,
-                    profileState.defaultReadAccess, profileState, pageContextInfo));
+                widgets.add(_newPostForm(
+                    profileState.currentMember,
+                    profileState.defaultReadAccess,
+                    profileState,
+                    pageContextInfo));
               }
               for (int i = 0; i < state.values.length; i++) {
                 widgets.add(PostWidget(

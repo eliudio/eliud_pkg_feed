@@ -3,13 +3,11 @@ import 'package:eliud_pkg_feed/extensions/bloc/profile_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_event.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_state.dart';
 import 'package:eliud_pkg_feed/extensions/util/editable_widget.dart';
-import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
-import 'package:eliud_pkg_feed/model/member_profile_model.dart';
+import 'package:eliud_pkg_text/platform/text_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:eliud_pkg_text/extensions/rich_text_dialog.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 class Profile extends StatefulWidget {
@@ -55,8 +53,7 @@ class _ProfileState extends State<Profile> {
                 child: child,
                 button: getEditIcon(
                   onPressed: () {
-                    RichTextDialog.open(
-                        context,
+                    AbstractTextPlatform.platform!.updateHtml(context,
                         widget.appId,
                         ownerId,
                         readAccess,
