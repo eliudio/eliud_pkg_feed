@@ -38,10 +38,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         yield await _updated(myState,
             myState.currentMemberProfileModel.copyWith(profile: event.value));
       } else if (event is ProfilePhotoChangedProfileEvent) {
-        yield await _updated(
+        var returnMe = await _updated(
             myState,
             myState.currentMemberProfileModel
                 .copyWith(profileOverride: event.value.url));
+        var equals = returnMe == state;
+        yield returnMe;
       } else if (event is ProfileBGPhotoChangedProfileEvent) {
         yield await _updated(
             myState,

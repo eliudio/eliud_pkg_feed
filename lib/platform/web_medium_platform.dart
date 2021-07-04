@@ -20,9 +20,7 @@ class WebMediumPlatform extends AbstractMediumPlatform {
   bool hasCamera() => false;
 
   Future<void> uploadPhoto(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress, {bool? allowCrop}) async {
-    print("**************** before result, pickFiles");
     var _result = await FilePicker.platform.pickFiles(type: FileType.image);
-    print("**************** allowCrop: $allowCrop");
     return processPhotos(_result, appId, ownerId, readAccess, feedbackFunction, feedbackProgress, allowCrop: allowCrop);
   }
 
@@ -38,7 +36,6 @@ class WebMediumPlatform extends AbstractMediumPlatform {
         var thumbnailBaseName = aFile.extension!;
         var bytes = aFile.bytes;
 
-        print("process photos");
         if ((allowCrop != null) && (allowCrop)) {
           print("allow crop");
           var newFile = await ImageCropper.cropImage(

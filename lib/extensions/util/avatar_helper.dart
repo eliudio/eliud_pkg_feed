@@ -9,46 +9,51 @@ import 'package:flutter/material.dart';
 class AvatarHelper {
   static Future<ProfileAttributes> _getProfileAttributes(
       String authorId, String appId, String feedId) async {
-    if (authorId.endsWith('feed')) {
-      int debugMe = 0;
-    }
     var key = authorId + "-" + feedId;
 
     // first try to get the information from memberProfileRepository
     var memberProfileModel =
         await memberProfileRepository(appId: appId)!.get(key, onError: (err) {});
+    var name;
+    var photoURL;
     if (memberProfileModel != null) {
-      var name = memberProfileModel.nameOverride;
-      var photoURL = memberProfileModel.profileOverride != null ? memberProfileModel.profileOverride! : null;
-      if (name != null) {
-        return ProfileAttributes(
-            name,
-            photoURL);
-      }
+      name = memberProfileModel.nameOverride;
+      photoURL = memberProfileModel.profileOverride != null ? memberProfileModel.profileOverride! : null;
+    }
+
+    // do we have name and photo?
+    if ((name != null) && (photoURL != null)) {
+      return ProfileAttributes(
+          name,
+          photoURL);
     }
 
     // second, this might not yet exit, as it's created by firebase functions
     var memberPub = await memberPublicInfoRepository()!.get(authorId);
     if (memberPub != null) {
-      var name = memberPub.name;
-      var photoURL = memberPub.photoURL;
-      if (name != null) {
-        return ProfileAttributes(
-            name,
-            photoURL);
-      }
+      name ??= memberPub.name;
+      photoURL ??= memberPub.photoURL;
+    }
+
+    // do we have name and photo?
+    if ((name != null) && (photoURL != null)) {
+      return ProfileAttributes(
+          name,
+          photoURL);
     }
 
     // third, we might not have access, unless it's our own, or we're the owner of the app
     var memberModel = await memberRepository()!.get(authorId);
     if (memberModel != null) {
-      var name = memberModel.name;
-      var photoURL = memberModel.photoURL;
-      if (name != null) {
-        return ProfileAttributes(
-            name,
-            photoURL);
-      }
+      name ??= memberModel.name;
+      photoURL ??= memberModel.photoURL;
+    }
+
+    // do we have name and photo?
+    if ((name != null) && (photoURL != null)) {
+      return ProfileAttributes(
+          name,
+          photoURL);
     }
     return ProfileAttributes("?", null);
   }

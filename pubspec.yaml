@@ -24,7 +24,7 @@ dependencies:
   chewie: 1.0.0
   image_picker_gallery_camera: 0.2.2
   file_picker: 3.0.2+2
-  image_cropper: 1.4.0
+  crop_your_image: 0.5.3
 
   eliud_core:
     path: ../eliud_core

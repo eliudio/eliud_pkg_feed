@@ -75,7 +75,7 @@ class _HeaderState extends State<Header> {
                 child: Container(
                     width: width,
                     child:
-                        LinearProgressIndicator(value: progressProfileVideo))))
+                        LinearProgressIndicator(value: progress >= 0 ? progress : null))))
       ]);
     }
   }
