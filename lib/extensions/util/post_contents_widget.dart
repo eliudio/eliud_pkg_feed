@@ -1,4 +1,5 @@
 import 'package:eliud_core/style/style_registry.dart';
+import 'package:eliud_pkg_text/platform/text_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
@@ -93,7 +94,7 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
 */
       return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'External link not supported yet');
     } else if (postModel.html != null) {
-      return HtmlWidget(postModel.html!);
+      return AbstractTextPlatform.platform!.htmlWidget(postModel.html!);
     }
 
     return Container(height: 1); // nothing
