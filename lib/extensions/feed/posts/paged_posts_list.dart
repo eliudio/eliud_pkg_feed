@@ -45,8 +45,6 @@ class _PagedPostsListState extends State<PagedPostsList> {
     setState(_) {
       videoUploadingProgress = progress;
     }
-
-    ;
   }
 
   Widget _getIcon(Widget child) {

@@ -12,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
 enum PostType { PostPhoto, PostVideo }
 
 /*
@@ -40,11 +39,8 @@ class _PostButtonState extends State<PostButton> {
       var _photo = Image.asset(
           "assets/images/segoshvishna.fiverr.com/photo.png",
           package: "eliud_pkg_feed");
-      return MediaButtons.mediaButtons(
-          context,
-          widget.feedModel.appId!,
-          widget.author.documentID!,
-          widget.readAccess,
+      return MediaButtons.mediaButtons(context, widget.feedModel.appId!,
+          widget.author.documentID!, widget.readAccess,
           allowCrop: false,
           tooltip: 'Add photo', photoFeedbackFunction: (photo) {
         _addPost(postMemberMedia: [
@@ -60,11 +56,8 @@ class _PostButtonState extends State<PostButton> {
       var _video = Image.asset(
           "assets/images/segoshvishna.fiverr.com/video.png",
           package: "eliud_pkg_feed");
-      return MediaButtons.mediaButtons(
-          context,
-          widget.feedModel.appId!,
-          widget.author.documentID!,
-          widget.readAccess,
+      return MediaButtons.mediaButtons(context, widget.feedModel.appId!,
+          widget.author.documentID!, widget.readAccess,
           allowCrop: false,
           tooltip: 'Add video', videoFeedbackFunction: (photo) {
         _addPost(postMemberMedia: [
@@ -105,23 +98,42 @@ class _PostButtonState extends State<PostButton> {
       return Stack(children: [
         _getOriginalIcon(child),
         Container(
-            padding: const EdgeInsets.only(top: 22.5, bottom: 22.5),
-            child: Align(
-                alignment: Alignment.bottomLeft,
-                child: Container(
-                    margin: EdgeInsets.all(7.0),
-                    padding: EdgeInsets.all(2.0),
-                    child: SizedBox(
-                      width: 45 * photoUploadingProgress!,
-                      height: 5,
-                      child: ColorFiltered(
-                          colorFilter: new ColorFilter.mode(
-                              Colors.black.withOpacity(0.9), BlendMode.dstATop),
-                          child: const DecoratedBox(
-                            decoration: const BoxDecoration(color: Colors.red),
-                          )),
-                    ))))
+            width: 60,
+            child: StyleRegistry.registry()
+                .styleWithContext(context)
+                .frontEndStyle()
+                .progressIndicatorStyle()
+                .progressIndicatorWithValue(context,
+                    value: photoUploadingProgress!))
       ]);
+
+/*
+      Container(
+          width: 45 * photoUploadingProgress!,
+          height: 40,
+          child: Stack(children: [
+            _getOriginalIcon(child),
+            Container(
+                padding: const EdgeInsets.only(top: 22.5, bottom: 22.5),
+                child: Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Container(
+                        margin: EdgeInsets.all(7.0),
+                        padding: EdgeInsets.all(2.0),
+                        child: SizedBox(
+                          width: 45 * photoUploadingProgress!,
+                          height: 5,
+                          child: ColorFiltered(
+                              colorFilter: new ColorFilter.mode(
+                                  Colors.black.withOpacity(0.9),
+                                  BlendMode.dstATop),
+                              child: const DecoratedBox(
+                                decoration:
+                                    const BoxDecoration(color: Colors.red),
+                              )),
+                        ))))
+          ]));
+*/
     }
   }
 
