@@ -122,23 +122,6 @@ class MobileMediumPlatform extends AbstractMediumPlatform {
         feedbackProgress);
   }
 
-  Future<void> processPhoto(
-    String appId,
-    String baseName,
-    String thumbnailBaseName,
-    String ownerId,
-    Uint8List bytes,
-    List<String> readAccess,
-    MemberMediumAvailable feedbackFunction,
-    FeedbackProgress? feedbackProgress,
-  ) async {
-    var memberMediumModel =
-        await MemberMediumHelper.createThumbnailUploadPhotoData(
-            appId, bytes, baseName, thumbnailBaseName, ownerId, readAccess,
-            feedbackProgress: feedbackProgress);
-    feedbackFunction(memberMediumModel);
-  }
-
   Future<void> processVideos(
       String appId,
       String ownerId,

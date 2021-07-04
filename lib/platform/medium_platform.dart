@@ -1,5 +1,8 @@
+import 'dart:typed_data';
+
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/tools/etc.dart';
+import 'package:eliud_core/tools/storage/member_medium_helper.dart';
 import 'package:eliud_core/tools/storage/upload_info.dart';
 import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import '../tools/view/video_view.dart';
@@ -73,4 +76,22 @@ abstract class AbstractMediumPlatform {
   void uploadVideo(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress);
 
   bool hasCamera();
+
+  Future<void> processPhoto(
+      String appId,
+      String baseName,
+      String thumbnailBaseName,
+      String ownerId,
+      Uint8List bytes,
+      List<String> readAccess,
+      MemberMediumAvailable feedbackFunction,
+      FeedbackProgress? feedbackProgress,
+      ) async {
+    var memberMediumModel =
+    await MemberMediumHelper.createThumbnailUploadPhotoData(
+        appId, bytes, baseName, thumbnailBaseName, ownerId, readAccess,
+        feedbackProgress: feedbackProgress);
+    feedbackFunction(memberMediumModel);
+  }
+
 }

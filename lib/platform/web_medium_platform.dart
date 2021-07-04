@@ -1,12 +1,12 @@
 import 'package:eliud_core/tools/storage/basename_helper.dart';
 import 'package:eliud_core/tools/storage/medium_data.dart';
 import 'package:eliud_core/tools/storage/member_medium_helper.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:eliud_core/tools/storage/upload_info.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'image_crop.dart';
 import 'medium_platform.dart';
 
 class WebMediumPlatform extends AbstractMediumPlatform {
@@ -20,64 +20,30 @@ class WebMediumPlatform extends AbstractMediumPlatform {
   bool hasCamera() => false;
 
   Future<void> uploadPhoto(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress, {bool? allowCrop}) async {
-    var _result = await FilePicker.platform.pickFiles(type: FileType.image);
-    return processPhotos(_result, appId, ownerId, readAccess, feedbackFunction, feedbackProgress, allowCrop: allowCrop);
+    if (feedbackProgress != null) feedbackProgress(-1);
+    var _result = await FilePicker.platform
+        .pickFiles(type: FileType.image, allowMultiple: false);
+    if (_result == null) return;
+    var aFile = _result.files[0];
+    var baseName = aFile.name;
+    var thumbnailBaseName = aFile.extension!;
+    var bytes = aFile.bytes;
+    if (bytes == null) return;
+
+    if ((allowCrop != null) && (allowCrop)) {
+      ImageCropWidget.open(context, (croppedImage) {
+        processPhoto(appId, baseName, thumbnailBaseName, ownerId, croppedImage,
+            readAccess, feedbackFunction, feedbackProgress);
+      }, bytes);
+    } else {
+      processPhoto(appId, baseName, thumbnailBaseName, ownerId, bytes,
+          readAccess, feedbackFunction, feedbackProgress);
+    }
   }
 
   Future<void> uploadVideo(BuildContext context, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress) async {
     var _result = await FilePicker.platform.pickFiles(type: FileType.video);
     return processVideos(_result, appId, ownerId, readAccess, feedbackFunction, feedbackProgress);
-  }
-
-  Future<void> processPhotos(FilePickerResult? result, String appId, String ownerId, List<String> readAccess, MemberMediumAvailable feedbackFunction, FeedbackProgress? feedbackProgress, {bool? allowCrop}) async {
-    if (result != null) {
-      for (var aFile in result.files) {
-        var baseName = aFile.name;
-        var thumbnailBaseName = aFile.extension!;
-        var bytes = aFile.bytes;
-
-        if ((allowCrop != null) && (allowCrop)) {
-          print("allow crop");
-          var newFile = await ImageCropper.cropImage(
-              sourcePath: aFile.path!,
-              androidUiSettings: AndroidUiSettings(
-                  toolbarTitle: 'Crop image',
-                  toolbarColor: Colors.black,
-                  toolbarWidgetColor: Colors.white,
-                  initAspectRatio: CropAspectRatioPreset.square,
-                  lockAspectRatio: true),
-                  iosUiSettings: IOSUiSettings(
-                    minimumAspectRatio: 1.0,
-                  )
-          );
-          var memberMediumModel = await MemberMediumHelper
-              .createThumbnailUploadPhotoFile(
-              appId,
-              newFile!.path,
-              ownerId,
-              readAccess,
-              feedbackProgress: feedbackProgress
-          );
-          feedbackFunction(memberMediumModel);
-        } else {
-          print("do not crop");
-          if (bytes != null) {
-            var memberMediumModel = await MemberMediumHelper
-                .createThumbnailUploadPhotoData(appId,
-                bytes,
-                baseName,
-                thumbnailBaseName,
-                ownerId,
-                readAccess,
-                feedbackProgress: feedbackProgress
-            );
-            feedbackFunction(memberMediumModel);
-          } else {
-            print('bytes is null!');
-          }
-        }
-      }
-    }
   }
 
   Future<void> processVideos(
