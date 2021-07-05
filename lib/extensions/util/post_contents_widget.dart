@@ -10,7 +10,7 @@ import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_media_helper.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
-import 'package:eliud_pkg_feed/platform/medium_platform.dart';
+import 'package:eliud_pkg_medium/platform/medium_platform.dart';
 
 import 'embedded_page.dart';
 
@@ -40,47 +40,56 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return _contents(memberID: widget.memberID, postModel: widget.postModel,
-        accessBloc: widget.accessBloc, parentPageId: widget.parentPageId);
+    return _contents(
+        memberID: widget.memberID,
+        postModel: widget.postModel,
+        accessBloc: widget.accessBloc,
+        parentPageId: widget.parentPageId);
   }
 
-  @override
-  Widget _contents({String? memberID,
-    required PostModel postModel,
-    AccessBloc? accessBloc,
-    String? parentPageId}) {
+  Widget _contents(
+      {String? memberID,
+      required PostModel postModel,
+      AccessBloc? accessBloc,
+      String? parentPageId}) {
     List<Tab> tabs = [];
 
     if (postModel.postPageId != null) {
       if (memberID != null) {
-        return EmbeddedPageHelper.postDetails(context, memberID, postModel,
-            accessBloc, parentPageId!
-        );
+        return EmbeddedPageHelper.postDetails(
+            context, memberID, postModel, accessBloc, parentPageId!);
       }
     } else if ((postModel.memberMedia != null) &&
         (postModel.memberMedia!.length > 0)) {
       if (postModel.memberMedia!.length == 1) {
         var medium = postModel.memberMedia![0];
         var width;
-        if (medium.memberMedium!.mediumType == MediumType.Photo) {
-          width = _width(context) * .7;
+        if (medium.memberMedium != null) {
+          if (medium.memberMedium!.mediumType == MediumType.Photo) {
+            width = _width(context) * .7;
+          }          return GestureDetector(
+              child: Center(
+                  child: MemberImageModelWidget(
+                memberMediumModel: medium.memberMedium!,
+                width: width,
+                showThumbnail:
+                    medium.memberMedium!.mediumType != MediumType.Photo,
+              )),
+              onTap: () {
+                _action([medium], 0);
+              });
+        } else {
+          print('postmodel with id ' +
+              postModel.documentID! +
+              ' has memberMedia with no details');
         }
-        return GestureDetector(
-            child: Center(
-                child: MemberImageModelWidget(memberMediumModel:medium.memberMedium!,
-                  width: width,
-                  showThumbnail: medium.memberMedium!.mediumType != MediumType.Photo,
-                )),
-            onTap: () {
-              _action([medium], 0);
-            });
       } else {
         List<PostMediumModel> memberMedia = postModel.memberMedia!;
         List<Widget> widgets = [];
         // Photos & videos
         //widgets.add(PostMediaHelper.videoAndPhotoDivider(context));
-        widgets.add(PostMediaHelper.staggeredMemberMediumModelFromPostMedia(context,
-            memberMedia, viewAction: (index) {
+        widgets.add(PostMediaHelper.staggeredMemberMediumModelFromPostMedia(
+            context, memberMedia, viewAction: (index) {
           _action(memberMedia, index);
         }));
         return Column(children: widgets);
@@ -92,7 +101,11 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
         javascriptMode: JavascriptMode.unrestricted,
       );
 */
-      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'External link not supported yet');
+      return StyleRegistry.registry()
+          .styleWithContext(context)
+          .frontEndStyle()
+          .textStyle()
+          .text(context, 'External link not supported yet');
     } else if (postModel.html != null) {
       return AbstractTextPlatform.platform!.htmlWidget(postModel.html!);
     }
@@ -103,13 +116,18 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
   void _action(List<PostMediumModel> memberMedia, int index) {
     var postMedium = memberMedia[index];
     if (postMedium.memberMedium!.mediumType! == MediumType.Photo) {
-      AbstractMediumPlatform.platform!
-          .showPhotosFromPostMedia(context, memberMedia, index);
+      showPhotosFromPostMedia(context, memberMedia, index);
     } else {
       AbstractMediumPlatform.platform!
           .showVideo(context, postMedium.memberMedium!);
     }
   }
 
-
+  void showPhotosFromPostMedia(
+      BuildContext context, List<PostMediumModel> postMedia, int initialPage) {
+    if (postMedia.length > 0) {
+      var photos = postMedia.map((pm) => pm.memberMedium!).toList();
+      AbstractMediumPlatform.platform!.showPhotos(context, photos, initialPage);
+    }
+  }
 }

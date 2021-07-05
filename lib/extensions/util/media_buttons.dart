@@ -1,6 +1,6 @@
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/storage/upload_info.dart';
-import 'package:eliud_pkg_feed/platform/medium_platform.dart';
+import 'package:eliud_pkg_medium/platform/medium_platform.dart';
 import 'package:flutter/material.dart';
 
 class MediaButtons {
@@ -20,7 +20,9 @@ class MediaButtons {
     if (readAccess == null) throw Exception('readAccess is null');
     var items = <PopupMenuItem<int>>[];
     if (photoFeedbackFunction != null) {
+      print("HAS CAMERA?");
       if (AbstractMediumPlatform.platform!.hasCamera()) {
+        print("HAS CAMERA INDEED!");
         items.add(
           PopupMenuItem<int>(
               child: StyleRegistry.registry()

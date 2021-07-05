@@ -32,19 +32,36 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   Stream<ProfileState> mapEventToState(ProfileEvent event) async* {
     if (event is InitialiseProfileEvent) {
       yield await determineProfileState(event);
-    } else if (state is LoggedInWatchingMyProfile) {
-      var myState = state as LoggedInWatchingMyProfile;
-      if (event is ProfileChangedProfileEvent) {
+    } else if (event is UploadingProfilePhotoEvent) {
+      if (state is ProfileInitialised) {
+        var theState = state as ProfileInitialised;
+        var newState = theState.progressWith(
+            uploadingProfilePhotoProgress: event.progress);
+        var isEqual = newState == theState;
+        yield newState;
+      }
+    } else if (event is UploadingBGPhotoEvent) {
+      if (state is ProfileInitialised) {
+        var theState = state as ProfileInitialised;
+        yield theState.progressWith(uploadingBGProgress: event.progress);
+      }
+    } else if (event is ProfileChangedProfileEvent) {
+      if (state is LoggedInWatchingMyProfile) {
+        var myState = state as LoggedInWatchingMyProfile;
         yield await _updated(myState,
             myState.currentMemberProfileModel.copyWith(profile: event.value));
-      } else if (event is ProfilePhotoChangedProfileEvent) {
-        var returnMe = await _updated(
+      }
+    } else if (event is ProfilePhotoChangedProfileEvent) {
+      if (state is LoggedInWatchingMyProfile) {
+        var myState = state as LoggedInWatchingMyProfile;
+        yield await _updated(
             myState,
             myState.currentMemberProfileModel
                 .copyWith(profileOverride: event.value.url));
-        var equals = returnMe == state;
-        yield returnMe;
-      } else if (event is ProfileBGPhotoChangedProfileEvent) {
+      }
+    } else if (event is ProfileBGPhotoChangedProfileEvent) {
+      if (state is LoggedInWatchingMyProfile) {
+        var myState = state as LoggedInWatchingMyProfile;
         yield await _updated(
             myState,
             myState.currentMemberProfileModel
@@ -57,7 +74,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       MemberProfileModel newMemberProfileModel) async {
     await memberProfileRepository(appId: myState.appId)!
         .update(newMemberProfileModel);
-    return myState.copyWith(newMemberProfileModel: newMemberProfileModel);
+    return myState.copyWith(newMemberProfileModel: newMemberProfileModel, uploadingBGProgress: null, uploadingProfilePhotoProgress: null);
   }
 
   Future<ProfileState> determineProfileState(
@@ -74,19 +91,29 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         var param = pageContextInfo
             .parameters![SwitchMember.switchMemberFeedPageParameter];
         if (param == null) {
-          return WatchingPublicProfile(feedId: feedId, appId: appId);
+          return WatchingPublicProfile(
+              feedId: feedId,
+              appId: appId,
+              uploadingProfilePhotoProgress: null,
+              uploadingBGProgress: null);
         } else {
           var feedPublicInfoModel = await getMemberPublicInfo(param);
-          var feedProfileModel =
-              await getMemberProfileModelWithPublicInfo(false, appId, feedId, feedPublicInfoModel, null);
+          var feedProfileModel = await getMemberProfileModelWithPublicInfo(
+              false, appId, feedId, feedPublicInfoModel, null);
           return NotLoggedInWatchingSomeone(
               appId: appId,
               feedId: feedId,
               feedProfileModel: feedProfileModel,
-              feedPublicInfoModel: feedPublicInfoModel);
+              feedPublicInfoModel: feedPublicInfoModel,
+              uploadingProfilePhotoProgress: null,
+              uploadingBGProgress: null);
         }
       } else {
-        return WatchingPublicProfile(feedId: feedId, appId: appId);
+        return WatchingPublicProfile(
+            feedId: feedId,
+            appId: appId,
+            uploadingProfilePhotoProgress: null,
+            uploadingBGProgress: null);
       }
     } else {
       var defaultReadAccess = await PostFollowersMemberHelper.asPublic(
@@ -99,23 +126,27 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       }
 
       if (param == null) {
-        var currentMemberProfileModel = await getMemberProfileModelWithCurrentMemberModel(true,
-            appId, feedId, currentMemberModel, defaultReadAccess);
+        var currentMemberProfileModel =
+            await getMemberProfileModelWithCurrentMemberModel(
+                true, appId, feedId, currentMemberModel, defaultReadAccess);
         return LoggedInWatchingMyProfile(
             feedId: feedId,
             appId: appId,
             currentMemberProfileModel: currentMemberProfileModel,
             currentMember: currentMemberModel,
             defaultReadAccess: defaultReadAccess,
-            onlyMyPosts: false);
+            onlyMyPosts: false,
+            uploadingProfilePhotoProgress: null,
+            uploadingBGProgress: null);
       } else {
-        var currentMemberProfileModel = await getMemberProfileModelWithCurrentMemberModel(false,
-            appId, feedId, currentMemberModel, defaultReadAccess);
+        var currentMemberProfileModel =
+            await getMemberProfileModelWithCurrentMemberModel(
+                false, appId, feedId, currentMemberModel, defaultReadAccess);
         var following = await FollowerHelper.following(
             currentMemberModel.documentID!, appId);
         var feedPublicInfoModel = await getMemberPublicInfo(param);
-        var feedProfileModel = await getMemberProfileModelWithPublicInfo(false,
-            appId, feedId, feedPublicInfoModel, null);
+        var feedProfileModel = await getMemberProfileModelWithPublicInfo(
+            false, appId, feedId, feedPublicInfoModel, null);
         return LoggedInAndWatchingOtherProfile(
             feedId: feedId,
             appId: appId,
@@ -124,8 +155,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             defaultReadAccess: defaultReadAccess,
             feedProfileModel: feedProfileModel,
             feedPublicInfoModel: feedPublicInfoModel,
-            iFollowThisPerson:
-                following.contains(currentMemberModel.documentID!));
+            iFollowThisPerson: following.contains(
+              currentMemberModel.documentID!,
+            ),
+            uploadingProfilePhotoProgress: null,
+            uploadingBGProgress: null);
       }
     }
   }
@@ -139,21 +173,37 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     return member;
   }
 
-  static Future<MemberProfileModel> getMemberProfileModelWithCurrentMemberModel(bool create, String appId,
-      String feedId, MemberModel member, List<String>? readAccess) async {
-    return getMemberProfileModel(create, appId, feedId, member.documentID!, member.photoURL!, member.name!, readAccess);
+  static Future<MemberProfileModel> getMemberProfileModelWithCurrentMemberModel(
+      bool create,
+      String appId,
+      String feedId,
+      MemberModel member,
+      List<String>? readAccess) async {
+    return getMemberProfileModel(create, appId, feedId, member.documentID!,
+        member.photoURL!, member.name!, readAccess);
   }
 
-  static Future<MemberProfileModel> getMemberProfileModelWithPublicInfo(bool create, String appId,
-      String feedId, MemberPublicInfoModel member, List<String>? readAccess) async {
-    return getMemberProfileModel(create, appId, feedId, member.documentID!, member.photoURL!, member.name!, readAccess);
+  static Future<MemberProfileModel> getMemberProfileModelWithPublicInfo(
+      bool create,
+      String appId,
+      String feedId,
+      MemberPublicInfoModel member,
+      List<String>? readAccess) async {
+    return getMemberProfileModel(create, appId, feedId, member.documentID!,
+        member.photoURL!, member.name!, readAccess);
   }
 
-  static Future<MemberProfileModel> getMemberProfileModel(bool create, String appId,
-      String feedId, String memberId, String photoURL, String name, List<String>? readAccess) async {
+  static Future<MemberProfileModel> getMemberProfileModel(
+      bool create,
+      String appId,
+      String feedId,
+      String memberId,
+      String photoURL,
+      String name,
+      List<String>? readAccess) async {
     var key = memberId + "-" + feedId;
-    var memberProfileModel =
-        await memberProfileRepository(appId: appId)!.get(key, onError: (exception) {} );
+    var memberProfileModel = await memberProfileRepository(appId: appId)!
+        .get(key, onError: (exception) {});
     if (memberProfileModel == null) {
       // create default profile
       memberProfileModel = MemberProfileModel(
@@ -163,8 +213,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           authorId: memberId,
           readAccess: readAccess,
           profileOverride: photoURL,
-          nameOverride: name
-      );
+          nameOverride: name);
       if (create) {
         await memberProfileRepository(appId: appId)!.add(memberProfileModel);
       }
@@ -249,6 +298,5 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         .withCondition(EliudQueryCondition('feedId', isEqualTo: feedId))
         .withCondition(
             EliudQueryCondition('readAccess', arrayContainsAny: ['PUBLIC']));
-    ;
   }
 }

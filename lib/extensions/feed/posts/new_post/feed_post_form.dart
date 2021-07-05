@@ -10,7 +10,7 @@ import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/media_buttons.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_media_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/switch_member.dart';
-import 'package:eliud_pkg_feed/platform/medium_platform.dart';
+import 'package:eliud_pkg_medium/platform/medium_platform.dart';
 import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -155,15 +155,19 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
     ]);
   }
 
-  void _photoUploading(double progress) {
-    BlocProvider.of<FeedPostFormBloc>(context)
-        .add(UploadingMedium(progress: progress));
+  void _photoUploading(double? progress) {
+    if (progress != null) {
+      BlocProvider.of<FeedPostFormBloc>(context)
+          .add(UploadingMedium(progress: progress));
+    }
     setState(() {});
   }
 
-  void _videoUploading(double progress) {
-    BlocProvider.of<FeedPostFormBloc>(context)
-        .add(UploadingMedium(progress: progress));
+  void _videoUploading(double? progress) {
+    if (progress != null) {
+      BlocProvider.of<FeedPostFormBloc>(context)
+          .add(UploadingMedium(progress: progress));
+    }
     setState(() {});
   }
 
@@ -175,17 +179,21 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         context, app.documentID!, memberId, readAccess,
         tooltip: 'Add video or photo',
         photoFeedbackFunction: (photo) {
-          var memberMedia = state.postModelDetails.memberMedia;
-          memberMedia.add(photo);
-          BlocProvider.of<FeedPostFormBloc>(context)
-              .add(ChangedMedia(memberMedia: memberMedia));
+          if (photo != null) {
+            var memberMedia = state.postModelDetails.memberMedia;
+            memberMedia.add(photo);
+            BlocProvider.of<FeedPostFormBloc>(context)
+                .add(ChangedMedia(memberMedia: memberMedia));
+          }
         },
         photoFeedbackProgress: _photoUploading,
         videoFeedbackFunction: (video) {
-          var memberMedia = state.postModelDetails.memberMedia;
-          memberMedia.add(video);
-          BlocProvider.of<FeedPostFormBloc>(context)
-              .add(ChangedMedia(memberMedia: memberMedia));
+          if (video != null) {
+            var memberMedia = state.postModelDetails.memberMedia;
+            memberMedia.add(video);
+            BlocProvider.of<FeedPostFormBloc>(context)
+                .add(ChangedMedia(memberMedia: memberMedia));
+          }
         },
         videoFeedbackProgress: _videoUploading);
   }

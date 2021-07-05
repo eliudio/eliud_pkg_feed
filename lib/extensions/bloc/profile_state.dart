@@ -48,8 +48,11 @@ class ProfileStateUninitialized extends ProfileState {
 abstract class ProfileInitialised extends ProfileState {
   final String feedId;
   final String appId;
+  final double? uploadingBGProgress;
+  final double? uploadingProfilePhotoProgress;
 
-  const ProfileInitialised(this.feedId, this.appId);
+  const ProfileInitialised(this.feedId, this.appId, this.uploadingBGProgress,
+      this.uploadingProfilePhotoProgress);
 
   String? memberId();
 
@@ -61,6 +64,9 @@ abstract class ProfileInitialised extends ProfileState {
 
   String profileUrl();
   String profileHTML();
+
+  ProfileInitialised progressWith(
+      {double? uploadingBGProgress, double? uploadingProfilePhotoProgress});
 }
 
 abstract class LoggedInProfileInitialized extends ProfileInitialised {
@@ -73,8 +79,11 @@ abstract class LoggedInProfileInitialized extends ProfileInitialised {
       String appId,
       this.currentMemberProfileModel,
       this.currentMember,
-      this.defaultReadAccess)
-      : super(feedId, appId);
+      this.defaultReadAccess,
+      double? uploadingBGProgress,
+      double? uploadingProfilePhotoProgress)
+      : super(
+            feedId, appId, uploadingBGProgress, uploadingProfilePhotoProgress);
 
   @override
   String? memberId() => currentMember.documentID!;
@@ -83,18 +92,26 @@ abstract class LoggedInProfileInitialized extends ProfileInitialised {
 class LoggedInWatchingMyProfile extends LoggedInProfileInitialized {
   final bool onlyMyPosts;
 
-  LoggedInWatchingMyProfile(
-      {required String feedId,
-      required String appId,
-      required MemberProfileModel currentMemberProfileModel,
-      required MemberModel currentMember,
-      required List<String> defaultReadAccess,
-      required this.onlyMyPosts})
-      : super(feedId, appId, currentMemberProfileModel, currentMember,
-            defaultReadAccess);
+  LoggedInWatchingMyProfile({
+    required String feedId,
+    required String appId,
+    required MemberProfileModel currentMemberProfileModel,
+    required MemberModel currentMember,
+    required List<String> defaultReadAccess,
+    required this.onlyMyPosts,
+    required double? uploadingBGProgress,
+    required double? uploadingProfilePhotoProgress,
+  }) : super(
+            feedId,
+            appId,
+            currentMemberProfileModel,
+            currentMember,
+            defaultReadAccess,
+            uploadingBGProgress,
+            uploadingProfilePhotoProgress);
 
   LoggedInWatchingMyProfile copyWith(
-      {required MemberProfileModel newMemberProfileModel}) {
+      {required MemberProfileModel newMemberProfileModel, double? uploadingBGProgress, double? uploadingProfilePhotoProgress}) {
     return LoggedInWatchingMyProfile(
       feedId: this.feedId,
       appId: this.appId,
@@ -102,6 +119,26 @@ class LoggedInWatchingMyProfile extends LoggedInProfileInitialized {
       currentMember: this.currentMember,
       defaultReadAccess: this.defaultReadAccess,
       onlyMyPosts: this.onlyMyPosts,
+      uploadingBGProgress: uploadingBGProgress == null ? uploadingBGProgress : this.uploadingBGProgress,
+      uploadingProfilePhotoProgress: uploadingProfilePhotoProgress == null ? uploadingProfilePhotoProgress : this.uploadingProfilePhotoProgress,
+    );
+  }
+
+  LoggedInWatchingMyProfile progressWith(
+      {double? uploadingBGProgress, double? uploadingProfilePhotoProgress}) {
+    return LoggedInWatchingMyProfile(
+      feedId: this.feedId,
+      appId: this.appId,
+      currentMemberProfileModel: this.currentMemberProfileModel,
+      currentMember: this.currentMember,
+      defaultReadAccess: this.defaultReadAccess,
+      onlyMyPosts: this.onlyMyPosts,
+      uploadingBGProgress: uploadingBGProgress == null
+          ? this.uploadingBGProgress
+          : uploadingBGProgress,
+      uploadingProfilePhotoProgress: uploadingProfilePhotoProgress == null
+          ? this.uploadingProfilePhotoProgress
+          : uploadingProfilePhotoProgress,
     );
   }
 
@@ -135,7 +172,9 @@ class LoggedInWatchingMyProfile extends LoggedInProfileInitialized {
         appId,
         currentMemberProfileModel,
         currentMember,
-        defaultReadAccess
+        defaultReadAccess,
+        uploadingBGProgress,
+        uploadingProfilePhotoProgress
       ];
 
   @override
@@ -147,7 +186,9 @@ class LoggedInWatchingMyProfile extends LoggedInProfileInitialized {
           appId == other.appId &&
           currentMemberProfileModel == other.currentMemberProfileModel &&
           currentMember == other.currentMember &&
-          ListEquality().equals(defaultReadAccess, other.defaultReadAccess);
+          ListEquality().equals(defaultReadAccess, other.defaultReadAccess) &&
+          uploadingBGProgress == other.uploadingBGProgress &&
+          uploadingProfilePhotoProgress == other.uploadingProfilePhotoProgress;
 
   @override
   String? watchingThisMember() {
@@ -168,9 +209,17 @@ class LoggedInAndWatchingOtherProfile extends LoggedInProfileInitialized {
       required List<String> defaultReadAccess,
       required this.feedProfileModel,
       required this.feedPublicInfoModel,
-      required this.iFollowThisPerson})
-      : super(feedId, appId, currentMemberProfileModel, currentMember,
-            defaultReadAccess);
+      required this.iFollowThisPerson,
+      required double? uploadingBGProgress,
+      required double? uploadingProfilePhotoProgress})
+      : super(
+            feedId,
+            appId,
+            currentMemberProfileModel,
+            currentMember,
+            defaultReadAccess,
+            uploadingBGProgress,
+            uploadingProfilePhotoProgress);
 
   @override
   bool canEditThisProfile() => false;
@@ -205,7 +254,9 @@ class LoggedInAndWatchingOtherProfile extends LoggedInProfileInitialized {
         defaultReadAccess,
         iFollowThisPerson,
         feedProfileModel,
-        feedPublicInfoModel
+        feedPublicInfoModel,
+        uploadingBGProgress,
+        uploadingProfilePhotoProgress
       ];
 
   @override
@@ -220,12 +271,33 @@ class LoggedInAndWatchingOtherProfile extends LoggedInProfileInitialized {
           ListEquality().equals(defaultReadAccess, other.defaultReadAccess) &&
           iFollowThisPerson == other.iFollowThisPerson &&
           feedProfileModel == other.feedProfileModel &&
-          feedPublicInfoModel == other.feedPublicInfoModel;
-
+          feedPublicInfoModel == other.feedPublicInfoModel &&
+          uploadingBGProgress == other.uploadingBGProgress &&
+          uploadingProfilePhotoProgress == other.uploadingProfilePhotoProgress;
 
   @override
   String? watchingThisMember() {
     return feedPublicInfoModel.documentID!;
+  }
+
+  LoggedInAndWatchingOtherProfile progressWith(
+      {double? uploadingBGProgress, double? uploadingProfilePhotoProgress}) {
+    return LoggedInAndWatchingOtherProfile(
+      feedId: this.feedId,
+      appId: this.appId,
+      currentMemberProfileModel: this.currentMemberProfileModel,
+      currentMember: this.currentMember,
+      defaultReadAccess: this.defaultReadAccess,
+      feedProfileModel: this.feedProfileModel,
+      feedPublicInfoModel: this.feedPublicInfoModel,
+      iFollowThisPerson: this.iFollowThisPerson,
+      uploadingBGProgress: uploadingBGProgress == null
+          ? this.uploadingBGProgress
+          : uploadingBGProgress,
+      uploadingProfilePhotoProgress: uploadingProfilePhotoProgress == null
+          ? this.uploadingProfilePhotoProgress
+          : uploadingProfilePhotoProgress,
+    );
   }
 }
 
@@ -233,12 +305,14 @@ class NotLoggedInWatchingSomeone extends ProfileInitialised {
   final MemberProfileModel feedProfileModel;
   final MemberPublicInfoModel feedPublicInfoModel;
 
-  NotLoggedInWatchingSomeone(
-      {required String feedId,
-      required String appId,
-      required this.feedProfileModel,
-      required this.feedPublicInfoModel})
-      : super(feedId, appId);
+  NotLoggedInWatchingSomeone({
+    required String feedId,
+    required String appId,
+    required this.feedProfileModel,
+    required this.feedPublicInfoModel,
+    required double? uploadingBGProgress,
+    required double? uploadingProfilePhotoProgress,
+  }) : super(feedId, appId, uploadingBGProgress, uploadingProfilePhotoProgress);
 
   @override
   String? memberId() => null;
@@ -273,6 +347,8 @@ class NotLoggedInWatchingSomeone extends ProfileInitialised {
         appId,
         feedProfileModel,
         feedPublicInfoModel,
+        uploadingBGProgress,
+        uploadingProfilePhotoProgress
       ];
 
   @override
@@ -282,17 +358,41 @@ class NotLoggedInWatchingSomeone extends ProfileInitialised {
           runtimeType == other.runtimeType &&
           feedId == other.feedId &&
           feedProfileModel == other.feedProfileModel &&
-          feedPublicInfoModel == other.feedPublicInfoModel;
+          feedPublicInfoModel == other.feedPublicInfoModel &&
+          uploadingBGProgress == other.uploadingBGProgress &&
+          uploadingProfilePhotoProgress == other.uploadingProfilePhotoProgress;
 
   @override
   String? watchingThisMember() {
     return feedPublicInfoModel.documentID!;
   }
+
+  @override
+  NotLoggedInWatchingSomeone progressWith(
+      {double? uploadingBGProgress, double? uploadingProfilePhotoProgress}) {
+    return NotLoggedInWatchingSomeone(
+      feedId: this.feedId,
+      appId: this.appId,
+      feedProfileModel: this.feedProfileModel,
+      feedPublicInfoModel: this.feedPublicInfoModel,
+      uploadingBGProgress: uploadingBGProgress == null
+          ? this.uploadingBGProgress
+          : uploadingBGProgress,
+      uploadingProfilePhotoProgress: uploadingProfilePhotoProgress == null
+          ? this.uploadingProfilePhotoProgress
+          : uploadingProfilePhotoProgress,
+    );
+  }
 }
 
 class WatchingPublicProfile extends ProfileInitialised {
-  WatchingPublicProfile({required String feedId, required String appId})
-      : super(feedId, appId);
+  WatchingPublicProfile(
+      {required String feedId,
+      required String appId,
+      required double? uploadingBGProgress,
+      required double? uploadingProfilePhotoProgress})
+      : super(
+            feedId, appId, uploadingBGProgress, uploadingProfilePhotoProgress);
 
   String? memberId() => null;
 
@@ -313,7 +413,8 @@ class WatchingPublicProfile extends ProfileInitialised {
   }
 
   @override
-  List<Object?> get props => [feedId, appId];
+  List<Object?> get props =>
+      [feedId, appId, uploadingBGProgress, uploadingProfilePhotoProgress];
 
   @override
   bool operator ==(Object other) =>
@@ -321,10 +422,22 @@ class WatchingPublicProfile extends ProfileInitialised {
       other is WatchingPublicProfile &&
           runtimeType == other.runtimeType &&
           feedId == other.feedId &&
-          appId == other.appId;
+          appId == other.appId &&
+          uploadingBGProgress == other.uploadingBGProgress &&
+          uploadingProfilePhotoProgress == other.uploadingProfilePhotoProgress;
 
   @override
   String? watchingThisMember() {
     return null;
+  }
+
+  @override
+  ProfileInitialised progressWith(
+      {double? uploadingBGProgress, double? uploadingProfilePhotoProgress}) {
+    return WatchingPublicProfile(
+        feedId: this.feedId,
+        appId: this.appId,
+        uploadingBGProgress: this.uploadingBGProgress,
+        uploadingProfilePhotoProgress: this.uploadingProfilePhotoProgress);
   }
 }

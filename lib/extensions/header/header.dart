@@ -1,6 +1,5 @@
 import 'package:eliud_core/core/navigate/page_param_helper.dart';
 import 'package:eliud_core/style/style_registry.dart';
-import 'package:eliud_core/tools/storage/upload_info.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_event.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_state.dart';
@@ -21,8 +20,7 @@ class Header extends StatefulWidget {
 }
 
 class _HeaderState extends State<Header> {
-  double? progressProfilePhoto;
-  double? progressProfileVideo;
+  static double NOT_UPLOADING = -2.0;
 
   static double heightBackgroundPhoto(BuildContext context) =>
       MediaQuery.of(context).size.height / 2.5;
@@ -63,7 +61,7 @@ class _HeaderState extends State<Header> {
 
   Widget _progress(
       Widget original, double? progress, double height, double width) {
-    if (progress == null) {
+    if ((progress == null) || (progress == NOT_UPLOADING)) {
       return original;
     } else {
       return Stack(children: [
@@ -114,7 +112,7 @@ class _HeaderState extends State<Header> {
                       state.appId,
                       state.feedId),
                 )),
-            progressProfilePhoto,
+            state.uploadingProfilePhotoProgress,
             110,
             70,
           );
@@ -136,10 +134,7 @@ class _HeaderState extends State<Header> {
                                   state,
                                   false,
                                   'Update profile photo',
-                                      (progress) =>
-                                      setState(() {
-                                        progressProfilePhoto = progress;
-                                      }))),
+                                      )),
                         ) // EditableButton(editFunction: () {})
                       ],
                     )
@@ -159,7 +154,7 @@ class _HeaderState extends State<Header> {
             allRows.add(EditableWidget(
                 child: _progress(
                     backgroundPhoto,
-                    progressProfileVideo,
+                    state.uploadingBGProgress,
                     heightBackgroundPhoto(context),
                     width(context) / 2),
                 button: _button(
@@ -167,16 +162,12 @@ class _HeaderState extends State<Header> {
                     state,
                     true,
                     'Update profile background',
-                        (progress) =>
-                        setState(() {
-                          progressProfileVideo = progress;
-                        }))));
+                        )));
           } else {
             allRows.add(backgroundPhoto);
           }
         }
 
-        var nameX;
         var watchingThisProfile = state.watchingThisProfile();
         if (watchingThisProfile != null) {
           // Add the name
@@ -204,7 +195,7 @@ class _HeaderState extends State<Header> {
   }
 
   Widget _button(BuildContext context, ProfileInitialised profileInitialised,
-      bool isBG, String tooltip, FeedbackProgress progressFct) {
+      bool isBG, String tooltip) {
     return MediaButtons.mediaButtons(
         context,
         profileInitialised.appId,
@@ -213,14 +204,30 @@ class _HeaderState extends State<Header> {
         allowCrop: !isBG,
         tooltip: tooltip, photoFeedbackFunction: (photo) {
       if (!isBG) {
-        BlocProvider.of<ProfileBloc>(context)
-            .add(ProfilePhotoChangedProfileEvent(photo));
+        if (photo != null) {
+          BlocProvider.of<ProfileBloc>(context)
+              .add(ProfilePhotoChangedProfileEvent(photo));
+        } else {
+          BlocProvider.of<ProfileBloc>(context)
+              .add(UploadingProfilePhotoEvent(NOT_UPLOADING));
+        }
       } else {
-        BlocProvider.of<ProfileBloc>(context)
-            .add(ProfileBGPhotoChangedProfileEvent(photo));
+        if (photo != null) {
+          BlocProvider.of<ProfileBloc>(context)
+              .add(ProfileBGPhotoChangedProfileEvent(photo));
+        } else {
+          BlocProvider.of<ProfileBloc>(context)
+              .add(UploadingBGPhotoEvent(NOT_UPLOADING));
+        }
       }
-      progressProfilePhoto = null;
-      progressProfileVideo = null;
-    }, photoFeedbackProgress: progressFct, icon: getEditIcon());
+    }, photoFeedbackProgress: (progress) {
+          if (!isBG) {
+            BlocProvider.of<ProfileBloc>(context)
+                .add(UploadingProfilePhotoEvent(progress));
+          } else {
+            BlocProvider.of<ProfileBloc>(context)
+                .add(UploadingBGPhotoEvent(progress));
+          }
+    }, icon: getEditIcon());
   }
 }
