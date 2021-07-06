@@ -1,4 +1,5 @@
 import 'package:eliud_core/style/style_registry.dart';
+import 'package:eliud_pkg_feed/extensions/util/post_type_helper.dart';
 import 'package:eliud_pkg_text/platform/text_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -52,29 +53,30 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
       required PostModel postModel,
       AccessBloc? accessBloc,
       String? parentPageId}) {
-    List<Tab> tabs = [];
-
-    if (postModel.postPageId != null) {
-      if (memberID != null) {
-        return EmbeddedPageHelper.postDetails(
-            context, memberID, postModel, accessBloc, parentPageId!);
-      }
-    } else if ((postModel.memberMedia != null) &&
-        (postModel.memberMedia!.length > 0)) {
-      if (postModel.memberMedia!.length == 1) {
+    PostType postType = PostTypeHelper.determineType(postModel);
+    switch (postType) {
+      case PostType.EmbeddedPage:
+        if (memberID != null) {
+          return EmbeddedPageHelper.postDetails(
+              context, memberID, postModel, accessBloc, parentPageId!);
+        }
+        break;
+      case PostType.SinglePhoto:
+      case PostType.SingleVideo:
         var medium = postModel.memberMedia![0];
         var width;
         if (medium.memberMedium != null) {
           if (medium.memberMedium!.mediumType == MediumType.Photo) {
             width = _width(context) * .7;
-          }          return GestureDetector(
+          }
+          return GestureDetector(
               child: Center(
                   child: MemberImageModelWidget(
-                memberMediumModel: medium.memberMedium!,
-                width: width,
-                showThumbnail:
+                    memberMediumModel: medium.memberMedium!,
+                    width: width,
+                    showThumbnail:
                     medium.memberMedium!.mediumType != MediumType.Photo,
-              )),
+                  )),
               onTap: () {
                 _action([medium], 0);
               });
@@ -83,7 +85,8 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
               postModel.documentID! +
               ' has memberMedia with no details');
         }
-      } else {
+        break;
+      case PostType.Album:
         List<PostMediumModel> memberMedia = postModel.memberMedia!;
         List<Widget> widgets = [];
         // Photos & videos
@@ -93,21 +96,22 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
           _action(memberMedia, index);
         }));
         return Column(children: widgets);
-      }
-    } else if (postModel.externalLink != null) {
-/*
-      return WebView(
-        initialUrl: state.postModel.externalLink,
-        javascriptMode: JavascriptMode.unrestricted,
-      );
-*/
-      return StyleRegistry.registry()
-          .styleWithContext(context)
-          .frontEndStyle()
-          .textStyle()
-          .text(context, 'External link not supported yet');
-    } else if (postModel.html != null) {
-      return AbstractTextPlatform.platform!.htmlWidget(postModel.html!);
+      case PostType.ExternalLink:
+        return StyleRegistry.registry()
+            .styleWithContext(context)
+            .frontEndStyle()
+            .textStyle()
+            .text(context, 'External link not supported yet');
+      case PostType.Html:
+        return AbstractTextPlatform.platform!.htmlWidget(postModel.html!);
+      case PostType.Unknown:
+        return StyleRegistry.registry()
+            .styleWithContext(context)
+            .frontEndStyle()
+            .textStyle()
+            .text(context, 'Type not determined');
+      case PostType.OnlyDescription:
+        return Container(height: 1);
     }
 
     return Container(height: 1); // nothing

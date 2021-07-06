@@ -28,8 +28,11 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
     final currentState = state;
     if (currentState is FeedPostFormUninitialized) {
       if (event is InitialiseNewFeedPostFormEvent) {
-        yield await _initialised();
+        yield await _initialiseNew();
+      } else if (event is InitialiseUpdateFeedPostFormEvent) {
+        yield await _initialiseUpdate();
       }
+
     } else if (currentState is FeedPostFormInitialized) {
       if (event is SubmitPost) {
         yield await _submit(currentState.postModelDetails);
@@ -55,12 +58,20 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
     }
   }
 
-  Future<FeedPostFormLoaded> _initialised() async => FeedPostFormLoaded(
-          postModelDetails: FeedPostModelDetails(
-          readAccess: await PostFollowersHelper.as(PostPrivilege.Public, accessState),
-          description: "",
-          memberMedia: [],
-          postPrivilege: PostPrivilege.Public,
+  Future<FeedPostFormLoaded> _initialiseNew() async => FeedPostFormLoaded(
+      postModelDetails: FeedPostModelDetails(
+        readAccess: await PostFollowersHelper.as(PostPrivilege.Public, accessState),
+        description: "",
+        memberMedia: [],
+        postPrivilege: PostPrivilege.Public,
+      ));
+
+  Future<FeedPostFormLoaded> _initialiseUpdate() async => FeedPostFormLoaded(
+      postModelDetails: FeedPostModelDetails(
+        readAccess: await PostFollowersHelper.as(PostPrivilege.Public, accessState),
+        description: "THIS WOULD BE UPDATE, CHANGE in feed_post_form_bloc line 72",
+        memberMedia: [],
+        postPrivilege: PostPrivilege.Public,
       ));
 
   Future<FeedPostFormState> _submit(
@@ -88,6 +99,6 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
     postListPagedBloc.add(AddPostPaged(value: postModel));
 
     // reset the form
-    return _initialised();
+    return _initialiseNew();
   }
 }

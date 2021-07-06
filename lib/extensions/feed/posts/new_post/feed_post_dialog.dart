@@ -18,6 +18,7 @@ class FeedPostDialog extends StatefulWidget {
   final String? currentMemberId;
   final String photoURL;
   final PageContextInfo pageContextInfo;
+  final FeedPostFormEvent initialiseEvent;
 
   FeedPostDialog(
       {Key? key,
@@ -25,12 +26,12 @@ class FeedPostDialog extends StatefulWidget {
       required this.postListPagedBloc,
       required this.memberId,
       required this.currentMemberId,
-      required this.photoURL, required this.pageContextInfo,
+      required this.photoURL, required this.pageContextInfo, required this.initialiseEvent
       })
       : super(key: key);
 
   static void open(
-      BuildContext context, String feedId, String memberId, String? currentMemberId, String photoURL, PageContextInfo pageContextInfo) {
+      BuildContext context, String feedId, String memberId, String? currentMemberId, String photoURL, PageContextInfo pageContextInfo, FeedPostFormEvent initialiseEvent) {
     var postListPagedBloc = BlocProvider.of<PostListPagedBloc>(context);
         StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogStyle().openWidgetDialog(
         context,
@@ -39,7 +40,7 @@ class FeedPostDialog extends StatefulWidget {
           postListPagedBloc: postListPagedBloc,
           memberId: memberId,
           currentMemberId: currentMemberId,
-          photoURL: photoURL, pageContextInfo: pageContextInfo,
+          photoURL: photoURL, pageContextInfo: pageContextInfo, initialiseEvent: initialiseEvent
         ));
   }
 
@@ -61,7 +62,7 @@ class _FeedPostDialogState extends State<FeedPostDialog> {
       return BlocProvider<FeedPostFormBloc>(
           create: (context) => FeedPostFormBloc(app.documentID!,
               postListPagedBloc, theState.member.documentID!, widget.feedId, theState)
-            ..add(InitialiseNewFeedPostFormEvent()),
+            ..add(widget.initialiseEvent),
           child: MyFeedPostForm(
                   widget.feedId,
                   widget.memberId,

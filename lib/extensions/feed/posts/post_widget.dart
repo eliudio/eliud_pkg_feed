@@ -1,3 +1,4 @@
+import 'package:eliud_core/core/navigate/page_param_helper.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/storage/medium_base.dart';
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_bloc.dart';
@@ -6,11 +7,17 @@ import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_sta
 import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_contents_widget.dart';
+import 'package:eliud_pkg_feed/extensions/util/post_type_helper.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
 import 'package:eliud_pkg_feed/model/post_like_model.dart';
+import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
+import 'package:eliud_pkg_text/platform/text_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'new_post/bloc/feed_post_form_event.dart';
+import 'new_post/feed_post_dialog.dart';
 
 class PostWidget extends StatefulWidget {
   //final MemberModel? member;
@@ -108,7 +115,11 @@ class _PostWidgetState extends State<PostWidget> {
 
   Widget _description(PostModel? postModel) {
     if ((postModel != null) && (postModel.description != null)) {
-      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, postModel.description!);
+      return StyleRegistry.registry()
+          .styleWithContext(context)
+          .frontEndStyle()
+          .textStyle()
+          .text(context, postModel.description!);
     } else {
       return Container(
         height: 0,
@@ -125,13 +136,13 @@ class _PostWidgetState extends State<PostWidget> {
             height: 40,
             width: 40,
             child: AvatarHelper.avatar(
-                    context,
-                    20,
-                    widget.pageId,
-                    widget.memberId,
-                    widget.currentMemberId,
-                    widget.appId,
-                    widget.feedId)),
+                context,
+                20,
+                widget.pageId,
+                widget.memberId,
+                widget.currentMemberId,
+                widget.appId,
+                widget.feedId)),
         Container(width: 8),
         Flexible(
           child: Container(
@@ -190,10 +201,19 @@ class _PostWidgetState extends State<PostWidget> {
     return Divider(height: 1, thickness: 1, color: Colors.black);
   }
 
-  Widget _heading(
-      BuildContext context, PostModel? postModel) {
-    if (postModel == null) return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'No post');
-    if (postModel.authorId == null) return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'No author');
+  Widget _heading(BuildContext context, PostModel? postModel) {
+    if (postModel == null)
+      return StyleRegistry.registry()
+          .styleWithContext(context)
+          .frontEndStyle()
+          .textStyle()
+          .text(context, 'No post');
+    if (postModel.authorId == null)
+      return StyleRegistry.registry()
+          .styleWithContext(context)
+          .frontEndStyle()
+          .textStyle()
+          .text(context, 'No author');
 
     var timeStamp;
     if (postModel.timestamp == null) {
@@ -206,8 +226,14 @@ class _PostWidgetState extends State<PostWidget> {
       Container(
           height: 50,
           width: 50,
-          child: AvatarHelper.avatar(context, 25, widget.pageId,
-                  postModel.authorId!, widget.currentMemberId, widget.appId, widget.feedId)),
+          child: AvatarHelper.avatar(
+              context,
+              25,
+              widget.pageId,
+              postModel.authorId!,
+              widget.currentMemberId,
+              widget.appId,
+              widget.feedId)),
       Container(
         width: 8,
       ),
@@ -215,15 +241,20 @@ class _PostWidgetState extends State<PostWidget> {
         Container(
           height: 4,
         ),
-        AvatarHelper.nameH5(context, postModel.authorId!, widget.appId, widget.feedId),
-        StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().h5(context, timeStamp,
-            textAlign: TextAlign.left),
+        AvatarHelper.nameH5(
+            context, postModel.authorId!, widget.appId, widget.feedId),
+        StyleRegistry.registry()
+            .styleWithContext(context)
+            .frontEndStyle()
+            .textStyle()
+            .h5(context, timeStamp, textAlign: TextAlign.left),
       ]),
       Spacer(),
     ];
 
     // allow to update / delete
-    if ((widget.currentMemberId != null) && (widget.currentMemberId == postModel.authorId)) {
+    if ((widget.currentMemberId != null) &&
+        (widget.currentMemberId == postModel.authorId)) {
       children.add(Spacer());
       children.add(_optionsPost(context, postModel, widget.currentMemberId!));
     }
@@ -246,34 +277,78 @@ class _PostWidgetState extends State<PostWidget> {
               .text(context, 'Delete post'),
           value: 0),
     );
-    items.add(
-      PopupMenuItem<int>(
-          child: StyleRegistry.registry()
-              .styleWithContext(context)
-              .frontEndStyle()
-              .textStyle()
-              .text(context, 'Update post'),
-          value: 0),
-    );
+    PostType type = PostTypeHelper.determineType(postModel);
+    if (PostTypeHelper.canUpdate(type)) {
+      items.add(
+        PopupMenuItem<int>(
+            child: StyleRegistry.registry()
+                .styleWithContext(context)
+                .frontEndStyle()
+                .textStyle()
+                .text(context, 'Update post'),
+            value: 1),
+      );
+    }
 
     return PopupMenuButton(
         icon: Icon(Icons.more_horiz),
-        itemBuilder:  (_) => items,
+        itemBuilder: (_) => items,
         onSelected: (choice) {
           if (choice == 0) {
-            StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogStyle().openAckNackDialog(context,
-                title: 'Delete post?',
-                message:
-                'You are sure you want to delete this post?',
-                onSelection: (value) async {
-                  if (value == 0) {
-                    BlocProvider.of<PostListPagedBloc>(context).add(DeletePostPaged(
-                        value: postModel
-                    ));
-                  }
-                });
+            StyleRegistry.registry()
+                .styleWithContext(context)
+                .frontEndStyle()
+                .dialogStyle()
+                .openAckNackDialog(context,
+                    title: 'Delete post?',
+                    message: 'You are sure you want to delete this post?',
+                    onSelection: (value) async {
+              if (value == 0) {
+                BlocProvider.of<PostListPagedBloc>(context)
+                    .add(DeletePostPaged(value: postModel));
+              }
+            });
           } else if (choice == 1) {
-            // update post
+            switch (type) {
+              case PostType.SingleVideo:
+              case PostType.SinglePhoto:
+              case PostType.Album:
+                var pageContextInfo = PageParamHelper.getPagaContextInfo(context);
+                FeedPostDialog.open(
+                    context,
+                    widget.feedId,
+                    postModel.authorId!,
+                    widget.currentMemberId,
+                    widget.photoURL!,
+                    pageContextInfo, InitialiseUpdateFeedPostFormEvent());
+                break;
+              case PostType.Html:
+                AbstractTextPlatform.platform!.updateHtml(
+                    context,
+                    postModel.appId!,
+                    postModel.authorId!,
+                    postModel.readAccess!,
+                    "Article", (newArticle) {
+                  BlocProvider.of<PostListPagedBloc>(context).add(
+                      UpdatePostPaged(
+                          value: postModel.copyWith(html: newArticle)));
+                }, postModel.html == null ? '' : postModel.html!); // TODO: Handle this case.
+                break;
+              case PostType.OnlyDescription:
+                StyleRegistry.registry()
+                    .styleWithContext(context)
+                    .frontEndStyle()
+                    .dialogStyle()
+                    .openEntryDialog(context, title: 'Same something else',
+                        onPressed: (value) {
+                  if (value != null) {
+                    BlocProvider.of<PostListPagedBloc>(context).add(
+                        UpdatePostPaged(
+                            value: postModel.copyWith(description: value)));
+                  }
+                }, initialValue: postModel.description == null ? '' : postModel.description);
+                break;
+            }
           }
         });
   }
@@ -367,7 +442,12 @@ class _PostWidgetState extends State<PostWidget> {
 
   Widget getCommentTreeWidget(BuildContext context, PostDetails postDetail,
       PostCommentContainer? data) {
-    if (data == null) return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'No Comments');
+    if (data == null)
+      return StyleRegistry.registry()
+          .styleWithContext(context)
+          .frontEndStyle()
+          .textStyle()
+          .text(context, 'No Comments');
 
     var name;
     if (data.member == null) {
@@ -381,8 +461,8 @@ class _PostWidgetState extends State<PostWidget> {
     }
 
     List<Widget> rowChildren = [
-      AvatarHelper.avatar(context, 20, widget.pageId,
-              data.member!.documentID!, widget.currentMemberId, widget.appId, widget.feedId),
+      AvatarHelper.avatar(context, 20, widget.pageId, data.member!.documentID!,
+          widget.currentMemberId, widget.appId, widget.feedId),
       Container(width: 8),
       Expanded(
           child: Container(
@@ -393,31 +473,46 @@ class _PostWidgetState extends State<PostWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().h5(context,
-              '${name}',
-            ),
+            StyleRegistry.registry()
+                .styleWithContext(context)
+                .frontEndStyle()
+                .textStyle()
+                .h5(
+                  context,
+                  '${name}',
+                ),
             SizedBox(
               height: 4,
             ),
-            StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().h5(context,
-              '${data.comment}',
-            ),
+            StyleRegistry.registry()
+                .styleWithContext(context)
+                .frontEndStyle()
+                .textStyle()
+                .h5(
+                  context,
+                  '${data.comment}',
+                ),
             SizedBox(
               height: 4,
             ),
             Align(
                 alignment: Alignment.bottomRight,
-                child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().h5(context,
-                  data.postComment == null || data.postComment!.likes == null
-                      ? 'no likes'
-                      : '${data.postComment!.likes} likes',
-                )),
+                child: StyleRegistry.registry()
+                    .styleWithContext(context)
+                    .frontEndStyle()
+                    .textStyle()
+                    .h5(
+                      context,
+                      data.postComment == null ||
+                              data.postComment!.likes == null
+                          ? 'no likes'
+                          : '${data.postComment!.likes} likes',
+                    )),
           ],
         ),
       )),
     ];
-    if (widget.memberId ==
-        data.member!.documentID) {
+    if (widget.memberId == data.member!.documentID) {
       rowChildren.add(_optionsPostComments(
           context, postDetail, data.member!.documentID, data));
     }
@@ -444,10 +539,15 @@ class _PostWidgetState extends State<PostWidget> {
                     .shrinkWrap, //limits the touch area to the button area
                 minWidth: 0, //wraps child's width
                 height: 0, //wraps child's height
-                child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().dialogButton(context, label: 'Like',
-                    selected: data.thisMemberLikesThisComment!,
-                    onPressed: () => _likeComment(
-                        context, postDetail, data)), //your original button
+                child: StyleRegistry.registry()
+                    .styleWithContext(context)
+                    .frontEndStyle()
+                    .buttonStyle()
+                    .dialogButton(context,
+                        label: 'Like',
+                        selected: data.thisMemberLikesThisComment!,
+                        onPressed: () => _likeComment(
+                            context, postDetail, data)), //your original button
               ),
               ButtonTheme(
                   padding: EdgeInsets.symmetric(
@@ -457,9 +557,14 @@ class _PostWidgetState extends State<PostWidget> {
                       .shrinkWrap, //limits the touch area to the button area
                   minWidth: 0, //wraps child's width
                   height: 0, //wraps child's height
-                  child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().dialogButton(context, label: 'Reply',
-                      onPressed: () => allowToAddCommentComment(context,
-                          postDetail, data, data.member!.documentID!))),
+                  child: StyleRegistry.registry()
+                      .styleWithContext(context)
+                      .frontEndStyle()
+                      .buttonStyle()
+                      .dialogButton(context,
+                          label: 'Reply',
+                          onPressed: () => allowToAddCommentComment(context,
+                              postDetail, data, data.member!.documentID!))),
             ]),
           ],
         ));
@@ -496,9 +601,19 @@ class _PostWidgetState extends State<PostWidget> {
         icon: Icon(Icons.more_horiz),
         itemBuilder: (_) => <PopupMenuItem<int>>[
               new PopupMenuItem<int>(
-                  child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'Update comment'), value: 0),
+                  child: StyleRegistry.registry()
+                      .styleWithContext(context)
+                      .frontEndStyle()
+                      .textStyle()
+                      .text(context, 'Update comment'),
+                  value: 0),
               new PopupMenuItem<int>(
-                  child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'Delete comment'), value: 1),
+                  child: StyleRegistry.registry()
+                      .styleWithContext(context)
+                      .frontEndStyle()
+                      .textStyle()
+                      .text(context, 'Delete comment'),
+                  value: 1),
             ],
         onSelected: (choice) {
           if (choice == 0)
@@ -523,30 +638,40 @@ class _PostWidgetState extends State<PostWidget> {
       children: <Widget>[
         Spacer(),
         StyleRegistry.registry()
-                    .styleWithContext(context)
-                    .frontEndStyle()
-                    .buttonStyle()
-                    .iconButton(
-                      context,
-                      icon: ImageIcon(_assetThumbUp(thisMemberLikeType)),
-                      onPressed: () => _like(context, postDetails),
-                    ),
-    StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context,
-          "$likes",
-        ),
+            .styleWithContext(context)
+            .frontEndStyle()
+            .buttonStyle()
+            .iconButton(
+              context,
+              icon: ImageIcon(_assetThumbUp(thisMemberLikeType)),
+              onPressed: () => _like(context, postDetails),
+            ),
+        StyleRegistry.registry()
+            .styleWithContext(context)
+            .frontEndStyle()
+            .textStyle()
+            .text(
+              context,
+              "$likes",
+            ),
         Spacer(flex: 3),
         StyleRegistry.registry()
-                    .styleWithContext(context)
-                    .frontEndStyle()
-                    .buttonStyle()
-                    .iconButton(
-                      context,
-                      icon: ImageIcon(_assetThumbDown(thisMemberLikeType)),
-                      onPressed: () => _dislike(context, postDetails),
-                    ),
-        StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context,
-          "$dislikes",
-        ),
+            .styleWithContext(context)
+            .frontEndStyle()
+            .buttonStyle()
+            .iconButton(
+              context,
+              icon: ImageIcon(_assetThumbDown(thisMemberLikeType)),
+              onPressed: () => _dislike(context, postDetails),
+            ),
+        StyleRegistry.registry()
+            .styleWithContext(context)
+            .frontEndStyle()
+            .textStyle()
+            .text(
+              context,
+              "$dislikes",
+            ),
         Spacer(),
       ],
     );
@@ -626,10 +751,15 @@ class _PostWidgetState extends State<PostWidget> {
     if (dislikes == null) dislikes = 0;
     return Padding(
       padding: const EdgeInsets.only(left: 14.0),
-      child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context,
-        "$likes likes $dislikes dislikes",
-        //style: TextStyle(fontWeight: FontWeight.bold),
-      ),
+      child: StyleRegistry.registry()
+          .styleWithContext(context)
+          .frontEndStyle()
+          .textStyle()
+          .text(
+            context,
+            "$likes likes $dislikes dislikes",
+            //style: TextStyle(fontWeight: FontWeight.bold),
+          ),
     );
   }
 

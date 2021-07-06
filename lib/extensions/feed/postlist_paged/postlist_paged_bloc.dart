@@ -42,6 +42,20 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
     if (event is PostListPagedFetched) {
       var value = await _mapPostFetchedToState(state);
       if (value != null) yield value;
+    } else if (event is UpdatePostPaged) {
+      await _mapUpdatePost(event);
+
+      // We update the entry in the current state avoiding interaction with repository
+      var newListOfValues = <PostDetails>[];
+      state.values.forEach((element) {
+        if (element.postModel.documentID != event.value.documentID) {
+          newListOfValues.add(element);
+        } else {
+          newListOfValues.add(element.copyWith(postModel: event.value));
+        }
+      });
+
+      yield state.copyWith(values: newListOfValues);
     } else if (event is AddPostPaged) {
       var details = PostDetails(postModel: event.value);
       await _mapAddPost(event);
@@ -52,7 +66,7 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
     } else if (event is DeletePostPaged) {
       await _mapDeletePost(event);
 
-      // We delete the entry and add it whilst limitting interaction with repository
+      // We delete the entry and add it whilst limiting interaction with repository
       var newListOfValues = <PostDetails>[];
       state.values.forEach((element) {
         if (element.postModel.documentID != event.value!.documentID) {
@@ -98,9 +112,8 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
     await _postRepository.delete(event.value!);
   }
 
-  Future<void> _mapUpdatePost(DeletePostPaged event) async {
-    await _postRepository
-        .update(event.value!.copyWith(archived: PostArchiveStatus.Archived));
+  Future<void> _mapUpdatePost(UpdatePostPaged event) async {
+    await _postRepository.update(event.value);
   }
 
   Future<void> _mapAddPost(AddPostPaged event) async {

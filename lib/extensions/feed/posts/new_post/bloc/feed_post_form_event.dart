@@ -18,6 +18,10 @@ abstract class FeedPostFormEvent extends Equatable {
 class InitialiseNewFeedPostFormEvent extends FeedPostFormEvent {
 }
 
+class InitialiseUpdateFeedPostFormEvent extends FeedPostFormEvent {
+
+}
+
 class ChangedFeedPostDescription extends FeedPostFormEvent {
   final String? value;
 

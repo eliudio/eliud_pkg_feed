@@ -11,6 +11,7 @@ import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_sta
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_button.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_widget.dart';
 import 'package:eliud_pkg_text/platform/text_platform.dart';
+import 'new_post/bloc/feed_post_form_event.dart';
 import 'new_post/feed_post_dialog.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
 import 'package:eliud_pkg_feed/model/post_medium_model.dart';
@@ -165,7 +166,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
                   profileInitialized.watchingThisProfile()!.authorId!,
                   profileInitialized.memberId(),
                   profileInitialized.profileUrl(),
-                  pageContextInfo)));
+                  pageContextInfo, InitialiseNewFeedPostFormEvent())));
       widgets.add(Spacer());
     }
 

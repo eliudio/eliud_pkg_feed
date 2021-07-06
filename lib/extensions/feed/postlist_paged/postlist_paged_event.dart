@@ -31,6 +31,15 @@ class AddPostPaged extends PostPagedEvent {
   List<Object?> get props => [ value ];
 }
 
+class UpdatePostPaged extends PostPagedEvent {
+  final PostModel value;
+
+  UpdatePostPaged({ required this.value });
+
+  @override
+  List<Object?> get props => [ value ];
+}
+
 class LikePostEvent extends PostPagedEvent {
   final PostDetails postDetail;
   final LikeType likeType;
