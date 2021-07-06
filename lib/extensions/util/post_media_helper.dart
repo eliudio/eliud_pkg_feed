@@ -72,13 +72,19 @@ class PostMediaHelper {
           .add(_getPopupMenuButton(context, name, image, i, deleteAction, viewAction));
     }
     if (progressExtra != null) {
-      widgets.add(Center(child:CircularPercentIndicator(
-        radius: 60.0,
-        lineWidth: 5.0,
-        percent: progressExtra,
-        center: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, '100%'),
-      )
-      ));
+      if (progressExtra >= 0) {
+        widgets.add(Center(child: CircularPercentIndicator(
+          radius: 60.0,
+          lineWidth: 5.0,
+          percent: progressExtra,
+          center: StyleRegistry.registry().styleWithContext(context)
+              .frontEndStyle().textStyle()
+              .text(context, '100%'),
+        )
+        ));
+      } else {
+        widgets.add(Center(child: CircularProgressIndicator()));
+      }
     }
     return _getContainer(widgets);
   }

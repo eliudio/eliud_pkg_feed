@@ -30,7 +30,7 @@ class PostButton extends StatefulWidget {
 }
 
 class _PostButtonState extends State<PostButton> {
-  double? photoUploadingProgress;
+  double? uploadingProgress;
   _PostButtonState();
 
   @override
@@ -39,36 +39,50 @@ class _PostButtonState extends State<PostButton> {
       var _photo = Image.asset(
           "assets/images/segoshvishna.fiverr.com/photo.png",
           package: "eliud_pkg_feed");
-      return MediaButtons.mediaButtons(context, widget.feedModel.appId!,
-          widget.author.documentID!, widget.readAccess,
-          allowCrop: false,
-          tooltip: 'Add photo', photoFeedbackFunction: (photo) {
-        _addPost(postMemberMedia: [
-          PostMediumModel(documentID: newRandomKey(), memberMedium: photo)
-        ]);
-        photoUploadingProgress = null;
-      }, photoFeedbackProgress: (progress) {
-        setState(() {
-          photoUploadingProgress = progress;
-        });
-      }, icon: _getIcon(_photo));
+      if (uploadingProgress == null) {
+        return MediaButtons.mediaButtons(context, widget.feedModel.appId!,
+            widget.author.documentID!, widget.readAccess,
+            allowCrop: false,
+            tooltip: 'Add photo',
+            photoFeedbackFunction: (photo) {
+              _addPost(postMemberMedia: [
+                PostMediumModel(documentID: newRandomKey(), memberMedium: photo)
+              ]);
+              uploadingProgress = null;
+            },
+            photoFeedbackProgress: (progress) {
+              setState(() {
+                uploadingProgress = progress;
+              });
+            },
+            icon: _getIcon(_photo));
+      } else {
+        return _getIcon(_photo);
+      }
     } else {
       var _video = Image.asset(
           "assets/images/segoshvishna.fiverr.com/video.png",
           package: "eliud_pkg_feed");
-      return MediaButtons.mediaButtons(context, widget.feedModel.appId!,
-          widget.author.documentID!, widget.readAccess,
-          allowCrop: false,
-          tooltip: 'Add video', videoFeedbackFunction: (photo) {
-        _addPost(postMemberMedia: [
-          PostMediumModel(documentID: newRandomKey(), memberMedium: photo)
-        ]);
-        photoUploadingProgress = null;
-      }, videoFeedbackProgress: (progress) {
-        setState(() {
-          photoUploadingProgress = progress;
-        });
-      }, icon: _getIcon(_video));
+      if (uploadingProgress == null) {
+        return MediaButtons.mediaButtons(context, widget.feedModel.appId!,
+            widget.author.documentID!, widget.readAccess,
+            allowCrop: false,
+            tooltip: 'Add video',
+            videoFeedbackFunction: (photo) {
+              _addPost(postMemberMedia: [
+                PostMediumModel(documentID: newRandomKey(), memberMedium: photo)
+              ]);
+              uploadingProgress = null;
+            },
+            videoFeedbackProgress: (progress) {
+              setState(() {
+                uploadingProgress = progress;
+              });
+            },
+            icon: _getIcon(_video));
+      } else {
+        return _getIcon(_video);
+      }
     }
   }
 
@@ -92,7 +106,7 @@ class _PostButtonState extends State<PostButton> {
   }
 
   Widget _getIcon(Widget child) {
-    if (photoUploadingProgress == null) {
+    if (uploadingProgress == null) {
       return _getOriginalIcon(child);
     } else {
       return Stack(children: [
@@ -104,7 +118,7 @@ class _PostButtonState extends State<PostButton> {
                 .frontEndStyle()
                 .progressIndicatorStyle()
                 .progressIndicatorWithValue(context,
-                    value: photoUploadingProgress!))
+                    value: uploadingProgress!))
       ]);
 
 /*

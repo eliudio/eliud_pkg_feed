@@ -20,9 +20,7 @@ class MediaButtons {
     if (readAccess == null) throw Exception('readAccess is null');
     var items = <PopupMenuItem<int>>[];
     if (photoFeedbackFunction != null) {
-      print("HAS CAMERA?");
       if (AbstractMediumPlatform.platform!.hasCamera()) {
-        print("HAS CAMERA INDEED!");
         items.add(
           PopupMenuItem<int>(
               child: StyleRegistry.registry()
