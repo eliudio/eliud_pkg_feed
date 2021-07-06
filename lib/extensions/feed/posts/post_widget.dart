@@ -218,15 +218,15 @@ class _PostWidgetState extends State<PostWidget> {
         AvatarHelper.nameH5(context, postModel.authorId!, widget.appId, widget.feedId),
         StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().h5(context, timeStamp,
             textAlign: TextAlign.left),
-      ])
+      ]),
+      Spacer(),
     ];
-/*
-    if (memberId == postModel.author!.documentID) {
-//      children.add(Spacer());
-//      currently no options, delete not implemented
-//      children.add(_optionsPost(context, postModel, memberId));
+
+    // allow to update / delete
+    if ((widget.currentMemberId != null) && (widget.currentMemberId == postModel.authorId)) {
+      children.add(Spacer());
+      children.add(_optionsPost(context, postModel, widget.currentMemberId!));
     }
-*/
 
     var row =
         Row(crossAxisAlignment: CrossAxisAlignment.start, children: children);
@@ -236,19 +236,44 @@ class _PostWidgetState extends State<PostWidget> {
 
   PopupMenuButton _optionsPost(
       BuildContext context, PostModel postModel, String memberId) {
+    var items = <PopupMenuItem<int>>[];
+    items.add(
+      PopupMenuItem<int>(
+          child: StyleRegistry.registry()
+              .styleWithContext(context)
+              .frontEndStyle()
+              .textStyle()
+              .text(context, 'Delete post'),
+          value: 0),
+    );
+    items.add(
+      PopupMenuItem<int>(
+          child: StyleRegistry.registry()
+              .styleWithContext(context)
+              .frontEndStyle()
+              .textStyle()
+              .text(context, 'Update post'),
+          value: 0),
+    );
+
     return PopupMenuButton(
         icon: Icon(Icons.more_horiz),
-        itemBuilder: (_) => <PopupMenuItem<int>>[
-              new PopupMenuItem<int>(
-                  child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'Delete post'), value: 0),
-            ],
+        itemBuilder:  (_) => items,
         onSelected: (choice) {
           if (choice == 0) {
-//        TODO: Issue with deleting post:
-//        Deleting the posts in a feed is an issue. A block inside a list seems the issue.
-//        I assumed this to be an issue because of the listen, but it seems it has to do with the block.
-//        I've created another branch paged-feed-alternative which is a feed without the listen.
-//        But it's equally a problem. Now what? Let's not support delete.
+            StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogStyle().openAckNackDialog(context,
+                title: 'Delete post?',
+                message:
+                'You are sure you want to delete this post?',
+                onSelection: (value) async {
+                  if (value == 0) {
+                    BlocProvider.of<PostListPagedBloc>(context).add(DeletePostPaged(
+                        value: postModel
+                    ));
+                  }
+                });
+          } else if (choice == 1) {
+            // update post
           }
         });
   }

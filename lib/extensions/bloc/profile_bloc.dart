@@ -35,10 +35,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     } else if (event is UploadingProfilePhotoEvent) {
       if (state is ProfileInitialised) {
         var theState = state as ProfileInitialised;
-        var newState = theState.progressWith(
+        yield theState.progressWith(
             uploadingProfilePhotoProgress: event.progress);
-        var isEqual = newState == theState;
-        yield newState;
       }
     } else if (event is UploadingBGPhotoEvent) {
       if (state is ProfileInitialised) {

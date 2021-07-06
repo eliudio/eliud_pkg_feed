@@ -22,8 +22,8 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
   EliudQuery eliudQuery;
 
   PostListPagedBloc(this.memberId, this.eliudQuery,
-      {required PostRepository postRepository}):
-        _postRepository = postRepository,
+      {required PostRepository postRepository})
+      : _postRepository = postRepository,
         super(const PostListPagedState());
 
   @override
@@ -53,20 +53,25 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
       await _mapDeletePost(event);
 
       // We delete the entry and add it whilst limitting interaction with repository
-      var newListOfValues = state.values.map((v) => v).toList();
-      newListOfValues.remove(event.value);
+      var newListOfValues = <PostDetails>[];
+      state.values.forEach((element) {
+        if (element.postModel.documentID != event.value!.documentID) {
+          newListOfValues.add(element);
+        }
+      });
+
       final extraValues =
-          await _fetchPosts(lastRowFetched: state.lastRowFetched, limit: 1);
-        var newState = extraValues.isEmpty
-            ? state.copyWith(hasReachedMax: true)
-            : state.copyWith(
-                status: PostListPagedStatus.success,
-                values: List.of(newListOfValues)..addAll(extraValues),
-                lastRowFetched: lastRowFetched,
-                hasReachedMax:
-                    _hasReachedMax(newListOfValues.length + extraValues.length),
-              );
-        yield newState;
+      await _fetchPosts(lastRowFetched: state.lastRowFetched, limit: 1);
+      var newState = extraValues.isEmpty
+          ? state.copyWith(hasReachedMax: true)
+          : state.copyWith(
+        status: PostListPagedStatus.success,
+        values: List.of(newListOfValues)..addAll(extraValues),
+        lastRowFetched: lastRowFetched,
+        hasReachedMax:
+        _hasReachedMax(newListOfValues.length + extraValues.length),
+      );
+      yield newState;
     } else if (event is LikePostEvent) {
       yield await _updateEmotion(state, null, event.likeType, event.postDetail);
     } else if (event is LikeCommentPostEvent) {
@@ -76,20 +81,24 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
       yield await _comment(state, event.comment, event.postDetail);
     } else if (event is AddCommentCommentEvent) {
       yield await _commentComment(
-          state,
-          event.postDetail,
-          event.postCommentContainer,
-          event.comment);
+          state, event.postDetail, event.postCommentContainer, event.comment);
     } else if (event is DeleteCommentEvent) {
-      yield await _deleteComment(state, event.deleteThis,
-          event.postDetail);
+      yield await _deleteComment(state, event.deleteThis, event.postDetail);
     } else if (event is UpdateCommentEvent) {
-      yield await _updateComment(state, event.updateThis,event.postDetail,
-          event.newValue, );
+      yield await _updateComment(
+        state,
+        event.updateThis,
+        event.postDetail,
+        event.newValue,
+      );
     }
   }
 
   Future<void> _mapDeletePost(DeletePostPaged event) async {
+    await _postRepository.delete(event.value!);
+  }
+
+  Future<void> _mapUpdatePost(DeletePostPaged event) async {
     await _postRepository
         .update(event.value!.copyWith(archived: PostArchiveStatus.Archived));
   }
@@ -104,12 +113,12 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
     try {
       if (state.status == PostListPagedStatus.initial) {
         final values = await _fetchPosts(limit: 5);
-          return state.copyWith(
-            status: PostListPagedStatus.success,
-            values: values,
-            lastRowFetched: lastRowFetched,
-            hasReachedMax: _hasReachedMax(values.length),
-          );
+        return state.copyWith(
+          status: PostListPagedStatus.success,
+          values: values,
+          lastRowFetched: lastRowFetched,
+          hasReachedMax: _hasReachedMax(values.length),
+        );
       } else {
         final values =
             await _fetchPosts(lastRowFetched: state.lastRowFetched, limit: 5);
@@ -245,7 +254,6 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
   // ********************************* create a comment ****************************
   Future<PostListPagedState> _comment(PostListPagedState theState,
       String comment, PostDetails postDetail) async {
-
     // First add the comment in the repository
     String postId = postDetail.postModel.documentID!;
     String appId = postDetail.postModel.appId!;
@@ -292,7 +300,8 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
 
     postCommentRepository(appId: appId)!.add(addThis);
 
-    var newComments = await _copyCommentCommentsAndAddOne(detail.comments, addThis);
+    var newComments =
+        await _copyCommentCommentsAndAddOne(detail.comments, addThis);
     var newPostDetail = detail.copyWith(comments: newComments);
     var newState = theState.replacePost(newPostDetail);
     return newState;
@@ -334,9 +343,10 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
 // ********************************* delete a comment ****************************
   Future<PostListPagedState> _deleteComment(PostListPagedState theState,
       PostCommentModel deleteThis, PostDetails postDetails) async {
-    postCommentRepository(appId: postDetails.postModel.appId)!.delete(deleteThis);
-    var newComments =_copyCommentsAndDeleteOne(
-        postDetails.comments, deleteThis.documentID);
+    postCommentRepository(appId: postDetails.postModel.appId)!
+        .delete(deleteThis);
+    var newComments =
+        _copyCommentsAndDeleteOne(postDetails.comments, deleteThis.documentID);
     var newPostDetails = postDetails.copyWith(comments: newComments);
     var newState = theState.replacePost(newPostDetails);
     return newState;
@@ -366,15 +376,16 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
 
 // ********************************* update a comment ****************************
   Future<PostListPagedState> _updateComment(
-      PostListPagedState theState,
-      PostCommentModel updateThis,
-      PostDetails postDetails,
-      String? newValue,
-      ) async {
+    PostListPagedState theState,
+    PostCommentModel updateThis,
+    PostDetails postDetails,
+    String? newValue,
+  ) async {
     postCommentRepository(appId: postDetails.postModel.appId)!
         .update(updateThis.copyWith(comment: newValue));
 
-    var newComments = _copyCommentsAndUpdateComment(postDetails.comments, updateThis.documentID, newValue);
+    var newComments = _copyCommentsAndUpdateComment(
+        postDetails.comments, updateThis.documentID, newValue);
     var newPostDetail = postDetails.copyWith(comments: newComments);
     var newState = theState.replacePost(newPostDetail);
     return newState;
