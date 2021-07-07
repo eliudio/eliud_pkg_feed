@@ -5,6 +5,7 @@ import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/random.dart';
+import 'package:eliud_pkg_feed/extensions/feed/posts/new_post/select_members.dart';
 import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/media_buttons.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_media_helper.dart';
@@ -26,7 +27,8 @@ class MyFeedPostForm extends StatefulWidget {
   final String photoURL;
   final PageContextInfo pageContextInfo;
 
-  MyFeedPostForm(this.feedId, this.memberId, this.currentMemberId, this.photoURL, this.pageContextInfo);
+  MyFeedPostForm(this.feedId, this.memberId, this.currentMemberId,
+      this.photoURL, this.pageContextInfo);
 
   _MyFeedPostFormState createState() => _MyFeedPostFormState();
 }
@@ -44,28 +46,95 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
     _postPrivilegeSelectedRadioTile = 0;
   }
 
-  Widget _radioPrivilegeTile(
+  RadioListTile _radioPrivilegeTile(
       String text, int value, FeedPostModelDetails feedPostModelDetails) {
-    return Flexible(
+    return /*Flexible(
       fit: FlexFit.loose,
-      child: RadioListTile(
-          value: value,
-          groupValue: _postPrivilegeSelectedRadioTile,
-          title: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, text),
-          onChanged: feedPostModelDetails.memberMedia.length == 0
-              ? (dynamic value) {
-                  _setPostSelectedRadioTile(value);
-                }
-              : null),
-    );
+      child: */
+        RadioListTile(
+            contentPadding: EdgeInsets.all(0),
+            dense: true,
+            value: value,
+            groupValue: _postPrivilegeSelectedRadioTile,
+            title: StyleRegistry.registry()
+                .styleWithContext(context)
+                .frontEndStyle()
+                .textStyle()
+                .text(context, text),
+            onChanged: feedPostModelDetails.memberMedia.length == 0
+                ? (dynamic value) {
+                    _setPostSelectedRadioTile(value);
+                  }
+                : null) /*,
+    )*/
+        ;
+  }
+
+  Widget _getList(RadioListTile tile1, RadioListTile tile2) {
+    return Flexible(
+        fit: FlexFit.loose,
+        child: ListView.builder(
+          itemBuilder: (context, index) {
+            if (index == 0) return tile1;
+            if (index == 1) return tile2;
+            return Text("not expected");
+          },
+          itemCount: 2,
+          shrinkWrap: true,
+          physics: ScrollPhysics(),
+        ));
   }
 
   Widget _rowAudience(FeedPostModelDetails feedPostModelDetails) {
-    List<Widget> children = [];
-    children.add(_radioPrivilegeTile('Public', 0, feedPostModelDetails));
-    children.add(_radioPrivilegeTile('Followers', 1, feedPostModelDetails));
-    children.add(_radioPrivilegeTile('Just Me', 2, feedPostModelDetails));
-    return Row(children: children);
+    var col1 = _getList(_radioPrivilegeTile('Public', 0, feedPostModelDetails),
+        _radioPrivilegeTile('Followers', 1, feedPostModelDetails));
+    var col2 = _getList(
+        _radioPrivilegeTile('Specific People', 2, feedPostModelDetails),
+        _radioPrivilegeTile('Just Me', 3, feedPostModelDetails));
+    var col3;
+
+    // specific followers
+    if (_postPrivilegeSelectedRadioTile == 2) {
+      col3 = Container(height: 300, width: 250, child: SelectMembersWidget());
+
+
+/*
+      col3 = Container(
+          height: 100,
+          width: 250,
+*/
+/*
+          decoration:
+              BoxDecoration(border: Border.all(color: Colors.black)),
+*//*
+
+          child: */
+/*Flexible(fit: FlexFit.loose, child:*//*
+ Align(alignment: Alignment.topLeft, child: ListView.builder(
+            padding: EdgeInsets.only(left: 10, right: 10, bottom: 30),
+            itemBuilder: (context, index) {
+              return ConstrainedBox(constraints: BoxConstraints(maxHeight: 22),
+              child: Align(alignment: Alignment.topLeft, child: CheckboxListTile(
+                value: true,
+                dense: true,
+                contentPadding: EdgeInsets.all(0),
+                onChanged: (bool? value) {
+                  setState(() {});
+                },
+                title: new Text('item ' + index.toString()),
+              )));
+            },
+            itemCount: 10,
+            shrinkWrap: true,
+            physics: ScrollPhysics(),
+          ))) */
+/*)*//*
+;
+*/
+      return Row(children: [col1, col2, col3]);
+    } else {
+      return Row(children: [col1, col2]);
+    }
   }
 
   @override
@@ -73,71 +142,86 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
     var theState = AccessBloc.getState(context);
     if (theState is LoggedIn) {
       var app = AccessBloc.app(context);
-      if (app == null) return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'No app available');
-        return StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogWidgetStyle().complexAckNackDialog(context,
-            title: 'New Album',
-            child: _contents(context, widget.pageContextInfo, app, theState),
-            onSelection: (value) {
-          if (value == 0) {
-            BlocProvider.of<FeedPostFormBloc>(context).add(SubmitPost());
-          }
+      if (app == null)
+        return StyleRegistry.registry()
+            .styleWithContext(context)
+            .frontEndStyle()
+            .textStyle()
+            .text(context, 'No app available');
+      return StyleRegistry.registry()
+          .styleWithContext(context)
+          .frontEndStyle()
+          .dialogWidgetStyle()
+          .complexAckNackDialog(context,
+              title: 'New Album',
+              child: _contents(context, widget.pageContextInfo, app, theState),
+              onSelection: (value) {
+        if (value == 0) {
+          BlocProvider.of<FeedPostFormBloc>(context).add(SubmitPost());
+        }
       });
-    } else {
-      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'Not logged in');
-    }
-  }
-
-  Widget _contents(BuildContext context, PageContextInfo pageContextInfo, AppModel app, AccessState theState) {
-    return BlocBuilder<FeedPostFormBloc, FeedPostFormState>(
-        builder: (context, state) {
-    if (state is FeedPostFormLoaded) {
-      if (state.postModelDetails.description != null) {
-        _descriptionController.text =
-            state.postModelDetails.description.toString();
-      } else {
-        _descriptionController.text = "";
-      }
-
-      if (state.postModelDetails.postPrivilege != null)
-        _postPrivilegeSelectedRadioTile =
-            state.postModelDetails.postPrivilege.index;
-      else
-        _postPrivilegeSelectedRadioTile = 0;
-    }
-    if (state is FeedPostFormInitialized) {
-      List<Widget> rows = [];
-      rows.add(_row1(pageContextInfo.pageId, app, state));
-      if ((state is SubmittableFeedPostFormWithMediumUploading) ||
-          ((state.postModelDetails.memberMedia != null) &&
-              (state.postModelDetails.memberMedia.isNotEmpty))) {
-        rows.add(_row2(context, state));
-        rows.add(PostMediaHelper.videoAndPhotoDivider(context));
-      }
-      rows.add(_rowAudience(state.postModelDetails));
-//          return PostHelper.getFormattedPost(rows);
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: rows,
-      );
     } else {
       return StyleRegistry.registry()
           .styleWithContext(context)
-          .frontEndStyle().progressIndicatorStyle()
-          .progressIndicator(context);
+          .frontEndStyle()
+          .textStyle()
+          .text(context, 'Not logged in');
     }
-        });
+  }
+
+  Widget _contents(BuildContext context, PageContextInfo pageContextInfo,
+      AppModel app, AccessState theState) {
+    return BlocBuilder<FeedPostFormBloc, FeedPostFormState>(
+        builder: (context, state) {
+      if (state is FeedPostFormLoaded) {
+        if (state.postModelDetails.description != null) {
+          _descriptionController.text =
+              state.postModelDetails.description.toString();
+        } else {
+          _descriptionController.text = "";
+        }
+
+        if (state.postModelDetails.postPrivilege != null)
+          _postPrivilegeSelectedRadioTile =
+              state.postModelDetails.postPrivilege.postPrivilegeType.index;
+        else
+          _postPrivilegeSelectedRadioTile = 0;
+      }
+      if (state is FeedPostFormInitialized) {
+        List<Widget> rows = [];
+        rows.add(_row1(pageContextInfo.pageId, app, state));
+        if ((state is SubmittableFeedPostFormWithMediumUploading) ||
+            ((state.postModelDetails.memberMedia != null) &&
+                (state.postModelDetails.memberMedia.isNotEmpty))) {
+          rows.add(_row2(context, state));
+          rows.add(PostMediaHelper.videoAndPhotoDivider(context));
+        }
+        rows.add(_rowAudience(state.postModelDetails));
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: rows,
+        );
+      } else {
+        return StyleRegistry.registry()
+            .styleWithContext(context)
+            .frontEndStyle()
+            .progressIndicatorStyle()
+            .progressIndicator(context);
+      }
+    });
   }
 
   Widget _row1(String pageId, AppModel app, FeedPostFormInitialized state) {
     var avatar = AvatarHelper.avatar(
-          context,
-          60,
-          pageId,
-          widget.memberId,
-          widget.currentMemberId,
-          app.documentID!,
-          widget.feedId,
-        );
+      context,
+      60,
+      pageId,
+      widget.memberId,
+      widget.currentMemberId,
+      app.documentID!,
+      widget.feedId,
+    );
     return Row(children: [
       Container(
           height: 60, width: 60, child: avatar == null ? Container() : avatar),
@@ -171,7 +255,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
 
   PopupMenuButton _mediaButtons(BuildContext context, AppModel app,
       FeedPostFormInitialized state, String memberId) {
-    List<String> readAccess = state.postModelDetails.readAccess;
+    List<String> readAccess = state.postModelDetails.postPrivilege.readAccess;
 
     return MediaButtons.mediaButtons(
         context, app.documentID!, memberId, readAccess,
@@ -180,9 +264,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
           if (photo != null) {
             var memberMedia = state.postModelDetails.memberMedia;
             memberMedia.add(PostMediumModel(
-                documentID: photo.documentID,
-                memberMedium: photo
-            ));
+                documentID: photo.documentID, memberMedium: photo));
             BlocProvider.of<FeedPostFormBloc>(context)
                 .add(ChangedMedia(memberMedia: memberMedia));
           }
@@ -191,11 +273,8 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         videoFeedbackFunction: (video) {
           if (video != null) {
             var memberMedia = state.postModelDetails.memberMedia;
-            memberMedia.add(
-                PostMediumModel(
-                    documentID: video.documentID,
-                    memberMedium: video
-                ));
+            memberMedia.add(PostMediumModel(
+                documentID: video.documentID, memberMedium: video));
             BlocProvider.of<FeedPostFormBloc>(context)
                 .add(ChangedMedia(memberMedia: memberMedia));
           }
@@ -208,14 +287,13 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
     if (state is SubmittableFeedPostFormWithMediumUploading) {
       progressValue = state.progress;
     }
-    var media =<MemberMediumModel>[];
+    var media = <MemberMediumModel>[];
     state.postModelDetails.memberMedia.forEach((medium) {
       if (medium.memberMedium != null) {
         media.add(medium.memberMedium!);
       }
     });
-    return PostMediaHelper.staggeredMemberMediumModel(context,
-        media,
+    return PostMediaHelper.staggeredMemberMediumModel(context, media,
         progressLabel: 'Uploading...',
         progressExtra: progressValue, deleteAction: (index) {
       var memberMedia = state.postModelDetails.memberMedia;
@@ -264,7 +342,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         _postPrivilegeSelectedRadioTile = val;
       });
       BlocProvider.of<FeedPostFormBloc>(context)
-          .add(ChangedFeedPostPrivilege(value: toPostPrivilege(val)));
+          .add(ChangedFeedPostPrivilege(value: val));
     }
   }
 

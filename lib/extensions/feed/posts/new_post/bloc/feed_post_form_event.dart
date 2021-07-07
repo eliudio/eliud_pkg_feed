@@ -42,9 +42,10 @@ class ChangedFeedPostDescription extends FeedPostFormEvent {
 }
 
 class ChangedFeedPostPrivilege extends FeedPostFormEvent {
-  final PostPrivilege? value;
+  final int value;
+  final List<String>? specificFollowers;
 
-  ChangedFeedPostPrivilege({this.value});
+  ChangedFeedPostPrivilege({required this.value, this.specificFollowers });
 
   @override
   List<Object?> get props => [ value ];

@@ -15,6 +15,7 @@ dependencies:
   buttons_tabbar: ^1.2.1
   transparent_image: 2.0.0
   flutter_stage: 0.0.1
+  flutter_tagging: 3.0.0
   percent_indicator: 3.0.1
 
   eliud_core:

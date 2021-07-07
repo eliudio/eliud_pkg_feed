@@ -38,9 +38,10 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
         yield await _submit(currentState.postModelDetails);
       }
       if (event is ChangedFeedPostPrivilege) {
-        var readAccess = await  PostFollowersHelper.as(event.value!, accessState);
+        var postPrivilegeType = toPostPrivilegeType(event.value);
+        var postPrivilege = await PostPrivilege.construct1(postPrivilegeType, appId, memberId, specificFollowers: event.specificFollowers);
         var newValue =
-            currentState.postModelDetails.copyWith(postPrivilege: event.value, readAccess: readAccess);
+            currentState.postModelDetails.copyWith(postPrivilege: postPrivilege);
         yield SubmittableFeedPostForm(postModelDetails: newValue);
       }
       if (event is UploadingMedium) {
@@ -58,29 +59,27 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
     }
   }
 
-  Future<FeedPostFormLoaded> _initialiseNew() async => FeedPostFormLoaded(
-      postModelDetails: FeedPostModelDetails(
-        readAccess: await PostFollowersHelper.as(PostPrivilege.Public, accessState),
-        description: "",
-        memberMedia: [],
-        postPrivilege: PostPrivilege.Public,
-      ));
+  Future<FeedPostFormLoaded> _initialiseNew() async {
+    return FeedPostFormLoaded(
+        postModelDetails: FeedPostModelDetails(
+          description: "",
+          memberMedia: [],
+          postPrivilege: await PostPrivilege.construct1(PostPrivilegeType.Public, appId, memberId),
+        ));
+  }
 
   Future<FeedPostFormLoaded> _initialiseUpdate(InitialiseUpdateFeedPostFormEvent event) async {
     var readAccess = event.readAccess;
     return FeedPostFormLoaded(
         postModelDetails: FeedPostModelDetails(
-          readAccess: readAccess,
           description: event.description,
           memberMedia: event.memberMedia,
-          postPrivilege: PostPrivilege.Public,
+          postPrivilege: await PostFollowersHelper.determinePostPrivilege(readAccess, appId, memberId),
         ));
   }
 
   Future<FeedPostFormState> _submit(
       FeedPostModelDetails feedPostModelDetails) async {
-    var readAccess = await PostFollowersHelper.as(feedPostModelDetails.postPrivilege, accessState);
-
     PostModel postModel = PostModel(
         documentID: newRandomKey(),
         authorId: memberId,
@@ -89,7 +88,7 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
         description: feedPostModelDetails.description,
         likes: 0,
         dislikes: 0,
-        readAccess: readAccess,
+        readAccess: await feedPostModelDetails.postPrivilege.readAccess,
         archived: PostArchiveStatus.Active,
         memberMedia: feedPostModelDetails.memberMedia);
 
