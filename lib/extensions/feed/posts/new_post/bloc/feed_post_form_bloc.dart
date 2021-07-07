@@ -30,7 +30,7 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
       if (event is InitialiseNewFeedPostFormEvent) {
         yield await _initialiseNew();
       } else if (event is InitialiseUpdateFeedPostFormEvent) {
-        yield await _initialiseUpdate();
+        yield await _initialiseUpdate(event);
       }
 
     } else if (currentState is FeedPostFormInitialized) {
@@ -66,21 +66,19 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
         postPrivilege: PostPrivilege.Public,
       ));
 
-  Future<FeedPostFormLoaded> _initialiseUpdate() async => FeedPostFormLoaded(
-      postModelDetails: FeedPostModelDetails(
-        readAccess: await PostFollowersHelper.as(PostPrivilege.Public, accessState),
-        description: "THIS WOULD BE UPDATE, CHANGE in feed_post_form_bloc line 72",
-        memberMedia: [],
-        postPrivilege: PostPrivilege.Public,
-      ));
+  Future<FeedPostFormLoaded> _initialiseUpdate(InitialiseUpdateFeedPostFormEvent event) async {
+    var readAccess = event.readAccess;
+    return FeedPostFormLoaded(
+        postModelDetails: FeedPostModelDetails(
+          readAccess: readAccess,
+          description: event.description,
+          memberMedia: event.memberMedia,
+          postPrivilege: PostPrivilege.Public,
+        ));
+  }
 
   Future<FeedPostFormState> _submit(
       FeedPostModelDetails feedPostModelDetails) async {
-    var postMemberMedia = feedPostModelDetails.memberMedia.map((memberMedium) => PostMediumModel(
-      documentID: newRandomKey(),
-      memberMedium: memberMedium
-    )).toList();
-
     var readAccess = await PostFollowersHelper.as(feedPostModelDetails.postPrivilege, accessState);
 
     PostModel postModel = PostModel(
@@ -93,7 +91,7 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
         dislikes: 0,
         readAccess: readAccess,
         archived: PostArchiveStatus.Active,
-        memberMedia: postMemberMedia);
+        memberMedia: feedPostModelDetails.memberMedia);
 
     // Now tell the list bloc to add the post
     postListPagedBloc.add(AddPostPaged(value: postModel));

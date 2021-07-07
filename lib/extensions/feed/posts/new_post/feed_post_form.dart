@@ -4,9 +4,11 @@ import 'package:eliud_core/core/navigate/page_param_helper.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/style/style_registry.dart';
+import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/media_buttons.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_media_helper.dart';
+import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:eliud_pkg_medium/platform/medium_platform.dart';
 import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 import 'package:flutter/material.dart';
@@ -177,7 +179,10 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         photoFeedbackFunction: (photo) {
           if (photo != null) {
             var memberMedia = state.postModelDetails.memberMedia;
-            memberMedia.add(photo);
+            memberMedia.add(PostMediumModel(
+                documentID: photo.documentID,
+                memberMedium: photo
+            ));
             BlocProvider.of<FeedPostFormBloc>(context)
                 .add(ChangedMedia(memberMedia: memberMedia));
           }
@@ -186,7 +191,11 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         videoFeedbackFunction: (video) {
           if (video != null) {
             var memberMedia = state.postModelDetails.memberMedia;
-            memberMedia.add(video);
+            memberMedia.add(
+                PostMediumModel(
+                    documentID: video.documentID,
+                    memberMedium: video
+                ));
             BlocProvider.of<FeedPostFormBloc>(context)
                 .add(ChangedMedia(memberMedia: memberMedia));
           }
@@ -199,8 +208,14 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
     if (state is SubmittableFeedPostFormWithMediumUploading) {
       progressValue = state.progress;
     }
+    var media =<MemberMediumModel>[];
+    state.postModelDetails.memberMedia.forEach((medium) {
+      if (medium.memberMedium != null) {
+        media.add(medium.memberMedium!);
+      }
+    });
     return PostMediaHelper.staggeredMemberMediumModel(context,
-        state.postModelDetails.memberMedia,
+        media,
         progressLabel: 'Uploading...',
         progressExtra: progressValue, deleteAction: (index) {
       var memberMedia = state.postModelDetails.memberMedia;
@@ -208,9 +223,9 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
       BlocProvider.of<FeedPostFormBloc>(context)
           .add(ChangedMedia(memberMedia: memberMedia));
     }, viewAction: (index) {
-      var medium = state.postModelDetails.memberMedia[index];
+      var medium = media[index];
       if (medium.mediumType == MediumType.Photo) {
-        var photos = state.postModelDetails.memberMedia;
+        var photos = media;
         AbstractMediumPlatform.platform!.showPhotos(context, photos, index);
       } else {
         AbstractMediumPlatform.platform!.showVideo(context, medium);

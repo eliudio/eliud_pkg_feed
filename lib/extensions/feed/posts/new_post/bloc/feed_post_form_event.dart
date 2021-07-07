@@ -19,7 +19,14 @@ class InitialiseNewFeedPostFormEvent extends FeedPostFormEvent {
 }
 
 class InitialiseUpdateFeedPostFormEvent extends FeedPostFormEvent {
+  final String description;
+  final List<PostMediumModel> memberMedia;
+  List<String> readAccess;
 
+  InitialiseUpdateFeedPostFormEvent(this.description, this.memberMedia, this.readAccess);
+
+  @override
+  List<Object?> get props => [description, memberMedia, readAccess];
 }
 
 class ChangedFeedPostDescription extends FeedPostFormEvent {
@@ -47,7 +54,7 @@ class ChangedFeedPostPrivilege extends FeedPostFormEvent {
 }
 
 class ChangedMedia extends FeedPostFormEvent {
-  final List<MemberMediumModel> memberMedia;
+  final List<PostMediumModel> memberMedia;
 
   ChangedMedia({required this.memberMedia});
 

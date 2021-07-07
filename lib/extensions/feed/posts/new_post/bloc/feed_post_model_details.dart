@@ -23,13 +23,14 @@ import 'package:meta/meta.dart';
 
 class FeedPostModelDetails {
   final String description;
-  final List<MemberMediumModel> memberMedia;
+  // final List<MemberMediumModel> memberMedia;
+  final List<PostMediumModel> memberMedia;
   final PostPrivilege postPrivilege;
   final List<String> readAccess;
 
   FeedPostModelDetails({required this.description, required this.memberMedia, required this.postPrivilege, required this.readAccess});
 
-  FeedPostModelDetails copyWith({String? description, List<MemberMediumModel>? memberMedia, PostPrivilege? postPrivilege, List<String>? readAccess}) {
+  FeedPostModelDetails copyWith({String? description, List<PostMediumModel>? memberMedia, PostPrivilege? postPrivilege, List<String>? readAccess}) {
     return FeedPostModelDetails(description: description ?? this.description, memberMedia: memberMedia ?? this.memberMedia, postPrivilege: postPrivilege ?? this.postPrivilege, readAccess: readAccess ?? this.readAccess);
   }
 }

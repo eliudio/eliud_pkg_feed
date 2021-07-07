@@ -12,6 +12,7 @@ import 'package:eliud_pkg_feed/model/feed_model.dart';
 import 'package:eliud_pkg_feed/model/post_like_model.dart';
 import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
+import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 import 'package:eliud_pkg_text/platform/text_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -313,14 +314,23 @@ class _PostWidgetState extends State<PostWidget> {
               case PostType.SingleVideo:
               case PostType.SinglePhoto:
               case PostType.Album:
-                var pageContextInfo = PageParamHelper.getPagaContextInfo(context);
+                var pageContextInfo =
+                    PageParamHelper.getPagaContextInfo(context);
                 FeedPostDialog.open(
                     context,
                     widget.feedId,
                     postModel.authorId!,
                     widget.currentMemberId,
                     widget.photoURL!,
-                    pageContextInfo, InitialiseUpdateFeedPostFormEvent());
+                    pageContextInfo,
+                    InitialiseUpdateFeedPostFormEvent(
+                        postModel.description == null
+                            ? ''
+                            : postModel.description!,
+                        postModel.memberMedia == null
+                            ? <PostMediumModel>[]
+                            : postModel.memberMedia!,
+                        postModel.readAccess == null ? [] : postModel.readAccess!));
                 break;
               case PostType.Html:
                 AbstractTextPlatform.platform!.updateHtml(
@@ -332,7 +342,10 @@ class _PostWidgetState extends State<PostWidget> {
                   BlocProvider.of<PostListPagedBloc>(context).add(
                       UpdatePostPaged(
                           value: postModel.copyWith(html: newArticle)));
-                }, postModel.html == null ? '' : postModel.html!); // TODO: Handle this case.
+                },
+                    postModel.html == null
+                        ? ''
+                        : postModel.html!); // TODO: Handle this case.
                 break;
               case PostType.OnlyDescription:
                 StyleRegistry.registry()
@@ -346,7 +359,10 @@ class _PostWidgetState extends State<PostWidget> {
                         UpdatePostPaged(
                             value: postModel.copyWith(description: value)));
                   }
-                }, initialValue: postModel.description == null ? '' : postModel.description);
+                },
+                        initialValue: postModel.description == null
+                            ? ''
+                            : postModel.description);
                 break;
             }
           }
