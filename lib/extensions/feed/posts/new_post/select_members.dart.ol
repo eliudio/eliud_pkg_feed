@@ -4,6 +4,7 @@ import 'package:flutter_tagging/flutter_tagging.dart';
 
 typedef SelectedMembersCallback(List<String> selectedMembers);
 
+/// Language Class
 class SelectedMember extends Taggable {
   ///
   final String name;
@@ -11,6 +12,7 @@ class SelectedMember extends Taggable {
   ///
   final int position;
 
+  /// Creates Language
   SelectedMember({
     required this.name,
     required this.position,
@@ -32,12 +34,7 @@ class SelectMembersWidget extends StatefulWidget {
     return _SelectMembersWidgetState();
   }
 
-  static Widget get(
-      {required String appId,
-        required String feedId,
-        required String memberId,
-        required List<String>? initialMembers,
-        required SelectedMembersCallback selectedMembersCallback}) {
+  static Widget get() {
     return SelectMembersWidget();
   }
 }
@@ -45,29 +42,30 @@ class SelectMembersWidget extends StatefulWidget {
 class _SelectMembersWidgetState extends State<SelectMembersWidget> {
   @override
   Widget build(BuildContext context) {
-    List<SelectedMember> _selectedMembers = [];
+    List<SelectedMember> _selectedLanguages = [];
 
     return FlutterTagging<SelectedMember>(
-        initialItems: _selectedMembers,
+        initialItems: _selectedLanguages,
         textFieldConfiguration: TextFieldConfiguration(
           decoration: InputDecoration(
             border: InputBorder.none,
             filled: true,
             fillColor: Colors.green.withAlpha(30),
-            hintText: 'Search Members',
-            labelText: 'Select Members',
+            hintText: 'Search Tags',
+            labelText: 'Select Tags',
           ),
         ),
-        findSuggestions: MemberService.getMembers,
+        findSuggestions: LanguageService.getLanguages,
         additionCallback: (value) {
           return SelectedMember(
             name: value,
             position: 0,
           );
         },
-        onAdded: (member) {
+        onAdded: (language) {
 
-          return member;
+          // api calls here, triggered when add to tag button is pressed
+          return language;
         },
         configureSuggestion: (lang) {
           return SuggestionConfiguration(
@@ -101,9 +99,10 @@ class _SelectMembersWidgetState extends State<SelectMembersWidget> {
   }
 }
 
-/// MemberService
-class MemberService {
-  static Future<List<SelectedMember>> getMembers(String query) async {
+/// LanguageService
+class LanguageService {
+  /// Mocks fetching language from network API with delay of 500ms.
+  static Future<List<SelectedMember>> getLanguages(String query) async {
     await Future.delayed(Duration(milliseconds: 500), null);
     return <SelectedMember>[
       SelectedMember(name: 'JavaScript', position: 1),

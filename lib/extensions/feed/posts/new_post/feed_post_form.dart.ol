@@ -6,14 +6,12 @@ import 'package:eliud_core/core/navigate/page_param_helper.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/style/style_registry.dart';
-import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/new_post/select_members.dart';
 import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/media_buttons.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_media_helper.dart';
 import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:eliud_pkg_medium/platform/medium_platform.dart';
-import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -91,6 +89,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         ));
   }
 
+  static final SPACE_INBETWEEN = 10.0;
   static double width(BuildContext context) => max(
       (MediaQuery.of(context).size.width * 0.9 - 2 * SPACE_INBETWEEN) / 2, 200);
 
@@ -106,44 +105,42 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
     if (_postPrivilegeSelectedRadioTile == 2) {
       var col2 = Container(height: 300, width: 250, child: SelectMembersWidget.get());
 
-
+      col2 = Container(
+          height: 200,
+          width: 300,
+          child: SelectMembersWidget.get(
 /*
-      col3 = Container(
-          height: 100,
-          width: 250,
+            appId: widget.appId,
+            feedId: widget.feedId,
+            memberId: widget.currentMemberId!,
+            selectedMembersCallback: _selectedMembersCallback,
+            initialMembers:
+            feedPostModelDetails.postPrivilege.specificFollowers,
 */
+          ));
+      return Row(children: [
+        spacer(),
+        col1,
 /*
-          decoration:
-              BoxDecoration(border: Border.all(color: Colors.black)),
-*//*
-
-          child: */
-/*Flexible(fit: FlexFit.loose, child:*//*
- Align(alignment: Alignment.topLeft, child: ListView.builder(
-            padding: EdgeInsets.only(left: 10, right: 10, bottom: 30),
-            itemBuilder: (context, index) {
-              return ConstrainedBox(constraints: BoxConstraints(maxHeight: 22),
-              child: Align(alignment: Alignment.topLeft, child: CheckboxListTile(
-                value: true,
-                dense: true,
-                contentPadding: EdgeInsets.all(0),
-                onChanged: (bool? value) {
-                  setState(() {});
-                },
-                title: new Text('item ' + index.toString()),
-              )));
-            },
-            itemCount: 10,
-            shrinkWrap: true,
-            physics: ScrollPhysics(),
-          ))) */
-/*)*//*
-;
+        Spacer(),
 */
-      return Row(children: [col1, col2]);
+        col2,
+        spacer()
+      ]);
+//      return Row(children: [col1, col2]);
     } else {
-      return Row(children: [col1]);
+      return Row(children: [        spacer()
+        ,col1]);
     }
+  }
+
+  Widget spacer() {
+    return Container(width: SPACE_INBETWEEN);
+  }
+
+  void _selectedMembersCallback(List<String> selectedMembers) {
+    BlocProvider.of<FeedPostFormBloc>(context).add(
+        ChangedFeedPostPrivilege(value: 2, specificFollowers: selectedMembers));
   }
 
   @override
