@@ -88,7 +88,7 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
         description: feedPostModelDetails.description,
         likes: 0,
         dislikes: 0,
-        readAccess: await feedPostModelDetails.postPrivilege.readAccess,
+        readAccess: feedPostModelDetails.postPrivilege.readAccess,
         archived: PostArchiveStatus.Active,
         memberMedia: feedPostModelDetails.memberMedia);
 

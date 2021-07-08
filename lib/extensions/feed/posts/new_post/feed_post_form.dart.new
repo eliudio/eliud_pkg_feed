@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/navigate/page_param_helper.dart';
@@ -71,71 +73,73 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         ;
   }
 
-  Widget _getList(RadioListTile tile1, RadioListTile tile2) {
+  Widget _getList(RadioListTile tile1, RadioListTile tile2, RadioListTile tile3,
+      RadioListTile tile4) {
     return Flexible(
         fit: FlexFit.loose,
         child: ListView.builder(
           itemBuilder: (context, index) {
             if (index == 0) return tile1;
             if (index == 1) return tile2;
+            if (index == 2) return tile3;
+            if (index == 3) return tile4;
             return Text("not expected");
           },
-          itemCount: 2,
+          itemCount: 4,
           shrinkWrap: true,
           physics: ScrollPhysics(),
         ));
   }
 
+  static double width(BuildContext context) => max(
+      (MediaQuery.of(context).size.width * 0.9 - 2 * SPACE_INBETWEEN) / 2, 200);
+
   Widget _rowAudience(FeedPostModelDetails feedPostModelDetails) {
-    var col1 = _getList(_radioPrivilegeTile('Public', 0, feedPostModelDetails),
-        _radioPrivilegeTile('Followers', 1, feedPostModelDetails));
-    var col2 = _getList(
+    var col1 = _getList(
+        _radioPrivilegeTile('Public', 0, feedPostModelDetails),
+        _radioPrivilegeTile('Followers', 1, feedPostModelDetails),
         _radioPrivilegeTile('Specific People', 2, feedPostModelDetails),
         _radioPrivilegeTile('Just Me', 3, feedPostModelDetails));
-    var col3;
+    var col2;
 
     // specific followers
     if (_postPrivilegeSelectedRadioTile == 2) {
-      col3 = Container(height: 300, width: 250, child: SelectMembersWidget.get());
-
-
-/*
-      col3 = Container(
-          height: 100,
-          width: 250,
-*/
-/*
-          decoration:
-              BoxDecoration(border: Border.all(color: Colors.black)),
-*//*
-
-          child: */
-/*Flexible(fit: FlexFit.loose, child:*//*
- Align(alignment: Alignment.topLeft, child: ListView.builder(
-            padding: EdgeInsets.only(left: 10, right: 10, bottom: 30),
-            itemBuilder: (context, index) {
-              return ConstrainedBox(constraints: BoxConstraints(maxHeight: 22),
-              child: Align(alignment: Alignment.topLeft, child: CheckboxListTile(
-                value: true,
-                dense: true,
-                contentPadding: EdgeInsets.all(0),
-                onChanged: (bool? value) {
-                  setState(() {});
-                },
-                title: new Text('item ' + index.toString()),
-              )));
-            },
-            itemCount: 10,
-            shrinkWrap: true,
-            physics: ScrollPhysics(),
-          ))) */
-/*)*//*
-;
-*/
-      return Row(children: [col1, col2, col3]);
+      col2 = Container(
+          height: 200,
+          width: width(context),
+          child: SelectMembersWidget.get(
+            appId: widget.appId,
+            feedId: widget.feedId,
+            memberId: widget.currentMemberId!,
+            selectedMembersCallback: _selectedMembersCallback,
+            initialMembers:
+                feedPostModelDetails.postPrivilege.specificFollowers,
+          ));
+      return Row(children: [
+        spacer(),
+        col1,
+        Spacer(),
+        col2,
+        spacer()
+      ]);
     } else {
-      return Row(children: [col1, col2]);
+      return Row(children: [
+        Spacer(),
+        col1,
+        Spacer(),
+      ]);
     }
+  }
+
+  static final SPACE_INBETWEEN = 10.0;
+
+  Widget spacer() {
+    return Container(width: SPACE_INBETWEEN);
+  }
+
+  void _selectedMembersCallback(List<String> selectedMembers) {
+    BlocProvider.of<FeedPostFormBloc>(context).add(
+        ChangedFeedPostPrivilege(value: 2, specificFollowers: selectedMembers));
   }
 
   @override

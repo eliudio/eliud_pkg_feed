@@ -64,6 +64,7 @@ class _FeedPostDialogState extends State<FeedPostDialog> {
               postListPagedBloc, theState.member.documentID!, widget.feedId, theState)
             ..add(widget.initialiseEvent),
           child: MyFeedPostForm(
+                  theState.app.documentID!,
                   widget.feedId,
                   widget.memberId,
                   widget.currentMemberId,
