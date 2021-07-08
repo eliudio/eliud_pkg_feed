@@ -91,7 +91,6 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         ));
   }
 
-  static final SPACE_INBETWEEN = 10.0;
   static double width(BuildContext context) => max(
       (MediaQuery.of(context).size.width * 0.9 - 2 * SPACE_INBETWEEN) / 2, 200);
 
