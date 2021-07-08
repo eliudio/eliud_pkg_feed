@@ -26,7 +26,25 @@ class SelectedMember extends Taggable {
   }''';
 }
 
+
 class SelectMembersWidget extends StatefulWidget {
+  final String appId;
+  final String feedId;
+  final String memberId;
+  final List<SelectedMember> initiallySelectedMembers;
+  final SelectedMembersCallback selectedMembersCallback;
+  final MemberService memberService;
+
+  const SelectMembersWidget._(
+      {Key? key,
+        required this.appId,
+        required this.feedId,
+        required this.memberId,
+        required this.initiallySelectedMembers,
+        required this.selectedMembersCallback,
+        required this.memberService})
+      : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     return _SelectMembersWidgetState();
@@ -38,14 +56,30 @@ class SelectMembersWidget extends StatefulWidget {
         required String memberId,
         required List<String>? initialMembers,
         required SelectedMembersCallback selectedMembersCallback}) {
-    return SelectMembersWidget();
+    var memberService = MemberService(appId, feedId, memberId);
+    var future = memberService.getFromIDs(initialMembers);
+    return FutureBuilder<List<SelectedMember>>(
+        future: future,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return SelectMembersWidget._(
+                appId: appId,
+                feedId: feedId,
+                memberId: memberId,
+                initiallySelectedMembers: snapshot.data!,
+                selectedMembersCallback: selectedMembersCallback,
+                memberService: memberService);
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        });
   }
 }
 
 class _SelectMembersWidgetState extends State<SelectMembersWidget> {
   @override
   Widget build(BuildContext context) {
-    List<SelectedMember> _selectedMembers = [];
+    List<SelectedMember> _selectedMembers = widget.initiallySelectedMembers;
 
     return FlutterTagging<SelectedMember>(
         initialItems: _selectedMembers,
@@ -103,10 +137,26 @@ class _SelectMembersWidgetState extends State<SelectMembersWidget> {
 
 /// MemberService
 class MemberService {
+  final String appId;
+  final String feedId;
+  final String memberId;
+
+  MemberService(this.appId, this.feedId, this.memberId);
+
+  Future<List<SelectedMember>> getFromIDs(List<String>? ids) {
+    /*if (ids == null) */ return Future.value(<SelectedMember>[SelectedMember(name: 'Java Script', position: 1)]);
+
+    // 1. map the ids to id+feed
+    // 2. query where id in that list from 1.
+    // 3. map to SelectedMember
+
+//    return null;
+  }
+
   static Future<List<SelectedMember>> getMembers(String query) async {
     await Future.delayed(Duration(milliseconds: 500), null);
     return <SelectedMember>[
-      SelectedMember(name: 'JavaScript', position: 1),
+      SelectedMember(name: 'Java Script', position: 1),
       SelectedMember(name: 'Python', position: 2),
       SelectedMember(name: 'Java', position: 3),
       SelectedMember(name: 'PHP', position: 4),
