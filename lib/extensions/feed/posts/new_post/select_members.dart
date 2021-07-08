@@ -4,29 +4,6 @@ import 'package:flutter_tagging/flutter_tagging.dart';
 
 typedef SelectedMembersCallback(List<String> selectedMembers);
 
-class SelectedMember extends Taggable {
-  ///
-  final String name;
-
-  ///
-  final int position;
-
-  SelectedMember({
-    required this.name,
-    required this.position,
-  });
-
-  @override
-  List<Object> get props => [name];
-
-  /// Converts the class to json string.
-  String toJson() => '''  {
-    "name": $name,\n
-    "position": $position\n
-  }''';
-}
-
-
 class SelectMembersWidget extends StatefulWidget {
   final String appId;
   final String feedId;
@@ -96,7 +73,7 @@ class _SelectMembersWidgetState extends State<SelectMembersWidget> {
         additionCallback: (value) {
           return SelectedMember(
             name: value,
-            position: 0,
+            memberId: '0',
           );
         },
         onAdded: (member) {
@@ -106,7 +83,7 @@ class _SelectMembersWidgetState extends State<SelectMembersWidget> {
         configureSuggestion: (lang) {
           return SuggestionConfiguration(
             title: Text(lang.name),
-            subtitle: Text(lang.position.toString()),
+            subtitle: Text(lang.memberId),
             additionWidget: Chip(
               avatar: Icon(
                 Icons.add_circle,
@@ -144,7 +121,7 @@ class MemberService {
   MemberService(this.appId, this.feedId, this.memberId);
 
   Future<List<SelectedMember>> getFromIDs(List<String>? ids) {
-    /*if (ids == null) */ return Future.value(<SelectedMember>[SelectedMember(name: 'Java Script', position: 1)]);
+    /*if (ids == null) */ return Future.value(<SelectedMember>[SelectedMember(name: 'Java Script', memberId: '1')]);
 
     // 1. map the ids to id+feed
     // 2. query where id in that list from 1.
@@ -156,15 +133,27 @@ class MemberService {
   static Future<List<SelectedMember>> getMembers(String query) async {
     await Future.delayed(Duration(milliseconds: 500), null);
     return <SelectedMember>[
-      SelectedMember(name: 'Java Script', position: 1),
-      SelectedMember(name: 'Python', position: 2),
-      SelectedMember(name: 'Java', position: 3),
-      SelectedMember(name: 'PHP', position: 4),
-      SelectedMember(name: 'C#', position: 5),
-      SelectedMember(name: 'C++', position: 6),
+      SelectedMember(name: 'Java Script', memberId: '1'),
+      SelectedMember(name: 'Python', memberId: '2'),
+      SelectedMember(name: 'Java', memberId: '3'),
+      SelectedMember(name: 'PHP', memberId: '4'),
+      SelectedMember(name: 'C#', memberId: '5'),
+      SelectedMember(name: 'C++', memberId: '6'),
     ]
         .where((lang) => lang.name.toLowerCase().contains(query.toLowerCase()))
         .toList();
   }
 }
 
+class SelectedMember extends Taggable {
+  final String memberId;
+  final String name;
+
+  SelectedMember({
+    required this.memberId,
+    required this.name,
+  });
+
+  @override
+  List<Object> get props => [memberId, name];
+}
