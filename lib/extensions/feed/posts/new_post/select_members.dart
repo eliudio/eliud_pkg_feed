@@ -1,3 +1,5 @@
+import 'package:eliud_core/tools/query/query_tools.dart';
+import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tagging/flutter_tagging.dart';
@@ -14,12 +16,12 @@ class SelectMembersWidget extends StatefulWidget {
 
   const SelectMembersWidget._(
       {Key? key,
-        required this.appId,
-        required this.feedId,
-        required this.memberId,
-        required this.initiallySelectedMembers,
-        required this.selectedMembersCallback,
-        required this.memberService})
+      required this.appId,
+      required this.feedId,
+      required this.memberId,
+      required this.initiallySelectedMembers,
+      required this.selectedMembersCallback,
+      required this.memberService})
       : super(key: key);
 
   @override
@@ -29,10 +31,10 @@ class SelectMembersWidget extends StatefulWidget {
 
   static Widget get(
       {required String appId,
-        required String feedId,
-        required String memberId,
-        required List<String>? initialMembers,
-        required SelectedMembersCallback selectedMembersCallback}) {
+      required String feedId,
+      required String memberId,
+      required List<String>? initialMembers,
+      required SelectedMembersCallback selectedMembersCallback}) {
     var memberService = MemberService(appId, feedId, memberId);
     var future = memberService.getFromIDs(initialMembers);
     return FutureBuilder<List<SelectedMember>>(
@@ -69,7 +71,7 @@ class _SelectMembersWidgetState extends State<SelectMembersWidget> {
             labelText: 'Select Members',
           ),
         ),
-        findSuggestions: MemberService.getMembers,
+        findSuggestions: widget.memberService.getMembers,
         additionCallback: (value) {
           return SelectedMember(
             name: value,
@@ -77,7 +79,6 @@ class _SelectMembersWidgetState extends State<SelectMembersWidget> {
           );
         },
         onAdded: (member) {
-
           return member;
         },
         configureSuggestion: (lang) {
@@ -107,8 +108,7 @@ class _SelectMembersWidgetState extends State<SelectMembersWidget> {
             deleteIconColor: Colors.white,
           );
         },
-        onChanged: () {
-        });
+        onChanged: () {});
   }
 }
 
@@ -121,7 +121,8 @@ class MemberService {
   MemberService(this.appId, this.feedId, this.memberId);
 
   Future<List<SelectedMember>> getFromIDs(List<String>? ids) {
-    /*if (ids == null) */ return Future.value(<SelectedMember>[SelectedMember(name: 'Java Script', memberId: '1')]);
+    /*if (ids == null) */ return Future.value(
+        <SelectedMember>[SelectedMember(name: 'Java Script', memberId: '1')]);
 
     // 1. map the ids to id+feed
     // 2. query where id in that list from 1.
@@ -130,18 +131,41 @@ class MemberService {
 //    return null;
   }
 
-  static Future<List<SelectedMember>> getMembers(String query) async {
-    await Future.delayed(Duration(milliseconds: 500), null);
-    return <SelectedMember>[
-      SelectedMember(name: 'Java Script', memberId: '1'),
-      SelectedMember(name: 'Python', memberId: '2'),
-      SelectedMember(name: 'Java', memberId: '3'),
-      SelectedMember(name: 'PHP', memberId: '4'),
-      SelectedMember(name: 'C#', memberId: '5'),
-      SelectedMember(name: 'C++', memberId: '6'),
-    ]
-        .where((lang) => lang.name.toLowerCase().contains(query.toLowerCase()))
-        .toList();
+  Future<List<SelectedMember>> getMembers(String query) async {
+    var membersValues = await memberProfileRepository(appId: appId)!.valuesList(
+          eliudQuery: EliudQuery()
+              .withCondition(EliudQueryCondition('feedId', isEqualTo: feedId))
+              .withCondition(EliudQueryCondition('readAccess',
+              arrayContainsAny: [memberId, 'PUBLIC'])));
+
+    var values2 = <SelectedMember>[];
+    if (query.length > 0) {
+      membersValues.forEach((value) {
+        if (value!.nameOverride != null) {
+          if (value!.nameOverride!.contains(query)) {
+            var selectedMember = SelectedMember(
+                memberId: value!.authorId != null
+                    ? value!.authorId!
+                    : 'no author id',
+                name: value.nameOverride != null
+                    ? value.nameOverride!
+                    : 'no name');
+            values2.add(selectedMember);
+          }
+        }
+      });
+    } else {
+      membersValues.forEach((value) {
+        var selectedMember = SelectedMember(
+            memberId: value!.authorId != null
+                ? value!.authorId!
+                : 'no authord id',
+            name: value.nameOverride != null ? value.nameOverride! : 'no name');
+        values2.add(selectedMember);
+      });
+    }
+
+    return values2;
   }
 }
 
