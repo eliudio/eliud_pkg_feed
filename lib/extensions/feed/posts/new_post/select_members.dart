@@ -66,7 +66,7 @@ class _SelectMembersWidgetState extends State<SelectMembersWidget> {
           decoration: InputDecoration(
             border: InputBorder.none,
             filled: true,
-            fillColor: Colors.green.withAlpha(30),
+            fillColor: Colors.grey.withAlpha(30),
             hintText: 'Search Members',
             labelText: 'Select Members',
           ),
@@ -85,6 +85,7 @@ class _SelectMembersWidgetState extends State<SelectMembersWidget> {
           return SuggestionConfiguration(
             title: Text(lang.name),
             subtitle: Text(lang.memberId),
+/*
             additionWidget: Chip(
               avatar: Icon(
                 Icons.add_circle,
@@ -98,12 +99,13 @@ class _SelectMembersWidgetState extends State<SelectMembersWidget> {
               ),
               backgroundColor: Colors.green,
             ),
+*/
           );
         },
         configureChip: (lang) {
           return ChipConfiguration(
             label: Text(lang.name),
-            backgroundColor: Colors.green,
+            backgroundColor: Colors.grey,
             labelStyle: TextStyle(color: Colors.white),
             deleteIconColor: Colors.white,
           );
