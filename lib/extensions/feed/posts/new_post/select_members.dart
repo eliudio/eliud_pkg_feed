@@ -1,11 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_feed/model/member_profile_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tagging/flutter_tagging.dart';
 
 typedef SelectedMembersCallback(List<String> selectedMembers);
 
+// Perpahs we should only show followed members?
 class SelectMembersWidget extends StatefulWidget {
   final String appId;
   final String feedId;
@@ -72,12 +76,14 @@ class _SelectMembersWidgetState extends State<SelectMembersWidget> {
           ),
         ),
         findSuggestions: widget.memberService.getMembers,
+/*
         additionCallback: (value) {
           return SelectedMember(
             name: value,
             memberId: '0',
           );
         },
+*/
         onAdded: (member) {
           return member;
         },
@@ -110,7 +116,10 @@ class _SelectMembersWidgetState extends State<SelectMembersWidget> {
             deleteIconColor: Colors.white,
           );
         },
-        onChanged: () {});
+        onChanged: () {
+          var iDs = _selectedMembers.map((selectedMember) => selectedMember.memberId).toList();
+          widget.selectedMembersCallback(iDs);
+        });
   }
 }
 
@@ -122,15 +131,21 @@ class MemberService {
 
   MemberService(this.appId, this.feedId, this.memberId);
 
-  Future<List<SelectedMember>> getFromIDs(List<String>? ids) {
-    /*if (ids == null) */ return Future.value(
-        <SelectedMember>[SelectedMember(name: 'Java Script', memberId: '1')]);
+  Future<List<SelectedMember>> getFromIDs(List<String>? ids) async {
+    if (ids == null) return Future.value(<SelectedMember>[]);
 
-    // 1. map the ids to id+feed
-    // 2. query where id in that list from 1.
-    // 3. map to SelectedMember
+    var values2 = <SelectedMember>[];
+    for (var id in ids) {
+      var value = await memberProfileRepository(appId: appId)!.get(id + '-' + feedId);
+      var selectedMember = SelectedMember(
+          memberId: value!.authorId != null
+              ? value.authorId!
+              : 'no author id',
+          name: value.nameOverride != null ? value.nameOverride! : 'no name');
+      values2.add(selectedMember);
+    }
 
-//    return null;
+    return values2;
   }
 
   Future<List<SelectedMember>> getMembers(String query) async {
@@ -140,14 +155,15 @@ class MemberService {
               .withCondition(EliudQueryCondition('readAccess',
               arrayContainsAny: [memberId, 'PUBLIC'])));
 
-    var values2 = <SelectedMember>[];
     if (query.length > 0) {
-      membersValues.forEach((value) {
+      var values2 = <SelectedMember>[];
+      var lowerQuery = query.toLowerCase();
+      for (var value in membersValues) {
         if (value!.nameOverride != null) {
-          if (value!.nameOverride!.contains(query)) {
+          if (value.nameOverride!.toLowerCase().contains(lowerQuery)) {
             var selectedMember = SelectedMember(
-                memberId: value!.authorId != null
-                    ? value!.authorId!
+                memberId: value.authorId != null
+                    ? value.authorId!
                     : 'no author id',
                 name: value.nameOverride != null
                     ? value.nameOverride!
@@ -155,18 +171,23 @@ class MemberService {
             values2.add(selectedMember);
           }
         }
-      });
+      }
+      return values2;
     } else {
-      membersValues.forEach((value) {
-        var selectedMember = SelectedMember(
-            memberId: value!.authorId != null
-                ? value!.authorId!
-                : 'no authord id',
-            name: value.nameOverride != null ? value.nameOverride! : 'no name');
-        values2.add(selectedMember);
-      });
+      return mapAll(membersValues);
     }
+  }
 
+  List<SelectedMember> mapAll(List<MemberProfileModel?> membersValues) {
+    var values2 = <SelectedMember>[];
+    membersValues.forEach((value) {
+      var selectedMember = SelectedMember(
+          memberId: value!.authorId != null
+              ? value.authorId!
+              : 'no author id',
+          name: value.nameOverride != null ? value.nameOverride! : 'no name');
+      values2.add(selectedMember);
+    });
     return values2;
   }
 }

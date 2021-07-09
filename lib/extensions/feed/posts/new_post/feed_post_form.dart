@@ -106,14 +106,14 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
       var col2 = Container(
           height: 200,
           width: 300,
-          child: SelectMembersWidget.get(
+          child: SingleChildScrollView(child:SelectMembersWidget.get(
             appId: widget.appId,
             feedId: widget.feedId,
             memberId: widget.currentMemberId!,
             selectedMembersCallback: _selectedMembersCallback,
             initialMembers:
             feedPostModelDetails.postPrivilege.specificFollowers,
-          ));
+          )));
       return Row(children: [
         spacer(),
         col1,

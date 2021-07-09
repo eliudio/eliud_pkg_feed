@@ -35,7 +35,7 @@ class FeedPostFormUninitialized extends FeedPostFormState {
               runtimeType == other.runtimeType;
 }
 
-class FeedPostFormInitialized extends FeedPostFormState {
+abstract class FeedPostFormInitialized extends FeedPostFormState {
   final FeedPostModelDetails postModelDetails;
 
   const FeedPostFormInitialized({ required this.postModelDetails });
