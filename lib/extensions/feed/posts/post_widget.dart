@@ -415,7 +415,7 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   void allowToUpdateComment(BuildContext context, PostDetails postDetail,
-      String? memberId, PostCommentContainer? postCommentContainer) {
+      String? memberId, PostCommentContainer postCommentContainer) {
     StyleRegistry.registry()
         .styleWithContext(context)
         .frontEndStyle()
@@ -423,11 +423,12 @@ class _PostWidgetState extends State<PostWidget> {
         .openEntryDialog(context,
             title: 'Update comment',
             hintText: 'Comment',
+            initialValue: postCommentContainer.comment!,
             ackButtonLabel: 'Reply',
             nackButtonLabel: 'Discard', onPressed: (comment) {
       if (comment != null) {
         BlocProvider.of<PostListPagedBloc>(context).add(UpdateCommentEvent(
-            postDetail, postCommentContainer!.postComment!, comment));
+            postDetail, postCommentContainer.postComment!, comment));
       }
     });
   }
@@ -619,7 +620,7 @@ class _PostWidgetState extends State<PostWidget> {
       BuildContext context,
       PostDetails postDetail,
       String? memberId,
-      PostCommentContainer? postComment) {
+      PostCommentContainer postComment) {
     return PopupMenuButton(
         icon: Icon(Icons.more_horiz),
         itemBuilder: (_) => <PopupMenuItem<int>>[
