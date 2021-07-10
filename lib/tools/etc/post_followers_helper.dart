@@ -85,7 +85,7 @@ class PostFollowersMemberHelper {
 
     if (ListHelper.listEquals(readAccess, _asMe)) return PostPrivilege.construct1(PostPrivilegeType.JustMe, appId, memberId);
     if (ListHelper.listEquals(readAccess, await _asPublic)) return PostPrivilege.construct1(PostPrivilegeType.Public, appId, memberId);
-    if (ListHelper.listEquals(readAccess, await _asFollowers)) return PostPrivilege.construct1(PostPrivilegeType.JustMe, appId, memberId);
+    if (ListHelper.listEquals(readAccess, await _asFollowers)) return PostPrivilege.construct1(PostPrivilegeType.Followers, appId, memberId);
 
     return PostPrivilege.construct1(PostPrivilegeType.SpecificPeople, appId, memberId, specificFollowers: readAccess);
   }

@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
-import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_event.dart';
-import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 import 'feed_post_form_event.dart';
@@ -38,10 +36,8 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
         yield await _submit(currentState.postModelDetails);
       }
       if (event is ChangedFeedPostPrivilege) {
-        var postPrivilegeType = toPostPrivilegeType(event.value);
-        var postPrivilege = await PostPrivilege.construct1(postPrivilegeType, appId, memberId, specificFollowers: event.specificFollowers);
         var newValue =
-            currentState.postModelDetails.copyWith(postPrivilege: postPrivilege);
+            currentState.postModelDetails.copyWith(postPrivilege: event.postPrivilege);
         yield SubmittableFeedPostForm(postModelDetails: newValue);
       }
       if (event is UploadingMedium) {

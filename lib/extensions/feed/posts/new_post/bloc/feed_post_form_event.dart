@@ -38,20 +38,19 @@ class ChangedFeedPostDescription extends FeedPostFormEvent {
   List<Object?> get props => [ value ];
 
   @override
-  String toString() => 'ChangedPostDescription{ value: $value }';
+  String toString() => 'ChangedFeedPostDescription{ value: $value }';
 }
 
 class ChangedFeedPostPrivilege extends FeedPostFormEvent {
-  final int value;
-  final List<String>? specificFollowers;
+  final PostPrivilege postPrivilege;
 
-  ChangedFeedPostPrivilege({required this.value, this.specificFollowers });
-
-  @override
-  List<Object?> get props => [ value ];
+  ChangedFeedPostPrivilege({required this.postPrivilege });
 
   @override
-  String toString() => 'ChangedPostDescription{ value: $value }';
+  List<Object?> get props => [ postPrivilege ];
+
+  @override
+  String toString() => 'ChangedFeedPostPrivilege{ value: $postPrivilege }';
 }
 
 class ChangedMedia extends FeedPostFormEvent {

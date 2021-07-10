@@ -6,11 +6,13 @@ import 'package:eliud_core/core/navigate/page_param_helper.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/style/style_registry.dart';
-import 'package:eliud_pkg_feed/extensions/feed/posts/new_post/select_members.dart';
+import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/bloc/post_privilege_bloc.dart';
+import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/post_privilege_widget.dart';
 import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/media_buttons.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_media_helper.dart';
 import 'package:eliud_pkg_feed/model/post_medium_model.dart';
+import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 import 'package:eliud_pkg_medium/platform/medium_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,7 +38,6 @@ class MyFeedPostForm extends StatefulWidget {
 
 class _MyFeedPostFormState extends State<MyFeedPostForm> {
   final TextEditingController _descriptionController = TextEditingController();
-  int? _postPrivilegeSelectedRadioTile;
 
   _MyFeedPostFormState();
 
@@ -44,99 +45,6 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
   void initState() {
     super.initState();
     _descriptionController.addListener(_onDescriptionChanged);
-    _postPrivilegeSelectedRadioTile = 0;
-  }
-
-  RadioListTile _radioPrivilegeTile(
-      String text, int value, FeedPostModelDetails feedPostModelDetails) {
-    return /*Flexible(
-      fit: FlexFit.loose,
-      child: */
-      RadioListTile(
-          contentPadding: EdgeInsets.all(0),
-          dense: true,
-          value: value,
-          groupValue: _postPrivilegeSelectedRadioTile,
-          title: StyleRegistry.registry()
-              .styleWithContext(context)
-              .frontEndStyle()
-              .textStyle()
-              .text(context, text),
-          onChanged: feedPostModelDetails.memberMedia.length == 0
-              ? (dynamic value) {
-            _setPostSelectedRadioTile(value);
-          }
-              : null) /*,
-    )*/
-    ;
-  }
-
-  Widget _getList(RadioListTile tile1, RadioListTile tile2, RadioListTile tile3,
-      RadioListTile tile4) {
-    return Flexible(
-        fit: FlexFit.loose,
-        child: ListView.builder(
-          itemBuilder: (context, index) {
-            if (index == 0) return tile1;
-            if (index == 1) return tile2;
-            if (index == 2) return tile3;
-            if (index == 3) return tile4;
-            return Text("not expected");
-          },
-          itemCount: 4,
-          shrinkWrap: true,
-          physics: ScrollPhysics(),
-        ));
-  }
-
-  static final SPACE_INBETWEEN = 10.0;
-  static double width(BuildContext context) => max(
-      (MediaQuery.of(context).size.width * 0.9 - 2 * SPACE_INBETWEEN) / 2, 200);
-
-  Widget _rowAudience(FeedPostModelDetails feedPostModelDetails) {
-    var col1 = _getList(
-        _radioPrivilegeTile('Public', 0, feedPostModelDetails),
-        _radioPrivilegeTile('Followers', 1, feedPostModelDetails),
-        _radioPrivilegeTile('Specific People', 2, feedPostModelDetails),
-        _radioPrivilegeTile('Just Me', 3, feedPostModelDetails));
-    var col3;
-
-    // specific followers
-    if (_postPrivilegeSelectedRadioTile == 2) {
-      var col2 = Container(
-          height: 200,
-          width: 300,
-          child: SingleChildScrollView(child:SelectMembersWidget.get(
-            appId: widget.appId,
-            feedId: widget.feedId,
-            memberId: widget.currentMemberId!,
-            selectedMembersCallback: _selectedMembersCallback,
-            initialMembers:
-            feedPostModelDetails.postPrivilege.specificFollowers,
-          )));
-      return Row(children: [
-        spacer(),
-        col1,
-/*
-        Spacer(),
-*/
-        col2,
-        spacer()
-      ]);
-//      return Row(children: [col1, col2]);
-    } else {
-      return Row(children: [        spacer()
-        ,col1]);
-    }
-  }
-
-  Widget spacer() {
-    return Container(width: SPACE_INBETWEEN);
-  }
-
-  void _selectedMembersCallback(List<String> selectedMembers) {
-    BlocProvider.of<FeedPostFormBloc>(context).add(
-        ChangedFeedPostPrivilege(value: 2, specificFollowers: selectedMembers));
   }
 
   @override
@@ -183,11 +91,6 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
               _descriptionController.text = "";
             }
 
-            if (state.postModelDetails.postPrivilege != null)
-              _postPrivilegeSelectedRadioTile =
-                  state.postModelDetails.postPrivilege.postPrivilegeType.index;
-            else
-              _postPrivilegeSelectedRadioTile = 0;
           }
           if (state is FeedPostFormInitialized) {
             List<Widget> rows = [];
@@ -198,7 +101,14 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
               rows.add(_row2(context, state));
               rows.add(PostMediaHelper.videoAndPhotoDivider(context));
             }
-            rows.add(_rowAudience(state.postModelDetails));
+
+            rows.add(BlocProvider<PostPrivilegeBloc>(
+              create: (context) => PostPrivilegeBloc(state.postModelDetails.postPrivilege, widget.appId, widget.memberId, _postPrivilegeChanged),
+              child: PostPrivilegeWidget(
+              widget.appId, widget.feedId, widget.memberId, widget.currentMemberId, state.postModelDetails.memberMedia.length == 0)
+
+              ),
+            );
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -212,6 +122,11 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
                 .progressIndicator(context);
           }
         });
+  }
+
+  void _postPrivilegeChanged(PostPrivilege postPrivilege) {
+    BlocProvider.of<FeedPostFormBloc>(context).add(
+        ChangedFeedPostPrivilege(postPrivilege: postPrivilege));
   }
 
   Widget _row1(String pageId, AppModel app, FeedPostFormInitialized state) {
@@ -336,16 +251,6 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
   void _onDescriptionChanged() {
     BlocProvider.of<FeedPostFormBloc>(context)
         .add(ChangedFeedPostDescription(value: _descriptionController.text));
-  }
-
-  void _setPostSelectedRadioTile(int? val) {
-    if (val != null) {
-      setState(() {
-        _postPrivilegeSelectedRadioTile = val;
-      });
-      BlocProvider.of<FeedPostFormBloc>(context)
-          .add(ChangedFeedPostPrivilege(value: val));
-    }
   }
 
   @override
