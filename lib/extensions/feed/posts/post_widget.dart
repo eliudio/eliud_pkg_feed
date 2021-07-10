@@ -4,6 +4,8 @@ import 'package:eliud_core/tools/storage/medium_base.dart';
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_event.dart';
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_state.dart';
+import 'package:eliud_pkg_feed/extensions/feed/posts/paged_posts_list.dart';
+import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/bloc/member_service.dart';
 import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_contents_widget.dart';
@@ -294,7 +296,7 @@ class _PostWidgetState extends State<PostWidget> {
     return PopupMenuButton(
         icon: Icon(Icons.more_horiz),
         itemBuilder: (_) => items,
-        onSelected: (choice) {
+        onSelected: (choice) async {
           if (choice == 0) {
             StyleRegistry.registry()
                 .styleWithContext(context)
@@ -336,6 +338,28 @@ class _PostWidgetState extends State<PostWidget> {
                             : postModel.readAccess!));
                 break;
               case PostType.Html:
+                var postPrivilege = await PostFollowersMemberHelper.determinePostPrivilege(postModel.readAccess!, postModel.appId!, postModel.authorId!);
+                var access;
+                switch (postPrivilege.postPrivilegeType) {
+                  case PostPrivilegeType.Public:
+                    access = 'public';
+                    break;
+                  case PostPrivilegeType.Followers:
+                    access = 'followers';
+                    break;
+                  case PostPrivilegeType.SpecificPeople:
+                    var specificSelectedMembers = await MemberService(postModel.appId!, postModel.feedId!, widget.memberId).getFromIDs(postModel.readAccess);
+                    var names = "";
+                    if (specificSelectedMembers != null) {
+                      names = specificSelectedMembers.map((e) => e.name).join(", ");
+                    }
+                    access = names;
+                    break;
+                  case PostPrivilegeType.JustMe:
+                    access = 'just me';
+                    break;
+                }
+
                 AbstractTextPlatform.platform!.updateHtml(
                     context,
                     postModel.appId!,
@@ -345,27 +369,8 @@ class _PostWidgetState extends State<PostWidget> {
                   BlocProvider.of<PostListPagedBloc>(context).add(
                       UpdatePostPaged(
                           value: postModel.copyWith(html: newArticle)));
-                }, postModel.html == null ? '' : postModel.html!); // TODO: Handle this case.
+                }, postModel.html == null ? '' : postModel.html!, extraIcons: PagedPostsListState.getAlbumActionIcons(context, access));
                 break;
-/*
-              case PostType.OnlyDescription:
-                StyleRegistry.registry()
-                    .styleWithContext(context)
-                    .frontEndStyle()
-                    .dialogStyle()
-                    .openEntryDialog(context, title: 'Same something else',
-                        onPressed: (value) {
-                  if (value != null) {
-                    BlocProvider.of<PostListPagedBloc>(context).add(
-                        UpdatePostPaged(
-                            value: postModel.copyWith(description: value)));
-                  }
-                },
-                        initialValue: postModel.description == null
-                            ? ''
-                            : postModel.description);
-                break;
-*/
             }
           }
         });

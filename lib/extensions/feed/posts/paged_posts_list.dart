@@ -8,9 +8,6 @@ import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_blo
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_event.dart';
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_state.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_button.dart';
-import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/bloc/post_privilege_bloc.dart';
-import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/bloc/post_privilege_event.dart';
-import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/post_privilege_widget.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_widget.dart';
 import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 import 'package:eliud_pkg_text/platform/text_platform.dart';
@@ -31,10 +28,10 @@ class PagedPostsList extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _PagedPostsListState createState() => _PagedPostsListState();
+  PagedPostsListState createState() => PagedPostsListState();
 }
 
-class _PagedPostsListState extends State<PagedPostsList> {
+class PagedPostsListState extends State<PagedPostsList> {
   late PostListPagedBloc _postBloc;
   double? photoUploadingProgress;
   double? videoUploadingProgress;
@@ -189,19 +186,7 @@ class _PagedPostsListState extends State<PagedPostsList> {
         "assets/images/segoshvishna.fiverr.com/article.png",
         package: "eliud_pkg_feed");
 
-    var article = Container(
-        padding: const EdgeInsets.only(top: 22.5, bottom: 22.5),
-        child: StyleRegistry.registry()
-            .styleWithContext(context)
-            .frontEndStyle()
-            .containerStyle()
-            .actionContainer(context,
-            child: Center(
-                child: Container(
-                    padding: EdgeInsets.all(2.0),
-                    width: 45,
-                    height: 40,
-                    child: articleIcon))));
+    var article = PostButtonState.formatIcon(context, articleIcon);
 
     var items = <PopupMenuItem<int>>[];
     items.add(
@@ -264,11 +249,11 @@ class _PagedPostsListState extends State<PagedPostsList> {
               readAccess: postPrivilege.readAccess,
             );
           }, 'Add article for ' + access,
-              extraIcons: getAlbumActionIcons(access));
+              extraIcons: getAlbumActionIcons(context, access));
         });
   }
 
-  List<Widget> getAlbumActionIcons(String accessible) {
+  static List<Widget> getAlbumActionIcons(BuildContext context, String accessible) {
     return [
       StyleRegistry.registry()
           .styleWithContext(context)

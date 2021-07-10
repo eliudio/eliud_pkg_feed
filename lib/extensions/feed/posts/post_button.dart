@@ -26,12 +26,12 @@ class PostButton extends StatefulWidget {
 
   PostButton(this.feedModel, this.postType, this.readAccess, this.author);
 
-  _PostButtonState createState() => _PostButtonState();
+  PostButtonState createState() => PostButtonState();
 }
 
-class _PostButtonState extends State<PostButton> {
+class PostButtonState extends State<PostButton> {
   double? uploadingProgress;
-  _PostButtonState();
+  PostButtonState();
 
   @override
   Widget build(BuildContext context) {
@@ -105,10 +105,10 @@ class _PostButtonState extends State<PostButton> {
 
   Widget _getIcon(Widget child) {
     if (uploadingProgress == null) {
-      return _getOriginalIcon(child);
+      return formatIcon(context, child);
     } else {
       return Stack(children: [
-        _getOriginalIcon(child),
+        formatIcon(context, child),
         Container(
             width: 60,
             child: StyleRegistry.registry()
@@ -148,7 +148,7 @@ class _PostButtonState extends State<PostButton> {
     }
   }
 
-  Widget _getOriginalIcon(Widget child, {double? width}) {
+  static Widget formatIcon(BuildContext context, Widget child, {double? width}) {
     return Container(
         padding: const EdgeInsets.only(top: 22.5, bottom: 22.5),
         child: StyleRegistry.registry()
