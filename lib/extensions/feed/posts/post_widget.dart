@@ -314,6 +314,7 @@ class _PostWidgetState extends State<PostWidget> {
               case PostType.SingleVideo:
               case PostType.SinglePhoto:
               case PostType.Album:
+              case PostType.OnlyDescription:
                 var pageContextInfo =
                     PageParamHelper.getPagaContextInfo(context);
                 FeedPostDialog.open(
@@ -330,7 +331,9 @@ class _PostWidgetState extends State<PostWidget> {
                         postModel.memberMedia == null
                             ? <PostMediumModel>[]
                             : postModel.memberMedia!,
-                        postModel.readAccess == null ? [] : postModel.readAccess!));
+                        postModel.readAccess == null
+                            ? []
+                            : postModel.readAccess!));
                 break;
               case PostType.Html:
                 AbstractTextPlatform.platform!.updateHtml(
@@ -342,11 +345,9 @@ class _PostWidgetState extends State<PostWidget> {
                   BlocProvider.of<PostListPagedBloc>(context).add(
                       UpdatePostPaged(
                           value: postModel.copyWith(html: newArticle)));
-                },
-                    postModel.html == null
-                        ? ''
-                        : postModel.html!); // TODO: Handle this case.
+                }, postModel.html == null ? '' : postModel.html!); // TODO: Handle this case.
                 break;
+/*
               case PostType.OnlyDescription:
                 StyleRegistry.registry()
                     .styleWithContext(context)
@@ -364,6 +365,7 @@ class _PostWidgetState extends State<PostWidget> {
                             ? ''
                             : postModel.description);
                 break;
+*/
             }
           }
         });

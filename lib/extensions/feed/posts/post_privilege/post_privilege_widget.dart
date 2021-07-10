@@ -125,7 +125,7 @@ class _PostPrivilegeWidgetState extends State<PostPrivilegeWidget> {
       case PostPrivilegeType.SpecificPeople:
         var names;
         if (specificSelectedMembers != null) {
-          names = specificSelectedMembers!.map((e) => e.name).join(", ");
+          names = specificSelectedMembers.map((e) => e.name).join(", ");
         }
         return Center(
             child: StyleRegistry.registry()

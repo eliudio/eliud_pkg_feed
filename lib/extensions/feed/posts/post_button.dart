@@ -43,19 +43,18 @@ class _PostButtonState extends State<PostButton> {
         return MediaButtons.mediaButtons(context, widget.feedModel.appId!,
             widget.author.documentID!, widget.readAccess,
             allowCrop: false,
-            tooltip: 'Add photo',
-            photoFeedbackFunction: (photo) {
-              _addPost(postMemberMedia: [
-                PostMediumModel(documentID: newRandomKey(), memberMedium: photo)
-              ]);
-              uploadingProgress = null;
-            },
-            photoFeedbackProgress: (progress) {
-              setState(() {
-                uploadingProgress = progress;
-              });
-            },
-            icon: _getIcon(_photo));
+            tooltip: 'Add photo', photoFeedbackFunction: (photo) {
+          if (photo != null) {
+            _addPost(postMemberMedia: [
+              PostMediumModel(documentID: newRandomKey(), memberMedium: photo)
+            ]);
+          }
+          uploadingProgress = null;
+        }, photoFeedbackProgress: (progress) {
+          setState(() {
+            uploadingProgress = progress;
+          });
+        }, icon: _getIcon(_photo));
       } else {
         return _getIcon(_photo);
       }
@@ -67,19 +66,18 @@ class _PostButtonState extends State<PostButton> {
         return MediaButtons.mediaButtons(context, widget.feedModel.appId!,
             widget.author.documentID!, widget.readAccess,
             allowCrop: false,
-            tooltip: 'Add video',
-            videoFeedbackFunction: (photo) {
-              _addPost(postMemberMedia: [
-                PostMediumModel(documentID: newRandomKey(), memberMedium: photo)
-              ]);
-              uploadingProgress = null;
-            },
-            videoFeedbackProgress: (progress) {
-              setState(() {
-                uploadingProgress = progress;
-              });
-            },
-            icon: _getIcon(_video));
+            tooltip: 'Add video', videoFeedbackFunction: (video) {
+          if (video != null) {
+            _addPost(postMemberMedia: [
+              PostMediumModel(documentID: newRandomKey(), memberMedium: video)
+            ]);
+          }
+          uploadingProgress = null;
+        }, videoFeedbackProgress: (progress) {
+          setState(() {
+            uploadingProgress = progress;
+          });
+        }, icon: _getIcon(_video));
       } else {
         return _getIcon(_video);
       }
@@ -117,8 +115,7 @@ class _PostButtonState extends State<PostButton> {
                 .styleWithContext(context)
                 .frontEndStyle()
                 .progressIndicatorStyle()
-                .progressIndicatorWithValue(context,
-                    value: uploadingProgress!))
+                .progressIndicatorWithValue(context, value: uploadingProgress!))
       ]);
 
 /*

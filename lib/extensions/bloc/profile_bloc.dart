@@ -114,8 +114,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             uploadingBGProgress: null);
       }
     } else {
-      var defaultReadAccess = await PostFollowersMemberHelper.asPublic(
-          appId, currentMemberModel.documentID!);
+      var defaultReadAccess = await PostFollowersMemberHelper.asFollowers(appId, currentMemberModel.documentID!);
       // Determine current member
       var param;
       if (pageContextInfo.parameters != null) {

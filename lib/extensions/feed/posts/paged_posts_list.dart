@@ -1,6 +1,5 @@
 import 'package:eliud_core/core/navigate/page_param_helper.dart';
 import 'package:eliud_core/model/member_model.dart';
-import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_bloc.dart';
@@ -9,7 +8,11 @@ import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_blo
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_event.dart';
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_state.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_button.dart';
+import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/bloc/post_privilege_bloc.dart';
+import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/bloc/post_privilege_event.dart';
+import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/post_privilege_widget.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_widget.dart';
+import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 import 'package:eliud_pkg_text/platform/text_platform.dart';
 import 'new_post/bloc/feed_post_form_event.dart';
 import 'new_post/feed_post_dialog.dart';
@@ -166,38 +169,123 @@ class _PagedPostsListState extends State<PagedPostsList> {
                   profileInitialized.watchingThisProfile()!.authorId!,
                   profileInitialized.memberId(),
                   profileInitialized.profileUrl(),
-                  pageContextInfo, InitialiseNewFeedPostFormEvent())));
+                  pageContextInfo,
+                  InitialiseNewFeedPostFormEvent())));
       widgets.add(Spacer());
     }
 
     // Article
     if (widget.feedModel.articlePost != null && widget.feedModel.articlePost!) {
-      var article = Image.asset(
-          "assets/images/segoshvishna.fiverr.com/article.png",
-          package: "eliud_pkg_feed");
-      widgets.add(StyleRegistry.registry()
-          .styleWithContext(context)
-          .frontEndStyle()
-          .buttonStyle()
-          .iconButton(context, icon: article, tooltip: 'Article',
-              onPressed: () {
-        AbstractTextPlatform.platform!.updateHtml(
-            context,
-            widget.feedModel.appId!,
-            author.documentID!,
-            readAccess,
-            "Article", (newArticle) {
-          _addPost(
-            html: newArticle,
-            authorId: author.documentID!,
-            readAccess: readAccess,
-          );
-        }, 'Add article');
-      }));
+      widgets.add(articleButton(widget.feedModel.appId!, author.documentID!));
+
       widgets.add(Spacer());
     }
 
     return Container(height: 110, child: Row(children: widgets));
+  }
+
+  Widget articleButton(String appId, String memberId) {
+    var articleIcon = Image.asset(
+        "assets/images/segoshvishna.fiverr.com/article.png",
+        package: "eliud_pkg_feed");
+
+    var article = Container(
+        padding: const EdgeInsets.only(top: 22.5, bottom: 22.5),
+        child: StyleRegistry.registry()
+            .styleWithContext(context)
+            .frontEndStyle()
+            .containerStyle()
+            .actionContainer(context,
+            child: Center(
+                child: Container(
+                    padding: EdgeInsets.all(2.0),
+                    width: 45,
+                    height: 40,
+                    child: articleIcon))));
+
+    var items = <PopupMenuItem<int>>[];
+    items.add(
+      PopupMenuItem<int>(
+          child: StyleRegistry.registry()
+              .styleWithContext(context)
+              .frontEndStyle()
+              .textStyle()
+              .text(context, 'Publish article for public'),
+          value: 0),
+    );
+    items.add(
+      PopupMenuItem<int>(
+          child: StyleRegistry.registry()
+              .styleWithContext(context)
+              .frontEndStyle()
+              .textStyle()
+              .text(context, 'Publish article for followers'),
+          value: 1),
+    );
+    items.add(
+      PopupMenuItem<int>(
+          child: StyleRegistry.registry()
+              .styleWithContext(context)
+              .frontEndStyle()
+              .textStyle()
+              .text(context, 'Publish article for me'),
+          value: 2),
+    );
+    return PopupMenuButton(
+        tooltip: 'Add article',
+        padding: EdgeInsets.all(0.0),
+        child: article,
+        itemBuilder: (_) => items,
+        onSelected: (choice) async {
+          var postPrivilege;
+          var access;
+          if (choice == 0) {
+            postPrivilege = await PostPrivilege.construct1(
+                PostPrivilegeType.Public, appId, memberId);
+            access = 'public';
+          }
+          if (choice == 1) {
+            postPrivilege = await PostPrivilege.construct1(
+                PostPrivilegeType.Followers, appId, memberId);
+            access = 'followers';
+          }
+          if (choice == 2) {
+            postPrivilege = await PostPrivilege.construct1(
+                PostPrivilegeType.Public, appId, memberId);
+            access = 'just me';
+          }
+
+          AbstractTextPlatform.platform!.updateHtml(
+              context, appId, memberId, postPrivilege.readAccess, "Article",
+              (newArticle) {
+            _addPost(
+              html: newArticle,
+              authorId: memberId,
+              readAccess: postPrivilege.readAccess,
+            );
+          }, 'Add article for ' + access,
+              extraIcons: getAlbumActionIcons(access));
+        });
+  }
+
+  List<Widget> getAlbumActionIcons(String accessible) {
+    return [
+      StyleRegistry.registry()
+          .styleWithContext(context)
+          .frontEndStyle()
+          .buttonStyle()
+          .dialogButton(context, label: 'Audience', onPressed: () {
+        StyleRegistry.registry()
+            .styleWithContext(context)
+            .frontEndStyle()
+            .dialogStyle()
+            .openMessageDialog(
+              context,
+              title: 'Accessible',
+              message: 'Article accessible by: ' + accessible,
+            );
+      })
+    ];
   }
 
   @override
