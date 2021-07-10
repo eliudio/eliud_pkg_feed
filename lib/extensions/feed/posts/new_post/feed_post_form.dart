@@ -7,6 +7,7 @@ import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/bloc/post_privilege_bloc.dart';
+import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/bloc/post_privilege_event.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/post_privilege_widget.dart';
 import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/media_buttons.dart';
@@ -103,7 +104,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
             }
 
             rows.add(BlocProvider<PostPrivilegeBloc>(
-              create: (context) => PostPrivilegeBloc(state.postModelDetails.postPrivilege, widget.appId, widget.memberId, _postPrivilegeChanged),
+                create: (context) => PostPrivilegeBloc(widget.appId, widget.feedId, widget.memberId, _postPrivilegeChanged)..add(InitialisePostPrivilegeEvent(postPrivilege: state.postModelDetails.postPrivilege)),
               child: PostPrivilegeWidget(
               widget.appId, widget.feedId, widget.memberId, widget.currentMemberId, state.postModelDetails.memberMedia.length == 0)
 

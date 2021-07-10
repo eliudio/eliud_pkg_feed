@@ -1,7 +1,9 @@
+import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/bloc/member_service.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'package:collection/collection.dart';
 
 @immutable
 abstract class PostPrivilegeState extends Equatable {
@@ -36,8 +38,9 @@ class PostPrivilegeUninitialized extends PostPrivilegeState {
 
 class PostPrivilegeInitialized extends PostPrivilegeState {
   final PostPrivilege postPrivilege;
+  final List<SelectedMember>? specificSelectedMembers;
 
-  const PostPrivilegeInitialized({ required this.postPrivilege });
+  const PostPrivilegeInitialized({ required this.postPrivilege, required this.specificSelectedMembers });
 
   @override
   List<Object?> get props => [ postPrivilege ];
@@ -47,5 +50,6 @@ class PostPrivilegeInitialized extends PostPrivilegeState {
       identical(this, other) ||
           other is PostPrivilegeInitialized &&
               runtimeType == other.runtimeType &&
-              postPrivilege == other.postPrivilege;
+              postPrivilege == other.postPrivilege &&
+              ListEquality().equals(specificSelectedMembers, other.specificSelectedMembers);
 }

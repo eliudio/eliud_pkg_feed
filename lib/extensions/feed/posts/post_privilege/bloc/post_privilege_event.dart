@@ -1,4 +1,5 @@
 
+import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
@@ -11,6 +12,15 @@ abstract class PostPrivilegeEvent extends Equatable {
 }
 
 class InitialisePostPrivilegeEvent extends PostPrivilegeEvent {
+  final PostPrivilege postPrivilege;
+
+  InitialisePostPrivilegeEvent({required this.postPrivilege });
+
+  @override
+  List<Object?> get props => [ postPrivilege ];
+
+  @override
+  String toString() => 'InitialisePostPrivilegeEvent{ value: $postPrivilege }';
 }
 
 class ChangedPostPrivilege extends PostPrivilegeEvent {

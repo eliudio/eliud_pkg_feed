@@ -7,6 +7,7 @@ import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'bloc/member_service.dart';
 import 'bloc/post_privilege_event.dart';
 import 'bloc/post_privilege_state.dart';
 
@@ -77,7 +78,7 @@ class _PostPrivilegeWidgetState extends State<PostPrivilegeWidget> {
   static double width(BuildContext context) => max(
       (MediaQuery.of(context).size.width * 0.9 - 2 * SPACE_INBETWEEN) / 2, 200);
 
-  Widget _editableAudience(PostPrivilege postPrivilege) {
+  Widget _editableAudience(PostPrivilege postPrivilege, List<SelectedMember>? specificSelectedMembers) {
     var col1 =_getList(
         _radioPrivilegeTile('Public', 0),
         _radioPrivilegeTile('Followers', 1),
@@ -87,15 +88,14 @@ class _PostPrivilegeWidgetState extends State<PostPrivilegeWidget> {
     // specific followers
     if (_postPrivilegeSelectedRadioTile == 2) {
       var col2 = Container(
-          height: 200,
+          height: 300,
           width: 200,
           child: SingleChildScrollView(child:SelectMembersWidget.get(
             appId: widget.appId,
             feedId: widget.feedId,
             memberId: widget.currentMemberId!,
             selectedMembersCallback: _selectedMembersCallback,
-            initialMembers:
-            postPrivilege.specificFollowers,
+            specificSelectedMembers: specificSelectedMembers,
           )));
       return Row(children: [
         spacer(),
@@ -113,7 +113,7 @@ class _PostPrivilegeWidgetState extends State<PostPrivilegeWidget> {
     }
   }
 
-  Widget _displayAudience(PostPrivilege postPrivilege) {
+  Widget _displayAudience(PostPrivilege postPrivilege, List<SelectedMember>? specificSelectedMembers) {
     switch (postPrivilege.postPrivilegeType) {
       case PostPrivilegeType.Public:
         return Center(child: StyleRegistry.registry()
@@ -129,11 +129,15 @@ class _PostPrivilegeWidgetState extends State<PostPrivilegeWidget> {
             .text(context, 'Accessible by your followers',
             maxLines: 5));
       case PostPrivilegeType.SpecificPeople:
+        var names;
+        if (specificSelectedMembers != null) {
+          names = specificSelectedMembers!.map((e) => e.name).join(", ");
+        }
         return Center(child: StyleRegistry.registry()
             .styleWithContext(context)
             .frontEndStyle()
             .textStyle()
-            .text(context, 'Accessible by '));
+            .text(context, 'Accessible by ' + names));
       case PostPrivilegeType.JustMe:
         return Center(child: StyleRegistry.registry()
             .styleWithContext(context)
@@ -168,9 +172,9 @@ class _PostPrivilegeWidgetState extends State<PostPrivilegeWidget> {
         builder: (context, state) {
           if (state is PostPrivilegeInitialized) {
             if (widget.canEdit) {
-              return _editableAudience(state.postPrivilege);
+              return _editableAudience(state.postPrivilege, state.specificSelectedMembers);
             } else {
-              return _displayAudience(state.postPrivilege);
+              return _displayAudience(state.postPrivilege, state.specificSelectedMembers);
             }
           } else {
             return StyleRegistry.registry()

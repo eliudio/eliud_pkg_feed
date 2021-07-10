@@ -4,22 +4,35 @@ import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/bloc/post_pr
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/bloc/post_privilege_state.dart';
 import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 
+import 'member_service.dart';
+
 typedef void PostPrivilegeChanged(PostPrivilege postPrivilege);
 
 class PostPrivilegeBloc extends Bloc<PostPrivilegeEvent, PostPrivilegeState> {
   final String appId;
-  final PostPrivilegeChanged postPrivilegeCallback;
+  final String feedId;
   final String memberId;
+  late MemberService memberService;
 
-  PostPrivilegeBloc(PostPrivilege postPrivilege, this.appId, this.memberId, this.postPrivilegeCallback) : super(PostPrivilegeInitialized(postPrivilege: postPrivilege));
+  final PostPrivilegeChanged postPrivilegeCallback;
+
+  PostPrivilegeBloc(this.appId, this.feedId, this.memberId, this.postPrivilegeCallback) : super(PostPrivilegeUninitialized()) {
+    memberService = MemberService(appId, feedId, memberId);
+  }
 
   @override
   Stream<PostPrivilegeState> mapEventToState(PostPrivilegeEvent event) async* {
-    if (event is ChangedPostPrivilege) {
+    if (event is InitialisePostPrivilegeEvent) {
+      yield PostPrivilegeInitialized(
+          postPrivilege: event.postPrivilege, specificSelectedMembers: await memberService.getFromPostPrivilege(event.postPrivilege));
+    } else if (event is ChangedPostPrivilege) {
       var postPrivilegeType = toPostPrivilegeType(event.value);
-      var postPrivilege = await PostPrivilege.construct1(postPrivilegeType, appId, memberId, specificFollowers: event.specificFollowers);
+      var postPrivilege = await PostPrivilege.construct1(
+          postPrivilegeType, appId, memberId,
+          specificFollowers: event.specificFollowers);
       postPrivilegeCallback(postPrivilege);
-      yield PostPrivilegeInitialized(postPrivilege: postPrivilege);
+      yield PostPrivilegeInitialized(
+          postPrivilege: postPrivilege, specificSelectedMembers: await memberService.getFromPostPrivilege(postPrivilege));
     }
   }
 }
