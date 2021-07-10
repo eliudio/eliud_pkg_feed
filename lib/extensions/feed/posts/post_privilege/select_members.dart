@@ -38,7 +38,8 @@ class SelectMembersWidget extends StatefulWidget {
       required List<SelectedMember>? specificSelectedMembers,
       required SelectedMembersCallback selectedMembersCallback}) {
     var memberService = MemberService(appId, feedId, memberId);
-    if (specificSelectedMembers == null) specificSelectedMembers = <SelectedMember>[];
+    if (specificSelectedMembers == null)
+      specificSelectedMembers = <SelectedMember>[];
     return SelectMembersWidget._(
         appId: appId,
         feedId: feedId,
@@ -54,54 +55,57 @@ class _SelectMembersWidgetState extends State<SelectMembersWidget> {
   Widget build(BuildContext context) {
     List<SelectedMember> _selectedMembers = widget.initiallySelectedMembers;
 
-    return FlutterTagging<SelectedMember>(
-        initialItems: _selectedMembers,
-        textFieldConfiguration: TextFieldConfiguration(
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            filled: true,
-            fillColor: Colors.grey.withAlpha(30),
-            hintText: 'Search Members',
-            labelText: 'Select Members',
-          ),
-        ),
-        findSuggestions: widget.memberService.getMembers,
+    return Column(children: <Widget>[
+      Padding(
+          padding: const EdgeInsets.all(0.0),
+          child: FlutterTagging<SelectedMember>(
+              initialItems: _selectedMembers,
+              textFieldConfiguration: TextFieldConfiguration(
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  filled: true,
+                  fillColor: Colors.grey.withAlpha(30),
+                  hintText: 'Search Members',
+                  labelText: 'Select Members',
+                ),
+              ),
+              findSuggestions: widget.memberService.getMembers,
+              onAdded: (member) {
+                return member;
+              },
+              configureSuggestion: (lang) {
+                return SuggestionConfiguration(
+                  title: StyleRegistry.registry()
+                      .styleWithContext(context)
+                      .frontEndStyle()
+                      .textStyle()
+                      .text(context, lang.name),
+                  subtitle: StyleRegistry.registry()
+                      .styleWithContext(context)
+                      .frontEndStyle()
+                      .textStyle()
+                      .text(context, lang.memberId),
+                );
+              },
+              configureChip: (lang) {
+                return ChipConfiguration(
+                  label: Text(lang.name),
+                  backgroundColor: Colors.grey,
+                  labelStyle: TextStyle(color: Colors.white),
+                  deleteIconColor: Colors.white,
+                );
+              },
+              onChanged: () {
+                var iDs = _selectedMembers
+                    .map((selectedMember) => selectedMember.memberId)
+                    .toList();
+                widget.selectedMembersCallback(iDs);
+              })),
 /*
-        additionCallback: (value) {
-          return SelectedMember(
-            name: value,
-            memberId: '0',
-          );
-        },
+      SizedBox(
+        height: 20.0,
+      ),
 */
-        onAdded: (member) {
-          return member;
-        },
-        configureSuggestion: (lang) {
-          return SuggestionConfiguration(
-            title: StyleRegistry.registry()
-              .styleWithContext(context)
-              .frontEndStyle()
-              .textStyle()
-              .text(context, lang.name),
-            subtitle: StyleRegistry.registry()
-                .styleWithContext(context)
-                .frontEndStyle()
-                .textStyle()
-                .text(context, lang.memberId),
-          );
-        },
-        configureChip: (lang) {
-          return ChipConfiguration(
-            label: Text(lang.name),
-            backgroundColor: Colors.grey,
-            labelStyle: TextStyle(color: Colors.white),
-            deleteIconColor: Colors.white,
-          );
-        },
-        onChanged: () {
-          var iDs = _selectedMembers.map((selectedMember) => selectedMember.memberId).toList();
-          widget.selectedMembersCallback(iDs);
-        });
+    ]);
   }
 }
