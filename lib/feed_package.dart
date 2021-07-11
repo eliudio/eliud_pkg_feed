@@ -7,6 +7,7 @@ import 'package:eliud_core/core/registry.dart';
 import 'package:eliud_pkg_feed/tools/action/post_action_entity.dart';
 import 'package:eliud_pkg_feed/tools/action/post_action_handler.dart';
 import 'package:eliud_pkg_feed/tools/action/post_action_model.dart';
+import 'package:eliud_pkg_follow/follow_package.dart';
 import 'package:flutter_bloc/src/bloc_provider.dart';
 import 'package:eliud_core/model/access_model.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
@@ -40,6 +41,7 @@ abstract class FeedPackage extends Package {
 
     // Register a mapper for an extra action: the mapper for the WorkflowAction
     ActionModelRegistry.registry()!.addMapper(PostActionEntity.label, PostActionMapper());
+
   }
 
   @override

@@ -47,8 +47,8 @@ class _ProfileState extends State<Profile> {
             ]));
         if (state  is LoggedInProfileInitialized) {
           var ownerId = profile!.authorId!;
-          var readAccess = state.watchingThisProfile()!.readAccess!;
           if (state.canEditThisProfile()) {
+            var readAccess = state.watchingThisProfile()!.readAccess!;
             return EditableWidget(
                 child: child,
                 button: getEditIcon(

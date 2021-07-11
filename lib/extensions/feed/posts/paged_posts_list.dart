@@ -302,7 +302,7 @@ class PagedPostsListState extends State<PagedPostsList> {
                   feedId: widget.feedModel.documentID!,
                   details: state.values[i],
                   pageId: pageId,
-                  memberId: memberId!,
+                  memberId: state.values[i].postModel.authorId!,
                   currentMemberId: currentMemberId,
                   isEditable: profileState.canEditThisProfile(),
                   photoURL: photoURL,
