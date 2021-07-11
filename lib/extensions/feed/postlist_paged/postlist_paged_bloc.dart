@@ -77,7 +77,10 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
       final extraValues =
       await _fetchPosts(lastRowFetched: state.lastRowFetched, limit: 1);
       var newState = extraValues.isEmpty
-          ? state.copyWith(hasReachedMax: true)
+          ? state.copyWith(hasReachedMax: true,
+            status: PostListPagedStatus.success,
+            values: List.of(newListOfValues),
+          )
           : state.copyWith(
         status: PostListPagedStatus.success,
         values: List.of(newListOfValues)..addAll(extraValues),
