@@ -17,7 +17,6 @@ export '../model/album_cache.dart';
 export '../model/feed_cache.dart';
 export '../model/feed_menu_cache.dart';
 export '../model/header_cache.dart';
-export '../model/member_profile_cache.dart';
 export '../model/post_cache.dart';
 export '../model/post_comment_cache.dart';
 export '../model/post_like_cache.dart';

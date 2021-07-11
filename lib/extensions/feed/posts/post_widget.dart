@@ -271,15 +271,6 @@ class _PostWidgetState extends State<PostWidget> {
   PopupMenuButton _optionsPost(
       BuildContext context, PostModel postModel, String memberId) {
     var items = <PopupMenuItem<int>>[];
-    items.add(
-      PopupMenuItem<int>(
-          child: StyleRegistry.registry()
-              .styleWithContext(context)
-              .frontEndStyle()
-              .textStyle()
-              .text(context, 'Delete post'),
-          value: 0),
-    );
     PostType type = PostTypeHelper.determineType(postModel);
     if (PostTypeHelper.canUpdate(type)) {
       items.add(
@@ -292,6 +283,15 @@ class _PostWidgetState extends State<PostWidget> {
             value: 1),
       );
     }
+    items.add(
+      PopupMenuItem<int>(
+          child: StyleRegistry.registry()
+              .styleWithContext(context)
+              .frontEndStyle()
+              .textStyle()
+              .text(context, 'Delete post'),
+          value: 0),
+    );
 
     return PopupMenuButton(
         icon: Icon(Icons.more_horiz),

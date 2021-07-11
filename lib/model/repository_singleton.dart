@@ -30,7 +30,6 @@ import '../model/header_repository.dart';
 import '../model/header_cache.dart';
 import '../model/member_profile_firestore.dart';
 import '../model/member_profile_repository.dart';
-import '../model/member_profile_cache.dart';
 import '../model/post_firestore.dart';
 import '../model/post_repository.dart';
 import '../model/post_cache.dart';
@@ -81,7 +80,7 @@ class RepositorySingleton extends AbstractRepositorySingleton {
       return _headerRepository[appId];
     }
     MemberProfileRepository? memberProfileRepository(String? appId) {
-      if ((appId != null) && (_memberProfileRepository[appId] == null)) _memberProfileRepository[appId] = MemberProfileCache(MemberProfileFirestore(appRepository()!.getSubCollection(appId, 'memberprofile'), appId));
+      if ((appId != null) && (_memberProfileRepository[appId] == null)) _memberProfileRepository[appId] = MemberProfileFirestore(appRepository()!.getSubCollection(appId, 'memberprofile'), appId);
       return _memberProfileRepository[appId];
     }
     PostRepository? postRepository(String? appId) {
