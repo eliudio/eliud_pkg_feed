@@ -34,8 +34,9 @@ class PostMediumEntity {
     return 'PostMediumEntity{memberMediumId: $memberMediumId}';
   }
 
-  static PostMediumEntity? fromMap(Map? map) {
-    if (map == null) return null;
+  static PostMediumEntity? fromMap(Object? o) {
+    if (o == null) return null;
+    var map = o as Map<String, dynamic>;
 
     return PostMediumEntity(
       memberMediumId: map['memberMediumId'], 

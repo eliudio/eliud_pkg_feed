@@ -43,8 +43,9 @@ class FeedEntity {
     return 'FeedEntity{appId: $appId, description: $description, thumbImage: $thumbImage, photoPost: $photoPost, videoPost: $videoPost, messagePost: $messagePost, audioPost: $audioPost, albumPost: $albumPost, articlePost: $articlePost, conditions: $conditions}';
   }
 
-  static FeedEntity? fromMap(Map? map) {
-    if (map == null) return null;
+  static FeedEntity? fromMap(Object? o) {
+    if (o == null) return null;
+    var map = o as Map<String, dynamic>;
 
     var conditionsFromMap;
     conditionsFromMap = map['conditions'];

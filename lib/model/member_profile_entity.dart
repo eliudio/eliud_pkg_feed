@@ -43,8 +43,9 @@ class MemberProfileEntity {
     return 'MemberProfileEntity{appId: $appId, feedId: $feedId, authorId: $authorId, profile: $profile, profileBackgroundId: $profileBackgroundId, profileOverride: $profileOverride, nameOverride: $nameOverride, readAccess: String[] { $readAccessCsv }}';
   }
 
-  static MemberProfileEntity? fromMap(Map? map) {
-    if (map == null) return null;
+  static MemberProfileEntity? fromMap(Object? o) {
+    if (o == null) return null;
+    var map = o as Map<String, dynamic>;
 
     return MemberProfileEntity(
       appId: map['appId'], 

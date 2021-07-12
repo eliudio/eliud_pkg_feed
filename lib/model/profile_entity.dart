@@ -37,8 +37,9 @@ class ProfileEntity {
     return 'ProfileEntity{appId: $appId, description: $description, feedId: $feedId, conditions: $conditions}';
   }
 
-  static ProfileEntity? fromMap(Map? map) {
-    if (map == null) return null;
+  static ProfileEntity? fromMap(Object? o) {
+    if (o == null) return null;
+    var map = o as Map<String, dynamic>;
 
     var conditionsFromMap;
     conditionsFromMap = map['conditions'];

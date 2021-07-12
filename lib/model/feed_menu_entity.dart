@@ -39,8 +39,9 @@ class FeedMenuEntity {
     return 'FeedMenuEntity{appId: $appId, description: $description, menuId: $menuId, itemColor: $itemColor, selectedItemColor: $selectedItemColor, conditions: $conditions}';
   }
 
-  static FeedMenuEntity? fromMap(Map? map) {
-    if (map == null) return null;
+  static FeedMenuEntity? fromMap(Object? o) {
+    if (o == null) return null;
+    var map = o as Map<String, dynamic>;
 
     var itemColorFromMap;
     itemColorFromMap = map['itemColor'];

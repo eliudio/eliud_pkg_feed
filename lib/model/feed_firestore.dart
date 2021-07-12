@@ -49,11 +49,11 @@ class FeedFirestore implements FeedRepository {
   }
 
   FeedModel? _populateDoc(DocumentSnapshot value) {
-    return FeedModel.fromEntity(value.id, FeedEntity.fromMap(value.data() as Map<String, dynamic>));
+    return FeedModel.fromEntity(value.id, FeedEntity.fromMap(value.data()));
   }
 
   Future<FeedModel?> _populateDocPlus(DocumentSnapshot value) async {
-    return FeedModel.fromEntityPlus(value.id, FeedEntity.fromMap(value.data() as Map<String, dynamic>), appId: appId);  }
+    return FeedModel.fromEntityPlus(value.id, FeedEntity.fromMap(value.data()), appId: appId);  }
 
   Future<FeedModel?> get(String? id, {Function(Exception)? onError}) async {
     try {

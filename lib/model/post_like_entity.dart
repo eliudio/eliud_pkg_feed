@@ -42,8 +42,9 @@ class PostLikeEntity {
     return 'PostLikeEntity{postId: $postId, postCommentId: $postCommentId, memberId: $memberId, timestamp: $timestamp, appId: $appId, likeType: $likeType}';
   }
 
-  static PostLikeEntity? fromMap(Map? map) {
-    if (map == null) return null;
+  static PostLikeEntity? fromMap(Object? o) {
+    if (o == null) return null;
+    var map = o as Map<String, dynamic>;
 
     return PostLikeEntity(
       postId: map['postId'], 

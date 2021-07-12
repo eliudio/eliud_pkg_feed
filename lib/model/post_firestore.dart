@@ -69,11 +69,11 @@ class PostFirestore implements PostRepository {
   }
 
   PostModel? _populateDoc(DocumentSnapshot value) {
-    return PostModel.fromEntity(value.id, PostEntity.fromMap(value.data() as Map<String, dynamic>));
+    return PostModel.fromEntity(value.id, PostEntity.fromMap(value.data()));
   }
 
   Future<PostModel?> _populateDocPlus(DocumentSnapshot value) async {
-    return PostModel.fromEntityPlus(value.id, PostEntity.fromMap(value.data() as Map<String, dynamic>), appId: appId);  }
+    return PostModel.fromEntityPlus(value.id, PostEntity.fromMap(value.data()), appId: appId);  }
 
   Future<PostModel?> get(String? id, {Function(Exception)? onError}) async {
     try {

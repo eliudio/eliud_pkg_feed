@@ -47,8 +47,9 @@ class PostCommentEntity {
     return 'PostCommentEntity{postId: $postId, postCommentId: $postCommentId, memberId: $memberId, timestamp: $timestamp, appId: $appId, comment: $comment, likes: $likes, dislikes: $dislikes, memberMedia: MemberMedium[] { $memberMediaCsv }}';
   }
 
-  static PostCommentEntity? fromMap(Map? map) {
-    if (map == null) return null;
+  static PostCommentEntity? fromMap(Object? o) {
+    if (o == null) return null;
+    var map = o as Map<String, dynamic>;
 
     var memberMediaFromMap;
     memberMediaFromMap = map['memberMedia'];
