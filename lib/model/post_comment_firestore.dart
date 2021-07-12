@@ -69,11 +69,11 @@ class PostCommentFirestore implements PostCommentRepository {
   }
 
   PostCommentModel? _populateDoc(DocumentSnapshot value) {
-    return PostCommentModel.fromEntity(value.id, PostCommentEntity.fromMap(value.data()));
+    return PostCommentModel.fromEntity(value.id, PostCommentEntity.fromMap(value.data() as Map<String, dynamic>));
   }
 
   Future<PostCommentModel?> _populateDocPlus(DocumentSnapshot value) async {
-    return PostCommentModel.fromEntityPlus(value.id, PostCommentEntity.fromMap(value.data()), appId: appId);  }
+    return PostCommentModel.fromEntityPlus(value.id, PostCommentEntity.fromMap(value.data() as Map<String, dynamic>), appId: appId);  }
 
   Future<PostCommentModel?> get(String? id, {Function(Exception)? onError}) async {
     try {

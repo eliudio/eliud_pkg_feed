@@ -49,11 +49,11 @@ class FeedMenuFirestore implements FeedMenuRepository {
   }
 
   FeedMenuModel? _populateDoc(DocumentSnapshot value) {
-    return FeedMenuModel.fromEntity(value.id, FeedMenuEntity.fromMap(value.data()));
+    return FeedMenuModel.fromEntity(value.id, FeedMenuEntity.fromMap(value.data() as Map<String, dynamic>));
   }
 
   Future<FeedMenuModel?> _populateDocPlus(DocumentSnapshot value) async {
-    return FeedMenuModel.fromEntityPlus(value.id, FeedMenuEntity.fromMap(value.data()), appId: appId);  }
+    return FeedMenuModel.fromEntityPlus(value.id, FeedMenuEntity.fromMap(value.data() as Map<String, dynamic>), appId: appId);  }
 
   Future<FeedMenuModel?> get(String? id, {Function(Exception)? onError}) async {
     try {

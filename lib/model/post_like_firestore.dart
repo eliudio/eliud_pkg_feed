@@ -69,11 +69,11 @@ class PostLikeFirestore implements PostLikeRepository {
   }
 
   PostLikeModel? _populateDoc(DocumentSnapshot value) {
-    return PostLikeModel.fromEntity(value.id, PostLikeEntity.fromMap(value.data()));
+    return PostLikeModel.fromEntity(value.id, PostLikeEntity.fromMap(value.data() as Map<String, dynamic>));
   }
 
   Future<PostLikeModel?> _populateDocPlus(DocumentSnapshot value) async {
-    return PostLikeModel.fromEntityPlus(value.id, PostLikeEntity.fromMap(value.data()), appId: appId);  }
+    return PostLikeModel.fromEntityPlus(value.id, PostLikeEntity.fromMap(value.data() as Map<String, dynamic>), appId: appId);  }
 
   Future<PostLikeModel?> get(String? id, {Function(Exception)? onError}) async {
     try {

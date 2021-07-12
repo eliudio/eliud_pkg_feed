@@ -49,11 +49,11 @@ class HeaderFirestore implements HeaderRepository {
   }
 
   HeaderModel? _populateDoc(DocumentSnapshot value) {
-    return HeaderModel.fromEntity(value.id, HeaderEntity.fromMap(value.data()));
+    return HeaderModel.fromEntity(value.id, HeaderEntity.fromMap(value.data() as Map<String, dynamic>));
   }
 
   Future<HeaderModel?> _populateDocPlus(DocumentSnapshot value) async {
-    return HeaderModel.fromEntityPlus(value.id, HeaderEntity.fromMap(value.data()), appId: appId);  }
+    return HeaderModel.fromEntityPlus(value.id, HeaderEntity.fromMap(value.data() as Map<String, dynamic>), appId: appId);  }
 
   Future<HeaderModel?> get(String? id, {Function(Exception)? onError}) async {
     try {

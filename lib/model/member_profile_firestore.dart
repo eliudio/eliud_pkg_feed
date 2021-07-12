@@ -49,11 +49,11 @@ class MemberProfileFirestore implements MemberProfileRepository {
   }
 
   MemberProfileModel? _populateDoc(DocumentSnapshot value) {
-    return MemberProfileModel.fromEntity(value.id, MemberProfileEntity.fromMap(value.data()));
+    return MemberProfileModel.fromEntity(value.id, MemberProfileEntity.fromMap(value.data() as Map<String, dynamic>));
   }
 
   Future<MemberProfileModel?> _populateDocPlus(DocumentSnapshot value) async {
-    return MemberProfileModel.fromEntityPlus(value.id, MemberProfileEntity.fromMap(value.data()), appId: appId);  }
+    return MemberProfileModel.fromEntityPlus(value.id, MemberProfileEntity.fromMap(value.data() as Map<String, dynamic>), appId: appId);  }
 
   Future<MemberProfileModel?> get(String? id, {Function(Exception)? onError}) async {
     try {

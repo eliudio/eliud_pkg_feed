@@ -49,11 +49,11 @@ class ProfileFirestore implements ProfileRepository {
   }
 
   ProfileModel? _populateDoc(DocumentSnapshot value) {
-    return ProfileModel.fromEntity(value.id, ProfileEntity.fromMap(value.data()));
+    return ProfileModel.fromEntity(value.id, ProfileEntity.fromMap(value.data() as Map<String, dynamic>));
   }
 
   Future<ProfileModel?> _populateDocPlus(DocumentSnapshot value) async {
-    return ProfileModel.fromEntityPlus(value.id, ProfileEntity.fromMap(value.data()), appId: appId);  }
+    return ProfileModel.fromEntityPlus(value.id, ProfileEntity.fromMap(value.data() as Map<String, dynamic>), appId: appId);  }
 
   Future<ProfileModel?> get(String? id, {Function(Exception)? onError}) async {
     try {

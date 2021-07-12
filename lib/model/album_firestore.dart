@@ -49,11 +49,11 @@ class AlbumFirestore implements AlbumRepository {
   }
 
   AlbumModel? _populateDoc(DocumentSnapshot value) {
-    return AlbumModel.fromEntity(value.id, AlbumEntity.fromMap(value.data()));
+    return AlbumModel.fromEntity(value.id, AlbumEntity.fromMap(value.data() as Map<String, dynamic>));
   }
 
   Future<AlbumModel?> _populateDocPlus(DocumentSnapshot value) async {
-    return AlbumModel.fromEntityPlus(value.id, AlbumEntity.fromMap(value.data()), appId: appId);  }
+    return AlbumModel.fromEntityPlus(value.id, AlbumEntity.fromMap(value.data() as Map<String, dynamic>), appId: appId);  }
 
   Future<AlbumModel?> get(String? id, {Function(Exception)? onError}) async {
     try {
