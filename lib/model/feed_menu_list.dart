@@ -152,7 +152,7 @@ class FeedMenuListWidgetState extends State<FeedMenuListWidget> {
 
           return FeedMenuListItem(
             value: value,
-            app: accessState.app,
+//            app: accessState.app,
             onDismissed: (direction) {
               BlocProvider.of<FeedMenuListBloc>(context)
                   .add(DeleteFeedMenuList(value: value));
@@ -199,7 +199,6 @@ class FeedMenuListWidgetState extends State<FeedMenuListWidget> {
 class FeedMenuListItem extends StatelessWidget {
   final DismissDirectionCallback onDismissed;
   final GestureTapCallback onTap;
-  final AppModel app;
   final FeedMenuModel? value;
 
   FeedMenuListItem({
@@ -207,7 +206,6 @@ class FeedMenuListItem extends StatelessWidget {
     required this.onDismissed,
     required this.onTap,
     required this.value,
-    required this.app,
   }) : super(key: key);
 
   @override

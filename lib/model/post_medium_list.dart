@@ -152,7 +152,7 @@ class PostMediumListWidgetState extends State<PostMediumListWidget> {
 
           return PostMediumListItem(
             value: value,
-            app: accessState.app,
+//            app: accessState.app,
             onDismissed: (direction) {
               BlocProvider.of<PostMediumListBloc>(context)
                   .add(DeletePostMediumList(value: value));
@@ -199,7 +199,6 @@ class PostMediumListWidgetState extends State<PostMediumListWidget> {
 class PostMediumListItem extends StatelessWidget {
   final DismissDirectionCallback onDismissed;
   final GestureTapCallback onTap;
-  final AppModel app;
   final PostMediumModel? value;
 
   PostMediumListItem({
@@ -207,7 +206,6 @@ class PostMediumListItem extends StatelessWidget {
     required this.onDismissed,
     required this.onTap,
     required this.value,
-    required this.app,
   }) : super(key: key);
 
   @override

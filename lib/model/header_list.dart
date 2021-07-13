@@ -152,7 +152,7 @@ class HeaderListWidgetState extends State<HeaderListWidget> {
 
           return HeaderListItem(
             value: value,
-            app: accessState.app,
+//            app: accessState.app,
             onDismissed: (direction) {
               BlocProvider.of<HeaderListBloc>(context)
                   .add(DeleteHeaderList(value: value));
@@ -199,7 +199,6 @@ class HeaderListWidgetState extends State<HeaderListWidget> {
 class HeaderListItem extends StatelessWidget {
   final DismissDirectionCallback onDismissed;
   final GestureTapCallback onTap;
-  final AppModel app;
   final HeaderModel? value;
 
   HeaderListItem({
@@ -207,7 +206,6 @@ class HeaderListItem extends StatelessWidget {
     required this.onDismissed,
     required this.onTap,
     required this.value,
-    required this.app,
   }) : super(key: key);
 
   @override

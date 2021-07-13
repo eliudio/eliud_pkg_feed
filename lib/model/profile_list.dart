@@ -152,7 +152,7 @@ class ProfileListWidgetState extends State<ProfileListWidget> {
 
           return ProfileListItem(
             value: value,
-            app: accessState.app,
+//            app: accessState.app,
             onDismissed: (direction) {
               BlocProvider.of<ProfileListBloc>(context)
                   .add(DeleteProfileList(value: value));
@@ -199,7 +199,6 @@ class ProfileListWidgetState extends State<ProfileListWidget> {
 class ProfileListItem extends StatelessWidget {
   final DismissDirectionCallback onDismissed;
   final GestureTapCallback onTap;
-  final AppModel app;
   final ProfileModel? value;
 
   ProfileListItem({
@@ -207,7 +206,6 @@ class ProfileListItem extends StatelessWidget {
     required this.onDismissed,
     required this.onTap,
     required this.value,
-    required this.app,
   }) : super(key: key);
 
   @override

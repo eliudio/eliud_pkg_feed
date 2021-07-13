@@ -152,7 +152,7 @@ class PostListWidgetState extends State<PostListWidget> {
 
           return PostListItem(
             value: value,
-            app: accessState.app,
+//            app: accessState.app,
             onDismissed: (direction) {
               BlocProvider.of<PostListBloc>(context)
                   .add(DeletePostList(value: value));
@@ -199,7 +199,6 @@ class PostListWidgetState extends State<PostListWidget> {
 class PostListItem extends StatelessWidget {
   final DismissDirectionCallback onDismissed;
   final GestureTapCallback onTap;
-  final AppModel app;
   final PostModel? value;
 
   PostListItem({
@@ -207,7 +206,6 @@ class PostListItem extends StatelessWidget {
     required this.onDismissed,
     required this.onTap,
     required this.value,
-    required this.app,
   }) : super(key: key);
 
   @override

@@ -152,7 +152,7 @@ class AlbumListWidgetState extends State<AlbumListWidget> {
 
           return AlbumListItem(
             value: value,
-            app: accessState.app,
+//            app: accessState.app,
             onDismissed: (direction) {
               BlocProvider.of<AlbumListBloc>(context)
                   .add(DeleteAlbumList(value: value));
@@ -199,7 +199,6 @@ class AlbumListWidgetState extends State<AlbumListWidget> {
 class AlbumListItem extends StatelessWidget {
   final DismissDirectionCallback onDismissed;
   final GestureTapCallback onTap;
-  final AppModel app;
   final AlbumModel? value;
 
   AlbumListItem({
@@ -207,7 +206,6 @@ class AlbumListItem extends StatelessWidget {
     required this.onDismissed,
     required this.onTap,
     required this.value,
-    required this.app,
   }) : super(key: key);
 
   @override

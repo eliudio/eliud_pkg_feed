@@ -152,7 +152,7 @@ class PostLikeListWidgetState extends State<PostLikeListWidget> {
 
           return PostLikeListItem(
             value: value,
-            app: accessState.app,
+//            app: accessState.app,
             onDismissed: (direction) {
               BlocProvider.of<PostLikeListBloc>(context)
                   .add(DeletePostLikeList(value: value));
@@ -199,7 +199,6 @@ class PostLikeListWidgetState extends State<PostLikeListWidget> {
 class PostLikeListItem extends StatelessWidget {
   final DismissDirectionCallback onDismissed;
   final GestureTapCallback onTap;
-  final AppModel app;
   final PostLikeModel? value;
 
   PostLikeListItem({
@@ -207,7 +206,6 @@ class PostLikeListItem extends StatelessWidget {
     required this.onDismissed,
     required this.onTap,
     required this.value,
-    required this.app,
   }) : super(key: key);
 
   @override

@@ -152,7 +152,7 @@ class PostCommentListWidgetState extends State<PostCommentListWidget> {
 
           return PostCommentListItem(
             value: value,
-            app: accessState.app,
+//            app: accessState.app,
             onDismissed: (direction) {
               BlocProvider.of<PostCommentListBloc>(context)
                   .add(DeletePostCommentList(value: value));
@@ -199,7 +199,6 @@ class PostCommentListWidgetState extends State<PostCommentListWidget> {
 class PostCommentListItem extends StatelessWidget {
   final DismissDirectionCallback onDismissed;
   final GestureTapCallback onTap;
-  final AppModel app;
   final PostCommentModel? value;
 
   PostCommentListItem({
@@ -207,7 +206,6 @@ class PostCommentListItem extends StatelessWidget {
     required this.onDismissed,
     required this.onTap,
     required this.value,
-    required this.app,
   }) : super(key: key);
 
   @override
