@@ -58,5 +58,14 @@ abstract class AbstractRepositorySingleton {
   ProfileRepository? profileRepository(String? appId);
 
   void flush(String? appId) {
+    albumRepository(appId)!.flush();
+    feedRepository(appId)!.flush();
+    feedMenuRepository(appId)!.flush();
+    headerRepository(appId)!.flush();
+    memberProfileRepository(appId)!.flush();
+    postRepository(appId)!.flush();
+    postCommentRepository(appId)!.flush();
+    postLikeRepository(appId)!.flush();
+    profileRepository(appId)!.flush();
   }
 }
