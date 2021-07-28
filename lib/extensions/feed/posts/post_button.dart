@@ -4,7 +4,7 @@ import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_event.dart';
-import 'package:eliud_pkg_feed/extensions/util/media_buttons.dart';
+import 'package:eliud_pkg_medium/tools/media_buttons.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
 import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
@@ -148,7 +148,8 @@ class PostButtonState extends State<PostButton> {
     }
   }
 
-  static Widget formatIcon(BuildContext context, Widget child, {double? width}) {
+  static Widget formatIcon(BuildContext context, Widget child,
+      {double? width}) {
     return Container(
         padding: const EdgeInsets.only(top: 22.5, bottom: 22.5),
         child: StyleRegistry.registry()

@@ -5,7 +5,7 @@ import 'package:eliud_pkg_feed/extensions/bloc/profile_event.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_state.dart';
 import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/editable_widget.dart';
-import 'package:eliud_pkg_feed/extensions/util/media_buttons.dart';
+import 'package:eliud_pkg_medium/tools/media_buttons.dart';
 import 'package:eliud_pkg_feed/model/member_profile_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

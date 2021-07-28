@@ -10,18 +10,18 @@ import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/bloc/post_pr
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/bloc/post_privilege_event.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/post_privilege_widget.dart';
 import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
-import 'package:eliud_pkg_feed/extensions/util/media_buttons.dart';
+import 'package:eliud_pkg_medium/tools/media_buttons.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_media_helper.dart';
 import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 import 'package:eliud_pkg_medium/platform/medium_platform.dart';
+import 'package:eliud_pkg_medium/tools/media_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/feed_post_form_bloc.dart';
 import 'bloc/feed_post_form_event.dart';
 import 'bloc/feed_post_form_state.dart';
-import 'bloc/feed_post_model_details.dart';
 
 class MyFeedPostForm extends StatefulWidget {
   final String appId;
@@ -100,7 +100,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
                 ((state.postModelDetails.memberMedia != null) &&
                     (state.postModelDetails.memberMedia.isNotEmpty))) {
               rows.add(_row2(context, state));
-              rows.add(PostMediaHelper.videoAndPhotoDivider(context));
+              rows.add(MediaHelper.videoAndPhotoDivider(context));
             }
 
             rows.add(BlocProvider<PostPrivilegeBloc>(
@@ -211,7 +211,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         media.add(medium.memberMedium!);
       }
     });
-    return PostMediaHelper.staggeredMemberMediumModel(context, media,
+    return MediaHelper.staggeredMemberMediumModel(context, media,
         progressLabel: 'Uploading...',
         progressExtra: progressValue, deleteAction: (index) {
           var memberMedia = state.postModelDetails.memberMedia;
