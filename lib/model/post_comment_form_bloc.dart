@@ -16,6 +16,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:eliud_core/tools/enums.dart';
@@ -114,7 +115,7 @@ class PostCommentFormBloc extends Bloc<PostCommentFormEvent, PostCommentFormStat
         return;
       }
       if (event is ChangedPostCommentTimestamp) {
-        newValue = currentState.value!.copyWith(timestamp: event.value);
+        newValue = currentState.value!.copyWith(timestamp: dateTimeFromTimestampString(event.value!));
         yield SubmittablePostCommentForm(value: newValue);
 
         return;

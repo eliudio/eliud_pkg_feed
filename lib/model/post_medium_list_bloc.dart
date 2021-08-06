@@ -23,7 +23,6 @@ import 'package:eliud_pkg_feed/model/post_medium_list_state.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 
 
-const _postMediumLimit = 5;
 
 class PostMediumListBloc extends Bloc<PostMediumListEvent, PostMediumListState> {
   final PostMediumRepository _postMediumRepository;
@@ -34,8 +33,9 @@ class PostMediumListBloc extends Bloc<PostMediumListEvent, PostMediumListState> 
   final String? orderBy;
   final bool? descending;
   final bool? detailed;
+  final int postMediumLimit;
 
-  PostMediumListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required PostMediumRepository postMediumRepository})
+  PostMediumListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required PostMediumRepository postMediumRepository, this.postMediumLimit = 5})
       : assert(postMediumRepository != null),
         _postMediumRepository = postMediumRepository,
         super(PostMediumListLoading());
@@ -48,7 +48,7 @@ class PostMediumListBloc extends Bloc<PostMediumListEvent, PostMediumListState> 
       orderBy: orderBy,
       descending: descending,
       eliudQuery: eliudQuery,
-      limit: ((paged != null) && paged!) ? pages * _postMediumLimit : null
+      limit: ((paged != null) && paged!) ? pages * postMediumLimit : null
     );
   }
 
@@ -60,7 +60,7 @@ class PostMediumListBloc extends Bloc<PostMediumListEvent, PostMediumListState> 
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,
-        limit: ((paged != null) && paged!) ? pages * _postMediumLimit : null
+        limit: ((paged != null) && paged!) ? pages * postMediumLimit : null
     );
   }
 

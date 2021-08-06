@@ -15,6 +15,7 @@
 
 import 'package:collection/collection.dart';
 import 'package:eliud_core/tools/common_tools.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
@@ -54,7 +55,7 @@ PostArchiveStatus toPostArchiveStatus(int? index) {
 class PostModel {
   String? documentID;
   String? authorId;
-  String? timestamp;
+  DateTime? timestamp;
 
   // This is the identifier of the app to which this feed belongs
   String? appId;
@@ -81,7 +82,7 @@ class PostModel {
     assert(documentID != null);
   }
 
-  PostModel copyWith({String? documentID, String? authorId, String? timestamp, String? appId, String? feedId, String? postAppId, String? postPageId, Map<String, dynamic>? pageParameters, String? html, String? description, int? likes, int? dislikes, List<String>? readAccess, PostArchiveStatus? archived, String? externalLink, List<PostMediumModel>? memberMedia, }) {
+  PostModel copyWith({String? documentID, String? authorId, DateTime? timestamp, String? appId, String? feedId, String? postAppId, String? postPageId, Map<String, dynamic>? pageParameters, String? html, String? description, int? likes, int? dislikes, List<String>? readAccess, PostArchiveStatus? archived, String? externalLink, List<PostMediumModel>? memberMedia, }) {
     return PostModel(documentID: documentID ?? this.documentID, authorId: authorId ?? this.authorId, timestamp: timestamp ?? this.timestamp, appId: appId ?? this.appId, feedId: feedId ?? this.feedId, postAppId: postAppId ?? this.postAppId, postPageId: postPageId ?? this.postPageId, pageParameters: pageParameters ?? this.pageParameters, html: html ?? this.html, description: description ?? this.description, likes: likes ?? this.likes, dislikes: dislikes ?? this.dislikes, readAccess: readAccess ?? this.readAccess, archived: archived ?? this.archived, externalLink: externalLink ?? this.externalLink, memberMedia: memberMedia ?? this.memberMedia, );
   }
 
@@ -121,7 +122,7 @@ class PostModel {
   PostEntity toEntity({String? appId}) {
     return PostEntity(
           authorId: (authorId != null) ? authorId : null, 
-          timestamp: timestamp, 
+          timestamp: (timestamp == null) ? null : timestamp!.millisecondsSinceEpoch, 
           appId: (appId != null) ? appId : null, 
           feedId: (feedId != null) ? feedId : null, 
           postAppId: (postAppId != null) ? postAppId : null, 
@@ -146,7 +147,7 @@ class PostModel {
     return PostModel(
           documentID: documentID, 
           authorId: entity.authorId, 
-          timestamp: entity.timestamp.toString(), 
+          timestamp: entity.timestamp == null ? null : DateTime.fromMillisecondsSinceEpoch((entity.timestamp as int)), 
           appId: entity.appId, 
           feedId: entity.feedId, 
           postAppId: entity.postAppId, 
@@ -177,7 +178,7 @@ class PostModel {
     return PostModel(
           documentID: documentID, 
           authorId: entity.authorId, 
-          timestamp: entity.timestamp.toString(), 
+          timestamp: entity.timestamp == null ? null : DateTime.fromMillisecondsSinceEpoch((entity.timestamp as int)), 
           appId: entity.appId, 
           feedId: entity.feedId, 
           postAppId: entity.postAppId, 

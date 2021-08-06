@@ -15,13 +15,14 @@
 
 import 'dart:collection';
 import 'dart:convert';
-import 'package:eliud_core/tools/common_tools.dart';
 import 'abstract_repository_singleton.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/model/entity_export.dart';
 import 'package:eliud_pkg_membership/model/entity_export.dart';
 import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_feed/model/entity_export.dart';
 
+import 'package:eliud_core/tools/common_tools.dart';
 class PostLikeEntity {
   final String? postId;
   final String? postCommentId;
@@ -50,7 +51,7 @@ class PostLikeEntity {
       postId: map['postId'], 
       postCommentId: map['postCommentId'], 
       memberId: map['memberId'], 
-      timestamp: postLikeRepository(appId: map['appId'])!.timeStampToString(map['timestamp']), 
+      timestamp: map['timestamp'] == null ? null : (map['timestamp']  as Timestamp).millisecondsSinceEpoch,
       appId: map['appId'], 
       likeType: map['likeType'], 
     );

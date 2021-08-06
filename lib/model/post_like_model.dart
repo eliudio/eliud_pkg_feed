@@ -14,6 +14,7 @@
 */
 
 import 'package:eliud_core/tools/common_tools.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
@@ -55,7 +56,7 @@ class PostLikeModel {
   String? postId;
   String? postCommentId;
   String? memberId;
-  String? timestamp;
+  DateTime? timestamp;
 
   // This is the identifier of the app to which this feed belongs
   String? appId;
@@ -65,7 +66,7 @@ class PostLikeModel {
     assert(documentID != null);
   }
 
-  PostLikeModel copyWith({String? documentID, String? postId, String? postCommentId, String? memberId, String? timestamp, String? appId, LikeType? likeType, }) {
+  PostLikeModel copyWith({String? documentID, String? postId, String? postCommentId, String? memberId, DateTime? timestamp, String? appId, LikeType? likeType, }) {
     return PostLikeModel(documentID: documentID ?? this.documentID, postId: postId ?? this.postId, postCommentId: postCommentId ?? this.postCommentId, memberId: memberId ?? this.memberId, timestamp: timestamp ?? this.timestamp, appId: appId ?? this.appId, likeType: likeType ?? this.likeType, );
   }
 
@@ -95,7 +96,7 @@ class PostLikeModel {
           postId: (postId != null) ? postId : null, 
           postCommentId: (postCommentId != null) ? postCommentId : null, 
           memberId: (memberId != null) ? memberId : null, 
-          timestamp: timestamp, 
+          timestamp: (timestamp == null) ? null : timestamp!.millisecondsSinceEpoch, 
           appId: (appId != null) ? appId : null, 
           likeType: (likeType != null) ? likeType!.index : null, 
     );
@@ -109,7 +110,7 @@ class PostLikeModel {
           postId: entity.postId, 
           postCommentId: entity.postCommentId, 
           memberId: entity.memberId, 
-          timestamp: entity.timestamp.toString(), 
+          timestamp: entity.timestamp == null ? null : DateTime.fromMillisecondsSinceEpoch((entity.timestamp as int)), 
           appId: entity.appId, 
           likeType: toLikeType(entity.likeType), 
     );
@@ -124,7 +125,7 @@ class PostLikeModel {
           postId: entity.postId, 
           postCommentId: entity.postCommentId, 
           memberId: entity.memberId, 
-          timestamp: entity.timestamp.toString(), 
+          timestamp: entity.timestamp == null ? null : DateTime.fromMillisecondsSinceEpoch((entity.timestamp as int)), 
           appId: entity.appId, 
           likeType: toLikeType(entity.likeType), 
     );

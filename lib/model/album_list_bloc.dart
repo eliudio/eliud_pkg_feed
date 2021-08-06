@@ -23,7 +23,6 @@ import 'package:eliud_pkg_feed/model/album_list_state.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 
 
-const _albumLimit = 5;
 
 class AlbumListBloc extends Bloc<AlbumListEvent, AlbumListState> {
   final AlbumRepository _albumRepository;
@@ -34,8 +33,9 @@ class AlbumListBloc extends Bloc<AlbumListEvent, AlbumListState> {
   final String? orderBy;
   final bool? descending;
   final bool? detailed;
+  final int albumLimit;
 
-  AlbumListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required AlbumRepository albumRepository})
+  AlbumListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required AlbumRepository albumRepository, this.albumLimit = 5})
       : assert(albumRepository != null),
         _albumRepository = albumRepository,
         super(AlbumListLoading());
@@ -48,7 +48,7 @@ class AlbumListBloc extends Bloc<AlbumListEvent, AlbumListState> {
       orderBy: orderBy,
       descending: descending,
       eliudQuery: eliudQuery,
-      limit: ((paged != null) && paged!) ? pages * _albumLimit : null
+      limit: ((paged != null) && paged!) ? pages * albumLimit : null
     );
   }
 
@@ -60,7 +60,7 @@ class AlbumListBloc extends Bloc<AlbumListEvent, AlbumListState> {
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,
-        limit: ((paged != null) && paged!) ? pages * _albumLimit : null
+        limit: ((paged != null) && paged!) ? pages * albumLimit : null
     );
   }
 

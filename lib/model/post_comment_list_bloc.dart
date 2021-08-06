@@ -23,7 +23,6 @@ import 'package:eliud_pkg_feed/model/post_comment_list_state.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 
 
-const _postCommentLimit = 5;
 
 class PostCommentListBloc extends Bloc<PostCommentListEvent, PostCommentListState> {
   final PostCommentRepository _postCommentRepository;
@@ -34,8 +33,9 @@ class PostCommentListBloc extends Bloc<PostCommentListEvent, PostCommentListStat
   final String? orderBy;
   final bool? descending;
   final bool? detailed;
+  final int postCommentLimit;
 
-  PostCommentListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required PostCommentRepository postCommentRepository})
+  PostCommentListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required PostCommentRepository postCommentRepository, this.postCommentLimit = 5})
       : assert(postCommentRepository != null),
         _postCommentRepository = postCommentRepository,
         super(PostCommentListLoading());
@@ -48,7 +48,7 @@ class PostCommentListBloc extends Bloc<PostCommentListEvent, PostCommentListStat
       orderBy: orderBy,
       descending: descending,
       eliudQuery: eliudQuery,
-      limit: ((paged != null) && paged!) ? pages * _postCommentLimit : null
+      limit: ((paged != null) && paged!) ? pages * postCommentLimit : null
     );
   }
 
@@ -60,7 +60,7 @@ class PostCommentListBloc extends Bloc<PostCommentListEvent, PostCommentListStat
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,
-        limit: ((paged != null) && paged!) ? pages * _postCommentLimit : null
+        limit: ((paged != null) && paged!) ? pages * postCommentLimit : null
     );
   }
 

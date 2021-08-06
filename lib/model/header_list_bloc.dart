@@ -23,7 +23,6 @@ import 'package:eliud_pkg_feed/model/header_list_state.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 
 
-const _headerLimit = 5;
 
 class HeaderListBloc extends Bloc<HeaderListEvent, HeaderListState> {
   final HeaderRepository _headerRepository;
@@ -34,8 +33,9 @@ class HeaderListBloc extends Bloc<HeaderListEvent, HeaderListState> {
   final String? orderBy;
   final bool? descending;
   final bool? detailed;
+  final int headerLimit;
 
-  HeaderListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required HeaderRepository headerRepository})
+  HeaderListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required HeaderRepository headerRepository, this.headerLimit = 5})
       : assert(headerRepository != null),
         _headerRepository = headerRepository,
         super(HeaderListLoading());
@@ -48,7 +48,7 @@ class HeaderListBloc extends Bloc<HeaderListEvent, HeaderListState> {
       orderBy: orderBy,
       descending: descending,
       eliudQuery: eliudQuery,
-      limit: ((paged != null) && paged!) ? pages * _headerLimit : null
+      limit: ((paged != null) && paged!) ? pages * headerLimit : null
     );
   }
 
@@ -60,7 +60,7 @@ class HeaderListBloc extends Bloc<HeaderListEvent, HeaderListState> {
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,
-        limit: ((paged != null) && paged!) ? pages * _headerLimit : null
+        limit: ((paged != null) && paged!) ? pages * headerLimit : null
     );
   }
 

@@ -23,7 +23,6 @@ import 'package:eliud_pkg_feed/model/post_list_state.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 
 
-const _postLimit = 5;
 
 class PostListBloc extends Bloc<PostListEvent, PostListState> {
   final PostRepository _postRepository;
@@ -34,8 +33,9 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
   final String? orderBy;
   final bool? descending;
   final bool? detailed;
+  final int postLimit;
 
-  PostListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required PostRepository postRepository})
+  PostListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required PostRepository postRepository, this.postLimit = 5})
       : assert(postRepository != null),
         _postRepository = postRepository,
         super(PostListLoading());
@@ -48,7 +48,7 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
       orderBy: orderBy,
       descending: descending,
       eliudQuery: eliudQuery,
-      limit: ((paged != null) && paged!) ? pages * _postLimit : null
+      limit: ((paged != null) && paged!) ? pages * postLimit : null
     );
   }
 
@@ -60,7 +60,7 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,
-        limit: ((paged != null) && paged!) ? pages * _postLimit : null
+        limit: ((paged != null) && paged!) ? pages * postLimit : null
     );
   }
 

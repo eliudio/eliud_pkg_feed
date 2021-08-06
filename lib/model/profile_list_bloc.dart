@@ -23,7 +23,6 @@ import 'package:eliud_pkg_feed/model/profile_list_state.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 
 
-const _profileLimit = 5;
 
 class ProfileListBloc extends Bloc<ProfileListEvent, ProfileListState> {
   final ProfileRepository _profileRepository;
@@ -34,8 +33,9 @@ class ProfileListBloc extends Bloc<ProfileListEvent, ProfileListState> {
   final String? orderBy;
   final bool? descending;
   final bool? detailed;
+  final int profileLimit;
 
-  ProfileListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required ProfileRepository profileRepository})
+  ProfileListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required ProfileRepository profileRepository, this.profileLimit = 5})
       : assert(profileRepository != null),
         _profileRepository = profileRepository,
         super(ProfileListLoading());
@@ -48,7 +48,7 @@ class ProfileListBloc extends Bloc<ProfileListEvent, ProfileListState> {
       orderBy: orderBy,
       descending: descending,
       eliudQuery: eliudQuery,
-      limit: ((paged != null) && paged!) ? pages * _profileLimit : null
+      limit: ((paged != null) && paged!) ? pages * profileLimit : null
     );
   }
 
@@ -60,7 +60,7 @@ class ProfileListBloc extends Bloc<ProfileListEvent, ProfileListState> {
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,
-        limit: ((paged != null) && paged!) ? pages * _profileLimit : null
+        limit: ((paged != null) && paged!) ? pages * profileLimit : null
     );
   }
 

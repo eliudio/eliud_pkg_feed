@@ -15,6 +15,7 @@
 
 import 'package:collection/collection.dart';
 import 'package:eliud_core/tools/common_tools.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
@@ -44,7 +45,7 @@ class PostCommentModel {
   String? postId;
   String? postCommentId;
   String? memberId;
-  String? timestamp;
+  DateTime? timestamp;
 
   // This is the identifier of the app to which this feed belongs
   String? appId;
@@ -57,7 +58,7 @@ class PostCommentModel {
     assert(documentID != null);
   }
 
-  PostCommentModel copyWith({String? documentID, String? postId, String? postCommentId, String? memberId, String? timestamp, String? appId, String? comment, int? likes, int? dislikes, List<MemberMediumModel>? memberMedia, }) {
+  PostCommentModel copyWith({String? documentID, String? postId, String? postCommentId, String? memberId, DateTime? timestamp, String? appId, String? comment, int? likes, int? dislikes, List<MemberMediumModel>? memberMedia, }) {
     return PostCommentModel(documentID: documentID ?? this.documentID, postId: postId ?? this.postId, postCommentId: postCommentId ?? this.postCommentId, memberId: memberId ?? this.memberId, timestamp: timestamp ?? this.timestamp, appId: appId ?? this.appId, comment: comment ?? this.comment, likes: likes ?? this.likes, dislikes: dislikes ?? this.dislikes, memberMedia: memberMedia ?? this.memberMedia, );
   }
 
@@ -92,7 +93,7 @@ class PostCommentModel {
           postId: (postId != null) ? postId : null, 
           postCommentId: (postCommentId != null) ? postCommentId : null, 
           memberId: (memberId != null) ? memberId : null, 
-          timestamp: timestamp, 
+          timestamp: (timestamp == null) ? null : timestamp!.millisecondsSinceEpoch, 
           appId: (appId != null) ? appId : null, 
           comment: (comment != null) ? comment : null, 
           likes: (likes != null) ? likes : null, 
@@ -111,7 +112,7 @@ class PostCommentModel {
           postId: entity.postId, 
           postCommentId: entity.postCommentId, 
           memberId: entity.memberId, 
-          timestamp: entity.timestamp.toString(), 
+          timestamp: entity.timestamp == null ? null : DateTime.fromMillisecondsSinceEpoch((entity.timestamp as int)), 
           appId: entity.appId, 
           comment: entity.comment, 
           likes: entity.likes, 
@@ -136,7 +137,7 @@ class PostCommentModel {
           postId: entity.postId, 
           postCommentId: entity.postCommentId, 
           memberId: entity.memberId, 
-          timestamp: entity.timestamp.toString(), 
+          timestamp: entity.timestamp == null ? null : DateTime.fromMillisecondsSinceEpoch((entity.timestamp as int)), 
           appId: entity.appId, 
           comment: entity.comment, 
           likes: entity.likes, 

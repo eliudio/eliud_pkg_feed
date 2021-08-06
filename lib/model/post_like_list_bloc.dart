@@ -23,7 +23,6 @@ import 'package:eliud_pkg_feed/model/post_like_list_state.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 
 
-const _postLikeLimit = 5;
 
 class PostLikeListBloc extends Bloc<PostLikeListEvent, PostLikeListState> {
   final PostLikeRepository _postLikeRepository;
@@ -34,8 +33,9 @@ class PostLikeListBloc extends Bloc<PostLikeListEvent, PostLikeListState> {
   final String? orderBy;
   final bool? descending;
   final bool? detailed;
+  final int postLikeLimit;
 
-  PostLikeListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required PostLikeRepository postLikeRepository})
+  PostLikeListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required PostLikeRepository postLikeRepository, this.postLikeLimit = 5})
       : assert(postLikeRepository != null),
         _postLikeRepository = postLikeRepository,
         super(PostLikeListLoading());
@@ -48,7 +48,7 @@ class PostLikeListBloc extends Bloc<PostLikeListEvent, PostLikeListState> {
       orderBy: orderBy,
       descending: descending,
       eliudQuery: eliudQuery,
-      limit: ((paged != null) && paged!) ? pages * _postLikeLimit : null
+      limit: ((paged != null) && paged!) ? pages * postLikeLimit : null
     );
   }
 
@@ -60,7 +60,7 @@ class PostLikeListBloc extends Bloc<PostLikeListEvent, PostLikeListState> {
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,
-        limit: ((paged != null) && paged!) ? pages * _postLikeLimit : null
+        limit: ((paged != null) && paged!) ? pages * postLikeLimit : null
     );
   }
 

@@ -23,7 +23,6 @@ import 'package:eliud_pkg_feed/model/feed_menu_list_state.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 
 
-const _feedMenuLimit = 5;
 
 class FeedMenuListBloc extends Bloc<FeedMenuListEvent, FeedMenuListState> {
   final FeedMenuRepository _feedMenuRepository;
@@ -34,8 +33,9 @@ class FeedMenuListBloc extends Bloc<FeedMenuListEvent, FeedMenuListState> {
   final String? orderBy;
   final bool? descending;
   final bool? detailed;
+  final int feedMenuLimit;
 
-  FeedMenuListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required FeedMenuRepository feedMenuRepository})
+  FeedMenuListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required FeedMenuRepository feedMenuRepository, this.feedMenuLimit = 5})
       : assert(feedMenuRepository != null),
         _feedMenuRepository = feedMenuRepository,
         super(FeedMenuListLoading());
@@ -48,7 +48,7 @@ class FeedMenuListBloc extends Bloc<FeedMenuListEvent, FeedMenuListState> {
       orderBy: orderBy,
       descending: descending,
       eliudQuery: eliudQuery,
-      limit: ((paged != null) && paged!) ? pages * _feedMenuLimit : null
+      limit: ((paged != null) && paged!) ? pages * feedMenuLimit : null
     );
   }
 
@@ -60,7 +60,7 @@ class FeedMenuListBloc extends Bloc<FeedMenuListEvent, FeedMenuListState> {
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,
-        limit: ((paged != null) && paged!) ? pages * _feedMenuLimit : null
+        limit: ((paged != null) && paged!) ? pages * feedMenuLimit : null
     );
   }
 

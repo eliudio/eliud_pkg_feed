@@ -23,7 +23,6 @@ import 'package:eliud_pkg_feed/model/feed_list_state.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 
 
-const _feedLimit = 5;
 
 class FeedListBloc extends Bloc<FeedListEvent, FeedListState> {
   final FeedRepository _feedRepository;
@@ -34,8 +33,9 @@ class FeedListBloc extends Bloc<FeedListEvent, FeedListState> {
   final String? orderBy;
   final bool? descending;
   final bool? detailed;
+  final int feedLimit;
 
-  FeedListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required FeedRepository feedRepository})
+  FeedListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required FeedRepository feedRepository, this.feedLimit = 5})
       : assert(feedRepository != null),
         _feedRepository = feedRepository,
         super(FeedListLoading());
@@ -48,7 +48,7 @@ class FeedListBloc extends Bloc<FeedListEvent, FeedListState> {
       orderBy: orderBy,
       descending: descending,
       eliudQuery: eliudQuery,
-      limit: ((paged != null) && paged!) ? pages * _feedLimit : null
+      limit: ((paged != null) && paged!) ? pages * feedLimit : null
     );
   }
 
@@ -60,7 +60,7 @@ class FeedListBloc extends Bloc<FeedListEvent, FeedListState> {
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,
-        limit: ((paged != null) && paged!) ? pages * _feedLimit : null
+        limit: ((paged != null) && paged!) ? pages * feedLimit : null
     );
   }
 
