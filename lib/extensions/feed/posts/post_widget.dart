@@ -143,7 +143,7 @@ class _PostWidgetState extends State<PostWidget> {
                 context,
                 20,
                 widget.pageId,
-                widget.memberId,
+                widget.currentMemberId!,
                 widget.currentMemberId,
                 widget.appId,
                 widget.feedId)),
