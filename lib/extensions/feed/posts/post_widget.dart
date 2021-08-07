@@ -1,5 +1,6 @@
 import 'package:eliud_core/core/navigate/page_param_helper.dart';
 import 'package:eliud_core/style/style_registry.dart';
+import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/storage/medium_base.dart';
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_event.dart';
@@ -250,7 +251,7 @@ class _PostWidgetState extends State<PostWidget> {
             .styleWithContext(context)
             .frontEndStyle()
             .textStyle()
-            .h5(context, timeStamp, textAlign: TextAlign.left),
+            .h5(context, formatFullPrecision(timeStamp), textAlign: TextAlign.left),
       ]),
       Spacer(),
     ];
