@@ -221,7 +221,7 @@ class _PostWidgetState extends State<PostWidget> {
 
     var timeStamp;
     if (postModel.timestamp == null) {
-      timeStamp = "?";
+      timeStamp = DateTime.now();
     } else {
       timeStamp = postModel.timestamp!;
     }

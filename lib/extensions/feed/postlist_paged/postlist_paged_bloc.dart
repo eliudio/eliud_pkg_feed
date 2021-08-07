@@ -37,6 +37,7 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
     );
   }
 
+
   @override
   Stream<PostListPagedState> mapEventToState(PostPagedEvent event) async* {
     if (event is PostListPagedFetched) {
