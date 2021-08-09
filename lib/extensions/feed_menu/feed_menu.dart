@@ -7,6 +7,7 @@ import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/action/action_model.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_state.dart';
+import 'package:eliud_pkg_feed/extensions/util/switch_member.dart';
 import 'package:eliud_pkg_feed/model/feed_menu_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,8 @@ class FeedMenu extends StatefulWidget {
   _FeedMenuState createState() => _FeedMenuState();
 }
 
-class _FeedMenuState extends State<FeedMenu> with SingleTickerProviderStateMixin {
+class _FeedMenuState extends State<FeedMenu>
+    with SingleTickerProviderStateMixin {
   _FeedMenuState();
 
   @override
@@ -31,17 +33,30 @@ class _FeedMenuState extends State<FeedMenu> with SingleTickerProviderStateMixin
     var parameters = pageContextInfo.parameters;
     var theState = AccessBloc.getState(context);
     if (theState is AppLoaded) {
+      bool otherMember = false;
+      if (parameters != null) {
+        var openingForMemberId =
+            parameters[SwitchMember.switchMemberFeedPageParameter];
+        if (openingForMemberId != theState.getMember()!.documentID!) {
+          otherMember = true;
+        }
+      }
       return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
         if (state is ProfileInitialised) {
-          var items = widget.feedMenuModel.menu!.menuItems!;
+          var items;
+          if (otherMember) {
+            items = widget.feedMenuModel.menuOtherMember!.menuItems!;
+          } else {
+            items = widget.feedMenuModel.menuCurrentMember!.menuItems!;
+          }
           var useTheseItems = <String>[];
           var actions = <ActionModel>[];
           var selectedPage = 0;
           var i = 0;
           for (var item in items) {
             if (theState.menuItemHasAccess(item)) {
-              var isActive = PageHelper.isActivePage(
-                  pageContextInfo.pageId, item.action);
+              var isActive =
+                  PageHelper.isActivePage(pageContextInfo.pageId, item.action);
               if (isActive) {
                 selectedPage = i;
               }
@@ -53,13 +68,22 @@ class _FeedMenuState extends State<FeedMenu> with SingleTickerProviderStateMixin
             }
           }
 
-          return FeedMenuItems(useTheseItems, actions, selectedPage, parameters);
+          return FeedMenuItems(
+              useTheseItems, actions, selectedPage, parameters);
         } else {
-          return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicatorStyle().progressIndicator(context);
+          return StyleRegistry.registry()
+              .styleWithContext(context)
+              .frontEndStyle()
+              .progressIndicatorStyle()
+              .progressIndicator(context);
         }
       });
     } else {
-      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'App not loaded');
+      return StyleRegistry.registry()
+          .styleWithContext(context)
+          .frontEndStyle()
+          .textStyle()
+          .text(context, 'App not loaded');
     }
   }
 }
@@ -72,10 +96,12 @@ class FeedMenuItems extends StatefulWidget {
 
   FeedMenuItems(this.items, this.actions, this.active, this.parameters);
 
-  _FeedMenuItemsState createState() => _FeedMenuItemsState(items, active, actions, parameters);
+  _FeedMenuItemsState createState() =>
+      _FeedMenuItemsState(items, active, actions, parameters);
 }
 
-class _FeedMenuItemsState extends State<FeedMenuItems> with SingleTickerProviderStateMixin {
+class _FeedMenuItemsState extends State<FeedMenuItems>
+    with SingleTickerProviderStateMixin {
   TabController? _tabController;
   final List<String> items;
   final int active;
@@ -105,7 +131,8 @@ class _FeedMenuItemsState extends State<FeedMenuItems> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     if (_tabController != null) {
-      return StyleRegistry.registry().styleWithContext(context)
+      return StyleRegistry.registry()
+          .styleWithContext(context)
           .frontEndStyle()
           .tabsStyle()
           .tabBar(context, items: items, tabController: _tabController!);
@@ -116,8 +143,8 @@ class _FeedMenuItemsState extends State<FeedMenuItems> with SingleTickerProvider
 
   void _handleTabSelection() {
     if ((_tabController != null) && (_tabController!.indexIsChanging)) {
-        var action = actions[_tabController!.index];
-        eliudrouter.Router.navigateTo(context, action, parameters: parameters);
+      var action = actions[_tabController!.index];
+      eliudrouter.Router.navigateTo(context, action, parameters: parameters);
     }
   }
 }

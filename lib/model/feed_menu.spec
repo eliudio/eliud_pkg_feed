@@ -41,8 +41,16 @@
       "group": "general"
     },
     {
-      "fieldName": "menu",
-      "displayName": "Menu",
+      "fieldName": "menuCurrentMember",
+      "displayName": "Menu For Current Member",
+      "fieldType": "MenuDef",
+      "association": true,
+      "optional": true,
+      "group": "iconMenu"
+    },
+    {
+      "fieldName": "menuOtherMember",
+      "displayName": "Menu For Other Member",
       "fieldType": "MenuDef",
       "association": true,
       "optional": true,

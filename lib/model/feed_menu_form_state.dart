@@ -111,15 +111,31 @@ class DescriptionFeedMenuFormError extends FeedMenuFormError {
 }
 
 
-class MenuFeedMenuFormError extends FeedMenuFormError { 
-  const MenuFeedMenuFormError({ String? message, FeedMenuModel? value }): super(message: message, value: value);
+class MenuCurrentMemberFeedMenuFormError extends FeedMenuFormError { 
+  const MenuCurrentMemberFeedMenuFormError({ String? message, FeedMenuModel? value }): super(message: message, value: value);
 
   @override
   List<Object?> get props => [ message, value ];
 
   @override
   String toString() {
-    return '''MenuFeedMenuFormError {
+    return '''MenuCurrentMemberFeedMenuFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
+class MenuOtherMemberFeedMenuFormError extends FeedMenuFormError { 
+  const MenuOtherMemberFeedMenuFormError({ String? message, FeedMenuModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''MenuOtherMemberFeedMenuFormError {
       value: $value,
       message: $message,
     }''';

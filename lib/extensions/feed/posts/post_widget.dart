@@ -174,24 +174,19 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   Widget _textField() {
-    return TextField(
+    return StyleRegistry.registry()
+        .styleWithContext(context)
+        .frontEndStyle()
+        .texFormFieldStyle()
+        .textField(
+      context,
+      readOnly: false,
       textAlign: TextAlign.left,
+      textInputAction: TextInputAction.send,
+//      onSubmitted: (value) => _submit(value),
       controller: _commentController,
       keyboardType: TextInputType.text,
-      decoration: InputDecoration(
-        hintText: 'Add your comment here and press ok...',
-        hintStyle: TextStyle(fontSize: 16),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(
-            width: 0,
-            style: BorderStyle.none,
-          ),
-        ),
-        filled: true,
-        contentPadding: EdgeInsets.only(left: 8),
-        fillColor: Colors.grey,
-      ),
+      hintText: 'Comment here...',
     );
   }
 
@@ -251,7 +246,7 @@ class _PostWidgetState extends State<PostWidget> {
             .styleWithContext(context)
             .frontEndStyle()
             .textStyle()
-            .h5(context, formatFullPrecision(timeStamp), textAlign: TextAlign.left),
+            .h5(context, verboseDateTimeRepresentation(timeStamp), textAlign: TextAlign.left),
       ]),
       Spacer(),
     ];
@@ -295,7 +290,7 @@ class _PostWidgetState extends State<PostWidget> {
     );
 
     return PopupMenuButton(
-        icon: Icon(Icons.more_horiz),
+        icon: Icon(Icons.more_vert),
         itemBuilder: (_) => items,
         onSelected: (choice) async {
           if (choice == 0) {
@@ -623,7 +618,7 @@ class _PostWidgetState extends State<PostWidget> {
       String? memberId,
       PostCommentContainer postComment) {
     return PopupMenuButton(
-        icon: Icon(Icons.more_horiz),
+        icon: Icon(Icons.more_vert),
         itemBuilder: (_) => <PopupMenuItem<int>>[
               new PopupMenuItem<int>(
                   child: StyleRegistry.registry()

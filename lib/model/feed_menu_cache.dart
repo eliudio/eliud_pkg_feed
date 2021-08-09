@@ -128,17 +128,28 @@ class FeedMenuCache implements FeedMenuRepository {
 
   static Future<FeedMenuModel> refreshRelations(FeedMenuModel model) async {
 
-    MenuDefModel? menuHolder;
-    if (model.menu != null) {
+    MenuDefModel? menuCurrentMemberHolder;
+    if (model.menuCurrentMember != null) {
       try {
-        await menuDefRepository(appId: model.appId)!.get(model.menu!.documentID).then((val) {
-          menuHolder = val;
+        await menuDefRepository(appId: model.appId)!.get(model.menuCurrentMember!.documentID).then((val) {
+          menuCurrentMemberHolder = val;
+        }).catchError((error) {});
+      } catch (_) {}
+    }
+
+    MenuDefModel? menuOtherMemberHolder;
+    if (model.menuOtherMember != null) {
+      try {
+        await menuDefRepository(appId: model.appId)!.get(model.menuOtherMember!.documentID).then((val) {
+          menuOtherMemberHolder = val;
         }).catchError((error) {});
       } catch (_) {}
     }
 
     return model.copyWith(
-        menu: menuHolder,
+        menuCurrentMember: menuCurrentMemberHolder,
+
+        menuOtherMember: menuOtherMemberHolder,
 
 
     );

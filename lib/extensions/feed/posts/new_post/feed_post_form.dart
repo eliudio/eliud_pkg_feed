@@ -233,16 +233,18 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
       AppModel app,
       FeedPostFormInitialized state,
       ) {
-    return TextFormField(
+    return StyleRegistry.registry()
+        .styleWithContext(context)
+        .frontEndStyle()
+        .texFormFieldStyle()
+        .textField(
+      context,
       readOnly: false,
+      textAlign: TextAlign.left,
+      textInputAction: TextInputAction.send,
       controller: _descriptionController,
       keyboardType: TextInputType.text,
-      autovalidate: true,
-      decoration: InputDecoration(
-        hintText: 'Say something...',
-        hintStyle: TextStyle(fontSize: 16),
-//        contentPadding: EdgeInsets.all(8),
-      ),
+      hintText: 'Say something...',
       validator: (_) {
         return state is DescriptionFeedPostFormError ? state.message : null;
       },

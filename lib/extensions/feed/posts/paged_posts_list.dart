@@ -122,7 +122,7 @@ class PagedPostsListState extends State<PagedPostsList> {
             .styleWithContext(context)
             .frontEndStyle()
             .dialogStyle()
-            .openEntryDialog(context, title: 'Same something',
+            .openEntryDialog(context, title: 'Say something',
                 onPressed: (value) {
           if (value != null) {
             _addPost(

@@ -25,19 +25,20 @@ import 'package:eliud_core/tools/common_tools.dart';
 class FeedMenuEntity {
   final String? appId;
   final String? description;
-  final String? menuId;
+  final String? menuCurrentMemberId;
+  final String? menuOtherMemberId;
   final RgbEntity? itemColor;
   final RgbEntity? selectedItemColor;
   final ConditionsSimpleEntity? conditions;
 
-  FeedMenuEntity({this.appId, this.description, this.menuId, this.itemColor, this.selectedItemColor, this.conditions, });
+  FeedMenuEntity({this.appId, this.description, this.menuCurrentMemberId, this.menuOtherMemberId, this.itemColor, this.selectedItemColor, this.conditions, });
 
 
-  List<Object?> get props => [appId, description, menuId, itemColor, selectedItemColor, conditions, ];
+  List<Object?> get props => [appId, description, menuCurrentMemberId, menuOtherMemberId, itemColor, selectedItemColor, conditions, ];
 
   @override
   String toString() {
-    return 'FeedMenuEntity{appId: $appId, description: $description, menuId: $menuId, itemColor: $itemColor, selectedItemColor: $selectedItemColor, conditions: $conditions}';
+    return 'FeedMenuEntity{appId: $appId, description: $description, menuCurrentMemberId: $menuCurrentMemberId, menuOtherMemberId: $menuOtherMemberId, itemColor: $itemColor, selectedItemColor: $selectedItemColor, conditions: $conditions}';
   }
 
   static FeedMenuEntity? fromMap(Object? o) {
@@ -60,7 +61,8 @@ class FeedMenuEntity {
     return FeedMenuEntity(
       appId: map['appId'], 
       description: map['description'], 
-      menuId: map['menuId'], 
+      menuCurrentMemberId: map['menuCurrentMemberId'], 
+      menuOtherMemberId: map['menuOtherMemberId'], 
       itemColor: itemColorFromMap, 
       selectedItemColor: selectedItemColorFromMap, 
       conditions: conditionsFromMap, 
@@ -83,8 +85,10 @@ class FeedMenuEntity {
       else theDocument["appId"] = null;
     if (description != null) theDocument["description"] = description;
       else theDocument["description"] = null;
-    if (menuId != null) theDocument["menuId"] = menuId;
-      else theDocument["menuId"] = null;
+    if (menuCurrentMemberId != null) theDocument["menuCurrentMemberId"] = menuCurrentMemberId;
+      else theDocument["menuCurrentMemberId"] = null;
+    if (menuOtherMemberId != null) theDocument["menuOtherMemberId"] = menuOtherMemberId;
+      else theDocument["menuOtherMemberId"] = null;
     if (itemColor != null) theDocument["itemColor"] = itemColorMap;
       else theDocument["itemColor"] = null;
     if (selectedItemColor != null) theDocument["selectedItemColor"] = selectedItemColorMap;

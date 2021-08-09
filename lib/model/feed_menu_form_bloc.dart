@@ -100,15 +100,34 @@ class FeedMenuFormBloc extends Bloc<FeedMenuFormEvent, FeedMenuFormState> {
 
         return;
       }
-      if (event is ChangedFeedMenuMenu) {
+      if (event is ChangedFeedMenuMenuCurrentMember) {
         if (event.value != null)
-          newValue = currentState.value!.copyWith(menu: await menuDefRepository(appId: appId)!.get(event.value));
+          newValue = currentState.value!.copyWith(menuCurrentMember: await menuDefRepository(appId: appId)!.get(event.value));
         else
           newValue = new FeedMenuModel(
                                  documentID: currentState.value!.documentID,
                                  appId: currentState.value!.appId,
                                  description: currentState.value!.description,
-                                 menu: null,
+                                 menuCurrentMember: null,
+                                 menuOtherMember: currentState.value!.menuOtherMember,
+                                 itemColor: currentState.value!.itemColor,
+                                 selectedItemColor: currentState.value!.selectedItemColor,
+                                 conditions: currentState.value!.conditions,
+          );
+        yield SubmittableFeedMenuForm(value: newValue);
+
+        return;
+      }
+      if (event is ChangedFeedMenuMenuOtherMember) {
+        if (event.value != null)
+          newValue = currentState.value!.copyWith(menuOtherMember: await menuDefRepository(appId: appId)!.get(event.value));
+        else
+          newValue = new FeedMenuModel(
+                                 documentID: currentState.value!.documentID,
+                                 appId: currentState.value!.appId,
+                                 description: currentState.value!.description,
+                                 menuCurrentMember: currentState.value!.menuCurrentMember,
+                                 menuOtherMember: null,
                                  itemColor: currentState.value!.itemColor,
                                  selectedItemColor: currentState.value!.selectedItemColor,
                                  conditions: currentState.value!.conditions,
