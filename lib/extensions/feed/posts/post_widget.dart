@@ -566,8 +566,8 @@ class _PostWidgetState extends State<PostWidget> {
                     .dialogButton(context,
                         label: 'Like',
                         selected: data.thisMemberLikesThisComment!,
-                        onPressed: () => _likeComment(
-                            context, postDetail, data)), //your original button
+                        onPressed: () => widget.isEditable ? _likeComment(
+                            context, postDetail, data) : null), //your original button
               ),
               ButtonTheme(
                   padding: EdgeInsets.symmetric(
@@ -583,8 +583,8 @@ class _PostWidgetState extends State<PostWidget> {
                       .buttonStyle()
                       .dialogButton(context,
                           label: 'Reply',
-                          onPressed: () => allowToAddCommentComment(context,
-                              postDetail, data, data.member!.documentID!))),
+                          onPressed: () => widget.isEditable ? allowToAddCommentComment(context,
+                              postDetail, data, data.member!.documentID!) : null)),
             ]),
           ],
         ));
@@ -664,7 +664,7 @@ class _PostWidgetState extends State<PostWidget> {
             .iconButton(
               context,
               icon: ImageIcon(_assetThumbUp(thisMemberLikeType)),
-              onPressed: () => _like(context, postDetails),
+              onPressed: () => widget.isEditable ? _like(context, postDetails) : null,
             ),
         StyleRegistry.registry()
             .styleWithContext(context)
@@ -682,7 +682,7 @@ class _PostWidgetState extends State<PostWidget> {
             .iconButton(
               context,
               icon: ImageIcon(_assetThumbDown(thisMemberLikeType)),
-              onPressed: () => _dislike(context, postDetails),
+              onPressed: () => widget.isEditable ? _dislike(context, postDetails) : null,
             ),
         StyleRegistry.registry()
             .styleWithContext(context)
