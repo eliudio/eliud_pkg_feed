@@ -90,95 +90,106 @@ class PagedPostsListState extends State<PagedPostsList> {
       List<String> readAccess,
       LoggedInProfileInitialized profileInitialized,
       PageContextInfo pageContextInfo) {
-    List<Widget> widgets = [];
-    widgets.add(Spacer());
-
-    // Photo
-    if (widget.feedModel.photoPost!) {
-      widgets.add(
-          PostButton(widget.feedModel, PostType.PostPhoto, readAccess, author));
+    if (profileInitialized is LoggedInWatchingMyProfile) {
+      List<Widget> widgets = [];
       widgets.add(Spacer());
-    }
 
-    // Video
-    if (widget.feedModel.videoPost != null && widget.feedModel.videoPost!) {
-      widgets.add(
-          PostButton(widget.feedModel, PostType.PostVideo, readAccess, author));
-      widgets.add(Spacer());
-    }
+      // Photo
+      if (widget.feedModel.photoPost!) {
+        widgets.add(
+            PostButton(
+                widget.feedModel, PostType.PostPhoto, readAccess, author));
+        widgets.add(Spacer());
+      }
 
-    // Message
-    if (widget.feedModel.messagePost != null && widget.feedModel.messagePost!) {
-      var message = Image.asset(
-          "assets/images/segoshvishna.fiverr.com/message.png",
-          package: "eliud_pkg_feed");
-      widgets.add(StyleRegistry.registry()
-          .styleWithContext(context)
-          .frontEndStyle()
-          .buttonStyle()
-          .iconButton(context, icon: message, tooltip: 'Message',
-              onPressed: () {
-        StyleRegistry.registry()
+      // Video
+      if (widget.feedModel.videoPost != null && widget.feedModel.videoPost!) {
+        widgets.add(
+            PostButton(
+                widget.feedModel, PostType.PostVideo, readAccess, author));
+        widgets.add(Spacer());
+      }
+
+      // Message
+      if (widget.feedModel.messagePost != null &&
+          widget.feedModel.messagePost!) {
+        var message = Image.asset(
+            "assets/images/segoshvishna.fiverr.com/message.png",
+            package: "eliud_pkg_feed");
+        widgets.add(StyleRegistry.registry()
             .styleWithContext(context)
             .frontEndStyle()
-            .dialogStyle()
-            .openEntryDialog(context, title: 'Say something',
-                onPressed: (value) {
-          if (value != null) {
-            _addPost(
-              description: value,
-              authorId: author.documentID!,
-              readAccess: readAccess,
-            );
-          }
-        });
-      }));
-      widgets.add(Spacer());
+            .buttonStyle()
+            .iconButton(context, icon: message, tooltip: 'Message',
+            onPressed: () {
+              StyleRegistry.registry()
+                  .styleWithContext(context)
+                  .frontEndStyle()
+                  .dialogStyle()
+                  .openEntryDialog(context, title: 'Say something',
+                  onPressed: (value) {
+                    if (value != null) {
+                      _addPost(
+                        description: value,
+                        authorId: author.documentID!,
+                        readAccess: readAccess,
+                      );
+                    }
+                  });
+            }));
+        widgets.add(Spacer());
+      }
+
+      // Audio
+      if (widget.feedModel.audioPost != null && widget.feedModel.audioPost!) {
+        var audio = Image.asset(
+            "assets/images/segoshvishna.fiverr.com/audio.png",
+            package: "eliud_pkg_feed");
+        widgets.add(StyleRegistry.registry()
+            .styleWithContext(context)
+            .frontEndStyle()
+            .buttonStyle()
+            .iconButton(context,
+            icon: audio, tooltip: 'Audio', onPressed: () {}));
+        widgets.add(Spacer());
+      }
+
+      // Album
+      if (widget.feedModel.albumPost != null && widget.feedModel.albumPost!) {
+        var album = Image.asset(
+            "assets/images/segoshvishna.fiverr.com/album.png",
+            package: "eliud_pkg_feed");
+        widgets.add(StyleRegistry.registry()
+            .styleWithContext(context)
+            .frontEndStyle()
+            .buttonStyle()
+            .iconButton(context,
+            icon: album,
+            tooltip: 'Album',
+            onPressed: () =>
+                FeedPostDialog.open(
+                    context,
+                    widget.feedModel.documentID!,
+                    profileInitialized.watchingThisProfile()!.authorId!,
+                    profileInitialized.memberId(),
+                    profileInitialized.profileUrl(),
+                    pageContextInfo,
+                    InitialiseNewFeedPostFormEvent())));
+        widgets.add(Spacer());
+      }
+
+      // Article
+      if (widget.feedModel.articlePost != null &&
+          widget.feedModel.articlePost!) {
+        widgets.add(articleButton(widget.feedModel.appId!, author.documentID!));
+
+        widgets.add(Spacer());
+      }
+
+      return Container(height: 110, child: Row(children: widgets));
+    } else {
+      return Container(height:0);
     }
-
-    // Audio
-    if (widget.feedModel.audioPost != null && widget.feedModel.audioPost!) {
-      var audio = Image.asset("assets/images/segoshvishna.fiverr.com/audio.png",
-          package: "eliud_pkg_feed");
-      widgets.add(StyleRegistry.registry()
-          .styleWithContext(context)
-          .frontEndStyle()
-          .buttonStyle()
-          .iconButton(context,
-              icon: audio, tooltip: 'Audio', onPressed: () {}));
-      widgets.add(Spacer());
-    }
-
-    // Album
-    if (widget.feedModel.albumPost != null && widget.feedModel.albumPost!) {
-      var album = Image.asset("assets/images/segoshvishna.fiverr.com/album.png",
-          package: "eliud_pkg_feed");
-      widgets.add(StyleRegistry.registry()
-          .styleWithContext(context)
-          .frontEndStyle()
-          .buttonStyle()
-          .iconButton(context,
-              icon: album,
-              tooltip: 'Album',
-              onPressed: () => FeedPostDialog.open(
-                  context,
-                  widget.feedModel.documentID!,
-                  profileInitialized.watchingThisProfile()!.authorId!,
-                  profileInitialized.memberId(),
-                  profileInitialized.profileUrl(),
-                  pageContextInfo,
-                  InitialiseNewFeedPostFormEvent())));
-      widgets.add(Spacer());
-    }
-
-    // Article
-    if (widget.feedModel.articlePost != null && widget.feedModel.articlePost!) {
-      widgets.add(articleButton(widget.feedModel.appId!, author.documentID!));
-
-      widgets.add(Spacer());
-    }
-
-    return Container(height: 110, child: Row(children: widgets));
   }
 
   Widget articleButton(String appId, String memberId) {
