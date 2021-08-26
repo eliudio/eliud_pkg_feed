@@ -1,7 +1,6 @@
 import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/navigate/page_param_helper.dart';
-import 'package:eliud_core/default_style/frontend/impl/dialog/dialog_helper.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_bloc.dart';
 import 'package:flutter/material.dart';
