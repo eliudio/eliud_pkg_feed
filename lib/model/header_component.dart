@@ -27,7 +27,7 @@ abstract class AbstractHeaderComponent extends StatelessWidget {
   static String componentName = "headers";
   final String? headerID;
 
-  AbstractHeaderComponent({this.headerID});
+  AbstractHeaderComponent({Key? key, this.headerID}): super(key: key);
 
   @override
   Widget build(BuildContext context) {

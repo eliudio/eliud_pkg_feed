@@ -27,7 +27,7 @@ abstract class AbstractPostCommentComponent extends StatelessWidget {
   static String componentName = "postComments";
   final String? postCommentID;
 
-  AbstractPostCommentComponent({this.postCommentID});
+  AbstractPostCommentComponent({Key? key, this.postCommentID}): super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -27,7 +27,7 @@ abstract class AbstractAlbumComponent extends StatelessWidget {
   static String componentName = "albums";
   final String? albumID;
 
-  AbstractAlbumComponent({this.albumID});
+  AbstractAlbumComponent({Key? key, this.albumID}): super(key: key);
 
   @override
   Widget build(BuildContext context) {

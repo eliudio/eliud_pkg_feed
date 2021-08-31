@@ -13,13 +13,13 @@ import 'feed_menu/feed_menu.dart';
 class FeedMenuComponentConstructorDefault implements ComponentConstructor {
   FeedMenuComponentConstructorDefault();
 
-  Widget createNew({String? id, Map<String, dynamic>? parameters}) {
-    return FeedMenuComponent(id: id);
+  Widget createNew({Key? key, required String id, Map<String, dynamic>? parameters}) {
+    return FeedMenuComponent(key: key, id: id);
   }
 }
 
 class FeedMenuComponent extends AbstractFeedMenuComponent {
-  FeedMenuComponent({String? id}) : super(feedMenuID: id);
+  FeedMenuComponent({Key? key, required String id}) : super(key: key, feedMenuID: id);
 
   @override
   Widget alertWidget({title = String, content = String}) {

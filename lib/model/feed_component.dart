@@ -27,7 +27,7 @@ abstract class AbstractFeedComponent extends StatelessWidget {
   static String componentName = "feeds";
   final String? feedID;
 
-  AbstractFeedComponent({this.feedID});
+  AbstractFeedComponent({Key? key, this.feedID}): super(key: key);
 
   @override
   Widget build(BuildContext context) {

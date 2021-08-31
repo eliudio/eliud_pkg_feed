@@ -11,13 +11,13 @@ import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 class FeedComponentConstructorDefault implements ComponentConstructor {
   FeedComponentConstructorDefault();
 
-  Widget createNew({String? id, Map<String, dynamic>? parameters}) {
-    return FeedComponent(id: id);
+  Widget createNew({Key? key, required String id, Map<String, dynamic>? parameters}) {
+    return FeedComponent(key: key, id: id);
   }
 }
 
 class FeedComponent extends AbstractFeedComponent {
-  FeedComponent({String? id}) : super(feedID: id);
+  FeedComponent({Key? key, required String id}) : super(key: key, feedID: id);
 
   @override
   Widget alertWidget({title = String, content = String}) {

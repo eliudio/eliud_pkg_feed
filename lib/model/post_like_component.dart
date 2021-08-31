@@ -27,7 +27,7 @@ abstract class AbstractPostLikeComponent extends StatelessWidget {
   static String componentName = "postLikes";
   final String? postLikeID;
 
-  AbstractPostLikeComponent({this.postLikeID});
+  AbstractPostLikeComponent({Key? key, this.postLikeID}): super(key: key);
 
   @override
   Widget build(BuildContext context) {

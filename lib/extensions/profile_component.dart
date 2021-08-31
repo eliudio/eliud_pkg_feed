@@ -14,13 +14,13 @@ import 'profile/profile.dart';
 class ProfileComponentConstructorDefault implements ComponentConstructor {
   ProfileComponentConstructorDefault();
 
-  Widget createNew({String? id, Map<String, dynamic>? parameters}) {
-    return ProfileComponent(id: id);
+  Widget createNew({Key? key, required String id, Map<String, dynamic>? parameters}) {
+    return ProfileComponent(key: key, id: id);
   }
 }
 
 class ProfileComponent extends AbstractProfileComponent {
-  ProfileComponent({String? id}) : super(profileID: id);
+  ProfileComponent({Key? key, required String id}) : super(key: key, profileID: id);
 
   @override
   Widget alertWidget({title = String, content = String}) {

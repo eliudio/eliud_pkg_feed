@@ -13,13 +13,13 @@ import 'header/header.dart';
 class HeaderComponentConstructorDefault implements ComponentConstructor {
   HeaderComponentConstructorDefault();
 
-  Widget createNew({String? id, Map<String, dynamic>? parameters}) {
-    return HeaderComponent(id: id);
+  Widget createNew({Key? key, required String id, Map<String, dynamic>? parameters}) {
+    return HeaderComponent(key: key, id: id);
   }
 }
 
 class HeaderComponent extends AbstractHeaderComponent {
-  HeaderComponent({String? id}) : super(headerID: id);
+  HeaderComponent({Key? key, required String id}) : super(key: key, headerID: id);
 
   @override
   Widget alertWidget({title = String, content = String}) {

@@ -27,7 +27,7 @@ abstract class AbstractProfileComponent extends StatelessWidget {
   static String componentName = "profiles";
   final String? profileID;
 
-  AbstractProfileComponent({this.profileID});
+  AbstractProfileComponent({Key? key, this.profileID}): super(key: key);
 
   @override
   Widget build(BuildContext context) {

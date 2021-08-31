@@ -27,7 +27,7 @@ abstract class AbstractFeedMenuComponent extends StatelessWidget {
   static String componentName = "feedMenus";
   final String? feedMenuID;
 
-  AbstractFeedMenuComponent({this.feedMenuID});
+  AbstractFeedMenuComponent({Key? key, this.feedMenuID}): super(key: key);
 
   @override
   Widget build(BuildContext context) {

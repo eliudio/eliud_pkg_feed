@@ -13,15 +13,15 @@ import 'package:flutter/material.dart';
 class AlbumComponentConstructorDefault implements ComponentConstructor {
   AlbumComponentConstructorDefault();
 
-  Widget createNew({String? id, Map<String, dynamic>? parameters}) {
-    return AlbumComponent(id: id);
+  Widget createNew({Key? key, required String id, Map<String, dynamic>? parameters}) {
+    return AlbumComponent(key: key, id: id);
   }
 }
 
 class AlbumComponent extends AbstractAlbumComponent {
   String? parentPageId;
 
-  AlbumComponent({String? id}) : super(albumID: id);
+  AlbumComponent({Key? key, required String id}) : super(key: key, albumID: id);
 
   @override
   Widget alertWidget({title = String, content = String}) {
