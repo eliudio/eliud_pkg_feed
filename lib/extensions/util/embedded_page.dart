@@ -80,6 +80,7 @@ class EmbeddedPageHelper {
                         title: 'Error', content: 'No page defined');
                   } else {
                     var componentInfo = ComponentInfo.getComponentInfo(
+                      context,
                         state.value!.bodyComponents!,
                         parameters,
                         accessState,
