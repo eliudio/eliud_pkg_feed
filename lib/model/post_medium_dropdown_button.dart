@@ -61,10 +61,9 @@ class PostMediumDropdownButtonWidgetState extends State<PostMediumDropdownButton
     super.dispose();
   }
 
-List<Widget> widgets(PostMediumModel pm) {
+List<Widget> widgets(PostMediumModel value) {
 var widgets = <Widget>[];
-if (pm.documentID! != null) widgets.add(new Text(pm.documentID!));
-if (pm.documentID! != null) widgets.add(new Text(pm.documentID!));
+widgets.add(value!.documentID != null ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.documentID!)) : Container());
 return widgets;
 }
 
