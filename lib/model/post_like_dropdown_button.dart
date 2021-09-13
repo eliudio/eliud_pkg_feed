@@ -63,8 +63,8 @@ class PostLikeDropdownButtonWidgetState extends State<PostLikeDropdownButtonWidg
 
 List<Widget> widgets(PostLikeModel value) {
 var widgets = <Widget>[];
-widgets.add(value!.timestamp != null ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.timestamp!.toString())) : Container());
-widgets.add(value!.documentID != null ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.documentID!)) : Container());
+widgets.add(value.timestamp != null ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value.timestamp!.toString())) : Container());
+widgets.add(value.documentID != null ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value.documentID!)) : Container());
 return widgets;
 }
 
