@@ -5,7 +5,6 @@ import 'package:eliud_pkg_text/platform/text_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/tools/storage/fb_storage_image.dart';
 import 'package:eliud_pkg_feed/model/post_medium_model.dart';
