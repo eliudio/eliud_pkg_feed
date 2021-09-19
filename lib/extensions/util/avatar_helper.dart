@@ -1,5 +1,7 @@
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/style/frontend/has_profile_photo.dart';
+import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
+import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/extensions/util/switch_member.dart';
@@ -60,11 +62,7 @@ class AvatarHelper {
 
   static Widget avatar(BuildContext context, double radius, String pageId,
       String profileMemberId, String? currentMemberId, String appId, String feedId) {
-    return StyleRegistry.registry()
-        .styleWithContext(context)
-        .frontEndStyle()
-        .profilePhotoStyle()
-        .getProfilePhotoButtonFromExternalProvider(context,
+    return getProfilePhotoButtonFromExternalProvider(context,
             radius: radius,
             externalProfileURLProvider: () =>
                 _getProfileAttributes(profileMemberId, appId, feedId),
@@ -81,10 +79,10 @@ class AvatarHelper {
           if (snapshot.hasData) {
             var profileAttributes = snapshot.data;
             if (profileAttributes!.name != null) {
-              return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().h1(context, profileAttributes.name);
+              return h1(context, profileAttributes.name);
             }
           }
-          return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicatorStyle().progressIndicator(context);
+          return progressIndicator(context);
         });
   }
 
@@ -96,10 +94,10 @@ class AvatarHelper {
           if (snapshot.hasData) {
             var profileAttributes = snapshot.data;
             if (profileAttributes!.name != null) {
-              return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().h2(context, profileAttributes.name);
+              return h2(context, profileAttributes.name);
             }
           }
-          return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicatorStyle().progressIndicator(context);
+          return progressIndicator(context);
         });
   }
 
@@ -111,10 +109,10 @@ class AvatarHelper {
           if (snapshot.hasData) {
             var profileAttributes = snapshot.data;
             if (profileAttributes!.name != null) {
-              return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().h3(context, profileAttributes.name);
+              return h3(context, profileAttributes.name);
             }
           }
-          return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicatorStyle().progressIndicator(context);
+          return progressIndicator(context);
         });
   }
 
@@ -126,10 +124,10 @@ class AvatarHelper {
           if (snapshot.hasData) {
             var profileAttributes = snapshot.data;
             if (profileAttributes!.name != null) {
-              return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().h4(context, profileAttributes.name);
+              return h4(context, profileAttributes.name);
             }
           }
-          return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicatorStyle().progressIndicator(context);
+          return progressIndicator(context);
         });
   }
 
@@ -141,10 +139,10 @@ class AvatarHelper {
           if (snapshot.hasData) {
             var profileAttributes = snapshot.data;
             if (profileAttributes!.name != null) {
-              return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().h5(context, profileAttributes.name);
+              return h5(context, profileAttributes.name);
             }
           }
-          return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicatorStyle().progressIndicator(context);
+          return progressIndicator(context);
         });
   }
 
@@ -156,10 +154,10 @@ class AvatarHelper {
           if (snapshot.hasData) {
             var profileAttributes = snapshot.data;
             if (profileAttributes!.name != null) {
-              return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, profileAttributes.name);
+              return text(context, profileAttributes.name);
             }
           }
-          return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicatorStyle().progressIndicator(context);
+          return progressIndicator(context);
         });
   }
 }

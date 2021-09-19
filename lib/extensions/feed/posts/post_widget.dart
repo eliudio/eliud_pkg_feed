@@ -1,4 +1,9 @@
 import 'package:eliud_core/core/navigate/page_param_helper.dart';
+import 'package:eliud_core/style/frontend/has_button.dart';
+import 'package:eliud_core/style/frontend/has_container.dart';
+import 'package:eliud_core/style/frontend/has_dialog.dart';
+import 'package:eliud_core/style/frontend/has_text.dart';
+import 'package:eliud_core/style/frontend/has_text_form_field.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/storage/medium_base.dart';
@@ -107,11 +112,7 @@ class _PostWidgetState extends State<PostWidget> {
     widgets.add(_aBitSpace());
     widgets.add(_postComments(context, widget.details, widget.memberId));
 
-    return StyleRegistry.registry()
-        .styleWithContext(context)
-        .frontEndStyle()
-        .containerStyle()
-        .topicContainer(context, children: widgets);
+    return topicContainer(context, children: widgets);
   }
 
   static double _width(BuildContext context) =>
@@ -119,11 +120,7 @@ class _PostWidgetState extends State<PostWidget> {
 
   Widget _description(PostModel? postModel) {
     if ((postModel != null) && (postModel.description != null)) {
-      return StyleRegistry.registry()
-          .styleWithContext(context)
-          .frontEndStyle()
-          .textStyle()
-          .text(context, postModel.description!);
+      return text(context, postModel.description!);
     } else {
       return Container(
         height: 0,
@@ -154,11 +151,7 @@ class _PostWidgetState extends State<PostWidget> {
         ),
         Container(width: 8),
         //PostHelper.mediaButtons(context, _photoAvailable, _videoAvailable),
-        StyleRegistry.registry()
-            .styleWithContext(context)
-            .frontEndStyle()
-            .buttonStyle()
-            .button(context,
+        button(context,
                 label: 'Ok', onPressed: () => _addComment(context, postDetail)),
       ]);
     }
@@ -174,11 +167,7 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   Widget _textField() {
-    return StyleRegistry.registry()
-        .styleWithContext(context)
-        .frontEndStyle()
-        .texFormFieldStyle()
-        .textField(
+    return textField(
       context,
       readOnly: false,
       textAlign: TextAlign.left,
@@ -202,17 +191,9 @@ class _PostWidgetState extends State<PostWidget> {
 
   Widget _heading(BuildContext context, PostModel? postModel) {
     if (postModel == null)
-      return StyleRegistry.registry()
-          .styleWithContext(context)
-          .frontEndStyle()
-          .textStyle()
-          .text(context, 'No post');
+      return text(context, 'No post');
     if (postModel.authorId == null)
-      return StyleRegistry.registry()
-          .styleWithContext(context)
-          .frontEndStyle()
-          .textStyle()
-          .text(context, 'No author');
+      return text(context, 'No author');
 
     var timeStamp;
     if (postModel.timestamp == null) {
@@ -242,11 +223,7 @@ class _PostWidgetState extends State<PostWidget> {
         ),
         AvatarHelper.nameH5(
             context, postModel.authorId!, widget.appId, widget.feedId),
-        StyleRegistry.registry()
-            .styleWithContext(context)
-            .frontEndStyle()
-            .textStyle()
-            .h5(context, verboseDateTimeRepresentation(timeStamp), textAlign: TextAlign.left),
+        h5(context, verboseDateTimeRepresentation(timeStamp), textAlign: TextAlign.left),
       ]),
       Spacer(),
     ];
@@ -271,21 +248,13 @@ class _PostWidgetState extends State<PostWidget> {
     if (PostTypeHelper.canUpdate(type)) {
       items.add(
         PopupMenuItem<int>(
-            child: StyleRegistry.registry()
-                .styleWithContext(context)
-                .frontEndStyle()
-                .textStyle()
-                .text(context, 'Update post'),
+            child: text(context, 'Update post'),
             value: 1),
       );
     }
     items.add(
       PopupMenuItem<int>(
-          child: StyleRegistry.registry()
-              .styleWithContext(context)
-              .frontEndStyle()
-              .textStyle()
-              .text(context, 'Delete post'),
+          child: text(context, 'Delete post'),
           value: 0),
     );
 
@@ -294,11 +263,7 @@ class _PostWidgetState extends State<PostWidget> {
         itemBuilder: (_) => items,
         onSelected: (choice) async {
           if (choice == 0) {
-            StyleRegistry.registry()
-                .styleWithContext(context)
-                .frontEndStyle()
-                .dialogStyle()
-                .openAckNackDialog(context,
+            openAckNackDialog(context,
                     title: 'Delete post?',
                     message: 'You are sure you want to delete this post?',
                     onSelection: (value) async {
@@ -374,11 +339,7 @@ class _PostWidgetState extends State<PostWidget> {
 
   void allowToAddComment(
       BuildContext context, PostDetails postDetail, String memberId) {
-    StyleRegistry.registry()
-        .styleWithContext(context)
-        .frontEndStyle()
-        .dialogStyle()
-        .openEntryDialog(
+    openEntryDialog(
       context,
       title: 'Reply to comment',
       ackButtonLabel: 'Reply',
@@ -394,11 +355,7 @@ class _PostWidgetState extends State<PostWidget> {
 
   void allowToAddCommentComment(BuildContext context, PostDetails postDetail,
       PostCommentContainer postCommentContainer, String memberId) {
-    StyleRegistry.registry()
-        .styleWithContext(context)
-        .frontEndStyle()
-        .dialogStyle()
-        .openEntryDialog(context,
+    openEntryDialog(context,
             title: 'Reply to comment',
             hintText: 'Reply',
             ackButtonLabel: 'Reply',
@@ -412,11 +369,7 @@ class _PostWidgetState extends State<PostWidget> {
 
   void allowToUpdateComment(BuildContext context, PostDetails postDetail,
       String? memberId, PostCommentContainer postCommentContainer) {
-    StyleRegistry.registry()
-        .styleWithContext(context)
-        .frontEndStyle()
-        .dialogStyle()
-        .openEntryDialog(context,
+    openEntryDialog(context,
             title: 'Update comment',
             hintText: 'Comment',
             initialValue: postCommentContainer.comment!,
@@ -431,11 +384,7 @@ class _PostWidgetState extends State<PostWidget> {
 
   void allowToDeleteComment(BuildContext context, PostDetails postDetail,
       String? memberId, PostCommentContainer? postCommentContainer) {
-    StyleRegistry.registry()
-        .styleWithContext(context)
-        .frontEndStyle()
-        .dialogStyle()
-        .openAckNackDialog(context,
+    openAckNackDialog(context,
             message: "Do you want to delete this comment",
             onSelection: (value) async {
       if (value == 0) {
@@ -463,11 +412,7 @@ class _PostWidgetState extends State<PostWidget> {
   Widget getCommentTreeWidget(BuildContext context, PostDetails postDetail,
       PostCommentContainer? data) {
     if (data == null)
-      return StyleRegistry.registry()
-          .styleWithContext(context)
-          .frontEndStyle()
-          .textStyle()
-          .text(context, 'No Comments');
+      return text(context, 'No Comments');
 
     var name;
     if (data.member == null) {
@@ -493,22 +438,14 @@ class _PostWidgetState extends State<PostWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            StyleRegistry.registry()
-                .styleWithContext(context)
-                .frontEndStyle()
-                .textStyle()
-                .h5(
+            h5(
                   context,
                   '${name}',
                 ),
             SizedBox(
               height: 4,
             ),
-            StyleRegistry.registry()
-                .styleWithContext(context)
-                .frontEndStyle()
-                .textStyle()
-                .h5(
+            h5(
                   context,
                   '${data.comment}',
                 ),
@@ -517,11 +454,7 @@ class _PostWidgetState extends State<PostWidget> {
             ),
             Align(
                 alignment: Alignment.bottomRight,
-                child: StyleRegistry.registry()
-                    .styleWithContext(context)
-                    .frontEndStyle()
-                    .textStyle()
-                    .h5(
+                child: h5(
                       context,
                       data.postComment == null ||
                               data.postComment!.likes == null
@@ -559,11 +492,7 @@ class _PostWidgetState extends State<PostWidget> {
                     .shrinkWrap, //limits the touch area to the button area
                 minWidth: 0, //wraps child's width
                 height: 0, //wraps child's height
-                child: StyleRegistry.registry()
-                    .styleWithContext(context)
-                    .frontEndStyle()
-                    .buttonStyle()
-                    .dialogButton(context,
+                child: dialogButton(context,
                         label: 'Like',
                         selected: data.thisMemberLikesThisComment!,
                         onPressed: () => widget.isEditable ? _likeComment(
@@ -577,11 +506,7 @@ class _PostWidgetState extends State<PostWidget> {
                       .shrinkWrap, //limits the touch area to the button area
                   minWidth: 0, //wraps child's width
                   height: 0, //wraps child's height
-                  child: StyleRegistry.registry()
-                      .styleWithContext(context)
-                      .frontEndStyle()
-                      .buttonStyle()
-                      .dialogButton(context,
+                  child: dialogButton(context,
                           label: 'Reply',
                           onPressed: () => widget.isEditable ? allowToAddCommentComment(context,
                               postDetail, data, data.member!.documentID!) : null)),
@@ -621,18 +546,10 @@ class _PostWidgetState extends State<PostWidget> {
         icon: Icon(Icons.more_vert),
         itemBuilder: (_) => <PopupMenuItem<int>>[
               new PopupMenuItem<int>(
-                  child: StyleRegistry.registry()
-                      .styleWithContext(context)
-                      .frontEndStyle()
-                      .textStyle()
-                      .text(context, 'Update comment'),
+                  child: text(context, 'Update comment'),
                   value: 0),
               new PopupMenuItem<int>(
-                  child: StyleRegistry.registry()
-                      .styleWithContext(context)
-                      .frontEndStyle()
-                      .textStyle()
-                      .text(context, 'Delete comment'),
+                  child: text(context, 'Delete comment'),
                   value: 1),
             ],
         onSelected: (choice) {
@@ -657,38 +574,22 @@ class _PostWidgetState extends State<PostWidget> {
     return Row(
       children: <Widget>[
         Spacer(),
-        StyleRegistry.registry()
-            .styleWithContext(context)
-            .frontEndStyle()
-            .buttonStyle()
-            .iconButton(
+        iconButton(
               context,
               icon: ImageIcon(_assetThumbUp(thisMemberLikeType)),
               onPressed: () => widget.isEditable ? _like(context, postDetails) : null,
             ),
-        StyleRegistry.registry()
-            .styleWithContext(context)
-            .frontEndStyle()
-            .textStyle()
-            .text(
+        text(
               context,
               "$likes",
             ),
         Spacer(flex: 3),
-        StyleRegistry.registry()
-            .styleWithContext(context)
-            .frontEndStyle()
-            .buttonStyle()
-            .iconButton(
+        iconButton(
               context,
               icon: ImageIcon(_assetThumbDown(thisMemberLikeType)),
               onPressed: () => widget.isEditable ? _dislike(context, postDetails) : null,
             ),
-        StyleRegistry.registry()
-            .styleWithContext(context)
-            .frontEndStyle()
-            .textStyle()
-            .text(
+        text(
               context,
               "$dislikes",
             ),
@@ -771,11 +672,7 @@ class _PostWidgetState extends State<PostWidget> {
     if (dislikes == null) dislikes = 0;
     return Padding(
       padding: const EdgeInsets.only(left: 14.0),
-      child: StyleRegistry.registry()
-          .styleWithContext(context)
-          .frontEndStyle()
-          .textStyle()
-          .text(
+      child: text(
             context,
             "$likes likes $dislikes dislikes",
             //style: TextStyle(fontWeight: FontWeight.bold),

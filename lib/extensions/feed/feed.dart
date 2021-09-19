@@ -1,5 +1,7 @@
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
+import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
+import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_bloc.dart';
@@ -33,19 +35,11 @@ class _FeedState extends State<Feed> {
         if (state is ProfileInitialised) {
           return _getIt(context, widget.feedModel, state);
         } else {
-          return StyleRegistry.registry()
-              .styleWithContext(context)
-              .frontEndStyle()
-              .progressIndicatorStyle()
-              .progressIndicator(context);
+          return progressIndicator(context);
         }
       });
     } else {
-      return StyleRegistry.registry()
-          .styleWithContext(context)
-          .frontEndStyle()
-          .textStyle()
-          .text(context, 'App not loaded');
+      return text(context, 'App not loaded');
     }
   }
 

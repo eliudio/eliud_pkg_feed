@@ -1,3 +1,6 @@
+import 'package:eliud_core/style/frontend/has_container.dart';
+import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
+import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_event.dart';
@@ -24,19 +27,11 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
       if (state is ProfileError)
-        return StyleRegistry.registry()
-            .styleWithContext(context)
-            .frontEndStyle()
-            .textStyle()
-            .text(context, 'No profile');
+        return text(context, 'No profile');
       if (state is ProfileInitialised) {
         var profile = state.watchingThisProfile();
         var html = state.profileHTML();
-        var child = StyleRegistry.registry()
-            .styleWithContext(context)
-            .frontEndStyle()
-            .containerStyle()
-            .topicContainer(context,
+        var child = topicContainer(context,
             children: ([
               html == null || html.length == 0
                   ? Container(
@@ -72,11 +67,7 @@ class _ProfileState extends State<Profile> {
           return child;
         }
       }
-      return StyleRegistry.registry()
-          .styleWithContext(context)
-          .frontEndStyle()
-          .progressIndicatorStyle()
-          .progressIndicator(context);
+      return progressIndicator(context);
     });
   }
 }

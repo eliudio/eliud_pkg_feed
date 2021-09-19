@@ -1,5 +1,10 @@
 import 'package:eliud_core/core/navigate/page_param_helper.dart';
 import 'package:eliud_core/model/member_model.dart';
+import 'package:eliud_core/style/frontend/has_button.dart';
+import 'package:eliud_core/style/frontend/has_container.dart';
+import 'package:eliud_core/style/frontend/has_dialog.dart';
+import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
+import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_bloc.dart';
@@ -51,11 +56,7 @@ class PagedPostsListState extends State<PagedPostsList> {
   Widget _getIcon(Widget child) {
     return Container(
         padding: const EdgeInsets.only(top: 22.5, bottom: 22.5),
-        child: StyleRegistry.registry()
-            .styleWithContext(context)
-            .frontEndStyle()
-            .containerStyle()
-            .actionContainer(context,
+        child: actionContainer(context,
                 child: Center(
                     child: Container(
                         padding: EdgeInsets.all(2.0),
@@ -116,17 +117,9 @@ class PagedPostsListState extends State<PagedPostsList> {
         var message = Image.asset(
             "assets/images/segoshvishna.fiverr.com/message.png",
             package: "eliud_pkg_feed");
-        widgets.add(StyleRegistry.registry()
-            .styleWithContext(context)
-            .frontEndStyle()
-            .buttonStyle()
-            .iconButton(context, icon: message, tooltip: 'Message',
+        widgets.add(iconButton(context, icon: message, tooltip: 'Message',
             onPressed: () {
-              StyleRegistry.registry()
-                  .styleWithContext(context)
-                  .frontEndStyle()
-                  .dialogStyle()
-                  .openEntryDialog(context, title: 'Say something',
+              openEntryDialog(context, title: 'Say something',
                   onPressed: (value) {
                     if (value != null) {
                       _addPost(
@@ -145,11 +138,7 @@ class PagedPostsListState extends State<PagedPostsList> {
         var audio = Image.asset(
             "assets/images/segoshvishna.fiverr.com/audio.png",
             package: "eliud_pkg_feed");
-        widgets.add(StyleRegistry.registry()
-            .styleWithContext(context)
-            .frontEndStyle()
-            .buttonStyle()
-            .iconButton(context,
+        widgets.add(iconButton(context,
             icon: audio, tooltip: 'Audio', onPressed: () {}));
         widgets.add(Spacer());
       }
@@ -159,11 +148,7 @@ class PagedPostsListState extends State<PagedPostsList> {
         var album = Image.asset(
             "assets/images/segoshvishna.fiverr.com/album.png",
             package: "eliud_pkg_feed");
-        widgets.add(StyleRegistry.registry()
-            .styleWithContext(context)
-            .frontEndStyle()
-            .buttonStyle()
-            .iconButton(context,
+        widgets.add(iconButton(context,
             icon: album,
             tooltip: 'Album',
             onPressed: () =>
@@ -202,29 +187,17 @@ class PagedPostsListState extends State<PagedPostsList> {
     var items = <PopupMenuItem<int>>[];
     items.add(
       PopupMenuItem<int>(
-          child: StyleRegistry.registry()
-              .styleWithContext(context)
-              .frontEndStyle()
-              .textStyle()
-              .text(context, 'Publish article for public'),
+          child: text(context, 'Publish article for public'),
           value: 0),
     );
     items.add(
       PopupMenuItem<int>(
-          child: StyleRegistry.registry()
-              .styleWithContext(context)
-              .frontEndStyle()
-              .textStyle()
-              .text(context, 'Publish article for followers'),
+          child: text(context, 'Publish article for followers'),
           value: 1),
     );
     items.add(
       PopupMenuItem<int>(
-          child: StyleRegistry.registry()
-              .styleWithContext(context)
-              .frontEndStyle()
-              .textStyle()
-              .text(context, 'Publish article for me'),
+          child: text(context, 'Publish article for me'),
           value: 2),
     );
     return PopupMenuButton(
@@ -266,16 +239,8 @@ class PagedPostsListState extends State<PagedPostsList> {
 
   static List<Widget> getAlbumActionIcons(BuildContext context, String accessible) {
     return [
-      StyleRegistry.registry()
-          .styleWithContext(context)
-          .frontEndStyle()
-          .buttonStyle()
-          .dialogButton(context, label: 'Audience', onPressed: () {
-        StyleRegistry.registry()
-            .styleWithContext(context)
-            .frontEndStyle()
-            .dialogStyle()
-            .openMessageDialog(
+      dialogButton(context, label: 'Audience', onPressed: () {
+        openMessageDialog(
               context,
               title: 'Accessible',
               message: 'Article accessible by: ' + accessible,
@@ -325,20 +290,12 @@ class PagedPostsListState extends State<PagedPostsList> {
                   physics: ScrollPhysics(),
                   children: widgets);
             } else {
-              return StyleRegistry.registry()
-                  .styleWithContext(context)
-                  .frontEndStyle()
-                  .progressIndicatorStyle()
-                  .progressIndicator(context);
+              return progressIndicator(context);
             }
           },
         );
       } else {
-        return StyleRegistry.registry()
-            .styleWithContext(context)
-            .frontEndStyle()
-            .progressIndicatorStyle()
-            .progressIndicator(context);
+        return progressIndicator(context);
       }
     });
   }
@@ -360,11 +317,7 @@ class PagedPostsListState extends State<PagedPostsList> {
               );
             } else {
               return Center(
-                  child: StyleRegistry.registry()
-                      .styleWithContext(context)
-                      .frontEndStyle()
-                      .textStyle()
-                      .h5(
+                  child: h5(
                         context,
                         "That's all folks",
                       ));
@@ -403,11 +356,7 @@ class _MyButtonState extends State<MyButton> {
   @override
   Widget build(BuildContext context) {
     if (!clicked) {
-      return StyleRegistry.registry()
-          .styleWithContext(context)
-          .frontEndStyle()
-          .buttonStyle()
-          .button(
+      return button(
         context,
         label: 'More...',
         onPressed: () {
@@ -418,11 +367,7 @@ class _MyButtonState extends State<MyButton> {
         },
       );
     } else {
-      return StyleRegistry.registry()
-          .styleWithContext(context)
-          .frontEndStyle()
-          .progressIndicatorStyle()
-          .progressIndicator(context);
+      return progressIndicator(context);
     }
   }
 }

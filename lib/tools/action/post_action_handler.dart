@@ -3,6 +3,7 @@ import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/navigate/page_param_helper.dart';
 import 'package:eliud_core/core/navigate/router.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
+import 'package:eliud_core/style/frontend/has_dialog.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/action/action_model.dart';
 import 'package:eliud_core/tools/random.dart';
@@ -24,7 +25,7 @@ class PostActionHandler extends PackageActionHandler {
       if (accessState is LoggedIn) {
         String name = action.appID!;
 
-        StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogStyle().openSelectionDialog(context,
+        openSelectionDialog(context,
             title: 'Add page to feed ' + name,
             options: ['Only Me', 'My followers', 'Public'],
             onSelection: (int choice) {

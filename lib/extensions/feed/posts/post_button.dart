@@ -1,5 +1,7 @@
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
+import 'package:eliud_core/style/frontend/has_container.dart';
+import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_bloc.dart';
@@ -111,11 +113,7 @@ class PostButtonState extends State<PostButton> {
         formatIcon(context, child),
         Container(
             width: 60,
-            child: StyleRegistry.registry()
-                .styleWithContext(context)
-                .frontEndStyle()
-                .progressIndicatorStyle()
-                .progressIndicatorWithValue(context, value: uploadingProgress!))
+            child: progressIndicatorWithValue(context, value: uploadingProgress!))
       ]);
 
 /*
@@ -152,11 +150,7 @@ class PostButtonState extends State<PostButton> {
       {double? width}) {
     return Container(
         padding: const EdgeInsets.only(top: 22.5, bottom: 22.5),
-        child: StyleRegistry.registry()
-            .styleWithContext(context)
-            .frontEndStyle()
-            .containerStyle()
-            .actionContainer(context,
+        child: actionContainer(context,
                 child: Center(
                     child: Container(
                         padding: EdgeInsets.all(2.0),

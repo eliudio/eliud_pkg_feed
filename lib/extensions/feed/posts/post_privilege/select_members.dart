@@ -1,3 +1,4 @@
+import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -75,16 +76,8 @@ class _SelectMembersWidgetState extends State<SelectMembersWidget> {
               },
               configureSuggestion: (lang) {
                 return SuggestionConfiguration(
-                  title: StyleRegistry.registry()
-                      .styleWithContext(context)
-                      .frontEndStyle()
-                      .textStyle()
-                      .text(context, lang.name),
-                  subtitle: StyleRegistry.registry()
-                      .styleWithContext(context)
-                      .frontEndStyle()
-                      .textStyle()
-                      .text(context, lang.memberId),
+                  title: text(context, lang.name),
+                  subtitle: text(context, lang.memberId),
                 );
               },
               configureChip: (lang) {

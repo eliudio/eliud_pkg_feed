@@ -1,3 +1,4 @@
+import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_type_helper.dart';
 import 'package:eliud_pkg_text/platform/text_platform.dart';
@@ -97,19 +98,11 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
         }));
         return Column(children: widgets);
       case PostType.ExternalLink:
-        return StyleRegistry.registry()
-            .styleWithContext(context)
-            .frontEndStyle()
-            .textStyle()
-            .text(context, 'External link not supported yet');
+        return text(context, 'External link not supported yet');
       case PostType.Html:
         return AbstractTextPlatform.platform!.htmlWidget(postModel.html!);
       case PostType.Unknown:
-        return StyleRegistry.registry()
-            .styleWithContext(context)
-            .frontEndStyle()
-            .textStyle()
-            .text(context, 'Type not determined');
+        return text(context, 'Type not determined');
       case PostType.OnlyDescription:
         return Container(height: 1);
     }

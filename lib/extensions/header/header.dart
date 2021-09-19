@@ -1,4 +1,7 @@
 import 'package:eliud_core/core/navigate/page_param_helper.dart';
+import 'package:eliud_core/style/frontend/has_container.dart';
+import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
+import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_event.dart';
@@ -84,11 +87,7 @@ class _HeaderState extends State<Header> {
     var pageId = pageContextInfo.pageId;
     return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
       if (state is ProfileError)
-        return StyleRegistry.registry()
-            .styleWithContext(context)
-            .frontEndStyle()
-            .textStyle()
-            .h5(context, 'No profile');
+        return h5(context, 'No profile');
       if (state is ProfileInitialised) {
         List<Widget> allRows = [];
 
@@ -141,11 +140,7 @@ class _HeaderState extends State<Header> {
                         : avatarWidget),
               ));
           rows.add(container);
-          var backgroundPhoto = StyleRegistry.registry()
-              .styleWithContext(context)
-              .frontEndStyle()
-              .containerStyle()
-              .topicContainer(context,
+          var backgroundPhoto = topicContainer(context,
               children: rows,
               image: _background(context, state.watchingThisProfile()));
 
@@ -173,11 +168,7 @@ class _HeaderState extends State<Header> {
           // Add the name
           allRows.add(Align(
               alignment: Alignment.bottomCenter,
-              child: StyleRegistry.registry()
-                  .styleWithContext(context)
-                  .frontEndStyle()
-                  .containerStyle()
-                  .actionContainer(context,
+              child: actionContainer(context,
                   child: Container(
                       padding: EdgeInsets.all(10.0),
                       child: AvatarHelper.nameH1(
@@ -186,11 +177,7 @@ class _HeaderState extends State<Header> {
         }
         return Column(children: allRows);
       }
-      return StyleRegistry.registry()
-          .styleWithContext(context)
-          .frontEndStyle()
-          .progressIndicatorStyle()
-          .progressIndicator(context);
+      return progressIndicator(context);
     });
   }
 

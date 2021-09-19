@@ -1,6 +1,7 @@
 import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/navigate/page_param_helper.dart';
+import 'package:eliud_core/style/frontend/has_dialog.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_bloc.dart';
 import 'package:flutter/material.dart';
@@ -25,22 +26,29 @@ class FeedPostDialog extends StatefulWidget {
       required this.postListPagedBloc,
       required this.memberId,
       required this.currentMemberId,
-      required this.photoURL, required this.pageContextInfo, required this.initialiseEvent
-      })
+      required this.photoURL,
+      required this.pageContextInfo,
+      required this.initialiseEvent})
       : super(key: key);
 
   static void open(
-      BuildContext context, String feedId, String memberId, String? currentMemberId, String photoURL, PageContextInfo pageContextInfo, FeedPostFormEvent initialiseEvent) {
+      BuildContext context,
+      String feedId,
+      String memberId,
+      String? currentMemberId,
+      String photoURL,
+      PageContextInfo pageContextInfo,
+      FeedPostFormEvent initialiseEvent) {
     var postListPagedBloc = BlocProvider.of<PostListPagedBloc>(context);
-        StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogStyle().openWidgetDialog(
-        context,
+    openWidgetDialog(context,
         child: FeedPostDialog(
-          feedId: feedId,
-          postListPagedBloc: postListPagedBloc,
-          memberId: memberId,
-          currentMemberId: currentMemberId,
-          photoURL: photoURL, pageContextInfo: pageContextInfo, initialiseEvent: initialiseEvent
-        ));
+            feedId: feedId,
+            postListPagedBloc: postListPagedBloc,
+            memberId: memberId,
+            currentMemberId: currentMemberId,
+            photoURL: photoURL,
+            pageContextInfo: pageContextInfo,
+            initialiseEvent: initialiseEvent));
   }
 
   @override
@@ -57,21 +65,34 @@ class _FeedPostDialogState extends State<FeedPostDialog> {
     var theState = AccessBloc.getState(context);
     if (theState is LoggedIn) {
       var app = AccessBloc.app(context);
-      if (app == null) return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'No app available');
+      if (app == null)
+        return StyleRegistry.registry()
+            .styleWithContext(context)
+            .frontEndStyle()
+            .textStyle()
+            .text(context, 'No app available');
       return BlocProvider<FeedPostFormBloc>(
-          create: (context) => FeedPostFormBloc(app.documentID!,
-              postListPagedBloc, theState.member.documentID!, widget.feedId, theState)
+          create: (context) => FeedPostFormBloc(
+              app.documentID!,
+              postListPagedBloc,
+              theState.member.documentID!,
+              widget.feedId,
+              theState)
             ..add(widget.initialiseEvent),
           child: MyFeedPostForm(
-                  theState.app.documentID!,
-                  widget.feedId,
-                  widget.memberId,
-                  widget.currentMemberId,
-                  widget.photoURL,
-                  widget.pageContextInfo,
-                ));
+            theState.app.documentID!,
+            widget.feedId,
+            widget.memberId,
+            widget.currentMemberId,
+            widget.photoURL,
+            widget.pageContextInfo,
+          ));
     } else {
-      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'Not logged in');
+      return StyleRegistry.registry()
+          .styleWithContext(context)
+          .frontEndStyle()
+          .textStyle()
+          .text(context, 'Not logged in');
     }
   }
 }

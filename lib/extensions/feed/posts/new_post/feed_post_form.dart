@@ -1,10 +1,12 @@
-import 'dart:math';
-
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/navigate/page_param_helper.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
+import 'package:eliud_core/style/frontend/has_dialog_widget.dart';
+import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
+import 'package:eliud_core/style/frontend/has_text.dart';
+import 'package:eliud_core/style/frontend/has_text_form_field.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/bloc/post_privilege_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/bloc/post_privilege_event.dart';
@@ -54,16 +56,8 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
     if (theState is LoggedIn) {
       var app = AccessBloc.app(context);
       if (app == null)
-        return StyleRegistry.registry()
-            .styleWithContext(context)
-            .frontEndStyle()
-            .textStyle()
-            .text(context, 'No app available');
-      return StyleRegistry.registry()
-          .styleWithContext(context)
-          .frontEndStyle()
-          .dialogWidgetStyle()
-          .complexAckNackDialog(context,
+        return text(context, 'No app available');
+      return complexAckNackDialog(context,
           title: 'New Album',
           child: _contents(context, widget.pageContextInfo, app, theState),
           onSelection: (value) {
@@ -72,11 +66,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
             }
           });
     } else {
-      return StyleRegistry.registry()
-          .styleWithContext(context)
-          .frontEndStyle()
-          .textStyle()
-          .text(context, 'Not logged in');
+      return text(context, 'Not logged in');
     }
   }
 
@@ -116,11 +106,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
               children: rows,
             );
           } else {
-            return StyleRegistry.registry()
-                .styleWithContext(context)
-                .frontEndStyle()
-                .progressIndicatorStyle()
-                .progressIndicator(context);
+            return progressIndicator(context);
           }
         });
   }
@@ -233,11 +219,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
       AppModel app,
       FeedPostFormInitialized state,
       ) {
-    return StyleRegistry.registry()
-        .styleWithContext(context)
-        .frontEndStyle()
-        .texFormFieldStyle()
-        .textField(
+    return textField(
       context,
       readOnly: false,
       textAlign: TextAlign.left,

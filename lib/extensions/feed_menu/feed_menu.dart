@@ -3,6 +3,9 @@ import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/navigate/page_param_helper.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 import 'package:eliud_core/core/tools/page_helper.dart';
+import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
+import 'package:eliud_core/style/frontend/has_tabs.dart';
+import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/action/action_model.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_bloc.dart';
@@ -71,19 +74,11 @@ class _FeedMenuState extends State<FeedMenu>
           return FeedMenuItems(
               useTheseItems, actions, selectedPage, parameters);
         } else {
-          return StyleRegistry.registry()
-              .styleWithContext(context)
-              .frontEndStyle()
-              .progressIndicatorStyle()
-              .progressIndicator(context);
+          return progressIndicator(context);
         }
       });
     } else {
-      return StyleRegistry.registry()
-          .styleWithContext(context)
-          .frontEndStyle()
-          .textStyle()
-          .text(context, 'App not loaded');
+      return text(context, 'App not loaded');
     }
   }
 }
@@ -131,11 +126,7 @@ class _FeedMenuItemsState extends State<FeedMenuItems>
   @override
   Widget build(BuildContext context) {
     if (_tabController != null) {
-      return StyleRegistry.registry()
-          .styleWithContext(context)
-          .frontEndStyle()
-          .tabsStyle()
-          .tabBar(context, items: items, tabController: _tabController!);
+      return tabBar(context, items: items, tabController: _tabController!);
     } else {
       return Text('No controller');
     }

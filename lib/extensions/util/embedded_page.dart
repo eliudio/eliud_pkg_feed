@@ -9,6 +9,8 @@ import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/model/page_component_bloc.dart';
 import 'package:eliud_core/model/page_component_event.dart';
 import 'package:eliud_core/model/page_component_state.dart';
+import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
+import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:flutter/material.dart';
@@ -22,10 +24,10 @@ class EmbeddedPageHelper {
       AccessBloc? originalAccessBloc,
       String parentPageId) {
     if (postModel == null)
-      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, "Can't construct post details without postModel");
+      return text(context, "Can't construct post details without postModel");
     if ((postModel.appId == postModel.postAppId) &&
         (postModel.postPageId == parentPageId))
-      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'Not showing recursive posts');
+      return text(context, 'Not showing recursive posts');
     String? appId = postModel.postAppId;
     String? pageId = postModel.postPageId;
     var parameters = postModel.pageParameters;
@@ -44,11 +46,7 @@ class EmbeddedPageHelper {
                 child: _body(context, originalAccessBloc, accessState, appId,
                     pageId, parameters));
           } else {
-            return StyleRegistry.registry()
-                .styleWithContext(context)
-                .frontEndStyle()
-                .progressIndicatorStyle()
-                .progressIndicator(context);
+            return progressIndicator(context);
           }
         })));
   }
@@ -60,7 +58,7 @@ class EmbeddedPageHelper {
       String? appId,
       String? pageId,
       Map<String, dynamic>? parameters) {
-    if (accessState == null) return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'Access state is not available');
+    if (accessState == null) return text(context, 'Access state is not available');
     if (accessState is AppLoaded) {
       return Stack(
         children: <Widget>[
@@ -101,11 +99,7 @@ class EmbeddedPageHelper {
                     }
                   }
                 } else {
-                  return StyleRegistry.registry()
-                      .styleWithContext(context)
-                      .frontEndStyle()
-                      .progressIndicatorStyle()
-                      .progressIndicator(context);
+                  return progressIndicator(context);
                 }
               })),
           InkWell(
@@ -122,7 +116,7 @@ class EmbeddedPageHelper {
         ],
       );
     } else {
-      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, 'App loaded');
+      return text(context, 'App loaded');
     }
   }
 }

@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
+import 'package:eliud_core/style/frontend/has_text.dart' as tx;
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/bloc/post_privilege_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/select_members.dart';
@@ -110,36 +112,20 @@ class _PostPrivilegeWidgetState extends State<PostPrivilegeWidget> {
     switch (postPrivilege.postPrivilegeType) {
       case PostPrivilegeType.Public:
         return Center(
-            child: StyleRegistry.registry()
-                .styleWithContext(context)
-                .frontEndStyle()
-                .textStyle()
-                .text(context, 'Accessible by public'));
+            child: tx.text(context, 'Accessible by public'));
       case PostPrivilegeType.Followers:
         return Center(
-            child: StyleRegistry.registry()
-                .styleWithContext(context)
-                .frontEndStyle()
-                .textStyle()
-                .text(context, 'Accessible by your followers', maxLines: 5));
+            child: tx.text(context, 'Accessible by your followers', maxLines: 5));
       case PostPrivilegeType.SpecificPeople:
         var names;
         if (specificSelectedMembers != null) {
           names = specificSelectedMembers.map((e) => e.name).join(", ");
         }
         return Center(
-            child: StyleRegistry.registry()
-                .styleWithContext(context)
-                .frontEndStyle()
-                .textStyle()
-                .text(context, 'Accessible by ' + names));
+            child: tx.text(context, 'Accessible by ' + names));
       case PostPrivilegeType.JustMe:
         return Center(
-            child: StyleRegistry.registry()
-                .styleWithContext(context)
-                .frontEndStyle()
-                .textStyle()
-                .text(context, 'Accessible by you'));
+            child: tx.text(context, 'Accessible by you'));
     }
   }
 
@@ -175,11 +161,7 @@ class _PostPrivilegeWidgetState extends State<PostPrivilegeWidget> {
               state.postPrivilege, state.specificSelectedMembers);
         }
       } else {
-        return StyleRegistry.registry()
-            .styleWithContext(context)
-            .frontEndStyle()
-            .progressIndicatorStyle()
-            .progressIndicator(context);
+        return progressIndicator(context);
       }
     });
   }
