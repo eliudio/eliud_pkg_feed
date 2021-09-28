@@ -4,7 +4,7 @@ import 'package:eliud_core/core/tools/component_info.dart';
 import 'package:eliud_core/core/tools/page_body.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/style/style_registry.dart';
-import 'package:eliud_core/tools/component_constructor.dart';
+import 'package:eliud_core/tools/component/component_constructor.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_event.dart';
 import 'package:flutter/material.dart';
