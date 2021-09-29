@@ -16,12 +16,23 @@
 
 import '../model/internal_component.dart';
 import 'package:eliud_core/core/registry.dart';
+import 'package:eliud_core/tools/component/component_spec.dart';
 
 import '../extensions/album_component.dart';
+import '../editors/album_component_editor.dart';
+import 'album_component_selector.dart';
 import '../extensions/feed_component.dart';
+import '../editors/feed_component_editor.dart';
+import 'feed_component_selector.dart';
 import '../extensions/feed_menu_component.dart';
+import '../editors/feed_menu_component_editor.dart';
+import 'feed_menu_component_selector.dart';
 import '../extensions/header_component.dart';
+import '../editors/header_component_editor.dart';
+import 'header_component_selector.dart';
 import '../extensions/profile_component.dart';
+import '../editors/profile_component_editor.dart';
+import 'profile_component_selector.dart';
 import 'package:eliud_pkg_feed/model/internal_component.dart';
 
 
@@ -43,6 +54,13 @@ class ComponentRegistry {
     Registry.registry()!.register(componentName: "headers", componentConstructor: HeaderComponentConstructorDefault());
     Registry.registry()!.addDropDownSupporter("profiles", DropdownButtonComponentFactory());
     Registry.registry()!.register(componentName: "profiles", componentConstructor: ProfileComponentConstructorDefault());
+    Registry.registry()!.addComponentSpec('eliud_pkg_feed', [
+      ComponentSpec('albums', AlbumComponentConstructorDefault(), AlbumComponentSelector(), AlbumComponentEditorConstructor(), ), 
+      ComponentSpec('feeds', FeedComponentConstructorDefault(), FeedComponentSelector(), FeedComponentEditorConstructor(), ), 
+      ComponentSpec('feedMenus', FeedMenuComponentConstructorDefault(), FeedMenuComponentSelector(), FeedMenuComponentEditorConstructor(), ), 
+      ComponentSpec('headers', HeaderComponentConstructorDefault(), HeaderComponentSelector(), HeaderComponentEditorConstructor(), ), 
+      ComponentSpec('profiles', ProfileComponentConstructorDefault(), ProfileComponentSelector(), ProfileComponentEditorConstructor(), ), 
+    ]);
 
   }
 }
