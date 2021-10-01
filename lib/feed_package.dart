@@ -19,6 +19,8 @@ import 'package:eliud_pkg_feed/model/component_registry.dart';
 import 'extensions/util/profile_widget_wrapper.dart';
 
 abstract class FeedPackage extends Package {
+  FeedPackage() : super('eliud_pkg_feed');
+
   @override
   BlocProvider? createMainBloc(NavigatorBloc navigatorBloc, AccessBloc accessBloc) => null;
 
