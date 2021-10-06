@@ -117,7 +117,7 @@ class PagedPostsListState extends State<PagedPostsList> {
         var message = Image.asset(
             "assets/images/segoshvishna.fiverr.com/message.png",
             package: "eliud_pkg_feed");
-        widgets.add(iconButton(context, icon: message, tooltip: 'Message',
+        widgets.add(actionContainer(context, child: iconButton(context, icon: message, tooltip: 'Message',
             onPressed: () {
               openEntryDialog(context, title: 'Say something',
                   onPressed: (value) {
@@ -129,7 +129,7 @@ class PagedPostsListState extends State<PagedPostsList> {
                       );
                     }
                   });
-            }));
+            })));
         widgets.add(Spacer());
       }
 
@@ -148,7 +148,7 @@ class PagedPostsListState extends State<PagedPostsList> {
         var album = Image.asset(
             "assets/images/segoshvishna.fiverr.com/album.png",
             package: "eliud_pkg_feed");
-        widgets.add(iconButton(context,
+        widgets.add(actionContainer(context, child: iconButton(context,
             icon: album,
             tooltip: 'Album',
             onPressed: () =>
@@ -159,7 +159,7 @@ class PagedPostsListState extends State<PagedPostsList> {
                     profileInitialized.memberId(),
                     profileInitialized.profileUrl(),
                     pageContextInfo,
-                    InitialiseNewFeedPostFormEvent())));
+                    InitialiseNewFeedPostFormEvent()))));
         widgets.add(Spacer());
       }
 
