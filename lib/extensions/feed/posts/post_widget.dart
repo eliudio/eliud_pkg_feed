@@ -321,7 +321,7 @@ class _PostWidgetState extends State<PostWidget> {
                     break;
                 }
 
-                AbstractTextPlatform.platform!.updateHtml(
+                AbstractTextPlatform.platform!.updateHtmlUsingMemberMedium(
                     context,
                     postModel.appId!,
                     postModel.authorId!,

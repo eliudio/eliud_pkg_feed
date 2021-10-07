@@ -224,7 +224,7 @@ class PagedPostsListState extends State<PagedPostsList> {
             access = 'just me';
           }
 
-          AbstractTextPlatform.platform!.updateHtml(
+          AbstractTextPlatform.platform!.updateHtmlUsingMemberMedium(
               context, appId, memberId, postPrivilege.readAccess, "Article",
               (newArticle) {
             _addPost(

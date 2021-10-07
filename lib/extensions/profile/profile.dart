@@ -47,7 +47,7 @@ class _ProfileState extends State<Profile> {
                 child: child,
                 button: getEditIcon(
                   onPressed: () {
-                    AbstractTextPlatform.platform!.updateHtml(context,
+                    AbstractTextPlatform.platform!.updateHtmlUsingMemberMedium(context,
                         widget.appId,
                         ownerId,
                         readAccess,
