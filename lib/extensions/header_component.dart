@@ -13,9 +13,13 @@ import 'header/header.dart';
 class HeaderComponentConstructorDefault implements ComponentConstructor {
   HeaderComponentConstructorDefault();
 
+  @override
   Widget createNew({Key? key, required String id, Map<String, dynamic>? parameters}) {
     return HeaderComponent(key: key, id: id);
   }
+
+  @override
+  Future<dynamic> getModel({required String appId, required String id}) async => await headerRepository(appId: appId)!.get(id);
 }
 
 class HeaderComponent extends AbstractHeaderComponent {

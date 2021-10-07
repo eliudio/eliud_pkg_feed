@@ -13,9 +13,13 @@ import 'feed_menu/feed_menu.dart';
 class FeedMenuComponentConstructorDefault implements ComponentConstructor {
   FeedMenuComponentConstructorDefault();
 
+  @override
   Widget createNew({Key? key, required String id, Map<String, dynamic>? parameters}) {
     return FeedMenuComponent(key: key, id: id);
   }
+
+  @override
+  Future<dynamic> getModel({required String appId, required String id}) async => await feedMenuRepository(appId: appId)!.get(id);
 }
 
 class FeedMenuComponent extends AbstractFeedMenuComponent {

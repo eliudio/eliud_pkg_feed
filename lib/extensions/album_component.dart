@@ -15,9 +15,13 @@ import 'package:flutter/material.dart';
 class AlbumComponentConstructorDefault implements ComponentConstructor {
   AlbumComponentConstructorDefault();
 
+  @override
   Widget createNew({Key? key, required String id, Map<String, dynamic>? parameters}) {
     return AlbumComponent(key: key, id: id);
   }
+
+  @override
+  Future<dynamic> getModel({required String appId, required String id}) async => await albumRepository(appId: appId)!.get(id);
 }
 
 class AlbumComponent extends AbstractAlbumComponent {

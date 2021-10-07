@@ -15,9 +15,13 @@ import 'profile/profile.dart';
 class ProfileComponentConstructorDefault implements ComponentConstructor {
   ProfileComponentConstructorDefault();
 
+  @override
   Widget createNew({Key? key, required String id, Map<String, dynamic>? parameters}) {
     return ProfileComponent(key: key, id: id);
   }
+
+  @override
+  Future<dynamic> getModel({required String appId, required String id}) async => await profileRepository(appId: appId)!.get(id);
 }
 
 class ProfileComponent extends AbstractProfileComponent {
