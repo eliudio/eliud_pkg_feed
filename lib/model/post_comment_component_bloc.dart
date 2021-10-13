@@ -24,42 +24,30 @@ import 'package:flutter/services.dart';
 
 class PostCommentComponentBloc extends Bloc<PostCommentComponentEvent, PostCommentComponentState> {
   final PostCommentRepository? postCommentRepository;
+  StreamSubscription? _postCommentSubscription;
+
+  Stream<PostCommentComponentState> _mapLoadPostCommentComponentUpdateToState(String documentId) async* {
+    _postCommentSubscription?.cancel();
+    _postCommentSubscription = postCommentRepository!.listenTo(documentId, (value) {
+      if (value != null) add(PostCommentComponentUpdated(value: value!));
+    });
+  }
 
   PostCommentComponentBloc({ this.postCommentRepository }): super(PostCommentComponentUninitialized());
+
   @override
   Stream<PostCommentComponentState> mapEventToState(PostCommentComponentEvent event) async* {
     final currentState = state;
     if (event is FetchPostCommentComponent) {
-      try {
-        if (currentState is PostCommentComponentUninitialized) {
-          bool permissionDenied = false;
-          final model = await postCommentRepository!.get(event.id, onError: (error) {
-            // Unfortunatly the below is currently the only way we know how to identify if a document is read protected
-            if ((error is PlatformException) &&  (error.message!.startsWith("PERMISSION_DENIED"))) {
-              permissionDenied = true;
-            }
-          });
-          if (permissionDenied) {
-            yield PostCommentComponentPermissionDenied();
-          } else {
-            if (model != null) {
-              yield PostCommentComponentLoaded(value: model);
-            } else {
-              String? id = event.id;
-              yield PostCommentComponentError(
-                  message: "PostComment with id = '$id' not found");
-            }
-          }
-          return;
-        }
-      } catch (_) {
-        yield PostCommentComponentError(message: "Unknown error whilst retrieving PostComment");
-      }
+      yield* _mapLoadPostCommentComponentUpdateToState(event.id!);
+    } else if (event is PostCommentComponentUpdated) {
+      yield PostCommentComponentLoaded(value: event.value);
     }
   }
 
   @override
   Future<void> close() {
+    _postCommentSubscription?.cancel();
     return super.close();
   }
 

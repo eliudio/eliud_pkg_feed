@@ -25,42 +25,30 @@ import 'package:flutter/services.dart';
 
 class AlbumComponentBloc extends Bloc<AlbumComponentEvent, AlbumComponentState> {
   final AlbumRepository? albumRepository;
+  StreamSubscription? _albumSubscription;
+
+  Stream<AlbumComponentState> _mapLoadAlbumComponentUpdateToState(String documentId) async* {
+    _albumSubscription?.cancel();
+    _albumSubscription = albumRepository!.listenTo(documentId, (value) {
+      if (value != null) add(AlbumComponentUpdated(value: value!));
+    });
+  }
 
   AlbumComponentBloc({ this.albumRepository }): super(AlbumComponentUninitialized());
+
   @override
   Stream<AlbumComponentState> mapEventToState(AlbumComponentEvent event) async* {
     final currentState = state;
     if (event is FetchAlbumComponent) {
-      try {
-        if (currentState is AlbumComponentUninitialized) {
-          bool permissionDenied = false;
-          final model = await albumRepository!.get(event.id, onError: (error) {
-            // Unfortunatly the below is currently the only way we know how to identify if a document is read protected
-            if ((error is PlatformException) &&  (error.message!.startsWith("PERMISSION_DENIED"))) {
-              permissionDenied = true;
-            }
-          });
-          if (permissionDenied) {
-            yield AlbumComponentPermissionDenied();
-          } else {
-            if (model != null) {
-              yield AlbumComponentLoaded(value: model);
-            } else {
-              String? id = event.id;
-              yield AlbumComponentError(
-                  message: "Album with id = '$id' not found");
-            }
-          }
-          return;
-        }
-      } catch (_) {
-        yield AlbumComponentError(message: "Unknown error whilst retrieving Album");
-      }
+      yield* _mapLoadAlbumComponentUpdateToState(event.id!);
+    } else if (event is AlbumComponentUpdated) {
+      yield AlbumComponentLoaded(value: event.value);
     }
   }
 
   @override
   Future<void> close() {
+    _albumSubscription?.cancel();
     return super.close();
   }
 

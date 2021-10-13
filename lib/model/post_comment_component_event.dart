@@ -14,6 +14,7 @@
 */
 
 import 'package:equatable/equatable.dart';
+import 'package:eliud_pkg_feed/model/post_comment_model.dart';
 
 abstract class PostCommentComponentEvent extends Equatable {
   @override
@@ -25,4 +26,11 @@ class FetchPostCommentComponent extends PostCommentComponentEvent {
 
   FetchPostCommentComponent({ this.id });
 }
+
+class PostCommentComponentUpdated extends PostCommentComponentEvent {
+  final PostCommentModel value;
+
+  PostCommentComponentUpdated({ required this.value });
+}
+
 

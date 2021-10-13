@@ -14,6 +14,7 @@
 */
 
 import 'package:equatable/equatable.dart';
+import 'package:eliud_pkg_feed/model/feed_model.dart';
 
 abstract class FeedComponentEvent extends Equatable {
   @override
@@ -25,4 +26,11 @@ class FetchFeedComponent extends FeedComponentEvent {
 
   FetchFeedComponent({ this.id });
 }
+
+class FeedComponentUpdated extends FeedComponentEvent {
+  final FeedModel value;
+
+  FeedComponentUpdated({ required this.value });
+}
+
 

@@ -25,42 +25,30 @@ import 'package:flutter/services.dart';
 
 class ProfileComponentBloc extends Bloc<ProfileComponentEvent, ProfileComponentState> {
   final ProfileRepository? profileRepository;
+  StreamSubscription? _profileSubscription;
+
+  Stream<ProfileComponentState> _mapLoadProfileComponentUpdateToState(String documentId) async* {
+    _profileSubscription?.cancel();
+    _profileSubscription = profileRepository!.listenTo(documentId, (value) {
+      if (value != null) add(ProfileComponentUpdated(value: value!));
+    });
+  }
 
   ProfileComponentBloc({ this.profileRepository }): super(ProfileComponentUninitialized());
+
   @override
   Stream<ProfileComponentState> mapEventToState(ProfileComponentEvent event) async* {
     final currentState = state;
     if (event is FetchProfileComponent) {
-      try {
-        if (currentState is ProfileComponentUninitialized) {
-          bool permissionDenied = false;
-          final model = await profileRepository!.get(event.id, onError: (error) {
-            // Unfortunatly the below is currently the only way we know how to identify if a document is read protected
-            if ((error is PlatformException) &&  (error.message!.startsWith("PERMISSION_DENIED"))) {
-              permissionDenied = true;
-            }
-          });
-          if (permissionDenied) {
-            yield ProfileComponentPermissionDenied();
-          } else {
-            if (model != null) {
-              yield ProfileComponentLoaded(value: model);
-            } else {
-              String? id = event.id;
-              yield ProfileComponentError(
-                  message: "Profile with id = '$id' not found");
-            }
-          }
-          return;
-        }
-      } catch (_) {
-        yield ProfileComponentError(message: "Unknown error whilst retrieving Profile");
-      }
+      yield* _mapLoadProfileComponentUpdateToState(event.id!);
+    } else if (event is ProfileComponentUpdated) {
+      yield ProfileComponentLoaded(value: event.value);
     }
   }
 
   @override
   Future<void> close() {
+    _profileSubscription?.cancel();
     return super.close();
   }
 

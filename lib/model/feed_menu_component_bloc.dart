@@ -25,42 +25,30 @@ import 'package:flutter/services.dart';
 
 class FeedMenuComponentBloc extends Bloc<FeedMenuComponentEvent, FeedMenuComponentState> {
   final FeedMenuRepository? feedMenuRepository;
+  StreamSubscription? _feedMenuSubscription;
+
+  Stream<FeedMenuComponentState> _mapLoadFeedMenuComponentUpdateToState(String documentId) async* {
+    _feedMenuSubscription?.cancel();
+    _feedMenuSubscription = feedMenuRepository!.listenTo(documentId, (value) {
+      if (value != null) add(FeedMenuComponentUpdated(value: value!));
+    });
+  }
 
   FeedMenuComponentBloc({ this.feedMenuRepository }): super(FeedMenuComponentUninitialized());
+
   @override
   Stream<FeedMenuComponentState> mapEventToState(FeedMenuComponentEvent event) async* {
     final currentState = state;
     if (event is FetchFeedMenuComponent) {
-      try {
-        if (currentState is FeedMenuComponentUninitialized) {
-          bool permissionDenied = false;
-          final model = await feedMenuRepository!.get(event.id, onError: (error) {
-            // Unfortunatly the below is currently the only way we know how to identify if a document is read protected
-            if ((error is PlatformException) &&  (error.message!.startsWith("PERMISSION_DENIED"))) {
-              permissionDenied = true;
-            }
-          });
-          if (permissionDenied) {
-            yield FeedMenuComponentPermissionDenied();
-          } else {
-            if (model != null) {
-              yield FeedMenuComponentLoaded(value: model);
-            } else {
-              String? id = event.id;
-              yield FeedMenuComponentError(
-                  message: "FeedMenu with id = '$id' not found");
-            }
-          }
-          return;
-        }
-      } catch (_) {
-        yield FeedMenuComponentError(message: "Unknown error whilst retrieving FeedMenu");
-      }
+      yield* _mapLoadFeedMenuComponentUpdateToState(event.id!);
+    } else if (event is FeedMenuComponentUpdated) {
+      yield FeedMenuComponentLoaded(value: event.value);
     }
   }
 
   @override
   Future<void> close() {
+    _feedMenuSubscription?.cancel();
     return super.close();
   }
 

@@ -14,6 +14,7 @@
 */
 
 import 'package:equatable/equatable.dart';
+import 'package:eliud_pkg_feed/model/profile_model.dart';
 
 abstract class ProfileComponentEvent extends Equatable {
   @override
@@ -25,4 +26,11 @@ class FetchProfileComponent extends ProfileComponentEvent {
 
   FetchProfileComponent({ this.id });
 }
+
+class ProfileComponentUpdated extends ProfileComponentEvent {
+  final ProfileModel value;
+
+  ProfileComponentUpdated({ required this.value });
+}
+
 

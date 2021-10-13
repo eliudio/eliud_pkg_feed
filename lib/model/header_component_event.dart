@@ -14,6 +14,7 @@
 */
 
 import 'package:equatable/equatable.dart';
+import 'package:eliud_pkg_feed/model/header_model.dart';
 
 abstract class HeaderComponentEvent extends Equatable {
   @override
@@ -25,4 +26,11 @@ class FetchHeaderComponent extends HeaderComponentEvent {
 
   FetchHeaderComponent({ this.id });
 }
+
+class HeaderComponentUpdated extends HeaderComponentEvent {
+  final HeaderModel value;
+
+  HeaderComponentUpdated({ required this.value });
+}
+
 

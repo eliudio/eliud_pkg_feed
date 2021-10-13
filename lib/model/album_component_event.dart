@@ -14,6 +14,7 @@
 */
 
 import 'package:equatable/equatable.dart';
+import 'package:eliud_pkg_feed/model/album_model.dart';
 
 abstract class AlbumComponentEvent extends Equatable {
   @override
@@ -25,4 +26,11 @@ class FetchAlbumComponent extends AlbumComponentEvent {
 
   FetchAlbumComponent({ this.id });
 }
+
+class AlbumComponentUpdated extends AlbumComponentEvent {
+  final AlbumModel value;
+
+  AlbumComponentUpdated({ required this.value });
+}
+
 

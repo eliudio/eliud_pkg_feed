@@ -14,6 +14,7 @@
 */
 
 import 'package:equatable/equatable.dart';
+import 'package:eliud_pkg_feed/model/post_model.dart';
 
 abstract class PostComponentEvent extends Equatable {
   @override
@@ -25,4 +26,11 @@ class FetchPostComponent extends PostComponentEvent {
 
   FetchPostComponent({ this.id });
 }
+
+class PostComponentUpdated extends PostComponentEvent {
+  final PostModel value;
+
+  PostComponentUpdated({ required this.value });
+}
+
 

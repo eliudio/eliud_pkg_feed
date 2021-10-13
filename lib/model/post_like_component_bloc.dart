@@ -24,42 +24,30 @@ import 'package:flutter/services.dart';
 
 class PostLikeComponentBloc extends Bloc<PostLikeComponentEvent, PostLikeComponentState> {
   final PostLikeRepository? postLikeRepository;
+  StreamSubscription? _postLikeSubscription;
+
+  Stream<PostLikeComponentState> _mapLoadPostLikeComponentUpdateToState(String documentId) async* {
+    _postLikeSubscription?.cancel();
+    _postLikeSubscription = postLikeRepository!.listenTo(documentId, (value) {
+      if (value != null) add(PostLikeComponentUpdated(value: value!));
+    });
+  }
 
   PostLikeComponentBloc({ this.postLikeRepository }): super(PostLikeComponentUninitialized());
+
   @override
   Stream<PostLikeComponentState> mapEventToState(PostLikeComponentEvent event) async* {
     final currentState = state;
     if (event is FetchPostLikeComponent) {
-      try {
-        if (currentState is PostLikeComponentUninitialized) {
-          bool permissionDenied = false;
-          final model = await postLikeRepository!.get(event.id, onError: (error) {
-            // Unfortunatly the below is currently the only way we know how to identify if a document is read protected
-            if ((error is PlatformException) &&  (error.message!.startsWith("PERMISSION_DENIED"))) {
-              permissionDenied = true;
-            }
-          });
-          if (permissionDenied) {
-            yield PostLikeComponentPermissionDenied();
-          } else {
-            if (model != null) {
-              yield PostLikeComponentLoaded(value: model);
-            } else {
-              String? id = event.id;
-              yield PostLikeComponentError(
-                  message: "PostLike with id = '$id' not found");
-            }
-          }
-          return;
-        }
-      } catch (_) {
-        yield PostLikeComponentError(message: "Unknown error whilst retrieving PostLike");
-      }
+      yield* _mapLoadPostLikeComponentUpdateToState(event.id!);
+    } else if (event is PostLikeComponentUpdated) {
+      yield PostLikeComponentLoaded(value: event.value);
     }
   }
 
   @override
   Future<void> close() {
+    _postLikeSubscription?.cancel();
     return super.close();
   }
 

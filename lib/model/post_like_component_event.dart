@@ -14,6 +14,7 @@
 */
 
 import 'package:equatable/equatable.dart';
+import 'package:eliud_pkg_feed/model/post_like_model.dart';
 
 abstract class PostLikeComponentEvent extends Equatable {
   @override
@@ -25,4 +26,11 @@ class FetchPostLikeComponent extends PostLikeComponentEvent {
 
   FetchPostLikeComponent({ this.id });
 }
+
+class PostLikeComponentUpdated extends PostLikeComponentEvent {
+  final PostLikeModel value;
+
+  PostLikeComponentUpdated({ required this.value });
+}
+
 

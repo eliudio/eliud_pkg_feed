@@ -25,42 +25,30 @@ import 'package:flutter/services.dart';
 
 class HeaderComponentBloc extends Bloc<HeaderComponentEvent, HeaderComponentState> {
   final HeaderRepository? headerRepository;
+  StreamSubscription? _headerSubscription;
+
+  Stream<HeaderComponentState> _mapLoadHeaderComponentUpdateToState(String documentId) async* {
+    _headerSubscription?.cancel();
+    _headerSubscription = headerRepository!.listenTo(documentId, (value) {
+      if (value != null) add(HeaderComponentUpdated(value: value!));
+    });
+  }
 
   HeaderComponentBloc({ this.headerRepository }): super(HeaderComponentUninitialized());
+
   @override
   Stream<HeaderComponentState> mapEventToState(HeaderComponentEvent event) async* {
     final currentState = state;
     if (event is FetchHeaderComponent) {
-      try {
-        if (currentState is HeaderComponentUninitialized) {
-          bool permissionDenied = false;
-          final model = await headerRepository!.get(event.id, onError: (error) {
-            // Unfortunatly the below is currently the only way we know how to identify if a document is read protected
-            if ((error is PlatformException) &&  (error.message!.startsWith("PERMISSION_DENIED"))) {
-              permissionDenied = true;
-            }
-          });
-          if (permissionDenied) {
-            yield HeaderComponentPermissionDenied();
-          } else {
-            if (model != null) {
-              yield HeaderComponentLoaded(value: model);
-            } else {
-              String? id = event.id;
-              yield HeaderComponentError(
-                  message: "Header with id = '$id' not found");
-            }
-          }
-          return;
-        }
-      } catch (_) {
-        yield HeaderComponentError(message: "Unknown error whilst retrieving Header");
-      }
+      yield* _mapLoadHeaderComponentUpdateToState(event.id!);
+    } else if (event is HeaderComponentUpdated) {
+      yield HeaderComponentLoaded(value: event.value);
     }
   }
 
   @override
   Future<void> close() {
+    _headerSubscription?.cancel();
     return super.close();
   }
 
