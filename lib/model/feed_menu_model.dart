@@ -45,18 +45,19 @@ class FeedMenuModel {
   MenuDefModel? menuOtherMember;
   RgbModel? itemColor;
   RgbModel? selectedItemColor;
+  FeedModel? feed;
   ConditionsSimpleModel? conditions;
 
-  FeedMenuModel({this.documentID, this.appId, this.description, this.menuCurrentMember, this.menuOtherMember, this.itemColor, this.selectedItemColor, this.conditions, })  {
+  FeedMenuModel({this.documentID, this.appId, this.description, this.menuCurrentMember, this.menuOtherMember, this.itemColor, this.selectedItemColor, this.feed, this.conditions, })  {
     assert(documentID != null);
   }
 
-  FeedMenuModel copyWith({String? documentID, String? appId, String? description, MenuDefModel? menuCurrentMember, MenuDefModel? menuOtherMember, RgbModel? itemColor, RgbModel? selectedItemColor, ConditionsSimpleModel? conditions, }) {
-    return FeedMenuModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, menuCurrentMember: menuCurrentMember ?? this.menuCurrentMember, menuOtherMember: menuOtherMember ?? this.menuOtherMember, itemColor: itemColor ?? this.itemColor, selectedItemColor: selectedItemColor ?? this.selectedItemColor, conditions: conditions ?? this.conditions, );
+  FeedMenuModel copyWith({String? documentID, String? appId, String? description, MenuDefModel? menuCurrentMember, MenuDefModel? menuOtherMember, RgbModel? itemColor, RgbModel? selectedItemColor, FeedModel? feed, ConditionsSimpleModel? conditions, }) {
+    return FeedMenuModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, menuCurrentMember: menuCurrentMember ?? this.menuCurrentMember, menuOtherMember: menuOtherMember ?? this.menuOtherMember, itemColor: itemColor ?? this.itemColor, selectedItemColor: selectedItemColor ?? this.selectedItemColor, feed: feed ?? this.feed, conditions: conditions ?? this.conditions, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ appId.hashCode ^ description.hashCode ^ menuCurrentMember.hashCode ^ menuOtherMember.hashCode ^ itemColor.hashCode ^ selectedItemColor.hashCode ^ conditions.hashCode;
+  int get hashCode => documentID.hashCode ^ appId.hashCode ^ description.hashCode ^ menuCurrentMember.hashCode ^ menuOtherMember.hashCode ^ itemColor.hashCode ^ selectedItemColor.hashCode ^ feed.hashCode ^ conditions.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -70,11 +71,12 @@ class FeedMenuModel {
           menuOtherMember == other.menuOtherMember &&
           itemColor == other.itemColor &&
           selectedItemColor == other.selectedItemColor &&
+          feed == other.feed &&
           conditions == other.conditions;
 
   @override
   String toString() {
-    return 'FeedMenuModel{documentID: $documentID, appId: $appId, description: $description, menuCurrentMember: $menuCurrentMember, menuOtherMember: $menuOtherMember, itemColor: $itemColor, selectedItemColor: $selectedItemColor, conditions: $conditions}';
+    return 'FeedMenuModel{documentID: $documentID, appId: $appId, description: $description, menuCurrentMember: $menuCurrentMember, menuOtherMember: $menuOtherMember, itemColor: $itemColor, selectedItemColor: $selectedItemColor, feed: $feed, conditions: $conditions}';
   }
 
   FeedMenuEntity toEntity({String? appId}) {
@@ -85,6 +87,7 @@ class FeedMenuModel {
           menuOtherMemberId: (menuOtherMember != null) ? menuOtherMember!.documentID : null, 
           itemColor: (itemColor != null) ? itemColor!.toEntity(appId: appId) : null, 
           selectedItemColor: (selectedItemColor != null) ? selectedItemColor!.toEntity(appId: appId) : null, 
+          feedId: (feed != null) ? feed!.documentID : null, 
           conditions: (conditions != null) ? conditions!.toEntity(appId: appId) : null, 
     );
   }
@@ -130,6 +133,17 @@ class FeedMenuModel {
       }
     }
 
+    FeedModel? feedHolder;
+    if (entity.feedId != null) {
+      try {
+          feedHolder = await feedRepository(appId: appId)!.get(entity.feedId);
+      } on Exception catch(e) {
+        print('Error whilst trying to initialise feed');
+        print('Error whilst retrieving feed with id ${entity.feedId}');
+        print('Exception: $e');
+      }
+    }
+
     var counter = 0;
     return FeedMenuModel(
           documentID: documentID, 
@@ -141,6 +155,7 @@ class FeedMenuModel {
             await RgbModel.fromEntityPlus(entity.itemColor, appId: appId), 
           selectedItemColor: 
             await RgbModel.fromEntityPlus(entity.selectedItemColor, appId: appId), 
+          feed: feedHolder, 
           conditions: 
             await ConditionsSimpleModel.fromEntityPlus(entity.conditions, appId: appId), 
     );

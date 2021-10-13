@@ -30,7 +30,7 @@ class HeaderComponentBloc extends Bloc<HeaderComponentEvent, HeaderComponentStat
   Stream<HeaderComponentState> _mapLoadHeaderComponentUpdateToState(String documentId) async* {
     _headerSubscription?.cancel();
     _headerSubscription = headerRepository!.listenTo(documentId, (value) {
-      if (value != null) add(HeaderComponentUpdated(value: value!));
+      if (value != null) add(HeaderComponentUpdated(value: value));
     });
   }
 

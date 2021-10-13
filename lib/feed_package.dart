@@ -39,7 +39,9 @@ abstract class FeedPackage extends Package {
     // Register action handler for the feed action
     eliud_router.Router.register(PostActionHandler());
 
+/*
     Registry.registry()!.registerPageComponentsBloc('profile', ProfileWidgetWrapper('feed'));
+*/
 
     // Register a mapper for an extra action: the mapper for the WorkflowAction
     ActionModelRegistry.registry()!.addMapper(PostActionEntity.label, PostActionMapper());

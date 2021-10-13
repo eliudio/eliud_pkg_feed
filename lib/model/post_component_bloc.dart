@@ -29,7 +29,7 @@ class PostComponentBloc extends Bloc<PostComponentEvent, PostComponentState> {
   Stream<PostComponentState> _mapLoadPostComponentUpdateToState(String documentId) async* {
     _postSubscription?.cancel();
     _postSubscription = postRepository!.listenTo(documentId, (value) {
-      if (value != null) add(PostComponentUpdated(value: value!));
+      if (value != null) add(PostComponentUpdated(value: value));
     });
   }
 

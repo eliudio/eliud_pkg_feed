@@ -30,7 +30,7 @@ class ProfileComponentBloc extends Bloc<ProfileComponentEvent, ProfileComponentS
   Stream<ProfileComponentState> _mapLoadProfileComponentUpdateToState(String documentId) async* {
     _profileSubscription?.cancel();
     _profileSubscription = profileRepository!.listenTo(documentId, (value) {
-      if (value != null) add(ProfileComponentUpdated(value: value!));
+      if (value != null) add(ProfileComponentUpdated(value: value));
     });
   }
 

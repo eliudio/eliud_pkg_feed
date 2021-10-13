@@ -126,6 +126,7 @@ class _MyFeedMenuFormState extends State<MyFeedMenuForm> {
   final TextEditingController _descriptionController = TextEditingController();
   String? _menuCurrentMember;
   String? _menuOtherMember;
+  String? _feed;
 
 
   _MyFeedMenuFormState(this.formAction);
@@ -170,6 +171,10 @@ class _MyFeedMenuFormState extends State<MyFeedMenuForm> {
           _menuOtherMember= state.value!.menuOtherMember!.documentID;
         else
           _menuOtherMember= "";
+        if (state.value!.feed != null)
+          _feed= state.value!.feed!.documentID;
+        else
+          _feed= "";
       }
       if (state is FeedMenuFormInitialized) {
         List<Widget> children = [];
@@ -213,6 +218,11 @@ class _MyFeedMenuFormState extends State<MyFeedMenuForm> {
         children.add(
 
                   StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Description', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _descriptionController, keyboardType: TextInputType.text, validator: (_) => state is DescriptionFeedMenuFormError ? state.message : null, hintText: null)
+          );
+
+        children.add(
+
+                DropdownButtonComponentFactory().createNew(id: "feeds", value: _feed, trigger: _onFeedSelected, optional: false),
           );
 
 
@@ -280,6 +290,7 @@ class _MyFeedMenuFormState extends State<MyFeedMenuForm> {
                               menuOtherMember: state.value!.menuOtherMember, 
                               itemColor: state.value!.itemColor, 
                               selectedItemColor: state.value!.selectedItemColor, 
+                              feed: state.value!.feed, 
                               conditions: state.value!.conditions, 
                         )));
                       } else {
@@ -292,6 +303,7 @@ class _MyFeedMenuFormState extends State<MyFeedMenuForm> {
                               menuOtherMember: state.value!.menuOtherMember, 
                               itemColor: state.value!.itemColor, 
                               selectedItemColor: state.value!.selectedItemColor, 
+                              feed: state.value!.feed, 
                               conditions: state.value!.conditions, 
                           )));
                       }
@@ -359,6 +371,14 @@ class _MyFeedMenuFormState extends State<MyFeedMenuForm> {
   void _onSelectedItemColorChanged(value) {
     _myFormBloc.add(ChangedFeedMenuSelectedItemColor(value: value));
     
+  }
+
+
+  void _onFeedSelected(String? val) {
+    setState(() {
+      _feed = val;
+    });
+    _myFormBloc.add(ChangedFeedMenuFeed(value: val));
   }
 
 

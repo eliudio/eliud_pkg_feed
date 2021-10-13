@@ -29,7 +29,7 @@ class PostLikeComponentBloc extends Bloc<PostLikeComponentEvent, PostLikeCompone
   Stream<PostLikeComponentState> _mapLoadPostLikeComponentUpdateToState(String documentId) async* {
     _postLikeSubscription?.cancel();
     _postLikeSubscription = postLikeRepository!.listenTo(documentId, (value) {
-      if (value != null) add(PostLikeComponentUpdated(value: value!));
+      if (value != null) add(PostLikeComponentUpdated(value: value));
     });
   }
 

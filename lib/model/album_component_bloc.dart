@@ -30,7 +30,7 @@ class AlbumComponentBloc extends Bloc<AlbumComponentEvent, AlbumComponentState> 
   Stream<AlbumComponentState> _mapLoadAlbumComponentUpdateToState(String documentId) async* {
     _albumSubscription?.cancel();
     _albumSubscription = albumRepository!.listenTo(documentId, (value) {
-      if (value != null) add(AlbumComponentUpdated(value: value!));
+      if (value != null) add(AlbumComponentUpdated(value: value));
     });
   }
 

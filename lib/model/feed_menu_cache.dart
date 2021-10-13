@@ -146,10 +146,21 @@ class FeedMenuCache implements FeedMenuRepository {
       } catch (_) {}
     }
 
+    FeedModel? feedHolder;
+    if (model.feed != null) {
+      try {
+        await feedRepository(appId: model.appId)!.get(model.feed!.documentID).then((val) {
+          feedHolder = val;
+        }).catchError((error) {});
+      } catch (_) {}
+    }
+
     return model.copyWith(
         menuCurrentMember: menuCurrentMemberHolder,
 
         menuOtherMember: menuOtherMemberHolder,
+
+        feed: feedHolder,
 
 
     );

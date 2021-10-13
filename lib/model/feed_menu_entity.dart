@@ -29,16 +29,17 @@ class FeedMenuEntity {
   final String? menuOtherMemberId;
   final RgbEntity? itemColor;
   final RgbEntity? selectedItemColor;
+  final String? feedId;
   final ConditionsSimpleEntity? conditions;
 
-  FeedMenuEntity({this.appId, this.description, this.menuCurrentMemberId, this.menuOtherMemberId, this.itemColor, this.selectedItemColor, this.conditions, });
+  FeedMenuEntity({this.appId, this.description, this.menuCurrentMemberId, this.menuOtherMemberId, this.itemColor, this.selectedItemColor, this.feedId, this.conditions, });
 
 
-  List<Object?> get props => [appId, description, menuCurrentMemberId, menuOtherMemberId, itemColor, selectedItemColor, conditions, ];
+  List<Object?> get props => [appId, description, menuCurrentMemberId, menuOtherMemberId, itemColor, selectedItemColor, feedId, conditions, ];
 
   @override
   String toString() {
-    return 'FeedMenuEntity{appId: $appId, description: $description, menuCurrentMemberId: $menuCurrentMemberId, menuOtherMemberId: $menuOtherMemberId, itemColor: $itemColor, selectedItemColor: $selectedItemColor, conditions: $conditions}';
+    return 'FeedMenuEntity{appId: $appId, description: $description, menuCurrentMemberId: $menuCurrentMemberId, menuOtherMemberId: $menuOtherMemberId, itemColor: $itemColor, selectedItemColor: $selectedItemColor, feedId: $feedId, conditions: $conditions}';
   }
 
   static FeedMenuEntity? fromMap(Object? o) {
@@ -65,6 +66,7 @@ class FeedMenuEntity {
       menuOtherMemberId: map['menuOtherMemberId'], 
       itemColor: itemColorFromMap, 
       selectedItemColor: selectedItemColorFromMap, 
+      feedId: map['feedId'], 
       conditions: conditionsFromMap, 
     );
   }
@@ -93,6 +95,8 @@ class FeedMenuEntity {
       else theDocument["itemColor"] = null;
     if (selectedItemColor != null) theDocument["selectedItemColor"] = selectedItemColorMap;
       else theDocument["selectedItemColor"] = null;
+    if (feedId != null) theDocument["feedId"] = feedId;
+      else theDocument["feedId"] = null;
     if (conditions != null) theDocument["conditions"] = conditionsMap;
       else theDocument["conditions"] = null;
     return theDocument;

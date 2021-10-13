@@ -86,10 +86,12 @@ class EmbeddedPageHelper {
                         state.value!.backgroundOverride,
                         state.value!.gridView);
                     var widget;
+/*
                     if (state.value!.widgetWrapper != null) {
                       widget = Registry.registry()!.wrapWidgetInBloc(
                           state.value!.widgetWrapper!, context, componentInfo);
                     }
+*/
                     if (widget == null) {
                       return PageBody(
                         componentInfo: componentInfo,

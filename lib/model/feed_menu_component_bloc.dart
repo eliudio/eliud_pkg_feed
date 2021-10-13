@@ -30,7 +30,7 @@ class FeedMenuComponentBloc extends Bloc<FeedMenuComponentEvent, FeedMenuCompone
   Stream<FeedMenuComponentState> _mapLoadFeedMenuComponentUpdateToState(String documentId) async* {
     _feedMenuSubscription?.cancel();
     _feedMenuSubscription = feedMenuRepository!.listenTo(documentId, (value) {
-      if (value != null) add(FeedMenuComponentUpdated(value: value!));
+      if (value != null) add(FeedMenuComponentUpdated(value: value));
     });
   }
 

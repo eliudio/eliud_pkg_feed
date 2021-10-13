@@ -29,7 +29,7 @@ class FeedComponentBloc extends Bloc<FeedComponentEvent, FeedComponentState> {
   Stream<FeedComponentState> _mapLoadFeedComponentUpdateToState(String documentId) async* {
     _feedSubscription?.cancel();
     _feedSubscription = feedRepository!.listenTo(documentId, (value) {
-      if (value != null) add(FeedComponentUpdated(value: value!));
+      if (value != null) add(FeedComponentUpdated(value: value));
     });
   }
 

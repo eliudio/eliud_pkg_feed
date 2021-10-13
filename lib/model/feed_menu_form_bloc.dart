@@ -112,6 +112,7 @@ class FeedMenuFormBloc extends Bloc<FeedMenuFormEvent, FeedMenuFormState> {
                                  menuOtherMember: currentState.value!.menuOtherMember,
                                  itemColor: currentState.value!.itemColor,
                                  selectedItemColor: currentState.value!.selectedItemColor,
+                                 feed: currentState.value!.feed,
                                  conditions: currentState.value!.conditions,
           );
         yield SubmittableFeedMenuForm(value: newValue);
@@ -130,6 +131,7 @@ class FeedMenuFormBloc extends Bloc<FeedMenuFormEvent, FeedMenuFormState> {
                                  menuOtherMember: null,
                                  itemColor: currentState.value!.itemColor,
                                  selectedItemColor: currentState.value!.selectedItemColor,
+                                 feed: currentState.value!.feed,
                                  conditions: currentState.value!.conditions,
           );
         yield SubmittableFeedMenuForm(value: newValue);
@@ -144,6 +146,25 @@ class FeedMenuFormBloc extends Bloc<FeedMenuFormEvent, FeedMenuFormState> {
       }
       if (event is ChangedFeedMenuSelectedItemColor) {
         newValue = currentState.value!.copyWith(selectedItemColor: event.value);
+        yield SubmittableFeedMenuForm(value: newValue);
+
+        return;
+      }
+      if (event is ChangedFeedMenuFeed) {
+        if (event.value != null)
+          newValue = currentState.value!.copyWith(feed: await feedRepository(appId: appId)!.get(event.value));
+        else
+          newValue = new FeedMenuModel(
+                                 documentID: currentState.value!.documentID,
+                                 appId: currentState.value!.appId,
+                                 description: currentState.value!.description,
+                                 menuCurrentMember: currentState.value!.menuCurrentMember,
+                                 menuOtherMember: currentState.value!.menuOtherMember,
+                                 itemColor: currentState.value!.itemColor,
+                                 selectedItemColor: currentState.value!.selectedItemColor,
+                                 feed: null,
+                                 conditions: currentState.value!.conditions,
+          );
         yield SubmittableFeedMenuForm(value: newValue);
 
         return;
