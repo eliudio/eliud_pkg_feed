@@ -56,10 +56,16 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
     PostType postType = PostTypeHelper.determineType(postModel);
     switch (postType) {
       case PostType.EmbeddedPage:
+/*
+        I comment this out resulting in actually making this feature "embedded page" to stop to work.
+        The reason for this is because it seems to cause a lot of overhead in init apps being sent to appbloc.
+        The implementation of the embedded page is poor and hence this should be reviewed before use.
+
         if (memberID != null) {
           return EmbeddedPageHelper.postDetails(
               context, memberID, postModel, accessBloc, parentPageId!);
         }
+*/
         break;
       case PostType.SinglePhoto:
       case PostType.SingleVideo:

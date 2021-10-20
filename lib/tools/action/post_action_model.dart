@@ -1,16 +1,18 @@
 import 'package:eliud_core/model/conditions_model.dart';
+import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/tools/action/action_entity.dart';
 import 'package:eliud_core/tools/action/action_model.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
 import 'package:eliud_pkg_feed/tools/action/post_action_entity.dart';
+import 'package:flutter/material.dart';
 
 // Post the current page to your feed
 class PostActionModel extends ActionModel {
   // Post to which feed, which could be the feed of a different app
   final FeedModel? feed;
 
-  PostActionModel(String? appId, { this.feed, ConditionsModel? conditions} ) : super(appId, actionType: PostActionEntity.label, conditions: conditions);
+  PostActionModel(String appId, { this.feed, ConditionsModel? conditions} ) : super(appId, actionType: PostActionEntity.label, conditions: conditions);
 
   @override
   ActionEntity toEntity({String? appId}) {
@@ -21,13 +23,15 @@ class PostActionModel extends ActionModel {
   }
 
   static ActionModel? fromEntity(PostActionEntity entity) {
-    if (entity == null) return null;
+    if (entity.appID == null) throw Exception('entity PostActionModel.appID is null');
     return PostActionModel(
-      entity.appID,
+      entity.appID!,
       conditions: ConditionsModel.fromEntity(entity.conditions),
     );
   }
+
   static Future<ActionModel> fromEntityPlus(PostActionEntity entity, { String? appId}) async {
+    if (entity.appID == null) throw Exception('entity PostActionModel.appID is null');
     FeedModel? feedModel;
     if (entity.feedId != null) {
       try {
@@ -38,7 +42,7 @@ class PostActionModel extends ActionModel {
     }
 
     return PostActionModel(
-        entity.appID,
+        entity.appID!,
         conditions: ConditionsModel.fromEntity(entity.conditions),
         feed: feedModel
     );
@@ -47,6 +51,9 @@ class PostActionModel extends ActionModel {
   String message() {
     return "Post";
   }
+
+  @override
+  Widget describe(BuildContext context) => text(context, 'Post the current page to feed');
 }
 
 class PostActionMapper implements ActionModelMapper {
