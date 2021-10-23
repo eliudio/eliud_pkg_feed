@@ -46,7 +46,7 @@ class FeedMenuComponent extends AbstractFeedMenuComponent {
           ProfileBloc()
             ..add(InitialiseProfileEvent(
                 feedId, _accessState, modalRoute)),
-          child: FeedMenu(feedMenuModel!)
+          child: FeedMenu(feedMenuModel)
       );
     } else {
       return text(context, 'App not loaded');

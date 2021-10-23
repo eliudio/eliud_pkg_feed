@@ -23,7 +23,7 @@ class PostActionHandler extends PackageActionHandler {
     if (action is PostActionModel) {
       var accessState = AccessBloc.getState(context);
       if (accessState is LoggedIn) {
-        String name = action.appID!;
+        String name = action.appID;
 
         openSelectionDialog(context,
             title: 'Add page to feed ' + name,

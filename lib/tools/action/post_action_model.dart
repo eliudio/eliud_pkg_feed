@@ -53,7 +53,7 @@ class PostActionModel extends ActionModel {
   }
 
   @override
-  Widget describe(BuildContext context) => text(context, 'Post the current page to feed');
+  String describe() => 'Post the current page to feed';
 }
 
 class PostActionMapper implements ActionModelMapper {
