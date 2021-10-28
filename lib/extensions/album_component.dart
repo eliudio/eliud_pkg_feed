@@ -54,6 +54,8 @@ class AlbumComponent extends AbstractAlbumComponent {
     }
   }
 
+
+
   @override
   AlbumRepository getAlbumRepository(BuildContext context) {
     return albumRepository(appId: AccessBloc.appId(context))!;
