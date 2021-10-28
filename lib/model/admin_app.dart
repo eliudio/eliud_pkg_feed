@@ -56,30 +56,6 @@ class AdminApp extends AdminAppInstallerBase {
   AdminApp(this.appId, this._drawer, this._endDrawer, this._appBar, this._homeMenu, this.menuItemColor, this.selectedMenuItemColor, this.backgroundColor);
 
 
-  PageModel _albumsPages() {
-    List<BodyComponentModel> components = [];
-    components.add(BodyComponentModel(
-      documentID: "internalWidget-albums", componentName: "eliud_pkg_feed_internalWidgets", componentId: "albums"));
-    PageModel page = PageModel(
-        conditions: ConditionsModel(
-          privilegeLevelRequired: PrivilegeLevelRequired.OwnerPrivilegeRequired,
-          packageCondition: null,
-          conditionOverride: null,
-        ),
-        appId: appId,
-        documentID: "eliud_pkg_feed_albums_page",
-        title: "Albums",
-        drawer: _drawer,
-        endDrawer: _endDrawer,
-        appBar: _appBar,
-        homeMenu: _homeMenu,
-        bodyComponents: components,
-        layout: PageLayout.OnlyTheFirstComponent
-    );
-    return page;
-  }
-
-
   PageModel _feedsPages() {
     List<BodyComponentModel> components = [];
     components.add(BodyComponentModel(
@@ -250,9 +226,7 @@ class AdminApp extends AdminAppInstallerBase {
 
   Future<void> _setupAdminPages() {
 
-    return pageRepository(appId: appId)!.add(_albumsPages())
-
-        .then((_) => pageRepository(appId: appId)!.add(_feedsPages()))
+    return pageRepository(appId: appId)!.add(_feedsPages())
 
         .then((_) => pageRepository(appId: appId)!.add(_feedMenusPages()))
 
@@ -281,16 +255,6 @@ class AdminMenu extends AdminAppMenuInstallerBase {
 
   Future<MenuDefModel> menu(String appId) async {
     var menuItems = <MenuItemModel>[];
-
-    menuItems.add(
-      MenuItemModel(
-        documentID: "Albums",
-        text: "Albums",
-        description: "Albums",
-        icon: IconModel(codePoint: 0xe88a, fontFamily: "MaterialIcons"),
-        action: GotoPage(appId, pageID: "eliud_pkg_feed_albums_page"))
-    );
-
 
     menuItems.add(
       MenuItemModel(

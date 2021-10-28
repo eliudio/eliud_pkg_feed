@@ -13,7 +13,6 @@
 
 */
 
-import '../model/album_repository.dart';
 import '../model/feed_repository.dart';
 import '../model/feed_menu_repository.dart';
 import '../model/header_repository.dart';
@@ -28,7 +27,6 @@ import 'package:eliud_core/tools/common_tools.dart';
 import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
 import 'package:eliud_core/package/package.dart';
 
-AlbumRepository? albumRepository({ String? appId }) => AbstractRepositorySingleton.singleton.albumRepository(appId);
 FeedRepository? feedRepository({ String? appId }) => AbstractRepositorySingleton.singleton.feedRepository(appId);
 FeedMenuRepository? feedMenuRepository({ String? appId }) => AbstractRepositorySingleton.singleton.feedMenuRepository(appId);
 HeaderRepository? headerRepository({ String? appId }) => AbstractRepositorySingleton.singleton.headerRepository(appId);
@@ -47,7 +45,6 @@ abstract class AbstractRepositorySingleton {
   ];
   static late AbstractRepositorySingleton singleton;
 
-  AlbumRepository? albumRepository(String? appId);
   FeedRepository? feedRepository(String? appId);
   FeedMenuRepository? feedMenuRepository(String? appId);
   HeaderRepository? headerRepository(String? appId);
@@ -58,7 +55,6 @@ abstract class AbstractRepositorySingleton {
   ProfileRepository? profileRepository(String? appId);
 
   void flush(String? appId) {
-    albumRepository(appId)!.flush();
     feedRepository(appId)!.flush();
     feedMenuRepository(appId)!.flush();
     headerRepository(appId)!.flush();

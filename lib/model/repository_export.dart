@@ -13,7 +13,6 @@
 
 */
 
-export '../model/album_repository.dart';
 export '../model/feed_repository.dart';
 export '../model/feed_menu_repository.dart';
 export '../model/header_repository.dart';

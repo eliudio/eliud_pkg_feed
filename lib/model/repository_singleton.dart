@@ -16,9 +16,6 @@
 import 'abstract_repository_singleton.dart';
 import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
 import 'dart:collection';
-import '../model/album_firestore.dart';
-import '../model/album_repository.dart';
-import '../model/album_cache.dart';
 import '../model/feed_firestore.dart';
 import '../model/feed_repository.dart';
 import '../model/feed_cache.dart';
@@ -45,7 +42,6 @@ import '../model/profile_firestore.dart';
 import '../model/profile_repository.dart';
 import '../model/profile_cache.dart';
 
-import '../model/album_model.dart';
 import '../model/feed_menu_model.dart';
 import '../model/header_model.dart';
 import '../model/member_profile_model.dart';
@@ -53,7 +49,6 @@ import '../model/post_medium_model.dart';
 import '../model/profile_model.dart';
 
 class RepositorySingleton extends AbstractRepositorySingleton {
-    var _albumRepository = HashMap<String, AlbumRepository>();
     var _feedRepository = HashMap<String, FeedRepository>();
     var _feedMenuRepository = HashMap<String, FeedMenuRepository>();
     var _headerRepository = HashMap<String, HeaderRepository>();
@@ -63,10 +58,6 @@ class RepositorySingleton extends AbstractRepositorySingleton {
     var _postLikeRepository = HashMap<String, PostLikeRepository>();
     var _profileRepository = HashMap<String, ProfileRepository>();
 
-    AlbumRepository? albumRepository(String? appId) {
-      if ((appId != null) && (_albumRepository[appId] == null)) _albumRepository[appId] = AlbumCache(AlbumFirestore(appRepository()!.getSubCollection(appId, 'album'), appId));
-      return _albumRepository[appId];
-    }
     FeedRepository? feedRepository(String? appId) {
       if ((appId != null) && (_feedRepository[appId] == null)) _feedRepository[appId] = FeedCache(FeedFirestore(appRepository()!.getSubCollection(appId, 'feed'), appId));
       return _feedRepository[appId];

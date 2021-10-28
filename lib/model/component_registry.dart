@@ -18,9 +18,6 @@ import '../model/internal_component.dart';
 import 'package:eliud_core/core/registry.dart';
 import 'package:eliud_core/tools/component/component_spec.dart';
 
-import '../extensions/album_component.dart';
-import '../editors/album_component_editor.dart';
-import 'album_component_selector.dart';
 import '../extensions/feed_component.dart';
 import '../editors/feed_component_editor.dart';
 import 'feed_component_selector.dart';
@@ -41,11 +38,9 @@ import 'package:eliud_pkg_feed/model/internal_component.dart';
 class ComponentRegistry {
 
   void init() {
-    Registry.registry()!.addInternalComponents('eliud_pkg_feed', ["albums", "feeds", "feedMenus", "headers", "posts", "postComments", "postLikes", "profiles", ]);
+    Registry.registry()!.addInternalComponents('eliud_pkg_feed', ["feeds", "feedMenus", "headers", "posts", "postComments", "postLikes", "profiles", ]);
 
     Registry.registry()!.register(componentName: "eliud_pkg_feed_internalWidgets", componentConstructor: ListComponentFactory());
-    Registry.registry()!.addDropDownSupporter("albums", DropdownButtonComponentFactory());
-    Registry.registry()!.register(componentName: "albums", componentConstructor: AlbumComponentConstructorDefault());
     Registry.registry()!.addDropDownSupporter("feeds", DropdownButtonComponentFactory());
     Registry.registry()!.register(componentName: "feeds", componentConstructor: FeedComponentConstructorDefault());
     Registry.registry()!.addDropDownSupporter("feedMenus", DropdownButtonComponentFactory());
@@ -55,7 +50,6 @@ class ComponentRegistry {
     Registry.registry()!.addDropDownSupporter("profiles", DropdownButtonComponentFactory());
     Registry.registry()!.register(componentName: "profiles", componentConstructor: ProfileComponentConstructorDefault());
     Registry.registry()!.addComponentSpec('eliud_pkg_feed', [
-      ComponentSpec('albums', AlbumComponentConstructorDefault(), AlbumComponentSelector(), AlbumComponentEditorConstructor(), ), 
       ComponentSpec('feeds', FeedComponentConstructorDefault(), FeedComponentSelector(), FeedComponentEditorConstructor(), ), 
       ComponentSpec('feedMenus', FeedMenuComponentConstructorDefault(), FeedMenuComponentSelector(), FeedMenuComponentEditorConstructor(), ), 
       ComponentSpec('headers', HeaderComponentConstructorDefault(), HeaderComponentSelector(), HeaderComponentEditorConstructor(), ), 

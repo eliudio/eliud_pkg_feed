@@ -22,23 +22,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eliud_core/tools/has_fab.dart';
 
 
-import 'package:eliud_pkg_feed/model/album_list_bloc.dart';
-import 'package:eliud_pkg_feed/model/album_list.dart';
-import 'package:eliud_pkg_feed/model/album_dropdown_button.dart';
-import 'package:eliud_pkg_feed/model/album_list_event.dart';
-
-import 'package:eliud_core/model/repository_export.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
-import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_feed/model/repository_export.dart';
-import 'package:eliud_core/model/model_export.dart';
-import '../tools/bespoke_models.dart';
-import 'package:eliud_pkg_feed/model/model_export.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
-import 'package:eliud_pkg_feed/model/entity_export.dart';
-
 import 'package:eliud_pkg_feed/model/feed_list_bloc.dart';
 import 'package:eliud_pkg_feed/model/feed_list.dart';
 import 'package:eliud_pkg_feed/model/feed_dropdown_button.dart';
@@ -193,7 +176,6 @@ class DropdownButtonComponentFactory implements ComponentDropDown {
 
   bool supports(String id) {
 
-    if (id == "albums") return true;
     if (id == "feeds") return true;
     if (id == "feedMenus") return true;
     if (id == "headers") return true;
@@ -205,9 +187,6 @@ class DropdownButtonComponentFactory implements ComponentDropDown {
   }
 
   Widget createNew({Key? key, required String id, Map<String, dynamic>? parameters, String? value, DropdownButtonChanged? trigger, bool? optional}) {
-
-    if (id == "albums")
-      return DropdownButtonComponent(componentId: id, value: value, trigger: trigger, optional: optional);
 
     if (id == "feeds")
       return DropdownButtonComponent(componentId: id, value: value, trigger: trigger, optional: optional);
@@ -255,7 +234,6 @@ class ListComponent extends StatelessWidget with HasFab {
   @override
   Widget build(BuildContext context) {
 
-    if (componentId == 'albums') return _albumBuild(context);
     if (componentId == 'feeds') return _feedBuild(context);
     if (componentId == 'feedMenus') return _feedMenuBuild(context);
     if (componentId == 'headers') return _headerBuild(context);
@@ -267,7 +245,6 @@ class ListComponent extends StatelessWidget with HasFab {
   }
 
   void initWidget() {
-    if (componentId == 'albums') widget = AlbumListWidget();
     if (componentId == 'feeds') widget = FeedListWidget();
     if (componentId == 'feedMenus') widget = FeedMenuListWidget();
     if (componentId == 'headers') widget = HeaderListWidget();
@@ -275,19 +252,6 @@ class ListComponent extends StatelessWidget with HasFab {
     if (componentId == 'postComments') widget = PostCommentListWidget();
     if (componentId == 'postLikes') widget = PostLikeListWidget();
     if (componentId == 'profiles') widget = ProfileListWidget();
-  }
-
-  Widget _albumBuild(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<AlbumListBloc>(
-          create: (context) => AlbumListBloc(
-            albumRepository: albumRepository(appId: AccessBloc.appId(context))!,
-          )..add(LoadAlbumList()),
-        )
-      ],
-      child: widget!,
-    );
   }
 
   Widget _feedBuild(BuildContext context) {
@@ -397,7 +361,6 @@ class DropdownButtonComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    if (componentId == 'albums') return _albumBuild(context);
     if (componentId == 'feeds') return _feedBuild(context);
     if (componentId == 'feedMenus') return _feedMenuBuild(context);
     if (componentId == 'headers') return _headerBuild(context);
@@ -408,19 +371,6 @@ class DropdownButtonComponent extends StatelessWidget {
     return Text('Component with componentId == $componentId not found');
   }
 
-
-  Widget _albumBuild(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<AlbumListBloc>(
-          create: (context) => AlbumListBloc(
-            albumRepository: albumRepository(appId: AccessBloc.appId(context))!,
-          )..add(LoadAlbumList()),
-        )
-      ],
-      child: AlbumDropdownButtonWidget(value: value, trigger: trigger, optional: optional),
-    );
-  }
 
   Widget _feedBuild(BuildContext context) {
     return MultiBlocProvider(
