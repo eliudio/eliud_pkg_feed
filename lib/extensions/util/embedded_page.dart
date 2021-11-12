@@ -1,6 +1,4 @@
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
-import 'package:eliud_core/core/access/bloc/access_event.dart';
-import 'package:eliud_core/core/access/bloc/access_state.dart';
+import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/core/registry.dart';
 import 'package:eliud_core/core/tools/component_info.dart';
 import 'package:eliud_core/core/tools/page_body.dart';
@@ -23,6 +21,8 @@ class EmbeddedPageHelper {
       PostModel? postModel,
       AccessBloc? originalAccessBloc,
       String parentPageId) {
+    return Text("EmbeddedPage not implemented");
+/*
     if (postModel == null)
       return text(context, "Can't construct post details without postModel");
     if ((postModel.appId == postModel.postAppId) &&
@@ -86,12 +86,14 @@ class EmbeddedPageHelper {
                         state.value!.backgroundOverride,
                         state.value!.gridView);
                     var widget;
+*/
 /*
                     if (state.value!.widgetWrapper != null) {
                       widget = Registry.registry()!.wrapWidgetInBloc(
                           state.value!.widgetWrapper!, context, componentInfo);
                     }
-*/
+*//*
+
                     if (widget == null) {
                       return PageBody(
                         componentInfo: componentInfo,
@@ -120,5 +122,6 @@ class EmbeddedPageHelper {
     } else {
       return text(context, 'App loaded');
     }
+*/
   }
 }

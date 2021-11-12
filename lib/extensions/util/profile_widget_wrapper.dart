@@ -1,7 +1,9 @@
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
-import 'package:eliud_core/core/access/bloc/access_state.dart';
+import 'package:eliud_core/core/blocs/access/access_bloc.dart';
+import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
+import 'package:eliud_core/core/blocs/access/state/access_state.dart';
 import 'package:eliud_core/core/tools/component_info.dart';
 import 'package:eliud_core/core/tools/page_body.dart';
+import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/component/component_constructor.dart';
@@ -9,6 +11,7 @@ import 'package:eliud_pkg_feed/extensions/bloc/profile_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /*
@@ -30,18 +33,19 @@ class ProfileWidgetWrapper extends ComponentWidgetWrapper {
 
   @override
   Widget wrapWidget(BuildContext context, ComponentInfo componentInfo) {
-    // For example we could find the feeds component and than take the
-    var _accessState = AccessBloc.getState(context);
     var modalRoute = ModalRoute.of(context) as ModalRoute;
-    if (_accessState is AppLoaded) {
-      return BlocProvider<ProfileBloc>(
-        create: (context) =>
-        ProfileBloc()
-          ..add(InitialiseProfileEvent(
-              feedId, _accessState, modalRoute)),
-        child: PageBody(componentInfo: componentInfo,));
-    } else {
-      return text(context, 'App not loaded');
-    }
+    return BlocBuilder<AccessBloc, AccessState>(
+        builder: (context, accessState) {
+          if (accessState is AccessDetermined) {
+            return BlocProvider<ProfileBloc>(
+                create: (context) =>
+                ProfileBloc()
+                  ..add(InitialiseProfileEvent(
+                      feedId, accessState, modalRoute)),
+                child: PageBody(componentInfo: componentInfo,));
+          } else {
+            return progressIndicator(context);
+          }
+        });
   }
 }

@@ -13,8 +13,9 @@
 
 */
 
-import 'package:eliud_core/core/access/bloc/access_state.dart';
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
+import 'package:eliud_core/core/blocs/access/state/access_state.dart';
+import 'package:eliud_core/core/blocs/access/state/logged_in.dart';
+import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import '../tools/bespoke_models.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 import 'package:eliud_core/tools/screen_size.dart';
@@ -71,11 +72,11 @@ class ProfileForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var accessState = AccessBloc.getState(context);
-    var app = AccessBloc.app(context);
+    var app = AccessBloc.currentApp(context);
     if (app == null) return Text("No app available");
     if (formAction == FormAction.ShowData) {
       return BlocProvider<ProfileFormBloc >(
-            create: (context) => ProfileFormBloc(AccessBloc.appId(context),
+            create: (context) => ProfileFormBloc(AccessBloc.currentAppId(context),
                                        formAction: formAction,
 
                                                 )..add(InitialiseProfileFormEvent(value: value)),
@@ -84,7 +85,7 @@ class ProfileForm extends StatelessWidget {
           );
     } if (formAction == FormAction.ShowPreloadedData) {
       return BlocProvider<ProfileFormBloc >(
-            create: (context) => ProfileFormBloc(AccessBloc.appId(context),
+            create: (context) => ProfileFormBloc(AccessBloc.currentAppId(context),
                                        formAction: formAction,
 
                                                 )..add(InitialiseProfileFormNoLoadEvent(value: value)),
@@ -95,7 +96,7 @@ class ProfileForm extends StatelessWidget {
       return Scaffold(
         appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().appBarWithString(context, title: formAction == FormAction.UpdateAction ? 'Update Profile' : 'Add Profile'),
         body: BlocProvider<ProfileFormBloc >(
-            create: (context) => ProfileFormBloc(AccessBloc.appId(context),
+            create: (context) => ProfileFormBloc(AccessBloc.currentAppId(context),
                                        formAction: formAction,
 
                                                 )..add((formAction == FormAction.UpdateAction ? InitialiseProfileFormEvent(value: value) : InitialiseNewProfileFormEvent())),
@@ -140,7 +141,7 @@ class _MyProfileFormState extends State<MyProfileForm> {
 
   @override
   Widget build(BuildContext context) {
-    var app = AccessBloc.app(context);
+    var app = AccessBloc.currentApp(context);
     if (app == null) return Text('No app available');
     var accessState = AccessBloc.getState(context);
     return BlocBuilder<ProfileFormBloc, ProfileFormState>(builder: (context, state) {
@@ -293,7 +294,7 @@ class _MyProfileFormState extends State<MyProfileForm> {
   }
 
   bool _readOnly(AccessState accessState, ProfileFormInitialized state) {
-    return (formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData) || (!accessState.memberIsOwner());
+    return (formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData) || (!accessState.memberIsOwner(AccessBloc.currentAppId(context)));
   }
   
 

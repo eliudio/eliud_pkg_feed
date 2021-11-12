@@ -1,5 +1,7 @@
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
-import 'package:eliud_core/core/access/bloc/access_state.dart';
+import 'package:eliud_core/core/blocs/access/access_bloc.dart';
+import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
+import 'package:eliud_core/core/blocs/access/state/access_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eliud_core/core/navigate/page_param_helper.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 import 'package:eliud_core/core/tools/page_helper.dart';
@@ -32,54 +34,57 @@ class _FeedMenuState extends State<FeedMenu>
 
   @override
   Widget build(BuildContext context) {
-    var pageContextInfo = PageParamHelper.getPagaContextInfo(context);
-    var parameters = pageContextInfo.parameters;
-    var theState = AccessBloc.getState(context);
-    if (theState is AppLoaded) {
-      bool otherMember = false;
-      if (parameters != null) {
-        var openingForMemberId =
-            parameters[SwitchMember.switchMemberFeedPageParameter];
-        if (openingForMemberId != theState.getMember()!.documentID!) {
-          otherMember = true;
-        }
-      }
-      return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
-        if (state is ProfileInitialised) {
-          var items;
-          if (otherMember) {
-            items = widget.feedMenuModel.menuOtherMember!.menuItems!;
-          } else {
-            items = widget.feedMenuModel.menuCurrentMember!.menuItems!;
-          }
-          var useTheseItems = <String>[];
-          var actions = <ActionModel>[];
-          var selectedPage = 0;
-          var i = 0;
-          for (var item in items) {
-            if (theState.menuItemHasAccess(item)) {
-              var isActive =
-                  PageHelper.isActivePage(pageContextInfo.pageId, item.action);
-              if (isActive) {
-                selectedPage = i;
+    return BlocBuilder<AccessBloc, AccessState>(
+        builder: (context, accessState) {
+          if (accessState is AccessDetermined) {
+            var pageContextInfo = PageParamHelper.getPagaContextInfo(context, accessState.currentApp);
+            var parameters = pageContextInfo.parameters;
+            var theState = AccessBloc.getState(context);
+            bool otherMember = false;
+            if (parameters != null) {
+              var openingForMemberId =
+              parameters[SwitchMember.switchMemberFeedPageParameter];
+              if (openingForMemberId != theState.getMember()!.documentID!) {
+                otherMember = true;
               }
-              if (item.text != null) {
-                useTheseItems.add(item.text!);
-                actions.add(item.action!);
-              }
-              i++;
             }
-          }
+            return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
+              if (state is ProfileInitialised) {
+                var items;
+                if (otherMember) {
+                  items = widget.feedMenuModel.menuOtherMember!.menuItems!;
+                } else {
+                  items = widget.feedMenuModel.menuCurrentMember!.menuItems!;
+                }
+                var useTheseItems = <String>[];
+                var actions = <ActionModel>[];
+                var selectedPage = 0;
+                var i = 0;
+                for (var item in items) {
+                  if (accessState.menuItemHasAccess(item)) {
+                    var isActive =
+                    PageHelper.isActivePage(pageContextInfo.pageId, item.action);
+                    if (isActive) {
+                      selectedPage = i;
+                    }
+                    if (item.text != null) {
+                      useTheseItems.add(item.text!);
+                      actions.add(item.action!);
+                    }
+                    i++;
+                  }
+                }
 
-          return FeedMenuItems(
-              useTheseItems, actions, selectedPage, parameters);
-        } else {
-          return progressIndicator(context);
-        }
-      });
-    } else {
-      return text(context, 'App not loaded');
-    }
+                return FeedMenuItems(
+                    useTheseItems, actions, selectedPage, parameters);
+              } else {
+                return progressIndicator(context);
+              }
+            });
+          } else {
+            return progressIndicator(context);
+          }
+        });
   }
 }
 

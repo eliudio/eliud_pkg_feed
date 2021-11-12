@@ -13,8 +13,9 @@
 
 */
 
-import 'package:eliud_core/core/access/bloc/access_state.dart';
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
+import 'package:eliud_core/core/blocs/access/state/access_state.dart';
+import 'package:eliud_core/core/blocs/access/state/logged_in.dart';
+import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import '../tools/bespoke_models.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 import 'package:eliud_core/tools/screen_size.dart';
@@ -71,11 +72,11 @@ class FeedMenuForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var accessState = AccessBloc.getState(context);
-    var app = AccessBloc.app(context);
+    var app = AccessBloc.currentApp(context);
     if (app == null) return Text("No app available");
     if (formAction == FormAction.ShowData) {
       return BlocProvider<FeedMenuFormBloc >(
-            create: (context) => FeedMenuFormBloc(AccessBloc.appId(context),
+            create: (context) => FeedMenuFormBloc(AccessBloc.currentAppId(context),
                                        formAction: formAction,
 
                                                 )..add(InitialiseFeedMenuFormEvent(value: value)),
@@ -84,7 +85,7 @@ class FeedMenuForm extends StatelessWidget {
           );
     } if (formAction == FormAction.ShowPreloadedData) {
       return BlocProvider<FeedMenuFormBloc >(
-            create: (context) => FeedMenuFormBloc(AccessBloc.appId(context),
+            create: (context) => FeedMenuFormBloc(AccessBloc.currentAppId(context),
                                        formAction: formAction,
 
                                                 )..add(InitialiseFeedMenuFormNoLoadEvent(value: value)),
@@ -95,7 +96,7 @@ class FeedMenuForm extends StatelessWidget {
       return Scaffold(
         appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().appBarWithString(context, title: formAction == FormAction.UpdateAction ? 'Update FeedMenu' : 'Add FeedMenu'),
         body: BlocProvider<FeedMenuFormBloc >(
-            create: (context) => FeedMenuFormBloc(AccessBloc.appId(context),
+            create: (context) => FeedMenuFormBloc(AccessBloc.currentAppId(context),
                                        formAction: formAction,
 
                                                 )..add((formAction == FormAction.UpdateAction ? InitialiseFeedMenuFormEvent(value: value) : InitialiseNewFeedMenuFormEvent())),
@@ -142,7 +143,7 @@ class _MyFeedMenuFormState extends State<MyFeedMenuForm> {
 
   @override
   Widget build(BuildContext context) {
-    var app = AccessBloc.app(context);
+    var app = AccessBloc.currentApp(context);
     if (app == null) return Text('No app available');
     var accessState = AccessBloc.getState(context);
     return BlocBuilder<FeedMenuFormBloc, FeedMenuFormState>(builder: (context, state) {
@@ -392,7 +393,7 @@ class _MyFeedMenuFormState extends State<MyFeedMenuForm> {
   }
 
   bool _readOnly(AccessState accessState, FeedMenuFormInitialized state) {
-    return (formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData) || (!accessState.memberIsOwner());
+    return (formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData) || (!accessState.memberIsOwner(AccessBloc.currentAppId(context)));
   }
   
 

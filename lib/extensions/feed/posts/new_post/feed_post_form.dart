@@ -1,5 +1,6 @@
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
-import 'package:eliud_core/core/access/bloc/access_state.dart';
+import 'package:eliud_core/core/blocs/access/access_bloc.dart';
+import 'package:eliud_core/core/blocs/access/state/access_state.dart';
+import 'package:eliud_core/core/blocs/access/state/logged_in.dart';
 import 'package:eliud_core/core/navigate/page_param_helper.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
@@ -7,7 +8,6 @@ import 'package:eliud_core/style/frontend/has_dialog_widget.dart';
 import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/style/frontend/has_text_form_field.dart';
-import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/bloc/post_privilege_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/bloc/post_privilege_event.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/post_privilege_widget.dart';
@@ -52,14 +52,13 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
 
   @override
   Widget build(BuildContext context) {
-    var theState = AccessBloc.getState(context);
-    if (theState is LoggedIn) {
-      var app = AccessBloc.app(context);
-      if (app == null)
-        return text(context, 'No app available');
+    return BlocBuilder<AccessBloc, AccessState>(
+    builder: (context, accessState) {
+    if (accessState is LoggedIn) {
+      var app = accessState.currentApp;
       return complexAckNackDialog(context,
           title: 'New Album',
-          child: _contents(context, widget.pageContextInfo, app, theState),
+          child: _contents(context, widget.pageContextInfo, app, accessState),
           onSelection: (value) {
             if (value == 0) {
               BlocProvider.of<FeedPostFormBloc>(context).add(SubmitPost());
@@ -67,7 +66,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
           });
     } else {
       return text(context, 'Not logged in');
-    }
+    }});
   }
 
   Widget _contents(BuildContext context, PageContextInfo pageContextInfo,

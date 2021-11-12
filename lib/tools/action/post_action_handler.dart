@@ -1,5 +1,6 @@
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
-import 'package:eliud_core/core/access/bloc/access_state.dart';
+import 'package:eliud_core/core/blocs/access/access_bloc.dart';
+import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
+import 'package:eliud_core/core/blocs/access/state/logged_in.dart';
 import 'package:eliud_core/core/navigate/page_param_helper.dart';
 import 'package:eliud_core/core/navigate/router.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
@@ -59,7 +60,7 @@ class PostActionHandler extends PackageActionHandler {
 
   Future<void> executePostIt(BuildContext context, PostActionModel action,
       List<String> readAccess, LoggedIn accessState) async {
-    var pageContextInfo = PageParamHelper.getPagaContextInfo(context);
+    var pageContextInfo = PageParamHelper.getPagaContextInfo(context, accessState.currentApp);
     var postAppId = pageContextInfo.appId;
     var postPageId = pageContextInfo.pageId;
     var parameters = pageContextInfo.parameters;

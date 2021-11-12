@@ -1,3 +1,6 @@
+import 'package:eliud_core/core/blocs/access/access_bloc.dart';
+import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
+import 'package:eliud_core/core/blocs/access/state/access_state.dart';
 import 'package:eliud_core/core/navigate/page_param_helper.dart';
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/style/frontend/has_button.dart';
@@ -5,7 +8,6 @@ import 'package:eliud_core/style/frontend/has_container.dart';
 import 'package:eliud_core/style/frontend/has_dialog.dart';
 import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
-import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_state.dart';
@@ -57,12 +59,12 @@ class PagedPostsListState extends State<PagedPostsList> {
     return Container(
         padding: const EdgeInsets.only(top: 22.5, bottom: 22.5),
         child: actionContainer(context,
-                child: Center(
-                    child: Container(
-                        padding: EdgeInsets.all(2.0),
-                        width: 45,
-                        height: 40,
-                        child: child))));
+            child: Center(
+                child: Container(
+                    padding: EdgeInsets.all(2.0),
+                    width: 45,
+                    height: 40,
+                    child: child))));
   }
 
   void _addPost(
@@ -97,17 +99,15 @@ class PagedPostsListState extends State<PagedPostsList> {
 
       // Photo
       if (widget.feedModel.photoPost!) {
-        widgets.add(
-            PostButton(
-                widget.feedModel, PostType.PostPhoto, readAccess, author));
+        widgets.add(PostButton(
+            widget.feedModel, PostType.PostPhoto, readAccess, author));
         widgets.add(Spacer());
       }
 
       // Video
       if (widget.feedModel.videoPost != null && widget.feedModel.videoPost!) {
-        widgets.add(
-            PostButton(
-                widget.feedModel, PostType.PostVideo, readAccess, author));
+        widgets.add(PostButton(
+            widget.feedModel, PostType.PostVideo, readAccess, author));
         widgets.add(Spacer());
       }
 
@@ -117,18 +117,19 @@ class PagedPostsListState extends State<PagedPostsList> {
         var message = Image.asset(
             "assets/images/segoshvishna.fiverr.com/message.png",
             package: "eliud_pkg_feed");
-        widgets.add(actionContainer(context, child: iconButton(context, icon: message, tooltip: 'Message',
-            onPressed: () {
+        widgets.add(actionContainer(context,
+            child: iconButton(context, icon: message, tooltip: 'Message',
+                onPressed: () {
               openEntryDialog(context, title: 'Say something',
                   onPressed: (value) {
-                    if (value != null) {
-                      _addPost(
-                        description: value,
-                        authorId: author.documentID!,
-                        readAccess: readAccess,
-                      );
-                    }
-                  });
+                if (value != null) {
+                  _addPost(
+                    description: value,
+                    authorId: author.documentID!,
+                    readAccess: readAccess,
+                  );
+                }
+              });
             })));
         widgets.add(Spacer());
       }
@@ -148,11 +149,11 @@ class PagedPostsListState extends State<PagedPostsList> {
         var album = Image.asset(
             "assets/images/segoshvishna.fiverr.com/album.png",
             package: "eliud_pkg_feed");
-        widgets.add(actionContainer(context, child: iconButton(context,
-            icon: album,
-            tooltip: 'Album',
-            onPressed: () =>
-                FeedPostDialog.open(
+        widgets.add(actionContainer(context,
+            child: iconButton(context,
+                icon: album,
+                tooltip: 'Album',
+                onPressed: () => FeedPostDialog.open(
                     context,
                     widget.feedModel.documentID!,
                     profileInitialized.watchingThisProfile()!.authorId!,
@@ -173,7 +174,7 @@ class PagedPostsListState extends State<PagedPostsList> {
 
       return Container(height: 110, child: Row(children: widgets));
     } else {
-      return Container(height:0);
+      return Container(height: 0);
     }
   }
 
@@ -187,18 +188,15 @@ class PagedPostsListState extends State<PagedPostsList> {
     var items = <PopupMenuItem<int>>[];
     items.add(
       PopupMenuItem<int>(
-          child: text(context, 'Publish article for public'),
-          value: 0),
+          child: text(context, 'Publish article for public'), value: 0),
     );
     items.add(
       PopupMenuItem<int>(
-          child: text(context, 'Publish article for followers'),
-          value: 1),
+          child: text(context, 'Publish article for followers'), value: 1),
     );
     items.add(
       PopupMenuItem<int>(
-          child: text(context, 'Publish article for me'),
-          value: 2),
+          child: text(context, 'Publish article for me'), value: 2),
     );
     return PopupMenuButton(
         tooltip: 'Add article',
@@ -237,63 +235,70 @@ class PagedPostsListState extends State<PagedPostsList> {
         });
   }
 
-  static List<Widget> getAlbumActionIcons(BuildContext context, String accessible) {
+  static List<Widget> getAlbumActionIcons(
+      BuildContext context, String accessible) {
     return [
       dialogButton(context, label: 'Audience', onPressed: () {
         openMessageDialog(
-              context,
-              title: 'Accessible',
-              message: 'Article accessible by: ' + accessible,
-            );
+          context,
+          title: 'Accessible',
+          message: 'Article accessible by: ' + accessible,
+        );
       })
     ];
   }
 
   @override
   Widget build(BuildContext context) {
-    var pageContextInfo = PageParamHelper.getPagaContextInfo(context);
-    var pageId = pageContextInfo.pageId;
-    return BlocBuilder<ProfileBloc, ProfileState>(
-        builder: (context, profileState) {
-      if (profileState is ProfileInitialised) {
-        var appId = profileState.appId;
-        return BlocBuilder<PostListPagedBloc, PostListPagedState>(
-          builder: (context, state) {
-            if (state is PostListPagedState) {
-              var memberId = profileState.memberId();
-              var currentMemberId = profileState.memberId();
-              var photoURL = profileState.profileUrl();
-              List<Widget> widgets = [];
-              if (profileState is LoggedInProfileInitialized) {
-                widgets.add(_newPostForm(
-                    profileState.currentMember,
-                    profileState.defaultReadAccess,
-                    profileState,
-                    pageContextInfo));
-              }
-              for (int i = 0; i < state.values.length; i++) {
-                widgets.add(PostWidget(
-                  thumbStyle: widget.feedModel.thumbImage,
-                  appId: appId,
-                  feedId: widget.feedModel.documentID!,
-                  details: state.values[i],
-                  pageId: pageId,
-                  memberId: state.values[i].postModel.authorId!,
-                  currentMemberId: currentMemberId,
-                  isEditable: profileState.canEditThisProfile(),
-                  photoURL: photoURL,
-                ));
-              }
-              widgets.add(_buttonNextPage(!state.hasReachedMax));
-              return ListView(
-                  shrinkWrap: true,
-                  physics: ScrollPhysics(),
-                  children: widgets);
-            } else {
-              return progressIndicator(context);
-            }
-          },
-        );
+    return BlocBuilder<AccessBloc, AccessState>(
+        builder: (context, accessState) {
+      if (accessState is AccessDetermined) {
+        var pageContextInfo = PageParamHelper.getPagaContextInfo(context, accessState.currentApp);
+        var pageId = pageContextInfo.pageId;
+        return BlocBuilder<ProfileBloc, ProfileState>(
+            builder: (context, profileState) {
+          if (profileState is ProfileInitialised) {
+            var app = accessState.currentApp;
+            return BlocBuilder<PostListPagedBloc, PostListPagedState>(
+              builder: (context, state) {
+                if (state is PostListPagedState) {
+                  var currentMemberId = profileState.memberId();
+                  var photoURL = profileState.profileUrl();
+                  List<Widget> widgets = [];
+                  if (profileState is LoggedInProfileInitialized) {
+                    widgets.add(_newPostForm(
+                        profileState.currentMember,
+                        profileState.defaultReadAccess,
+                        profileState,
+                        pageContextInfo));
+                  }
+                  for (int i = 0; i < state.values.length; i++) {
+                    widgets.add(PostWidget(
+                      thumbStyle: widget.feedModel.thumbImage,
+                      app: app,
+                      feedId: widget.feedModel.documentID!,
+                      details: state.values[i],
+                      pageId: pageId,
+                      memberId: state.values[i].postModel.authorId!,
+                      currentMemberId: currentMemberId,
+                      isEditable: profileState.canEditThisProfile(),
+                      photoURL: photoURL,
+                    ));
+                  }
+                  widgets.add(_buttonNextPage(!state.hasReachedMax));
+                  return ListView(
+                      shrinkWrap: true,
+                      physics: ScrollPhysics(),
+                      children: widgets);
+                } else {
+                  return progressIndicator(context);
+                }
+              },
+            );
+          } else {
+            return progressIndicator(context);
+          }
+        });
       } else {
         return progressIndicator(context);
       }
@@ -318,9 +323,9 @@ class PagedPostsListState extends State<PagedPostsList> {
             } else {
               return Center(
                   child: h5(
-                        context,
-                        "That's all folks",
-                      ));
+                context,
+                "That's all folks",
+              ));
             }
           });
     }

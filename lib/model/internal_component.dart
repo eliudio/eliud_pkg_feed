@@ -15,7 +15,7 @@
 
 
 import 'package:eliud_core/tools/component/component_constructor.dart';
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
+import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -259,7 +259,7 @@ class ListComponent extends StatelessWidget with HasFab {
       providers: [
         BlocProvider<FeedListBloc>(
           create: (context) => FeedListBloc(
-            feedRepository: feedRepository(appId: AccessBloc.appId(context))!,
+            feedRepository: feedRepository(appId: AccessBloc.currentAppId(context))!,
           )..add(LoadFeedList()),
         )
       ],
@@ -272,7 +272,7 @@ class ListComponent extends StatelessWidget with HasFab {
       providers: [
         BlocProvider<FeedMenuListBloc>(
           create: (context) => FeedMenuListBloc(
-            feedMenuRepository: feedMenuRepository(appId: AccessBloc.appId(context))!,
+            feedMenuRepository: feedMenuRepository(appId: AccessBloc.currentAppId(context))!,
           )..add(LoadFeedMenuList()),
         )
       ],
@@ -285,7 +285,7 @@ class ListComponent extends StatelessWidget with HasFab {
       providers: [
         BlocProvider<HeaderListBloc>(
           create: (context) => HeaderListBloc(
-            headerRepository: headerRepository(appId: AccessBloc.appId(context))!,
+            headerRepository: headerRepository(appId: AccessBloc.currentAppId(context))!,
           )..add(LoadHeaderList()),
         )
       ],
@@ -298,7 +298,7 @@ class ListComponent extends StatelessWidget with HasFab {
       providers: [
         BlocProvider<PostListBloc>(
           create: (context) => PostListBloc(
-            postRepository: postRepository(appId: AccessBloc.appId(context))!,
+            postRepository: postRepository(appId: AccessBloc.currentAppId(context))!,
           )..add(LoadPostList()),
         )
       ],
@@ -311,7 +311,7 @@ class ListComponent extends StatelessWidget with HasFab {
       providers: [
         BlocProvider<PostCommentListBloc>(
           create: (context) => PostCommentListBloc(
-            postCommentRepository: postCommentRepository(appId: AccessBloc.appId(context))!,
+            postCommentRepository: postCommentRepository(appId: AccessBloc.currentAppId(context))!,
           )..add(LoadPostCommentList()),
         )
       ],
@@ -324,7 +324,7 @@ class ListComponent extends StatelessWidget with HasFab {
       providers: [
         BlocProvider<PostLikeListBloc>(
           create: (context) => PostLikeListBloc(
-            postLikeRepository: postLikeRepository(appId: AccessBloc.appId(context))!,
+            postLikeRepository: postLikeRepository(appId: AccessBloc.currentAppId(context))!,
           )..add(LoadPostLikeList()),
         )
       ],
@@ -337,7 +337,7 @@ class ListComponent extends StatelessWidget with HasFab {
       providers: [
         BlocProvider<ProfileListBloc>(
           create: (context) => ProfileListBloc(
-            profileRepository: profileRepository(appId: AccessBloc.appId(context))!,
+            profileRepository: profileRepository(appId: AccessBloc.currentAppId(context))!,
           )..add(LoadProfileList()),
         )
       ],
@@ -377,7 +377,7 @@ class DropdownButtonComponent extends StatelessWidget {
       providers: [
         BlocProvider<FeedListBloc>(
           create: (context) => FeedListBloc(
-            feedRepository: feedRepository(appId: AccessBloc.appId(context))!,
+            feedRepository: feedRepository(appId: AccessBloc.currentAppId(context))!,
           )..add(LoadFeedList()),
         )
       ],
@@ -390,7 +390,7 @@ class DropdownButtonComponent extends StatelessWidget {
       providers: [
         BlocProvider<FeedMenuListBloc>(
           create: (context) => FeedMenuListBloc(
-            feedMenuRepository: feedMenuRepository(appId: AccessBloc.appId(context))!,
+            feedMenuRepository: feedMenuRepository(appId: AccessBloc.currentAppId(context))!,
           )..add(LoadFeedMenuList()),
         )
       ],
@@ -403,7 +403,7 @@ class DropdownButtonComponent extends StatelessWidget {
       providers: [
         BlocProvider<HeaderListBloc>(
           create: (context) => HeaderListBloc(
-            headerRepository: headerRepository(appId: AccessBloc.appId(context))!,
+            headerRepository: headerRepository(appId: AccessBloc.currentAppId(context))!,
           )..add(LoadHeaderList()),
         )
       ],
@@ -416,7 +416,7 @@ class DropdownButtonComponent extends StatelessWidget {
       providers: [
         BlocProvider<PostListBloc>(
           create: (context) => PostListBloc(
-            postRepository: postRepository(appId: AccessBloc.appId(context))!,
+            postRepository: postRepository(appId: AccessBloc.currentAppId(context))!,
           )..add(LoadPostList()),
         )
       ],
@@ -429,7 +429,7 @@ class DropdownButtonComponent extends StatelessWidget {
       providers: [
         BlocProvider<PostCommentListBloc>(
           create: (context) => PostCommentListBloc(
-            postCommentRepository: postCommentRepository(appId: AccessBloc.appId(context))!,
+            postCommentRepository: postCommentRepository(appId: AccessBloc.currentAppId(context))!,
           )..add(LoadPostCommentList()),
         )
       ],
@@ -442,7 +442,7 @@ class DropdownButtonComponent extends StatelessWidget {
       providers: [
         BlocProvider<PostLikeListBloc>(
           create: (context) => PostLikeListBloc(
-            postLikeRepository: postLikeRepository(appId: AccessBloc.appId(context))!,
+            postLikeRepository: postLikeRepository(appId: AccessBloc.currentAppId(context))!,
           )..add(LoadPostLikeList()),
         )
       ],
@@ -455,7 +455,7 @@ class DropdownButtonComponent extends StatelessWidget {
       providers: [
         BlocProvider<ProfileListBloc>(
           create: (context) => ProfileListBloc(
-            profileRepository: profileRepository(appId: AccessBloc.appId(context))!,
+            profileRepository: profileRepository(appId: AccessBloc.currentAppId(context))!,
           )..add(LoadProfileList()),
         )
       ],

@@ -13,7 +13,7 @@
 
 */
 
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
+import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/style/frontend/has_button.dart';
 import 'package:eliud_core/style/frontend/has_divider.dart';
 import 'package:eliud_core/style/frontend/has_list_tile.dart';
@@ -38,7 +38,7 @@ class PostCommentComponentSelector extends ComponentSelector {
     return BlocProvider<PostCommentListBloc>(
           create: (context) => PostCommentListBloc(
             postCommentRepository:
-                postCommentRepository(appId: AccessBloc.appId(context))!,
+                postCommentRepository(appId: AccessBloc.currentAppId(context))!,
           )..add(LoadPostCommentList()),
       child: SelectPostCommentWidget(
           height: height,

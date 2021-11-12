@@ -13,8 +13,9 @@
 
 */
 
-import 'package:eliud_core/core/access/bloc/access_state.dart';
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
+import 'package:eliud_core/core/blocs/access/state/access_state.dart';
+import 'package:eliud_core/core/blocs/access/state/logged_in.dart';
+import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import '../tools/bespoke_models.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 import 'package:eliud_core/tools/screen_size.dart';
@@ -76,11 +77,11 @@ class PostForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var accessState = AccessBloc.getState(context);
-    var app = AccessBloc.app(context);
+    var app = AccessBloc.currentApp(context);
     if (app == null) return Text("No app available");
     if (formAction == FormAction.ShowData) {
       return BlocProvider<PostFormBloc >(
-            create: (context) => PostFormBloc(AccessBloc.appId(context),
+            create: (context) => PostFormBloc(AccessBloc.currentAppId(context),
                                        formAction: formAction,
 
                                                 )..add(InitialisePostFormEvent(value: value)),
@@ -89,7 +90,7 @@ class PostForm extends StatelessWidget {
           );
     } if (formAction == FormAction.ShowPreloadedData) {
       return BlocProvider<PostFormBloc >(
-            create: (context) => PostFormBloc(AccessBloc.appId(context),
+            create: (context) => PostFormBloc(AccessBloc.currentAppId(context),
                                        formAction: formAction,
 
                                                 )..add(InitialisePostFormNoLoadEvent(value: value)),
@@ -100,7 +101,7 @@ class PostForm extends StatelessWidget {
       return Scaffold(
         appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().appBarWithString(context, title: formAction == FormAction.UpdateAction ? 'Update Post' : 'Add Post'),
         body: BlocProvider<PostFormBloc >(
-            create: (context) => PostFormBloc(AccessBloc.appId(context),
+            create: (context) => PostFormBloc(AccessBloc.currentAppId(context),
                                        formAction: formAction,
 
                                                 )..add((formAction == FormAction.UpdateAction ? InitialisePostFormEvent(value: value) : InitialiseNewPostFormEvent())),
@@ -162,7 +163,7 @@ class _MyPostFormState extends State<MyPostForm> {
 
   @override
   Widget build(BuildContext context) {
-    var app = AccessBloc.app(context);
+    var app = AccessBloc.currentApp(context);
     if (app == null) return Text('No app available');
     var accessState = AccessBloc.getState(context);
     return BlocBuilder<PostFormBloc, PostFormState>(builder: (context, state) {
@@ -231,11 +232,11 @@ class _MyPostFormState extends State<MyPostForm> {
 
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().radioListTile(context, 0, _archivedSelectedRadioTile, 'Active', 'Active', !accessState.memberIsOwner() ? null : (dynamic val) => setSelectionArchived(val))
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().radioListTile(context, 0, _archivedSelectedRadioTile, 'Active', 'Active', !accessState.memberIsOwner(AccessBloc.currentAppId(context)) ? null : (dynamic val) => setSelectionArchived(val))
           );
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().radioListTile(context, 0, _archivedSelectedRadioTile, 'Archived', 'Archived', !accessState.memberIsOwner() ? null : (dynamic val) => setSelectionArchived(val))
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().radioListTile(context, 0, _archivedSelectedRadioTile, 'Archived', 'Archived', !accessState.memberIsOwner(AccessBloc.currentAppId(context)) ? null : (dynamic val) => setSelectionArchived(val))
           );
 
 
@@ -504,7 +505,7 @@ class _MyPostFormState extends State<MyPostForm> {
   }
 
   bool _readOnly(AccessState accessState, PostFormInitialized state) {
-    return (formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData) || (!accessState.memberIsOwner());
+    return (formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData) || (!accessState.memberIsOwner(AccessBloc.currentAppId(context)));
   }
   
 

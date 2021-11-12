@@ -77,8 +77,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   Future<ProfileState> determineProfileState(
       InitialiseProfileEvent event) async {
-    var accessState = event.appLoaded;
-    var app = accessState.app;
+    var accessState = event.accessDetermined;
+    var app = accessState.currentApp;
     var currentMemberModel = accessState.getMember();
     var pageContextInfo =
         PageParamHelper.getPagaContextInfoWithRoutAndApp(event.modalRoute, app);

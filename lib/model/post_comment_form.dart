@@ -13,8 +13,9 @@
 
 */
 
-import 'package:eliud_core/core/access/bloc/access_state.dart';
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
+import 'package:eliud_core/core/blocs/access/state/access_state.dart';
+import 'package:eliud_core/core/blocs/access/state/logged_in.dart';
+import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import '../tools/bespoke_models.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 import 'package:eliud_core/tools/screen_size.dart';
@@ -76,11 +77,11 @@ class PostCommentForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var accessState = AccessBloc.getState(context);
-    var app = AccessBloc.app(context);
+    var app = AccessBloc.currentApp(context);
     if (app == null) return Text("No app available");
     if (formAction == FormAction.ShowData) {
       return BlocProvider<PostCommentFormBloc >(
-            create: (context) => PostCommentFormBloc(AccessBloc.appId(context),
+            create: (context) => PostCommentFormBloc(AccessBloc.currentAppId(context),
                                        formAction: formAction,
 
                                                 )..add(InitialisePostCommentFormEvent(value: value)),
@@ -89,7 +90,7 @@ class PostCommentForm extends StatelessWidget {
           );
     } if (formAction == FormAction.ShowPreloadedData) {
       return BlocProvider<PostCommentFormBloc >(
-            create: (context) => PostCommentFormBloc(AccessBloc.appId(context),
+            create: (context) => PostCommentFormBloc(AccessBloc.currentAppId(context),
                                        formAction: formAction,
 
                                                 )..add(InitialisePostCommentFormNoLoadEvent(value: value)),
@@ -100,7 +101,7 @@ class PostCommentForm extends StatelessWidget {
       return Scaffold(
         appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().appBarWithString(context, title: formAction == FormAction.UpdateAction ? 'Update PostComment' : 'Add PostComment'),
         body: BlocProvider<PostCommentFormBloc >(
-            create: (context) => PostCommentFormBloc(AccessBloc.appId(context),
+            create: (context) => PostCommentFormBloc(AccessBloc.currentAppId(context),
                                        formAction: formAction,
 
                                                 )..add((formAction == FormAction.UpdateAction ? InitialisePostCommentFormEvent(value: value) : InitialiseNewPostCommentFormEvent())),
@@ -154,7 +155,7 @@ class _MyPostCommentFormState extends State<MyPostCommentForm> {
 
   @override
   Widget build(BuildContext context) {
-    var app = AccessBloc.app(context);
+    var app = AccessBloc.currentApp(context);
     if (app == null) return Text('No app available');
     var accessState = AccessBloc.getState(context);
     return BlocBuilder<PostCommentFormBloc, PostCommentFormState>(builder: (context, state) {
@@ -400,7 +401,7 @@ class _MyPostCommentFormState extends State<MyPostCommentForm> {
   }
 
   bool _readOnly(AccessState accessState, PostCommentFormInitialized state) {
-    return (formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData) || (!accessState.memberIsOwner());
+    return (formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData) || (!accessState.memberIsOwner(AccessBloc.currentAppId(context)));
   }
   
 

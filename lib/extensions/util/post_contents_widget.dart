@@ -1,5 +1,5 @@
+import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
-import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/storage/member_image_model_widget.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_type_helper.dart';
 import 'package:eliud_pkg_text/platform/text_platform.dart';
@@ -8,24 +8,21 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_pkg_feed/model/post_medium_model.dart';
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_media_helper.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:eliud_pkg_medium/platform/medium_platform.dart';
 
-import 'embedded_page.dart';
-
 class PostContentsWidget extends StatefulWidget {
   final String? memberID;
   final PostModel postModel;
-  final AccessBloc? accessBloc;
+  final AccessBloc accessBloc;
   final String? parentPageId;
 
   const PostContentsWidget(
       {Key? key,
       this.memberID,
       required this.postModel,
-      this.accessBloc,
+      required this.accessBloc,
       this.parentPageId})
       : super(key: key);
 

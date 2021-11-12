@@ -1,8 +1,7 @@
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
-import 'package:eliud_core/core/access/bloc/access_state.dart';
+import 'package:eliud_core/core/blocs/access/access_bloc.dart';
+import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
+import 'package:eliud_core/core/blocs/access/state/access_state.dart';
 import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
-import 'package:eliud_core/style/frontend/has_text.dart';
-import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_state.dart';
@@ -29,18 +28,20 @@ class _FeedState extends State<Feed> {
 
   @override
   Widget build(BuildContext context) {
-    var theState = AccessBloc.getState(context);
-    if (theState is AppLoaded) {
-      return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
-        if (state is ProfileInitialised) {
-          return _getIt(context, widget.feedModel, state);
-        } else {
-          return progressIndicator(context);
-        }
-      });
-    } else {
-      return text(context, 'App not loaded');
-    }
+    return BlocBuilder<AccessBloc, AccessState>(
+        builder: (context, accessState) {
+          if (accessState is AccessDetermined) {
+            return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
+              if (state is ProfileInitialised) {
+                return _getIt(context, widget.feedModel, state);
+              } else {
+                return progressIndicator(context);
+              }
+            });
+          } else {
+            return progressIndicator(context);
+          }
+        });
   }
 
   Widget _getIt(

@@ -1,5 +1,7 @@
-import 'package:eliud_core/core/access/bloc/access_state.dart';
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
+import 'package:eliud_core/core/blocs/access/access_bloc.dart';
+import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
+import 'package:eliud_core/core/blocs/access/state/access_state.dart';
+import 'package:eliud_core/core/blocs/access/state/logged_in.dart';
 import 'package:eliud_core/core/navigate/page_param_helper.dart';
 import 'package:eliud_core/style/frontend/has_dialog.dart';
 import 'package:eliud_core/style/style_registry.dart';
@@ -62,37 +64,39 @@ class _FeedPostDialogState extends State<FeedPostDialog> {
 
   @override
   Widget build(BuildContext context) {
-    var theState = AccessBloc.getState(context);
-    if (theState is LoggedIn) {
-      var app = AccessBloc.app(context);
-      if (app == null)
+    return BlocBuilder<AccessBloc, AccessState>(
+        builder: (context, accessState) {
+      if (accessState is LoggedIn) {
+        var app = accessState.currentApp;
+        if (app == null)
+          return StyleRegistry.registry()
+              .styleWithContext(context)
+              .frontEndStyle()
+              .textStyle()
+              .text(context, 'No app available');
+        return BlocProvider<FeedPostFormBloc>(
+            create: (context) => FeedPostFormBloc(
+                app.documentID!,
+                postListPagedBloc,
+                accessState.member.documentID!,
+                widget.feedId,
+                accessState)
+              ..add(widget.initialiseEvent),
+            child: MyFeedPostForm(
+              accessState.currentAppId(),
+              widget.feedId,
+              widget.memberId,
+              widget.currentMemberId,
+              widget.photoURL,
+              widget.pageContextInfo,
+            ));
+      } else {
         return StyleRegistry.registry()
             .styleWithContext(context)
             .frontEndStyle()
             .textStyle()
-            .text(context, 'No app available');
-      return BlocProvider<FeedPostFormBloc>(
-          create: (context) => FeedPostFormBloc(
-              app.documentID!,
-              postListPagedBloc,
-              theState.member.documentID!,
-              widget.feedId,
-              theState)
-            ..add(widget.initialiseEvent),
-          child: MyFeedPostForm(
-            theState.app.documentID!,
-            widget.feedId,
-            widget.memberId,
-            widget.currentMemberId,
-            widget.photoURL,
-            widget.pageContextInfo,
-          ));
-    } else {
-      return StyleRegistry.registry()
-          .styleWithContext(context)
-          .frontEndStyle()
-          .textStyle()
-          .text(context, 'Not logged in');
-    }
+            .text(context, 'Not logged in');
+      }
+    });
   }
 }

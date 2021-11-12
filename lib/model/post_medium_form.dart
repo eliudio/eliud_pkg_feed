@@ -13,8 +13,9 @@
 
 */
 
-import 'package:eliud_core/core/access/bloc/access_state.dart';
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
+import 'package:eliud_core/core/blocs/access/state/access_state.dart';
+import 'package:eliud_core/core/blocs/access/state/logged_in.dart';
+import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import '../tools/bespoke_models.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 import 'package:eliud_core/tools/screen_size.dart';
@@ -71,11 +72,11 @@ class PostMediumForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var accessState = AccessBloc.getState(context);
-    var app = AccessBloc.app(context);
+    var app = AccessBloc.currentApp(context);
     if (app == null) return Text("No app available");
     if (formAction == FormAction.ShowData) {
       return BlocProvider<PostMediumFormBloc >(
-            create: (context) => PostMediumFormBloc(AccessBloc.appId(context),
+            create: (context) => PostMediumFormBloc(AccessBloc.currentAppId(context),
                                        
                                                 )..add(InitialisePostMediumFormEvent(value: value)),
   
@@ -83,7 +84,7 @@ class PostMediumForm extends StatelessWidget {
           );
     } if (formAction == FormAction.ShowPreloadedData) {
       return BlocProvider<PostMediumFormBloc >(
-            create: (context) => PostMediumFormBloc(AccessBloc.appId(context),
+            create: (context) => PostMediumFormBloc(AccessBloc.currentAppId(context),
                                        
                                                 )..add(InitialisePostMediumFormNoLoadEvent(value: value)),
   
@@ -93,7 +94,7 @@ class PostMediumForm extends StatelessWidget {
       return Scaffold(
         appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().appBarWithString(context, title: formAction == FormAction.UpdateAction ? 'Update PostMedium' : 'Add PostMedium'),
         body: BlocProvider<PostMediumFormBloc >(
-            create: (context) => PostMediumFormBloc(AccessBloc.appId(context),
+            create: (context) => PostMediumFormBloc(AccessBloc.currentAppId(context),
                                        
                                                 )..add((formAction == FormAction.UpdateAction ? InitialisePostMediumFormEvent(value: value) : InitialiseNewPostMediumFormEvent())),
   
@@ -133,7 +134,7 @@ class _MyPostMediumFormState extends State<MyPostMediumForm> {
 
   @override
   Widget build(BuildContext context) {
-    var app = AccessBloc.app(context);
+    var app = AccessBloc.currentApp(context);
     if (app == null) return Text('No app available');
     var accessState = AccessBloc.getState(context);
     return BlocBuilder<PostMediumFormBloc, PostMediumFormState>(builder: (context, state) {
@@ -244,7 +245,7 @@ class _MyPostMediumFormState extends State<MyPostMediumForm> {
   }
 
   bool _readOnly(AccessState accessState, PostMediumFormInitialized state) {
-    return (formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData) || (!accessState.memberIsOwner());
+    return (formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData) || (!accessState.memberIsOwner(AccessBloc.currentAppId(context)));
   }
   
 

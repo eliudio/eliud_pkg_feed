@@ -1,4 +1,6 @@
+import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/core/navigate/page_param_helper.dart';
+import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/style/frontend/has_button.dart';
 import 'package:eliud_core/style/frontend/has_container.dart';
 import 'package:eliud_core/style/frontend/has_dialog.dart';
@@ -13,7 +15,6 @@ import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_sta
 import 'package:eliud_pkg_feed/extensions/feed/posts/paged_posts_list.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/bloc/member_service.dart';
 import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_contents_widget.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_type_helper.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
@@ -31,7 +32,7 @@ import 'new_post/feed_post_dialog.dart';
 class PostWidget extends StatefulWidget {
   //final MemberModel? member;
   //final String parentPageId;
-  final String appId;
+  final AppModel app;
   final String pageId;
   final String memberId; // of the post
   final String? currentMemberId;
@@ -43,7 +44,7 @@ class PostWidget extends StatefulWidget {
 
   const PostWidget(
       {Key? key,
-      required this.appId,
+      required this.app,
       required this.pageId,
       required this.memberId,
       required this.currentMemberId,
@@ -142,7 +143,7 @@ class _PostWidgetState extends State<PostWidget> {
                 widget.pageId,
                 widget.currentMemberId!,
                 widget.currentMemberId,
-                widget.appId,
+                widget.app.documentID!,
                 widget.feedId)),
         Container(width: 8),
         Flexible(
@@ -212,7 +213,7 @@ class _PostWidgetState extends State<PostWidget> {
               widget.pageId,
               postModel.authorId!,
               widget.currentMemberId,
-              widget.appId,
+              widget.app.documentID!,
               widget.feedId)),
       Container(
         width: 8,
@@ -222,7 +223,7 @@ class _PostWidgetState extends State<PostWidget> {
           height: 4,
         ),
         AvatarHelper.nameH5(
-            context, postModel.authorId!, widget.appId, widget.feedId),
+            context, postModel.authorId!, widget.app.documentID!, widget.feedId),
         h5(context, verboseDateTimeRepresentation(timeStamp), textAlign: TextAlign.left),
       ]),
       Spacer(),
@@ -279,7 +280,7 @@ class _PostWidgetState extends State<PostWidget> {
               case PostType.Album:
               case PostType.OnlyDescription:
                 var pageContextInfo =
-                    PageParamHelper.getPagaContextInfo(context);
+                    PageParamHelper.getPagaContextInfo(context, widget.app);
                 FeedPostDialog.open(
                     context,
                     widget.feedId,
@@ -427,7 +428,7 @@ class _PostWidgetState extends State<PostWidget> {
 
     List<Widget> rowChildren = [
       AvatarHelper.avatar(context, 20, widget.pageId, data.member!.documentID!,
-          widget.currentMemberId, widget.appId, widget.feedId),
+          widget.currentMemberId, widget.app.documentID!, widget.feedId),
       Container(width: 8),
       Expanded(
           child: Container(

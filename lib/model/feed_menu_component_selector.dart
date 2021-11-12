@@ -13,7 +13,7 @@
 
 */
 
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
+import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/style/frontend/has_button.dart';
 import 'package:eliud_core/style/frontend/has_divider.dart';
 import 'package:eliud_core/style/frontend/has_list_tile.dart';
@@ -38,7 +38,7 @@ class FeedMenuComponentSelector extends ComponentSelector {
     return BlocProvider<FeedMenuListBloc>(
           create: (context) => FeedMenuListBloc(
             feedMenuRepository:
-                feedMenuRepository(appId: AccessBloc.appId(context))!,
+                feedMenuRepository(appId: AccessBloc.currentAppId(context))!,
           )..add(LoadFeedMenuList()),
       child: SelectFeedMenuWidget(
           height: height,

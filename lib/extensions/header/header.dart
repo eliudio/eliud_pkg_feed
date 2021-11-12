@@ -1,8 +1,10 @@
+import 'package:eliud_core/core/blocs/access/access_bloc.dart';
+import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
+import 'package:eliud_core/core/blocs/access/state/access_state.dart';
 import 'package:eliud_core/core/navigate/page_param_helper.dart';
 import 'package:eliud_core/style/frontend/has_container.dart';
 import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
-import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_event.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_state.dart';
@@ -83,102 +85,112 @@ class _HeaderState extends State<Header> {
 
   @override
   Widget build(BuildContext context) {
-    var pageContextInfo = PageParamHelper.getPagaContextInfo(context);
-    var pageId = pageContextInfo.pageId;
-    return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
-      if (state is ProfileError)
-        return h5(context, 'No profile');
-      if (state is ProfileInitialised) {
-        List<Widget> allRows = [];
+    return BlocBuilder<AccessBloc, AccessState>(
+        builder: (context, accessState) {
+          if (accessState is AccessDetermined) {
+            var pageContextInfo = PageParamHelper.getPagaContextInfo(context, accessState.currentApp);
+            var pageId = pageContextInfo.pageId;
+            return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
+              if (state is ProfileError)
+                return h5(context, 'No profile');
+              if (state is ProfileInitialised) {
+                List<Widget> allRows = [];
 
-        // Add profile photo
-        List<Widget> rows = [];
+                // Add profile photo
+                List<Widget> rows = [];
 
-        var currentMemberId = state.memberId();
-        var memberId = state.watchingThisMember();
-        if (memberId != null) {
-          var avatarWidget = _progress(
-            Align(
-                alignment: Alignment.bottomCenter,
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 110, maxHeight: 110),
-                  child: AvatarHelper.avatar(
-                      context,
-                      55,
-                      pageId,
-                      memberId,
-                      currentMemberId,
-                      state.appId,
-                      state.feedId),
-                )),
-            state.uploadingProfilePhotoProgress,
-            110,
-            70,
-          );
-          var container = Container(
-              height: heightBackgroundPhoto(context),
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: 110, maxHeight: 110),
-                    child: state.canEditThisProfile()
-                        ? Stack(
-                      children: [
-                        avatarWidget,
-                        Align(
-                          alignment: Alignment.topRight,
-                          child: EditableButton(
-                              button: _button(
-                                  context,
-                                  state,
-                                  false,
-                                  'Update profile photo',
+                var currentMemberId = state.memberId();
+                var memberId = state.watchingThisMember();
+                if (memberId != null) {
+                  var avatarWidget = _progress(
+                    Align(
+                        alignment: Alignment.bottomCenter,
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(maxWidth: 110, maxHeight: 110),
+                          child: AvatarHelper.avatar(
+                              context,
+                              55,
+                              pageId,
+                              memberId,
+                              currentMemberId,
+                              state.appId,
+                              state.feedId),
+                        )),
+                    state.uploadingProfilePhotoProgress,
+                    110,
+                    70,
+                  );
+                  var container = Container(
+                      height: heightBackgroundPhoto(context),
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: ConstrainedBox(
+                            constraints: BoxConstraints(maxWidth: 110, maxHeight: 110),
+                            child: state.canEditThisProfile()
+                                ? Stack(
+                              children: [
+                                avatarWidget,
+                                Align(
+                                  alignment: Alignment.topRight,
+                                  child: EditableButton(
+                                      button: _button(
+                                        context,
+                                        state,
+                                        false,
+                                        'Update profile photo',
                                       )),
-                        ) // EditableButton(editFunction: () {})
-                      ],
-                    )
-                        : avatarWidget),
-              ));
-          rows.add(container);
-          var backgroundPhoto = topicContainer(context,
-              children: rows,
-              image: _background(context, state.watchingThisProfile()));
+                                ) // EditableButton(editFunction: () {})
+                              ],
+                            )
+                                : avatarWidget),
+                      ));
+                  rows.add(container);
+                  var backgroundPhoto = topicContainer(context,
+                      children: rows,
+                      image: _background(context, state.watchingThisProfile()));
 
-          // Add the background photo
-          if (state.canEditThisProfile()) {
-            allRows.add(EditableWidget(
-                child: _progress(
-                    backgroundPhoto,
-                    state.uploadingBGProgress,
-                    heightBackgroundPhoto(context),
-                    width(context) / 2),
-                button: _button(
-                    context,
-                    state,
-                    true,
-                    'Update profile background',
+                  // Add the background photo
+                  if (state.canEditThisProfile()) {
+                    allRows.add(EditableWidget(
+                        child: _progress(
+                            backgroundPhoto,
+                            state.uploadingBGProgress,
+                            heightBackgroundPhoto(context),
+                            width(context) / 2),
+                        button: _button(
+                          context,
+                          state,
+                          true,
+                          'Update profile background',
                         )));
-          } else {
-            allRows.add(backgroundPhoto);
-          }
-        }
+                  } else {
+                    allRows.add(backgroundPhoto);
+                  }
+                }
 
-        var watchingThisProfile = state.watchingThisProfile();
-        if (watchingThisProfile != null) {
-          // Add the name
-          allRows.add(Align(
-              alignment: Alignment.bottomCenter,
-              child: actionContainer(context,
-                  child: Container(
-                      padding: EdgeInsets.all(10.0),
-                      child: AvatarHelper.nameH1(
-                          context, watchingThisProfile.authorId!, state.appId,
-                          state.feedId)))));
-        }
-        return Column(children: allRows);
-      }
-      return progressIndicator(context);
-    });
+                var watchingThisProfile = state.watchingThisProfile();
+                if (watchingThisProfile != null) {
+                  // Add the name
+                  allRows.add(Align(
+                      alignment: Alignment.bottomCenter,
+                      child: actionContainer(context,
+                          child: Container(
+                              padding: EdgeInsets.all(10.0),
+                              child: AvatarHelper.nameH1(
+                                  context, watchingThisProfile.authorId!, state.appId,
+                                  state.feedId)))));
+                }
+                return Column(children: allRows);
+              }
+              return progressIndicator(context);
+            });
+          } else {
+            return progressIndicator(context);
+          }
+        });
+
+
+
   }
 
   Widget _button(BuildContext context, ProfileInitialised profileInitialised,
