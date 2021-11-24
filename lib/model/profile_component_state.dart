@@ -35,9 +35,9 @@ class ProfileComponentPermissionDenied extends ProfileComponentState {
 }
 
 class ProfileComponentLoaded extends ProfileComponentState {
-  final ProfileModel? value;
+  final ProfileModel value;
 
-  const ProfileComponentLoaded({ this.value });
+  const ProfileComponentLoaded({ required this.value });
 
   ProfileComponentLoaded copyWith({ ProfileModel? copyThis }) {
     return ProfileComponentLoaded(value: copyThis ?? this.value);

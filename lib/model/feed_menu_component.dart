@@ -13,9 +13,6 @@
 
 */
 
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:eliud_core/style/style_registry.dart';
 
 import 'package:eliud_pkg_feed/model/feed_menu_component_bloc.dart';
 import 'package:eliud_pkg_feed/model/feed_menu_component_event.dart';
@@ -23,18 +20,26 @@ import 'package:eliud_pkg_feed/model/feed_menu_model.dart';
 import 'package:eliud_pkg_feed/model/feed_menu_repository.dart';
 import 'package:eliud_pkg_feed/model/feed_menu_component_state.dart';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:eliud_core/style/style_registry.dart';
+import 'abstract_repository_singleton.dart';
+import 'package:eliud_core/core/widgets/alert_widget.dart';
+import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
+
 abstract class AbstractFeedMenuComponent extends StatelessWidget {
   static String componentName = "feedMenus";
-  final String? feedMenuID;
+  final String theAppId;
+  final String feedMenuId;
 
-  AbstractFeedMenuComponent({Key? key, this.feedMenuID}): super(key: key);
+  AbstractFeedMenuComponent({Key? key, required this.theAppId, required this.feedMenuId}): super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<FeedMenuComponentBloc> (
           create: (context) => FeedMenuComponentBloc(
-            feedMenuRepository: getFeedMenuRepository(context))
-        ..add(FetchFeedMenuComponent(id: feedMenuID)),
+            feedMenuRepository: feedMenuRepository(appId: theAppId)!)
+        ..add(FetchFeedMenuComponent(id: feedMenuId)),
       child: _feedMenuBlockBuilder(context),
     );
   }
@@ -43,7 +48,7 @@ abstract class AbstractFeedMenuComponent extends StatelessWidget {
     return BlocBuilder<FeedMenuComponentBloc, FeedMenuComponentState>(builder: (context, state) {
       if (state is FeedMenuComponentLoaded) {
         if (state.value == null) {
-          return alertWidget(title: 'Error', content: 'No FeedMenu defined');
+          return AlertWidget(title: "Error", content: 'No FeedMenu defined');
         } else {
           return yourWidget(context, state.value);
         }
@@ -54,7 +59,7 @@ abstract class AbstractFeedMenuComponent extends StatelessWidget {
           size: 30.0,
         );
       } else if (state is FeedMenuComponentError) {
-        return alertWidget(title: 'Error', content: state.message);
+        return AlertWidget(title: 'Error', content: state.message);
       } else {
         return Center(
           child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicatorStyle().progressIndicator(context),
@@ -63,8 +68,6 @@ abstract class AbstractFeedMenuComponent extends StatelessWidget {
     });
   }
 
-  Widget yourWidget(BuildContext context, FeedMenuModel? value);
-  Widget alertWidget({ title: String, content: String});
-  FeedMenuRepository getFeedMenuRepository(BuildContext context);
+  Widget yourWidget(BuildContext context, FeedMenuModel value);
 }
 

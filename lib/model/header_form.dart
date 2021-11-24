@@ -74,6 +74,7 @@ class HeaderForm extends StatelessWidget {
     var accessState = AccessBloc.getState(context);
     var app = AccessBloc.currentApp(context);
     if (app == null) return Text("No app available");
+    var appId = app.documentID!;
     if (formAction == FormAction.ShowData) {
       return BlocProvider<HeaderFormBloc >(
             create: (context) => HeaderFormBloc(AccessBloc.currentAppId(context),
@@ -143,6 +144,7 @@ class _MyHeaderFormState extends State<MyHeaderForm> {
   Widget build(BuildContext context) {
     var app = AccessBloc.currentApp(context);
     if (app == null) return Text('No app available');
+    var appId = app.documentID!;
     var accessState = AccessBloc.getState(context);
     return BlocBuilder<HeaderFormBloc, HeaderFormState>(builder: (context, state) {
       if (state is HeaderFormUninitialized) return Center(
@@ -192,7 +194,7 @@ class _MyHeaderFormState extends State<MyHeaderForm> {
 
         children.add(
 
-                DropdownButtonComponentFactory().createNew(id: "feeds", value: _feed, trigger: _onFeedSelected, optional: false),
+                DropdownButtonComponentFactory().createNew(appId: appId, id: "feeds", value: _feed, trigger: _onFeedSelected, optional: false),
           );
 
 

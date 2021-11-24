@@ -35,9 +35,9 @@ class PostComponentPermissionDenied extends PostComponentState {
 }
 
 class PostComponentLoaded extends PostComponentState {
-  final PostModel? value;
+  final PostModel value;
 
-  const PostComponentLoaded({ this.value });
+  const PostComponentLoaded({ required this.value });
 
   PostComponentLoaded copyWith({ PostModel? copyThis }) {
     return PostComponentLoaded(value: copyThis ?? this.value);

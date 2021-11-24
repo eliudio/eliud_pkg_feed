@@ -35,9 +35,9 @@ class FeedMenuComponentPermissionDenied extends FeedMenuComponentState {
 }
 
 class FeedMenuComponentLoaded extends FeedMenuComponentState {
-  final FeedMenuModel? value;
+  final FeedMenuModel value;
 
-  const FeedMenuComponentLoaded({ this.value });
+  const FeedMenuComponentLoaded({ required this.value });
 
   FeedMenuComponentLoaded copyWith({ FeedMenuModel? copyThis }) {
     return FeedMenuComponentLoaded(value: copyThis ?? this.value);

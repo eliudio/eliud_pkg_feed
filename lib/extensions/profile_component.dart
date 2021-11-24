@@ -20,8 +20,8 @@ class ProfileComponentConstructorDefault implements ComponentConstructor {
   ProfileComponentConstructorDefault();
 
   @override
-  Widget createNew({Key? key, required String id, Map<String, dynamic>? parameters}) {
-    return ProfileComponent(key: key, id: id);
+  Widget createNew({Key? key, required String appId, required String id, Map<String, dynamic>? parameters}) {
+    return ProfileComponent(key: key, appId: appId, id: id);
   }
 
   @override
@@ -29,12 +29,7 @@ class ProfileComponentConstructorDefault implements ComponentConstructor {
 }
 
 class ProfileComponent extends AbstractProfileComponent {
-  ProfileComponent({Key? key, required String id}) : super(key: key, profileID: id);
-
-  @override
-  Widget alertWidget({title = String, content = String}) {
-    return AlertWidget(title: title, content: content);
-  }
+  ProfileComponent({Key? key, required String appId, required String id}) : super(key: key, theAppId: appId, profileId: id);
 
   @override
   Widget yourWidget(BuildContext context, ProfileModel? profileModel) {
@@ -47,9 +42,9 @@ class ProfileComponent extends AbstractProfileComponent {
             return BlocProvider<ProfileBloc>(
                 create: (context) =>
                 ProfileBloc()
-                  ..add(InitialiseProfileEvent(
+                  ..add(InitialiseProfileEvent(accessState.currentAppId(context),
                       feedId, accessState, modalRoute)),
-                child: Profile(appId: accessState.currentApp.documentID!)
+                child: Profile(appId: accessState.currentApp(context).documentID!)
             );
           } else {
             return progressIndicator(context);
@@ -57,9 +52,4 @@ class ProfileComponent extends AbstractProfileComponent {
         });
   }
 
-  @override
-  ProfileRepository getProfileRepository(BuildContext context) {
-    return AbstractRepositorySingleton.singleton
-        .profileRepository(AccessBloc.currentAppId(context))!;
-  }
 }

@@ -35,9 +35,9 @@ class HeaderComponentPermissionDenied extends HeaderComponentState {
 }
 
 class HeaderComponentLoaded extends HeaderComponentState {
-  final HeaderModel? value;
+  final HeaderModel value;
 
-  const HeaderComponentLoaded({ this.value });
+  const HeaderComponentLoaded({ required this.value });
 
   HeaderComponentLoaded copyWith({ HeaderModel? copyThis }) {
     return HeaderComponentLoaded(value: copyThis ?? this.value);

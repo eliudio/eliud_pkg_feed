@@ -2,7 +2,7 @@ import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
 import 'package:eliud_core/core/blocs/access/state/access_state.dart';
 import 'package:eliud_core/core/blocs/access/state/logged_in.dart';
-import 'package:eliud_core/core/navigate/page_param_helper.dart';
+import 'package:eliud_core/core/navigate/router.dart' as eliud_router;
 import 'package:eliud_core/style/frontend/has_dialog.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_bloc.dart';
@@ -19,7 +19,7 @@ class FeedPostDialog extends StatefulWidget {
   final String memberId;
   final String? currentMemberId;
   final String photoURL;
-  final PageContextInfo pageContextInfo;
+  final eliud_router.PageContextInfo pageContextInfo;
   final FeedPostFormEvent initialiseEvent;
 
   FeedPostDialog(
@@ -39,7 +39,7 @@ class FeedPostDialog extends StatefulWidget {
       String memberId,
       String? currentMemberId,
       String photoURL,
-      PageContextInfo pageContextInfo,
+      eliud_router.PageContextInfo pageContextInfo,
       FeedPostFormEvent initialiseEvent) {
     var postListPagedBloc = BlocProvider.of<PostListPagedBloc>(context);
     openWidgetDialog(context,
@@ -67,7 +67,7 @@ class _FeedPostDialogState extends State<FeedPostDialog> {
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (context, accessState) {
       if (accessState is LoggedIn) {
-        var app = accessState.currentApp;
+        var app = accessState.currentApp(context);
         if (app == null)
           return StyleRegistry.registry()
               .styleWithContext(context)
@@ -83,7 +83,7 @@ class _FeedPostDialogState extends State<FeedPostDialog> {
                 accessState)
               ..add(widget.initialiseEvent),
             child: MyFeedPostForm(
-              accessState.currentAppId(),
+              accessState.currentAppId(context),
               widget.feedId,
               widget.memberId,
               widget.currentMemberId,

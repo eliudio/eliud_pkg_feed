@@ -1,7 +1,7 @@
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
 import 'package:eliud_core/core/blocs/access/state/logged_in.dart';
-import 'package:eliud_core/core/navigate/page_param_helper.dart';
+import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 import 'package:eliud_core/core/navigate/router.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/style/frontend/has_dialog.dart';
@@ -49,18 +49,18 @@ class PostActionHandler extends PackageActionHandler {
   Future<void> addToFollowers(BuildContext context, PostActionModel action,
       LoggedIn accessState) async {
     executePostIt(context, action,
-        await PostFollowersHelper.asFollowers(accessState), accessState);
+        await PostFollowersHelper.asFollowers(context, accessState), accessState);
   }
 
   Future<void> addToPublic(BuildContext context, PostActionModel action,
       LoggedIn accessState) async {
     executePostIt(context, action,
-        await PostFollowersHelper.asPublic(accessState), accessState);
+        await PostFollowersHelper.asPublic(context, accessState), accessState);
   }
 
   Future<void> executePostIt(BuildContext context, PostActionModel action,
       List<String> readAccess, LoggedIn accessState) async {
-    var pageContextInfo = PageParamHelper.getPagaContextInfo(context, accessState.currentApp);
+    var pageContextInfo = eliudrouter.Router.getPageContextInfo(context);
     var postAppId = pageContextInfo.appId;
     var postPageId = pageContextInfo.pageId;
     var parameters = pageContextInfo.parameters;

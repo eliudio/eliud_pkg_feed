@@ -1,11 +1,11 @@
 import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
-import 'package:eliud_core/core/blocs/access/state/access_state.dart';
 import 'package:eliud_core/core/blocs/access/state/logged_in.dart';
 import 'package:eliud_core/tools/etc.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_pkg_follow/model/abstract_repository_singleton.dart';
 import 'package:equatable/equatable.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 
 enum PostPrivilegeType {
   Public, Followers, SpecificPeople, JustMe,
@@ -23,8 +23,8 @@ class PostPrivilege extends Equatable {
     return PostPrivilege._(postPrivilegeType, readAccess, specificFollowers: specificFollowers);
   }
 
-  static Future<PostPrivilege> construct2(PostPrivilegeType postPrivilegeType, LoggedIn accessState, {List<String>? specificFollowers}) async {
-    var readAccess = await PostFollowersHelper.as(postPrivilegeType, accessState);
+  static Future<PostPrivilege> construct2(BuildContext context, PostPrivilegeType postPrivilegeType, LoggedIn accessState, {List<String>? specificFollowers}) async {
+    var readAccess = await PostFollowersHelper.as(context, postPrivilegeType, accessState);
     return PostPrivilege._(postPrivilegeType, readAccess, specificFollowers: specificFollowers);
   }
 
@@ -55,20 +55,19 @@ class PostFollowersHelper {
     return PostFollowersMemberHelper.determinePostPrivilege(readAccess, appId, memberId);
   }
 
-  static Future<List<String>> as(PostPrivilegeType postPrivilegeType, LoggedIn accessState, {List<String>? specificFollowers}) async {
-    return PostFollowersMemberHelper.as(postPrivilegeType, accessState.currentApp.documentID!, accessState.member.documentID!, specificFollowers: specificFollowers, );
+  static Future<List<String>> as(BuildContext context, PostPrivilegeType postPrivilegeType, LoggedIn accessState, {List<String>? specificFollowers}) async {
+    return PostFollowersMemberHelper.as(postPrivilegeType, accessState.currentApp(context).documentID!, accessState.member.documentID!, specificFollowers: specificFollowers, );
   }
 
   // List all followers in a list to provide them access to this post
-  static Future<List<String>> asFollowers(LoggedIn accessState) async {
-    return PostFollowersMemberHelper.asFollowers(accessState.currentApp.documentID!, accessState.member.documentID!);
+  static Future<List<String>> asFollowers(BuildContext context, LoggedIn accessState) async {
+    return PostFollowersMemberHelper.asFollowers(accessState.currentApp(context).documentID!, accessState.member.documentID!);
   }
 
   // To allow a post to be publicly available
-  static Future<List<String>> asPublic(AccessDetermined accessState) async {
+  static Future<List<String>> asPublic(BuildContext context, AccessDetermined accessState) async {
     if (accessState is LoggedIn) {
-      return PostFollowersMemberHelper.asFollowers(
-          accessState.currentApp.documentID!, accessState.member.documentID!);
+      return PostFollowersMemberHelper.asFollowers(accessState.currentApp(context).documentID!, accessState.member.documentID!);
     } else {
       return ['PUBLIC'];
     }

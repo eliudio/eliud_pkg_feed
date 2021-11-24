@@ -74,6 +74,7 @@ class FeedMenuForm extends StatelessWidget {
     var accessState = AccessBloc.getState(context);
     var app = AccessBloc.currentApp(context);
     if (app == null) return Text("No app available");
+    var appId = app.documentID!;
     if (formAction == FormAction.ShowData) {
       return BlocProvider<FeedMenuFormBloc >(
             create: (context) => FeedMenuFormBloc(AccessBloc.currentAppId(context),
@@ -145,6 +146,7 @@ class _MyFeedMenuFormState extends State<MyFeedMenuForm> {
   Widget build(BuildContext context) {
     var app = AccessBloc.currentApp(context);
     if (app == null) return Text('No app available');
+    var appId = app.documentID!;
     var accessState = AccessBloc.getState(context);
     return BlocBuilder<FeedMenuFormBloc, FeedMenuFormState>(builder: (context, state) {
       if (state is FeedMenuFormUninitialized) return Center(
@@ -187,12 +189,12 @@ class _MyFeedMenuFormState extends State<MyFeedMenuForm> {
 
         children.add(
 
-                DropdownButtonComponentFactory().createNew(id: "menuDefs", value: _menuCurrentMember, trigger: _onMenuCurrentMemberSelected, optional: true),
+                DropdownButtonComponentFactory().createNew(appId: appId, id: "menuDefs", value: _menuCurrentMember, trigger: _onMenuCurrentMemberSelected, optional: true),
           );
 
         children.add(
 
-                DropdownButtonComponentFactory().createNew(id: "menuDefs", value: _menuOtherMember, trigger: _onMenuOtherMemberSelected, optional: true),
+                DropdownButtonComponentFactory().createNew(appId: appId, id: "menuDefs", value: _menuOtherMember, trigger: _onMenuOtherMemberSelected, optional: true),
           );
 
 
@@ -223,7 +225,7 @@ class _MyFeedMenuFormState extends State<MyFeedMenuForm> {
 
         children.add(
 
-                DropdownButtonComponentFactory().createNew(id: "feeds", value: _feed, trigger: _onFeedSelected, optional: false),
+                DropdownButtonComponentFactory().createNew(appId: appId, id: "feeds", value: _feed, trigger: _onFeedSelected, optional: false),
           );
 
 

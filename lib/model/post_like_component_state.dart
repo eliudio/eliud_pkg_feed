@@ -35,9 +35,9 @@ class PostLikeComponentPermissionDenied extends PostLikeComponentState {
 }
 
 class PostLikeComponentLoaded extends PostLikeComponentState {
-  final PostLikeModel? value;
+  final PostLikeModel value;
 
-  const PostLikeComponentLoaded({ this.value });
+  const PostLikeComponentLoaded({ required this.value });
 
   PostLikeComponentLoaded copyWith({ PostLikeModel? copyThis }) {
     return PostLikeComponentLoaded(value: copyThis ?? this.value);

@@ -13,9 +13,6 @@
 
 */
 
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:eliud_core/style/style_registry.dart';
 
 import 'package:eliud_pkg_feed/model/post_like_component_bloc.dart';
 import 'package:eliud_pkg_feed/model/post_like_component_event.dart';
@@ -23,18 +20,26 @@ import 'package:eliud_pkg_feed/model/post_like_model.dart';
 import 'package:eliud_pkg_feed/model/post_like_repository.dart';
 import 'package:eliud_pkg_feed/model/post_like_component_state.dart';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:eliud_core/style/style_registry.dart';
+import 'abstract_repository_singleton.dart';
+import 'package:eliud_core/core/widgets/alert_widget.dart';
+import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
+
 abstract class AbstractPostLikeComponent extends StatelessWidget {
   static String componentName = "postLikes";
-  final String? postLikeID;
+  final String theAppId;
+  final String postLikeId;
 
-  AbstractPostLikeComponent({Key? key, this.postLikeID}): super(key: key);
+  AbstractPostLikeComponent({Key? key, required this.theAppId, required this.postLikeId}): super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<PostLikeComponentBloc> (
           create: (context) => PostLikeComponentBloc(
-            postLikeRepository: getPostLikeRepository(context))
-        ..add(FetchPostLikeComponent(id: postLikeID)),
+            postLikeRepository: postLikeRepository(appId: theAppId)!)
+        ..add(FetchPostLikeComponent(id: postLikeId)),
       child: _postLikeBlockBuilder(context),
     );
   }
@@ -43,7 +48,7 @@ abstract class AbstractPostLikeComponent extends StatelessWidget {
     return BlocBuilder<PostLikeComponentBloc, PostLikeComponentState>(builder: (context, state) {
       if (state is PostLikeComponentLoaded) {
         if (state.value == null) {
-          return alertWidget(title: 'Error', content: 'No PostLike defined');
+          return AlertWidget(title: "Error", content: 'No PostLike defined');
         } else {
           return yourWidget(context, state.value);
         }
@@ -54,7 +59,7 @@ abstract class AbstractPostLikeComponent extends StatelessWidget {
           size: 30.0,
         );
       } else if (state is PostLikeComponentError) {
-        return alertWidget(title: 'Error', content: state.message);
+        return AlertWidget(title: 'Error', content: state.message);
       } else {
         return Center(
           child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicatorStyle().progressIndicator(context),
@@ -63,8 +68,6 @@ abstract class AbstractPostLikeComponent extends StatelessWidget {
     });
   }
 
-  Widget yourWidget(BuildContext context, PostLikeModel? value);
-  Widget alertWidget({ title: String, content: String});
-  PostLikeRepository getPostLikeRepository(BuildContext context);
+  Widget yourWidget(BuildContext context, PostLikeModel value);
 }
 

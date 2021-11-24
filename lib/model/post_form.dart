@@ -79,6 +79,7 @@ class PostForm extends StatelessWidget {
     var accessState = AccessBloc.getState(context);
     var app = AccessBloc.currentApp(context);
     if (app == null) return Text("No app available");
+    var appId = app.documentID!;
     if (formAction == FormAction.ShowData) {
       return BlocProvider<PostFormBloc >(
             create: (context) => PostFormBloc(AccessBloc.currentAppId(context),
@@ -165,6 +166,7 @@ class _MyPostFormState extends State<MyPostForm> {
   Widget build(BuildContext context) {
     var app = AccessBloc.currentApp(context);
     if (app == null) return Text('No app available');
+    var appId = app.documentID!;
     var accessState = AccessBloc.getState(context);
     return BlocBuilder<PostFormBloc, PostFormState>(builder: (context, state) {
       if (state is PostFormUninitialized) return Center(

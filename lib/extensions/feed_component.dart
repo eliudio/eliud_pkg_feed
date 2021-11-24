@@ -20,8 +20,8 @@ class FeedComponentConstructorDefault implements ComponentConstructor {
   FeedComponentConstructorDefault();
 
   @override
-  Widget createNew({Key? key, required String id, Map<String, dynamic>? parameters}) {
-    return FeedComponent(key: key, id: id);
+  Widget createNew({Key? key, required String appId, required String id, Map<String, dynamic>? parameters}) {
+    return FeedComponent(key: key, appId: appId, id: id);
   }
 
   @override
@@ -29,18 +29,7 @@ class FeedComponentConstructorDefault implements ComponentConstructor {
 }
 
 class FeedComponent extends AbstractFeedComponent {
-  FeedComponent({Key? key, required String id}) : super(key: key, feedID: id);
-
-  @override
-  Widget alertWidget({title = String, content = String}) {
-    return AlertWidget(title: title, content: content);
-  }
-
-  @override
-  FeedRepository getFeedRepository(BuildContext context) {
-    return AbstractRepositorySingleton.singleton
-        .feedRepository(AccessBloc.currentAppId(context))!;
-  }
+  FeedComponent({Key? key, required String appId, required String id}) : super(key: key, theAppId: appId, feedId: id);
 
   @override
   Widget yourWidget(BuildContext context, FeedModel? value) {
@@ -53,7 +42,7 @@ class FeedComponent extends AbstractFeedComponent {
             return BlocProvider<ProfileBloc>(
                 create: (context) =>
                 ProfileBloc()
-                  ..add(InitialiseProfileEvent(
+                  ..add(InitialiseProfileEvent(accessState.currentAppId(context),
                       feedId, accessState, modalRoute)),
                 child: Feed(value));
           } else {

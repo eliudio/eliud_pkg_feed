@@ -74,6 +74,7 @@ class FeedForm extends StatelessWidget {
     var accessState = AccessBloc.getState(context);
     var app = AccessBloc.currentApp(context);
     if (app == null) return Text("No app available");
+    var appId = app.documentID!;
     if (formAction == FormAction.ShowData) {
       return BlocProvider<FeedFormBloc >(
             create: (context) => FeedFormBloc(AccessBloc.currentAppId(context),
@@ -156,6 +157,7 @@ class _MyFeedFormState extends State<MyFeedForm> {
   Widget build(BuildContext context) {
     var app = AccessBloc.currentApp(context);
     if (app == null) return Text('No app available');
+    var appId = app.documentID!;
     var accessState = AccessBloc.getState(context);
     return BlocBuilder<FeedFormBloc, FeedFormState>(builder: (context, state) {
       if (state is FeedFormUninitialized) return Center(

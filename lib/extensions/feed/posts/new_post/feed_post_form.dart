@@ -1,7 +1,7 @@
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/core/blocs/access/state/access_state.dart';
 import 'package:eliud_core/core/blocs/access/state/logged_in.dart';
-import 'package:eliud_core/core/navigate/page_param_helper.dart';
+import 'package:eliud_core/core/navigate/router.dart' as eliud_router;
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/style/frontend/has_dialog_widget.dart';
@@ -31,7 +31,7 @@ class MyFeedPostForm extends StatefulWidget {
   final String memberId;
   final String? currentMemberId;
   final String photoURL;
-  final PageContextInfo pageContextInfo;
+  final eliud_router.PageContextInfo pageContextInfo;
 
   MyFeedPostForm(this.appId, this.feedId, this.memberId, this.currentMemberId,
       this.photoURL, this.pageContextInfo);
@@ -55,7 +55,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
     return BlocBuilder<AccessBloc, AccessState>(
     builder: (context, accessState) {
     if (accessState is LoggedIn) {
-      var app = accessState.currentApp;
+      var app = accessState.currentApp(context);
       return complexAckNackDialog(context,
           title: 'New Album',
           child: _contents(context, widget.pageContextInfo, app, accessState),
@@ -69,7 +69,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
     }});
   }
 
-  Widget _contents(BuildContext context, PageContextInfo pageContextInfo,
+  Widget _contents(BuildContext context, eliud_router.PageContextInfo pageContextInfo,
       AppModel app, AccessState theState) {
     return BlocBuilder<FeedPostFormBloc, FeedPostFormState>(
         builder: (context, state) {

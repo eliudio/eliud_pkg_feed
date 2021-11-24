@@ -2,7 +2,6 @@ import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
 import 'package:eliud_core/core/blocs/access/state/access_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:eliud_core/core/navigate/page_param_helper.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 import 'package:eliud_core/core/tools/page_helper.dart';
 import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
@@ -37,7 +36,7 @@ class _FeedMenuState extends State<FeedMenu>
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (context, accessState) {
           if (accessState is AccessDetermined) {
-            var pageContextInfo = PageParamHelper.getPagaContextInfo(context, accessState.currentApp);
+            var pageContextInfo = eliudrouter.Router.getPageContextInfo(context,);
             var parameters = pageContextInfo.parameters;
             var theState = AccessBloc.getState(context);
             bool otherMember = false;

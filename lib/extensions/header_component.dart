@@ -19,8 +19,8 @@ class HeaderComponentConstructorDefault implements ComponentConstructor {
   HeaderComponentConstructorDefault();
 
   @override
-  Widget createNew({Key? key, required String id, Map<String, dynamic>? parameters}) {
-    return HeaderComponent(key: key, id: id);
+  Widget createNew({Key? key, required String appId, required String id, Map<String, dynamic>? parameters}) {
+    return HeaderComponent(key: key, appId: appId, id: id);
   }
 
   @override
@@ -28,7 +28,7 @@ class HeaderComponentConstructorDefault implements ComponentConstructor {
 }
 
 class HeaderComponent extends AbstractHeaderComponent {
-  HeaderComponent({Key? key, required String id}) : super(key: key, headerID: id);
+  HeaderComponent({Key? key, required String appId, required String id}) : super(key: key, theAppId: appId, headerId: id);
 
   @override
   Widget alertWidget({title = String, content = String}) {
@@ -46,7 +46,7 @@ class HeaderComponent extends AbstractHeaderComponent {
             return BlocProvider<ProfileBloc>(
                 create: (context) =>
             ProfileBloc()
-              ..add(InitialiseProfileEvent(
+              ..add(InitialiseProfileEvent(accessState.currentAppId(context),
                   feedId, accessState, modalRoute)),
           child:      Header());
           } else {

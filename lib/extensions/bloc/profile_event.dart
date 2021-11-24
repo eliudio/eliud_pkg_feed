@@ -13,11 +13,12 @@ abstract class ProfileEvent extends Equatable {
 }
 
 class InitialiseProfileEvent extends ProfileEvent {
+  final String appId;
   final String feedId;
   final AccessDetermined accessDetermined;
   final ModalRoute modalRoute;
 
-  InitialiseProfileEvent(this.feedId, this.accessDetermined, this.modalRoute);
+  InitialiseProfileEvent(this.appId, this.feedId, this.accessDetermined, this.modalRoute);
 }
 
 class ProfileChangedProfileEvent extends ProfileEvent {

@@ -107,7 +107,7 @@ class FeedMenuListWidgetState extends State<FeedMenuListWidget> {
                       context, label: 'Add',
                       onPressed: () {
                         Navigator.of(context).push(
-                                  pageRouteBuilder(accessState.currentApp, page: BlocProvider.value(
+                                  pageRouteBuilder(accessState.currentApp(context), page: BlocProvider.value(
                                       value: BlocProvider.of<FeedMenuListBloc>(context),
                                       child: FeedMenuForm(
                                           value: null,

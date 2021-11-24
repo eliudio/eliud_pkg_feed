@@ -1,5 +1,4 @@
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
-import 'package:eliud_core/core/navigate/page_param_helper.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/style/frontend/has_button.dart';
 import 'package:eliud_core/style/frontend/has_container.dart';
@@ -9,6 +8,7 @@ import 'package:eliud_core/style/frontend/has_text_form_field.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/storage/medium_base.dart';
+import 'package:eliud_core/core/navigate/router.dart' as eliud_router;
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_event.dart';
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_state.dart';
@@ -279,8 +279,7 @@ class _PostWidgetState extends State<PostWidget> {
               case PostType.SinglePhoto:
               case PostType.Album:
               case PostType.OnlyDescription:
-                var pageContextInfo =
-                    PageParamHelper.getPagaContextInfo(context, widget.app);
+                var pageContextInfo = eliud_router.Router.getPageContextInfo(context,);
                 FeedPostDialog.open(
                     context,
                     widget.feedId,

@@ -13,9 +13,6 @@
 
 */
 
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:eliud_core/style/style_registry.dart';
 
 import 'package:eliud_pkg_feed/model/feed_component_bloc.dart';
 import 'package:eliud_pkg_feed/model/feed_component_event.dart';
@@ -23,18 +20,26 @@ import 'package:eliud_pkg_feed/model/feed_model.dart';
 import 'package:eliud_pkg_feed/model/feed_repository.dart';
 import 'package:eliud_pkg_feed/model/feed_component_state.dart';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:eliud_core/style/style_registry.dart';
+import 'abstract_repository_singleton.dart';
+import 'package:eliud_core/core/widgets/alert_widget.dart';
+import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
+
 abstract class AbstractFeedComponent extends StatelessWidget {
   static String componentName = "feeds";
-  final String? feedID;
+  final String theAppId;
+  final String feedId;
 
-  AbstractFeedComponent({Key? key, this.feedID}): super(key: key);
+  AbstractFeedComponent({Key? key, required this.theAppId, required this.feedId}): super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<FeedComponentBloc> (
           create: (context) => FeedComponentBloc(
-            feedRepository: getFeedRepository(context))
-        ..add(FetchFeedComponent(id: feedID)),
+            feedRepository: feedRepository(appId: theAppId)!)
+        ..add(FetchFeedComponent(id: feedId)),
       child: _feedBlockBuilder(context),
     );
   }
@@ -43,7 +48,7 @@ abstract class AbstractFeedComponent extends StatelessWidget {
     return BlocBuilder<FeedComponentBloc, FeedComponentState>(builder: (context, state) {
       if (state is FeedComponentLoaded) {
         if (state.value == null) {
-          return alertWidget(title: 'Error', content: 'No Feed defined');
+          return AlertWidget(title: "Error", content: 'No Feed defined');
         } else {
           return yourWidget(context, state.value);
         }
@@ -54,7 +59,7 @@ abstract class AbstractFeedComponent extends StatelessWidget {
           size: 30.0,
         );
       } else if (state is FeedComponentError) {
-        return alertWidget(title: 'Error', content: state.message);
+        return AlertWidget(title: 'Error', content: state.message);
       } else {
         return Center(
           child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicatorStyle().progressIndicator(context),
@@ -63,8 +68,6 @@ abstract class AbstractFeedComponent extends StatelessWidget {
     });
   }
 
-  Widget yourWidget(BuildContext context, FeedModel? value);
-  Widget alertWidget({ title: String, content: String});
-  FeedRepository getFeedRepository(BuildContext context);
+  Widget yourWidget(BuildContext context, FeedModel value);
 }
 

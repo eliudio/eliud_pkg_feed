@@ -74,6 +74,7 @@ class ProfileForm extends StatelessWidget {
     var accessState = AccessBloc.getState(context);
     var app = AccessBloc.currentApp(context);
     if (app == null) return Text("No app available");
+    var appId = app.documentID!;
     if (formAction == FormAction.ShowData) {
       return BlocProvider<ProfileFormBloc >(
             create: (context) => ProfileFormBloc(AccessBloc.currentAppId(context),
@@ -143,6 +144,7 @@ class _MyProfileFormState extends State<MyProfileForm> {
   Widget build(BuildContext context) {
     var app = AccessBloc.currentApp(context);
     if (app == null) return Text('No app available');
+    var appId = app.documentID!;
     var accessState = AccessBloc.getState(context);
     return BlocBuilder<ProfileFormBloc, ProfileFormState>(builder: (context, state) {
       if (state is ProfileFormUninitialized) return Center(
@@ -192,7 +194,7 @@ class _MyProfileFormState extends State<MyProfileForm> {
 
         children.add(
 
-                DropdownButtonComponentFactory().createNew(id: "feeds", value: _feed, trigger: _onFeedSelected, optional: false),
+                DropdownButtonComponentFactory().createNew(appId: appId, id: "feeds", value: _feed, trigger: _onFeedSelected, optional: false),
           );
 
 

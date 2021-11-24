@@ -74,6 +74,7 @@ class MemberProfileForm extends StatelessWidget {
     var accessState = AccessBloc.getState(context);
     var app = AccessBloc.currentApp(context);
     if (app == null) return Text("No app available");
+    var appId = app.documentID!;
     if (formAction == FormAction.ShowData) {
       return BlocProvider<MemberProfileFormBloc >(
             create: (context) => MemberProfileFormBloc(AccessBloc.currentAppId(context),
@@ -151,6 +152,7 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
   Widget build(BuildContext context) {
     var app = AccessBloc.currentApp(context);
     if (app == null) return Text('No app available');
+    var appId = app.documentID!;
     var accessState = AccessBloc.getState(context);
     return BlocBuilder<MemberProfileFormBloc, MemberProfileFormState>(builder: (context, state) {
       if (state is MemberProfileFormUninitialized) return Center(
@@ -206,7 +208,7 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
 
         children.add(
 
-                DropdownButtonComponentFactory().createNew(id: "memberMediums", value: _profileBackground, trigger: _onProfileBackgroundSelected, optional: true),
+                DropdownButtonComponentFactory().createNew(appId: appId, id: "memberMediums", value: _profileBackground, trigger: _onProfileBackgroundSelected, optional: true),
           );
 
         children.add(

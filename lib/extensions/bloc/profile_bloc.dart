@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:eliud_core/core/navigate/page_param_helper.dart';
+import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
@@ -75,15 +75,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     return myState.copyWith(newMemberProfileModel: newMemberProfileModel, uploadingBGProgress: null, uploadingProfilePhotoProgress: null);
   }
 
-  Future<ProfileState> determineProfileState(
-      InitialiseProfileEvent event) async {
+  Future<ProfileState> determineProfileState(      InitialiseProfileEvent event) async {
     var accessState = event.accessDetermined;
-    var app = accessState.currentApp;
     var currentMemberModel = accessState.getMember();
     var pageContextInfo =
-        PageParamHelper.getPagaContextInfoWithRoutAndApp(event.modalRoute, app);
+        eliudrouter.Router.getPageContextInfoWithRoute(event.modalRoute);
     var feedId = event.feedId;
-    var appId = app.documentID!;
+    var appId = event.appId;
     if (currentMemberModel == null) {
       if (pageContextInfo.parameters != null) {
         var param = pageContextInfo

@@ -1,7 +1,7 @@
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
+import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
 import 'package:eliud_core/core/blocs/access/state/access_state.dart';
-import 'package:eliud_core/core/navigate/page_param_helper.dart';
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/style/frontend/has_button.dart';
 import 'package:eliud_core/style/frontend/has_container.dart';
@@ -92,7 +92,7 @@ class PagedPostsListState extends State<PagedPostsList> {
       MemberModel author,
       List<String> readAccess,
       LoggedInProfileInitialized profileInitialized,
-      PageContextInfo pageContextInfo) {
+      eliudrouter.PageContextInfo pageContextInfo) {
     if (profileInitialized is LoggedInWatchingMyProfile) {
       List<Widget> widgets = [];
       widgets.add(Spacer());
@@ -253,12 +253,12 @@ class PagedPostsListState extends State<PagedPostsList> {
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (context, accessState) {
       if (accessState is AccessDetermined) {
-        var pageContextInfo = PageParamHelper.getPagaContextInfo(context, accessState.currentApp);
+        var pageContextInfo = eliudrouter.Router.getPageContextInfo(context);
         var pageId = pageContextInfo.pageId;
         return BlocBuilder<ProfileBloc, ProfileState>(
             builder: (context, profileState) {
           if (profileState is ProfileInitialised) {
-            var app = accessState.currentApp;
+            var app = accessState.currentApp(context);
             return BlocBuilder<PostListPagedBloc, PostListPagedState>(
               builder: (context, state) {
                 if (state is PostListPagedState) {

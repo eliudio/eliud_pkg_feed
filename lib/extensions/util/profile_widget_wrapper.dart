@@ -3,6 +3,7 @@ import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
 import 'package:eliud_core/core/blocs/access/state/access_state.dart';
 import 'package:eliud_core/core/tools/component_info.dart';
 import 'package:eliud_core/core/tools/page_body.dart';
+import 'package:eliud_core/style/frontend/has_page_body.dart';
 import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/style/style_registry.dart';
@@ -40,9 +41,13 @@ class ProfileWidgetWrapper extends ComponentWidgetWrapper {
             return BlocProvider<ProfileBloc>(
                 create: (context) =>
                 ProfileBloc()
-                  ..add(InitialiseProfileEvent(
+                  ..add(InitialiseProfileEvent(accessState.currentAppId(context),
                       feedId, accessState, modalRoute)),
-                child: PageBody(componentInfo: componentInfo,));
+                child: pageBody(context,
+                    backgroundOverride: componentInfo.backgroundOverride,
+                    components: componentInfo.widgets,
+                    layout: componentInfo.layout,
+                    gridView: componentInfo.gridView));
           } else {
             return progressIndicator(context);
           }
