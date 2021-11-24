@@ -26,7 +26,7 @@ class PostActionHandler extends PackageActionHandler {
       if (accessState is LoggedIn) {
         String name = action.appID;
 
-        openSelectionDialog(context,
+        openSelectionDialog(context, action.appID + "/_addpagetofeed",
             title: 'Add page to feed ' + name,
             options: ['Only Me', 'My followers', 'Public'],
             onSelection: (int choice) {

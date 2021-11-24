@@ -42,7 +42,7 @@ class FeedPostDialog extends StatefulWidget {
       eliud_router.PageContextInfo pageContextInfo,
       FeedPostFormEvent initialiseEvent) {
     var postListPagedBloc = BlocProvider.of<PostListPagedBloc>(context);
-    openWidgetDialog(context,
+    openWidgetDialog(context, AccessBloc.currentAppId(context) + '/_feed',
         child: FeedPostDialog(
             feedId: feedId,
             postListPagedBloc: postListPagedBloc,

@@ -120,7 +120,7 @@ class PagedPostsListState extends State<PagedPostsList> {
         widgets.add(actionContainer(context,
             child: iconButton(context, icon: message, tooltip: 'Message',
                 onPressed: () {
-              openEntryDialog(context, title: 'Say something',
+              openEntryDialog(context, AccessBloc.currentAppId(context) + '/_message', title: 'Say something',
                   onPressed: (value) {
                 if (value != null) {
                   _addPost(
@@ -240,7 +240,7 @@ class PagedPostsListState extends State<PagedPostsList> {
     return [
       dialogButton(context, label: 'Audience', onPressed: () {
         openMessageDialog(
-          context,
+          context, AccessBloc.currentAppId(context) + '/_accessible',
           title: 'Accessible',
           message: 'Article accessible by: ' + accessible,
         );

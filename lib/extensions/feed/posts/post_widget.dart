@@ -264,7 +264,7 @@ class _PostWidgetState extends State<PostWidget> {
         itemBuilder: (_) => items,
         onSelected: (choice) async {
           if (choice == 0) {
-            openAckNackDialog(context,
+            openAckNackDialog(context, AccessBloc.currentAppId(context) + '/_deletepost',
                     title: 'Delete post?',
                     message: 'You are sure you want to delete this post?',
                     onSelection: (value) async {
@@ -340,7 +340,7 @@ class _PostWidgetState extends State<PostWidget> {
   void allowToAddComment(
       BuildContext context, PostDetails postDetail, String memberId) {
     openEntryDialog(
-      context,
+      context, AccessBloc.currentAppId(context) + '/_reply',
       title: 'Reply to comment',
       ackButtonLabel: 'Reply',
       nackButtonLabel: 'Discard',
@@ -355,7 +355,7 @@ class _PostWidgetState extends State<PostWidget> {
 
   void allowToAddCommentComment(BuildContext context, PostDetails postDetail,
       PostCommentContainer postCommentContainer, String memberId) {
-    openEntryDialog(context,
+    openEntryDialog(context, AccessBloc.currentAppId(context) + '/_reply',
             title: 'Reply to comment',
             hintText: 'Reply',
             ackButtonLabel: 'Reply',
@@ -369,7 +369,7 @@ class _PostWidgetState extends State<PostWidget> {
 
   void allowToUpdateComment(BuildContext context, PostDetails postDetail,
       String? memberId, PostCommentContainer postCommentContainer) {
-    openEntryDialog(context,
+    openEntryDialog(context, AccessBloc.currentAppId(context) + '/_updatecomment',
             title: 'Update comment',
             hintText: 'Comment',
             initialValue: postCommentContainer.comment!,
@@ -384,7 +384,7 @@ class _PostWidgetState extends State<PostWidget> {
 
   void allowToDeleteComment(BuildContext context, PostDetails postDetail,
       String? memberId, PostCommentContainer? postCommentContainer) {
-    openAckNackDialog(context,
+    openAckNackDialog(context, AccessBloc.currentAppId(context) + '/_deletecomment',
             message: "Do you want to delete this comment",
             onSelection: (value) async {
       if (value == 0) {
