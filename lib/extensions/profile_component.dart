@@ -39,10 +39,11 @@ class ProfileComponent extends AbstractProfileComponent {
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (context, accessState) {
           if (accessState is AccessDetermined) {
+            var appId = accessState.currentAppId(context);
             return BlocProvider<ProfileBloc>(
                 create: (context) =>
                 ProfileBloc()
-                  ..add(InitialiseProfileEvent(accessState.currentAppId(context),
+                  ..add(InitialiseProfileEvent(appId,
                       feedId, accessState, modalRoute)),
                 child: Profile(appId: accessState.currentApp(context).documentID!)
             );

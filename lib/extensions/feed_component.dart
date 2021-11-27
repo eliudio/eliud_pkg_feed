@@ -20,16 +20,22 @@ class FeedComponentConstructorDefault implements ComponentConstructor {
   FeedComponentConstructorDefault();
 
   @override
-  Widget createNew({Key? key, required String appId, required String id, Map<String, dynamic>? parameters}) {
+  Widget createNew(
+      {Key? key,
+      required String appId,
+      required String id,
+      Map<String, dynamic>? parameters}) {
     return FeedComponent(key: key, appId: appId, id: id);
   }
 
   @override
-  Future<dynamic> getModel({required String appId, required String id}) async => await feedRepository(appId: appId)!.get(id);
+  Future<dynamic> getModel({required String appId, required String id}) async =>
+      await feedRepository(appId: appId)!.get(id);
 }
 
 class FeedComponent extends AbstractFeedComponent {
-  FeedComponent({Key? key, required String appId, required String id}) : super(key: key, theAppId: appId, feedId: id);
+  FeedComponent({Key? key, required String appId, required String id})
+      : super(key: key, theAppId: appId, feedId: id);
 
   @override
   Widget yourWidget(BuildContext context, FeedModel? value) {
@@ -38,16 +44,16 @@ class FeedComponent extends AbstractFeedComponent {
     var feedId = value!.documentID!;
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (context, accessState) {
-          if (accessState is AccessDetermined) {
-            return BlocProvider<ProfileBloc>(
-                create: (context) =>
-                ProfileBloc()
-                  ..add(InitialiseProfileEvent(accessState.currentAppId(context),
-                      feedId, accessState, modalRoute)),
-                child: Feed(value));
-          } else {
-            return progressIndicator(context);
-          }
-        });
+      if (accessState is AccessDetermined) {
+        var appId = accessState.currentAppId(context);
+        return BlocProvider<ProfileBloc>(
+            create: (context) => ProfileBloc()
+              ..add(InitialiseProfileEvent(appId,
+                  feedId, accessState, modalRoute)),
+            child: Feed(value));
+      } else {
+        return progressIndicator(context);
+      }
+    });
   }
 }
