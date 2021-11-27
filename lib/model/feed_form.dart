@@ -77,7 +77,7 @@ class FeedForm extends StatelessWidget {
     var appId = app.documentID!;
     if (formAction == FormAction.ShowData) {
       return BlocProvider<FeedFormBloc >(
-            create: (context) => FeedFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => FeedFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add(InitialiseFeedFormEvent(value: value)),
@@ -86,7 +86,7 @@ class FeedForm extends StatelessWidget {
           );
     } if (formAction == FormAction.ShowPreloadedData) {
       return BlocProvider<FeedFormBloc >(
-            create: (context) => FeedFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => FeedFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add(InitialiseFeedFormNoLoadEvent(value: value)),
@@ -97,7 +97,7 @@ class FeedForm extends StatelessWidget {
       return Scaffold(
         appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().appBarWithString(context, title: formAction == FormAction.UpdateAction ? 'Update Feed' : 'Add Feed'),
         body: BlocProvider<FeedFormBloc >(
-            create: (context) => FeedFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => FeedFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add((formAction == FormAction.UpdateAction ? InitialiseFeedFormEvent(value: value) : InitialiseNewFeedFormEvent())),

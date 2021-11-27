@@ -35,10 +35,11 @@ class PostLikeComponentSelector extends ComponentSelector {
   @override
   Widget createSelectWidget(BuildContext context, double height,
       SelectComponent selected, editorConstructor) {
+    var appId = AccessBloc.currentAppId(context);
     return BlocProvider<PostLikeListBloc>(
           create: (context) => PostLikeListBloc(
             postLikeRepository:
-                postLikeRepository(appId: AccessBloc.currentAppId(context))!,
+                postLikeRepository(appId: appId)!,
           )..add(LoadPostLikeList()),
       child: SelectPostLikeWidget(
           height: height,

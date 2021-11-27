@@ -35,10 +35,11 @@ class PostCommentComponentSelector extends ComponentSelector {
   @override
   Widget createSelectWidget(BuildContext context, double height,
       SelectComponent selected, editorConstructor) {
+    var appId = AccessBloc.currentAppId(context);
     return BlocProvider<PostCommentListBloc>(
           create: (context) => PostCommentListBloc(
             postCommentRepository:
-                postCommentRepository(appId: AccessBloc.currentAppId(context))!,
+                postCommentRepository(appId: appId)!,
           )..add(LoadPostCommentList()),
       child: SelectPostCommentWidget(
           height: height,

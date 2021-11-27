@@ -82,7 +82,7 @@ class PostForm extends StatelessWidget {
     var appId = app.documentID!;
     if (formAction == FormAction.ShowData) {
       return BlocProvider<PostFormBloc >(
-            create: (context) => PostFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => PostFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add(InitialisePostFormEvent(value: value)),
@@ -91,7 +91,7 @@ class PostForm extends StatelessWidget {
           );
     } if (formAction == FormAction.ShowPreloadedData) {
       return BlocProvider<PostFormBloc >(
-            create: (context) => PostFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => PostFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add(InitialisePostFormNoLoadEvent(value: value)),
@@ -102,7 +102,7 @@ class PostForm extends StatelessWidget {
       return Scaffold(
         appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().appBarWithString(context, title: formAction == FormAction.UpdateAction ? 'Update Post' : 'Add Post'),
         body: BlocProvider<PostFormBloc >(
-            create: (context) => PostFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => PostFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add((formAction == FormAction.UpdateAction ? InitialisePostFormEvent(value: value) : InitialiseNewPostFormEvent())),

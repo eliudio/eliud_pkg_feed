@@ -77,7 +77,7 @@ class PostMediumForm extends StatelessWidget {
     var appId = app.documentID!;
     if (formAction == FormAction.ShowData) {
       return BlocProvider<PostMediumFormBloc >(
-            create: (context) => PostMediumFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => PostMediumFormBloc(appId,
                                        
                                                 )..add(InitialisePostMediumFormEvent(value: value)),
   
@@ -85,7 +85,7 @@ class PostMediumForm extends StatelessWidget {
           );
     } if (formAction == FormAction.ShowPreloadedData) {
       return BlocProvider<PostMediumFormBloc >(
-            create: (context) => PostMediumFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => PostMediumFormBloc(appId,
                                        
                                                 )..add(InitialisePostMediumFormNoLoadEvent(value: value)),
   
@@ -95,7 +95,7 @@ class PostMediumForm extends StatelessWidget {
       return Scaffold(
         appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().appBarWithString(context, title: formAction == FormAction.UpdateAction ? 'Update PostMedium' : 'Add PostMedium'),
         body: BlocProvider<PostMediumFormBloc >(
-            create: (context) => PostMediumFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => PostMediumFormBloc(appId,
                                        
                                                 )..add((formAction == FormAction.UpdateAction ? InitialisePostMediumFormEvent(value: value) : InitialiseNewPostMediumFormEvent())),
   

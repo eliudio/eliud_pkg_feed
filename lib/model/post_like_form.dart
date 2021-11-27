@@ -82,7 +82,7 @@ class PostLikeForm extends StatelessWidget {
     var appId = app.documentID!;
     if (formAction == FormAction.ShowData) {
       return BlocProvider<PostLikeFormBloc >(
-            create: (context) => PostLikeFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => PostLikeFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add(InitialisePostLikeFormEvent(value: value)),
@@ -91,7 +91,7 @@ class PostLikeForm extends StatelessWidget {
           );
     } if (formAction == FormAction.ShowPreloadedData) {
       return BlocProvider<PostLikeFormBloc >(
-            create: (context) => PostLikeFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => PostLikeFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add(InitialisePostLikeFormNoLoadEvent(value: value)),
@@ -102,7 +102,7 @@ class PostLikeForm extends StatelessWidget {
       return Scaffold(
         appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().appBarWithString(context, title: formAction == FormAction.UpdateAction ? 'Update PostLike' : 'Add PostLike'),
         body: BlocProvider<PostLikeFormBloc >(
-            create: (context) => PostLikeFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => PostLikeFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add((formAction == FormAction.UpdateAction ? InitialisePostLikeFormEvent(value: value) : InitialiseNewPostLikeFormEvent())),

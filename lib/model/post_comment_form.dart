@@ -82,7 +82,7 @@ class PostCommentForm extends StatelessWidget {
     var appId = app.documentID!;
     if (formAction == FormAction.ShowData) {
       return BlocProvider<PostCommentFormBloc >(
-            create: (context) => PostCommentFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => PostCommentFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add(InitialisePostCommentFormEvent(value: value)),
@@ -91,7 +91,7 @@ class PostCommentForm extends StatelessWidget {
           );
     } if (formAction == FormAction.ShowPreloadedData) {
       return BlocProvider<PostCommentFormBloc >(
-            create: (context) => PostCommentFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => PostCommentFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add(InitialisePostCommentFormNoLoadEvent(value: value)),
@@ -102,7 +102,7 @@ class PostCommentForm extends StatelessWidget {
       return Scaffold(
         appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().appBarWithString(context, title: formAction == FormAction.UpdateAction ? 'Update PostComment' : 'Add PostComment'),
         body: BlocProvider<PostCommentFormBloc >(
-            create: (context) => PostCommentFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => PostCommentFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add((formAction == FormAction.UpdateAction ? InitialisePostCommentFormEvent(value: value) : InitialiseNewPostCommentFormEvent())),

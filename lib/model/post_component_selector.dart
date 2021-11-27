@@ -35,10 +35,11 @@ class PostComponentSelector extends ComponentSelector {
   @override
   Widget createSelectWidget(BuildContext context, double height,
       SelectComponent selected, editorConstructor) {
+    var appId = AccessBloc.currentAppId(context);
     return BlocProvider<PostListBloc>(
           create: (context) => PostListBloc(
             postRepository:
-                postRepository(appId: AccessBloc.currentAppId(context))!,
+                postRepository(appId: appId)!,
           )..add(LoadPostList()),
       child: SelectPostWidget(
           height: height,

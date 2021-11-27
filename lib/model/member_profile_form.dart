@@ -77,7 +77,7 @@ class MemberProfileForm extends StatelessWidget {
     var appId = app.documentID!;
     if (formAction == FormAction.ShowData) {
       return BlocProvider<MemberProfileFormBloc >(
-            create: (context) => MemberProfileFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => MemberProfileFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add(InitialiseMemberProfileFormEvent(value: value)),
@@ -86,7 +86,7 @@ class MemberProfileForm extends StatelessWidget {
           );
     } if (formAction == FormAction.ShowPreloadedData) {
       return BlocProvider<MemberProfileFormBloc >(
-            create: (context) => MemberProfileFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => MemberProfileFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add(InitialiseMemberProfileFormNoLoadEvent(value: value)),
@@ -97,7 +97,7 @@ class MemberProfileForm extends StatelessWidget {
       return Scaffold(
         appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().appBarWithString(context, title: formAction == FormAction.UpdateAction ? 'Update MemberProfile' : 'Add MemberProfile'),
         body: BlocProvider<MemberProfileFormBloc >(
-            create: (context) => MemberProfileFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => MemberProfileFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add((formAction == FormAction.UpdateAction ? InitialiseMemberProfileFormEvent(value: value) : InitialiseNewMemberProfileFormEvent())),

@@ -35,10 +35,11 @@ class FeedMenuComponentSelector extends ComponentSelector {
   @override
   Widget createSelectWidget(BuildContext context, double height,
       SelectComponent selected, editorConstructor) {
+    var appId = AccessBloc.currentAppId(context);
     return BlocProvider<FeedMenuListBloc>(
           create: (context) => FeedMenuListBloc(
             feedMenuRepository:
-                feedMenuRepository(appId: AccessBloc.currentAppId(context))!,
+                feedMenuRepository(appId: appId)!,
           )..add(LoadFeedMenuList()),
       child: SelectFeedMenuWidget(
           height: height,

@@ -77,7 +77,7 @@ class HeaderForm extends StatelessWidget {
     var appId = app.documentID!;
     if (formAction == FormAction.ShowData) {
       return BlocProvider<HeaderFormBloc >(
-            create: (context) => HeaderFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => HeaderFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add(InitialiseHeaderFormEvent(value: value)),
@@ -86,7 +86,7 @@ class HeaderForm extends StatelessWidget {
           );
     } if (formAction == FormAction.ShowPreloadedData) {
       return BlocProvider<HeaderFormBloc >(
-            create: (context) => HeaderFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => HeaderFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add(InitialiseHeaderFormNoLoadEvent(value: value)),
@@ -97,7 +97,7 @@ class HeaderForm extends StatelessWidget {
       return Scaffold(
         appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().appBarWithString(context, title: formAction == FormAction.UpdateAction ? 'Update Header' : 'Add Header'),
         body: BlocProvider<HeaderFormBloc >(
-            create: (context) => HeaderFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => HeaderFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add((formAction == FormAction.UpdateAction ? InitialiseHeaderFormEvent(value: value) : InitialiseNewHeaderFormEvent())),

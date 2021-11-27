@@ -35,10 +35,11 @@ class FeedComponentSelector extends ComponentSelector {
   @override
   Widget createSelectWidget(BuildContext context, double height,
       SelectComponent selected, editorConstructor) {
+    var appId = AccessBloc.currentAppId(context);
     return BlocProvider<FeedListBloc>(
           create: (context) => FeedListBloc(
             feedRepository:
-                feedRepository(appId: AccessBloc.currentAppId(context))!,
+                feedRepository(appId: appId)!,
           )..add(LoadFeedList()),
       child: SelectFeedWidget(
           height: height,

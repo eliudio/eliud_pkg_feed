@@ -35,10 +35,11 @@ class HeaderComponentSelector extends ComponentSelector {
   @override
   Widget createSelectWidget(BuildContext context, double height,
       SelectComponent selected, editorConstructor) {
+    var appId = AccessBloc.currentAppId(context);
     return BlocProvider<HeaderListBloc>(
           create: (context) => HeaderListBloc(
             headerRepository:
-                headerRepository(appId: AccessBloc.currentAppId(context))!,
+                headerRepository(appId: appId)!,
           )..add(LoadHeaderList()),
       child: SelectHeaderWidget(
           height: height,

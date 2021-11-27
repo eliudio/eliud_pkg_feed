@@ -35,10 +35,11 @@ class ProfileComponentSelector extends ComponentSelector {
   @override
   Widget createSelectWidget(BuildContext context, double height,
       SelectComponent selected, editorConstructor) {
+    var appId = AccessBloc.currentAppId(context);
     return BlocProvider<ProfileListBloc>(
           create: (context) => ProfileListBloc(
             profileRepository:
-                profileRepository(appId: AccessBloc.currentAppId(context))!,
+                profileRepository(appId: appId)!,
           )..add(LoadProfileList()),
       child: SelectProfileWidget(
           height: height,
