@@ -156,7 +156,7 @@ class ChangedFeedMenuFeed extends FeedMenuFormEvent {
 }
 
 class ChangedFeedMenuConditions extends FeedMenuFormEvent {
-  final ConditionsSimpleModel? value;
+  final StorageConditionsModel? value;
 
   ChangedFeedMenuConditions({this.value});
 

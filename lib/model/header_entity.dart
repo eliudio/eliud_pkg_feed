@@ -26,7 +26,7 @@ class HeaderEntity {
   final String? appId;
   final String? description;
   final String? feedId;
-  final ConditionsSimpleEntity? conditions;
+  final StorageConditionsEntity? conditions;
 
   HeaderEntity({this.appId, this.description, this.feedId, this.conditions, });
 
@@ -45,7 +45,7 @@ class HeaderEntity {
     var conditionsFromMap;
     conditionsFromMap = map['conditions'];
     if (conditionsFromMap != null)
-      conditionsFromMap = ConditionsSimpleEntity.fromMap(conditionsFromMap);
+      conditionsFromMap = StorageConditionsEntity.fromMap(conditionsFromMap);
 
     return HeaderEntity(
       appId: map['appId'], 

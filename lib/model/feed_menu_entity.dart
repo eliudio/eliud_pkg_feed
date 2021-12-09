@@ -30,7 +30,7 @@ class FeedMenuEntity {
   final RgbEntity? itemColor;
   final RgbEntity? selectedItemColor;
   final String? feedId;
-  final ConditionsSimpleEntity? conditions;
+  final StorageConditionsEntity? conditions;
 
   FeedMenuEntity({this.appId, this.description, this.menuCurrentMemberId, this.menuOtherMemberId, this.itemColor, this.selectedItemColor, this.feedId, this.conditions, });
 
@@ -57,7 +57,7 @@ class FeedMenuEntity {
     var conditionsFromMap;
     conditionsFromMap = map['conditions'];
     if (conditionsFromMap != null)
-      conditionsFromMap = ConditionsSimpleEntity.fromMap(conditionsFromMap);
+      conditionsFromMap = StorageConditionsEntity.fromMap(conditionsFromMap);
 
     return FeedMenuEntity(
       appId: map['appId'], 

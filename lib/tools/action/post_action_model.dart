@@ -1,4 +1,4 @@
-import 'package:eliud_core/model/conditions_model.dart';
+import 'package:eliud_core/model/display_conditions_model.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/tools/action/action_entity.dart';
 import 'package:eliud_core/tools/action/action_model.dart';
@@ -12,7 +12,7 @@ class PostActionModel extends ActionModel {
   // Post to which feed, which could be the feed of a different app
   final FeedModel? feed;
 
-  PostActionModel(String appId, { this.feed, ConditionsModel? conditions} ) : super(appId, actionType: PostActionEntity.label, conditions: conditions);
+  PostActionModel(String appId, { this.feed, DisplayConditionsModel? conditions} ) : super(appId, actionType: PostActionEntity.label, conditions: conditions);
 
   @override
   ActionEntity toEntity({String? appId}) {
@@ -26,7 +26,7 @@ class PostActionModel extends ActionModel {
     if (entity.appID == null) throw Exception('entity PostActionModel.appID is null');
     return PostActionModel(
       entity.appID!,
-      conditions: ConditionsModel.fromEntity(entity.conditions),
+      conditions: DisplayConditionsModel.fromEntity(entity.conditions),
     );
   }
 
@@ -43,7 +43,7 @@ class PostActionModel extends ActionModel {
 
     return PostActionModel(
         entity.appID!,
-        conditions: ConditionsModel.fromEntity(entity.conditions),
+        conditions: DisplayConditionsModel.fromEntity(entity.conditions),
         feed: feedModel
     );
   }

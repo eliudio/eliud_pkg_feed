@@ -108,7 +108,7 @@ class ChangedProfileFeed extends ProfileFormEvent {
 }
 
 class ChangedProfileConditions extends ProfileFormEvent {
-  final ConditionsSimpleModel? value;
+  final StorageConditionsModel? value;
 
   ChangedProfileConditions({this.value});
 

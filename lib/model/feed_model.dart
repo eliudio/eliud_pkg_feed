@@ -72,13 +72,13 @@ class FeedModel {
 
   // Allow article posts
   bool? articlePost;
-  ConditionsSimpleModel? conditions;
+  StorageConditionsModel? conditions;
 
   FeedModel({this.documentID, this.appId, this.description, this.thumbImage, this.photoPost, this.videoPost, this.messagePost, this.audioPost, this.albumPost, this.articlePost, this.conditions, })  {
     assert(documentID != null);
   }
 
-  FeedModel copyWith({String? documentID, String? appId, String? description, ThumbStyle? thumbImage, bool? photoPost, bool? videoPost, bool? messagePost, bool? audioPost, bool? albumPost, bool? articlePost, ConditionsSimpleModel? conditions, }) {
+  FeedModel copyWith({String? documentID, String? appId, String? description, ThumbStyle? thumbImage, bool? photoPost, bool? videoPost, bool? messagePost, bool? audioPost, bool? albumPost, bool? articlePost, StorageConditionsModel? conditions, }) {
     return FeedModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, thumbImage: thumbImage ?? this.thumbImage, photoPost: photoPost ?? this.photoPost, videoPost: videoPost ?? this.videoPost, messagePost: messagePost ?? this.messagePost, audioPost: audioPost ?? this.audioPost, albumPost: albumPost ?? this.albumPost, articlePost: articlePost ?? this.articlePost, conditions: conditions ?? this.conditions, );
   }
 
@@ -137,7 +137,7 @@ class FeedModel {
           albumPost: entity.albumPost, 
           articlePost: entity.articlePost, 
           conditions: 
-            ConditionsSimpleModel.fromEntity(entity.conditions), 
+            StorageConditionsModel.fromEntity(entity.conditions), 
     );
   }
 
@@ -157,7 +157,7 @@ class FeedModel {
           albumPost: entity.albumPost, 
           articlePost: entity.articlePost, 
           conditions: 
-            await ConditionsSimpleModel.fromEntityPlus(entity.conditions, appId: appId), 
+            await StorageConditionsModel.fromEntityPlus(entity.conditions, appId: appId), 
     );
   }
 

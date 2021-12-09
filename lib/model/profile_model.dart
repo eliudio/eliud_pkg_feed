@@ -42,13 +42,13 @@ class ProfileModel {
   String? appId;
   String? description;
   FeedModel? feed;
-  ConditionsSimpleModel? conditions;
+  StorageConditionsModel? conditions;
 
   ProfileModel({this.documentID, this.appId, this.description, this.feed, this.conditions, })  {
     assert(documentID != null);
   }
 
-  ProfileModel copyWith({String? documentID, String? appId, String? description, FeedModel? feed, ConditionsSimpleModel? conditions, }) {
+  ProfileModel copyWith({String? documentID, String? appId, String? description, FeedModel? feed, StorageConditionsModel? conditions, }) {
     return ProfileModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, feed: feed ?? this.feed, conditions: conditions ?? this.conditions, );
   }
 
@@ -88,7 +88,7 @@ class ProfileModel {
           appId: entity.appId, 
           description: entity.description, 
           conditions: 
-            ConditionsSimpleModel.fromEntity(entity.conditions), 
+            StorageConditionsModel.fromEntity(entity.conditions), 
     );
   }
 
@@ -113,7 +113,7 @@ class ProfileModel {
           description: entity.description, 
           feed: feedHolder, 
           conditions: 
-            await ConditionsSimpleModel.fromEntityPlus(entity.conditions, appId: appId), 
+            await StorageConditionsModel.fromEntityPlus(entity.conditions, appId: appId), 
     );
   }
 

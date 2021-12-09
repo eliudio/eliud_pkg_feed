@@ -32,7 +32,7 @@ class FeedEntity {
   final bool? audioPost;
   final bool? albumPost;
   final bool? articlePost;
-  final ConditionsSimpleEntity? conditions;
+  final StorageConditionsEntity? conditions;
 
   FeedEntity({this.appId, this.description, this.thumbImage, this.photoPost, this.videoPost, this.messagePost, this.audioPost, this.albumPost, this.articlePost, this.conditions, });
 
@@ -51,7 +51,7 @@ class FeedEntity {
     var conditionsFromMap;
     conditionsFromMap = map['conditions'];
     if (conditionsFromMap != null)
-      conditionsFromMap = ConditionsSimpleEntity.fromMap(conditionsFromMap);
+      conditionsFromMap = StorageConditionsEntity.fromMap(conditionsFromMap);
 
     return FeedEntity(
       appId: map['appId'], 

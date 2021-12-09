@@ -46,13 +46,13 @@ class FeedMenuModel {
   RgbModel? itemColor;
   RgbModel? selectedItemColor;
   FeedModel? feed;
-  ConditionsSimpleModel? conditions;
+  StorageConditionsModel? conditions;
 
   FeedMenuModel({this.documentID, this.appId, this.description, this.menuCurrentMember, this.menuOtherMember, this.itemColor, this.selectedItemColor, this.feed, this.conditions, })  {
     assert(documentID != null);
   }
 
-  FeedMenuModel copyWith({String? documentID, String? appId, String? description, MenuDefModel? menuCurrentMember, MenuDefModel? menuOtherMember, RgbModel? itemColor, RgbModel? selectedItemColor, FeedModel? feed, ConditionsSimpleModel? conditions, }) {
+  FeedMenuModel copyWith({String? documentID, String? appId, String? description, MenuDefModel? menuCurrentMember, MenuDefModel? menuOtherMember, RgbModel? itemColor, RgbModel? selectedItemColor, FeedModel? feed, StorageConditionsModel? conditions, }) {
     return FeedMenuModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, menuCurrentMember: menuCurrentMember ?? this.menuCurrentMember, menuOtherMember: menuOtherMember ?? this.menuOtherMember, itemColor: itemColor ?? this.itemColor, selectedItemColor: selectedItemColor ?? this.selectedItemColor, feed: feed ?? this.feed, conditions: conditions ?? this.conditions, );
   }
 
@@ -104,7 +104,7 @@ class FeedMenuModel {
           selectedItemColor: 
             RgbModel.fromEntity(entity.selectedItemColor), 
           conditions: 
-            ConditionsSimpleModel.fromEntity(entity.conditions), 
+            StorageConditionsModel.fromEntity(entity.conditions), 
     );
   }
 
@@ -157,7 +157,7 @@ class FeedMenuModel {
             await RgbModel.fromEntityPlus(entity.selectedItemColor, appId: appId), 
           feed: feedHolder, 
           conditions: 
-            await ConditionsSimpleModel.fromEntityPlus(entity.conditions, appId: appId), 
+            await StorageConditionsModel.fromEntityPlus(entity.conditions, appId: appId), 
     );
   }
 

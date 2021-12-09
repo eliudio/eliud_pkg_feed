@@ -26,7 +26,7 @@ class ProfileEntity {
   final String? appId;
   final String? description;
   final String? feedId;
-  final ConditionsSimpleEntity? conditions;
+  final StorageConditionsEntity? conditions;
 
   ProfileEntity({this.appId, this.description, this.feedId, this.conditions, });
 
@@ -45,7 +45,7 @@ class ProfileEntity {
     var conditionsFromMap;
     conditionsFromMap = map['conditions'];
     if (conditionsFromMap != null)
-      conditionsFromMap = ConditionsSimpleEntity.fromMap(conditionsFromMap);
+      conditionsFromMap = StorageConditionsEntity.fromMap(conditionsFromMap);
 
     return ProfileEntity(
       appId: map['appId'], 

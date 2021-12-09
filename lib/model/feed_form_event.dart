@@ -180,7 +180,7 @@ class ChangedFeedArticlePost extends FeedFormEvent {
 }
 
 class ChangedFeedConditions extends FeedFormEvent {
-  final ConditionsSimpleModel? value;
+  final StorageConditionsModel? value;
 
   ChangedFeedConditions({this.value});
 

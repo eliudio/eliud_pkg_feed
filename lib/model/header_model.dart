@@ -42,13 +42,13 @@ class HeaderModel {
   String? appId;
   String? description;
   FeedModel? feed;
-  ConditionsSimpleModel? conditions;
+  StorageConditionsModel? conditions;
 
   HeaderModel({this.documentID, this.appId, this.description, this.feed, this.conditions, })  {
     assert(documentID != null);
   }
 
-  HeaderModel copyWith({String? documentID, String? appId, String? description, FeedModel? feed, ConditionsSimpleModel? conditions, }) {
+  HeaderModel copyWith({String? documentID, String? appId, String? description, FeedModel? feed, StorageConditionsModel? conditions, }) {
     return HeaderModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, feed: feed ?? this.feed, conditions: conditions ?? this.conditions, );
   }
 
@@ -88,7 +88,7 @@ class HeaderModel {
           appId: entity.appId, 
           description: entity.description, 
           conditions: 
-            ConditionsSimpleModel.fromEntity(entity.conditions), 
+            StorageConditionsModel.fromEntity(entity.conditions), 
     );
   }
 
@@ -113,7 +113,7 @@ class HeaderModel {
           description: entity.description, 
           feed: feedHolder, 
           conditions: 
-            await ConditionsSimpleModel.fromEntityPlus(entity.conditions, appId: appId), 
+            await StorageConditionsModel.fromEntityPlus(entity.conditions, appId: appId), 
     );
   }
 

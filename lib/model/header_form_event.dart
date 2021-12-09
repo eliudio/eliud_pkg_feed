@@ -108,7 +108,7 @@ class ChangedHeaderFeed extends HeaderFormEvent {
 }
 
 class ChangedHeaderConditions extends HeaderFormEvent {
-  final ConditionsSimpleModel? value;
+  final StorageConditionsModel? value;
 
   ChangedHeaderConditions({this.value});
 
