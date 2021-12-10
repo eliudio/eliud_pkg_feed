@@ -55,7 +55,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
     return BlocBuilder<AccessBloc, AccessState>(
     builder: (context, accessState) {
     if (accessState is LoggedIn) {
-      var app = accessState.currentApp(context);
+      var app = accessState.currentApp;
       return complexAckNackDialog(context,
           title: 'New Album',
           child: _contents(context, widget.pageContextInfo, app, accessState),

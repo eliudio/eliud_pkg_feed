@@ -67,7 +67,7 @@ class _FeedPostDialogState extends State<FeedPostDialog> {
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (context, accessState) {
       if (accessState is LoggedIn) {
-        var app = accessState.currentApp(context);
+        var app = accessState.currentApp;
         if (app == null)
           return StyleRegistry.registry()
               .styleWithContext(context)
@@ -83,7 +83,7 @@ class _FeedPostDialogState extends State<FeedPostDialog> {
                 accessState)
               ..add(widget.initialiseEvent),
             child: MyFeedPostForm(
-              accessState.currentAppId(context),
+              accessState.currentApp.documentID!,
               widget.feedId,
               widget.memberId,
               widget.currentMemberId,

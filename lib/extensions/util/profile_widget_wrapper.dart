@@ -41,7 +41,7 @@ class ProfileWidgetWrapper extends ComponentWidgetWrapper {
             return BlocProvider<ProfileBloc>(
                 create: (context) =>
                 ProfileBloc()
-                  ..add(InitialiseProfileEvent(accessState.currentAppId(context),
+                  ..add(InitialiseProfileEvent(accessState.currentApp.documentID!,
                       feedId, accessState, modalRoute)),
                 child: pageBody(context,
                     backgroundOverride: componentInfo.backgroundOverride,

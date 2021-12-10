@@ -107,7 +107,7 @@ class ProfileListWidgetState extends State<ProfileListWidget> {
                       context, label: 'Add',
                       onPressed: () {
                         Navigator.of(context).push(
-                                  pageRouteBuilder(accessState.currentApp(context), page: BlocProvider.value(
+                                  pageRouteBuilder(accessState.currentApp, page: BlocProvider.value(
                                       value: BlocProvider.of<ProfileListBloc>(context),
                                       child: ProfileForm(
                                           value: null,

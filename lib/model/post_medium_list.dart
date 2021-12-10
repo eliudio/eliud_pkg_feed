@@ -107,7 +107,7 @@ class PostMediumListWidgetState extends State<PostMediumListWidget> {
                       context, label: 'Add',
                       onPressed: () {
                         Navigator.of(context).push(
-                                  pageRouteBuilder(accessState.currentApp(context), page: BlocProvider.value(
+                                  pageRouteBuilder(accessState.currentApp, page: BlocProvider.value(
                                       value: BlocProvider.of<PostMediumListBloc>(context),
                                       child: PostMediumForm(
                                           value: null,

@@ -258,7 +258,7 @@ class PagedPostsListState extends State<PagedPostsList> {
         return BlocBuilder<ProfileBloc, ProfileState>(
             builder: (context, profileState) {
           if (profileState is ProfileInitialised) {
-            var app = accessState.currentApp(context);
+            var app = accessState.currentApp;
             return BlocBuilder<PostListPagedBloc, PostListPagedState>(
               builder: (context, state) {
                 if (state is PostListPagedState) {

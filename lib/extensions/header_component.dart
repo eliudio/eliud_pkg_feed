@@ -43,7 +43,7 @@ class HeaderComponent extends AbstractHeaderComponent {
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (context, accessState) {
           if (accessState is AccessDetermined) {
-            var appId = accessState.currentAppId(context);
+            var appId = accessState.currentApp.documentID!;
             return BlocProvider<ProfileBloc>(
                 create: (context) =>
             ProfileBloc()

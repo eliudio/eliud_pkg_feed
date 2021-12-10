@@ -56,18 +56,18 @@ class PostFollowersHelper {
   }
 
   static Future<List<String>> as(BuildContext context, PostPrivilegeType postPrivilegeType, LoggedIn accessState, {List<String>? specificFollowers}) async {
-    return PostFollowersMemberHelper.as(postPrivilegeType, accessState.currentApp(context).documentID!, accessState.member.documentID!, specificFollowers: specificFollowers, );
+    return PostFollowersMemberHelper.as(postPrivilegeType, accessState.currentApp.documentID!, accessState.member.documentID!, specificFollowers: specificFollowers, );
   }
 
   // List all followers in a list to provide them access to this post
   static Future<List<String>> asFollowers(BuildContext context, LoggedIn accessState) async {
-    return PostFollowersMemberHelper.asFollowers(accessState.currentApp(context).documentID!, accessState.member.documentID!);
+    return PostFollowersMemberHelper.asFollowers(accessState.currentApp.documentID!, accessState.member.documentID!);
   }
 
   // To allow a post to be publicly available
   static Future<List<String>> asPublic(BuildContext context, AccessDetermined accessState) async {
     if (accessState is LoggedIn) {
-      return PostFollowersMemberHelper.asFollowers(accessState.currentApp(context).documentID!, accessState.member.documentID!);
+      return PostFollowersMemberHelper.asFollowers(accessState.currentApp.documentID!, accessState.member.documentID!);
     } else {
       return ['PUBLIC'];
     }

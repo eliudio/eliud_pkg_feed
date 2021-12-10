@@ -39,13 +39,13 @@ class ProfileComponent extends AbstractProfileComponent {
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (context, accessState) {
           if (accessState is AccessDetermined) {
-            var appId = accessState.currentAppId(context);
+            var appId = accessState.currentApp.documentID!;
             return BlocProvider<ProfileBloc>(
                 create: (context) =>
                 ProfileBloc()
                   ..add(InitialiseProfileEvent(appId,
                       feedId, accessState, modalRoute)),
-                child: Profile(appId: accessState.currentApp(context).documentID!)
+                child: Profile(appId: accessState.currentApp.documentID!)
             );
           } else {
             return progressIndicator(context);
