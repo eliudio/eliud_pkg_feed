@@ -3,7 +3,6 @@ import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/member_profile_model.dart';
 import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
-import 'package:flutter_tagging/flutter_tagging.dart';
 
 /// MemberService
 class MemberService {
@@ -83,7 +82,7 @@ class MemberService {
   }
 }
 
-class SelectedMember extends Taggable {
+class SelectedMember /*extends Taggable */{
   final String memberId;
   final String name;
 

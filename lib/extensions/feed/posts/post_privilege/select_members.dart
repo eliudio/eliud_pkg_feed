@@ -2,7 +2,6 @@ import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_tagging/flutter_tagging.dart';
 
 import 'bloc/member_service.dart';
 
@@ -41,6 +40,7 @@ class SelectMembersWidget extends StatefulWidget {
     var memberService = MemberService(appId, feedId, memberId);
     if (specificSelectedMembers == null)
       specificSelectedMembers = <SelectedMember>[];
+
     return SelectMembersWidget._(
         appId: appId,
         feedId: feedId,
@@ -54,6 +54,8 @@ class SelectMembersWidget extends StatefulWidget {
 class _SelectMembersWidgetState extends State<SelectMembersWidget> {
   @override
   Widget build(BuildContext context) {
+    return Text("TODO. Or reintroduce FlutterTagging, or implement differently");
+/*
     List<SelectedMember> _selectedMembers = widget.initiallySelectedMembers;
 
     return Column(children: <Widget>[
@@ -94,11 +96,12 @@ class _SelectMembersWidgetState extends State<SelectMembersWidget> {
                     .toList();
                 widget.selectedMembersCallback(iDs);
               })),
-/*
       SizedBox(
         height: 20.0,
       ),
-*/
+
+
     ]);
+*/
   }
 }
