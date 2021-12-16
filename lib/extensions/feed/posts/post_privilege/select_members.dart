@@ -1,5 +1,8 @@
+import 'package:chips_input/chips_input.dart';
+import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/style/style_registry.dart';
+import 'package:eliud_core/tools/random.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -54,54 +57,86 @@ class SelectMembersWidget extends StatefulWidget {
 class _SelectMembersWidgetState extends State<SelectMembersWidget> {
   @override
   Widget build(BuildContext context) {
-    return Text("TODO. Or reintroduce FlutterTagging, or implement differently");
-/*
+    return FutureBuilder<List<SelectedMember>>(
+        future: widget.memberService.getMembers(null),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return TheRealSelectMembersWidget(
+              initiallySelectedMembers: widget.initiallySelectedMembers,
+              selectedMembersCallback: widget.selectedMembersCallback,
+              allMembers: snapshot.data!,
+            );
+          } else {
+            return progressIndicator(context);
+          }
+        });
+  }
+}
+
+class TheRealSelectMembersWidget extends StatefulWidget {
+  final List<SelectedMember> initiallySelectedMembers;
+  final SelectedMembersCallback selectedMembersCallback;
+  final List<SelectedMember> allMembers;
+
+  const TheRealSelectMembersWidget(
+      {Key? key,
+      required this.initiallySelectedMembers,
+      required this.selectedMembersCallback,
+      required this.allMembers})
+      : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _TheRealSelectMembersWidgetState();
+}
+
+class _TheRealSelectMembersWidgetState
+    extends State<TheRealSelectMembersWidget> {
+  @override
+  Widget build(BuildContext context) {
     List<SelectedMember> _selectedMembers = widget.initiallySelectedMembers;
-
-    return Column(children: <Widget>[
-      Padding(
-          padding: const EdgeInsets.all(0.0),
-          child: FlutterTagging<SelectedMember>(
-              initialItems: _selectedMembers,
-              textFieldConfiguration: TextFieldConfiguration(
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  filled: true,
-                  fillColor: Colors.grey.withAlpha(30),
-                  hintText: 'Search Members',
-                  labelText: 'Select Members',
+    return ChipsInput<SelectedMember>(
+//    maxChips: 3, // remove, if you like infinity number of chips
+      initialValue: _selectedMembers,
+      findSuggestions: (String query) {
+        var _selectedMembersS = _selectedMembers.map((e) => e.memberId).toList();
+        List<SelectedMember> remaining = [];
+        for (var element in widget.allMembers) {
+          if (!_selectedMembersS.contains(element.memberId)) {
+            if ((query.length == 0) || (element.name.toLowerCase().startsWith(query)))
+            remaining.add(element);
+          }
+        }
+        return remaining;
+      },
+      onChanged: (List<SelectedMember> data) {
+        var distinct = data.toSet().toList();
+        widget.selectedMembersCallback(distinct.map((e) => e.memberId).toList());
+      },
+      chipBuilder: (context, state, SelectedMember selectedMember) {
+        return InputChip(
+          key: ObjectKey(selectedMember.toString() + "-" + newRandomKey()),
+          label: Text(selectedMember.name),
+          avatar: selectedMember.imageURL == null
+              ? null
+              : CircleAvatar(
+                  backgroundImage: NetworkImage(selectedMember.imageURL!),
                 ),
-              ),
-              findSuggestions: widget.memberService.getMembers,
-              onAdded: (member) {
-                return member;
-              },
-              configureSuggestion: (lang) {
-                return SuggestionConfiguration(
-                  title: text(context, lang.name),
-                  subtitle: text(context, lang.memberId),
-                );
-              },
-              configureChip: (lang) {
-                return ChipConfiguration(
-                  label: Text(lang.name),
-                  backgroundColor: Colors.grey,
-                  labelStyle: TextStyle(color: Colors.white),
-                  deleteIconColor: Colors.white,
-                );
-              },
-              onChanged: () {
-                var iDs = _selectedMembers
-                    .map((selectedMember) => selectedMember.memberId)
-                    .toList();
-                widget.selectedMembersCallback(iDs);
-              })),
-      SizedBox(
-        height: 20.0,
-      ),
-
-
-    ]);
-*/
+          onDeleted: () => state.deleteChip(selectedMember),
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        );
+      },
+      suggestionBuilder: (context, SelectedMember selectedMember) {
+        return ListTile(
+          key: ObjectKey(selectedMember),
+          leading: selectedMember.imageURL == null
+              ? null
+              : CircleAvatar(
+                  backgroundImage: NetworkImage(selectedMember.imageURL!),
+                ),
+          title: Text(selectedMember.name),
+          subtitle: Text(selectedMember.memberId),
+        );
+      },
+    );
   }
 }

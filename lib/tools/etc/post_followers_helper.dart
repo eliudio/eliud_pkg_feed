@@ -36,6 +36,7 @@ class PostPrivilege extends Equatable {
       identical(this, other) ||
           other is PostPrivilege &&
               runtimeType == other.runtimeType &&
+              postPrivilegeType == other.postPrivilegeType &&
               ListEquality().equals(specificFollowers, other.specificFollowers) &&
               ListEquality().equals(readAccess, other.readAccess);
 }

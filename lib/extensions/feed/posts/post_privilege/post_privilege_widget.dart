@@ -37,7 +37,7 @@ class _PostPrivilegeWidgetState extends State<PostPrivilegeWidget> {
     _postPrivilegeSelectedRadioTile = 0;
   }
 
-  RadioListTile _radioPrivilegeTile(String text, int value) {
+  RadioListTile _radioPrivilegeTile(String text, int value, bool selected) {
     return /*Flexible(
       fit: FlexFit.loose,
       child: */
@@ -45,6 +45,7 @@ class _PostPrivilegeWidgetState extends State<PostPrivilegeWidget> {
             contentPadding: EdgeInsets.all(0),
             dense: true,
             value: value,
+            selected: selected,
             groupValue: _postPrivilegeSelectedRadioTile,
             title: StyleRegistry.registry()
                 .styleWithContext(context)
@@ -82,11 +83,12 @@ class _PostPrivilegeWidgetState extends State<PostPrivilegeWidget> {
 
   Widget _editableAudience(PostPrivilege postPrivilege,
       List<SelectedMember>? specificSelectedMembers) {
+
     var col1 = _getList(
-        _radioPrivilegeTile('Public', 0),
-        _radioPrivilegeTile('Followers', 1),
-        _radioPrivilegeTile('Specific People', 2),
-        _radioPrivilegeTile('Just Me', 3));
+        _radioPrivilegeTile('Public', 0, postPrivilege.postPrivilegeType == PostPrivilegeType.Public),
+        _radioPrivilegeTile('Followers', 1, postPrivilege.postPrivilegeType == PostPrivilegeType.Followers),
+        _radioPrivilegeTile('Specific People', 2, postPrivilege.postPrivilegeType == PostPrivilegeType.SpecificPeople),
+        _radioPrivilegeTile('Just Me', 3, postPrivilege.postPrivilegeType == PostPrivilegeType.JustMe));
 
     // specific followers
     if (_postPrivilegeSelectedRadioTile == 2) {
@@ -140,9 +142,6 @@ class _PostPrivilegeWidgetState extends State<PostPrivilegeWidget> {
 
   void _setPostSelectedRadioTile(int? val) {
     if (val != null) {
-      setState(() {
-        _postPrivilegeSelectedRadioTile = val;
-      });
       BlocProvider.of<PostPrivilegeBloc>(context)
           .add(ChangedPostPrivilege(value: val));
     }
@@ -153,6 +152,7 @@ class _PostPrivilegeWidgetState extends State<PostPrivilegeWidget> {
     return BlocBuilder<PostPrivilegeBloc, PostPrivilegeState>(
         builder: (context, state) {
       if (state is PostPrivilegeInitialized) {
+        _postPrivilegeSelectedRadioTile = state.postPrivilege.postPrivilegeType.index;
         if (widget.canEdit) {
           return _editableAudience(
               state.postPrivilege, state.specificSelectedMembers);

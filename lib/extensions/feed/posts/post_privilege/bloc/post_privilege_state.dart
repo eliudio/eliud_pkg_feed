@@ -43,7 +43,7 @@ class PostPrivilegeInitialized extends PostPrivilegeState {
   const PostPrivilegeInitialized({ required this.postPrivilege, required this.specificSelectedMembers });
 
   @override
-  List<Object?> get props => [ postPrivilege ];
+  List<Object?> get props => [ postPrivilege,specificSelectedMembers ];
 
   @override
   bool operator == (Object other) =>

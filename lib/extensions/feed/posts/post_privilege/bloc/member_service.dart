@@ -12,7 +12,8 @@ class MemberService {
 
   MemberService(this.appId, this.feedId, this.memberId);
 
-  Future<List<SelectedMember>?> getFromPostPrivilege(PostPrivilege postPrivilege) async {
+  Future<List<SelectedMember>?> getFromPostPrivilege(
+      PostPrivilege postPrivilege) async {
     if (postPrivilege.postPrivilegeType == PostPrivilegeType.SpecificPeople) {
       var ids = postPrivilege.specificFollowers;
       return getFromIDs(ids);
@@ -26,35 +27,34 @@ class MemberService {
 
     var values2 = <SelectedMember>[];
     for (var id in ids) {
-      var value = await memberProfileRepository(appId: appId)!.get(id + '-' + feedId);
+      var value =
+          await memberProfileRepository(appId: appId)!.get(id + '-' + feedId);
       var selectedMember = SelectedMember(
-          memberId: value!.authorId != null
-              ? value.authorId!
-              : 'no author id',
-          name: value.nameOverride != null ? value.nameOverride! : 'no name');
+          memberId: value!.authorId != null ? value.authorId! : 'no author id',
+          name: value.nameOverride != null ? value.nameOverride! : 'no name',
+          imageURL: value.profile);
       values2.add(selectedMember);
     }
 
     return values2;
   }
 
-  Future<List<SelectedMember>> getMembers(String query) async {
+  Future<List<SelectedMember>> getMembers(String? query) async {
     var membersValues = await memberProfileRepository(appId: appId)!.valuesList(
-          eliudQuery: EliudQuery()
-              .withCondition(EliudQueryCondition('feedId', isEqualTo: feedId))
-              .withCondition(EliudQueryCondition('readAccess',
-              arrayContainsAny: [memberId, 'PUBLIC'])));
+        eliudQuery: EliudQuery()
+            .withCondition(EliudQueryCondition('feedId', isEqualTo: feedId))
+            .withCondition(EliudQueryCondition('readAccess',
+                arrayContainsAny: [memberId, 'PUBLIC'])));
 
-    if (query.length > 0) {
+    if ((query != null) && (query.length > 0)) {
       var values2 = <SelectedMember>[];
       var lowerQuery = query.toLowerCase();
       for (var value in membersValues) {
         if (value!.nameOverride != null) {
           if (value.nameOverride!.toLowerCase().contains(lowerQuery)) {
             var selectedMember = SelectedMember(
-                memberId: value.authorId != null
-                    ? value.authorId!
-                    : 'no author id',
+                memberId:
+                    value.authorId != null ? value.authorId! : 'no author id',
                 name: value.nameOverride != null
                     ? value.nameOverride!
                     : 'no name');
@@ -72,9 +72,7 @@ class MemberService {
     var values2 = <SelectedMember>[];
     membersValues.forEach((value) {
       var selectedMember = SelectedMember(
-          memberId: value!.authorId != null
-              ? value.authorId!
-              : 'no author id',
+          memberId: value!.authorId != null ? value.authorId! : 'no author id',
           name: value.nameOverride != null ? value.nameOverride! : 'no name');
       values2.add(selectedMember);
     });
@@ -82,15 +80,13 @@ class MemberService {
   }
 }
 
-class SelectedMember /*extends Taggable */{
+class SelectedMember /*extends Taggable */ {
   final String memberId;
   final String name;
+  final String? imageURL;
 
-  SelectedMember({
-    required this.memberId,
-    required this.name,
-  });
+  SelectedMember({required this.memberId, required this.name, this.imageURL});
 
   @override
-  List<Object> get props => [memberId, name];
+  List<Object> get props => [memberId, name, imageURL ?? ''];
 }

@@ -31,8 +31,11 @@ class PostPrivilegeBloc extends Bloc<PostPrivilegeEvent, PostPrivilegeState> {
           postPrivilegeType, appId, memberId,
           specificFollowers: event.specificFollowers);
       postPrivilegeCallback(postPrivilege);
-      yield PostPrivilegeInitialized(
+      var currentState = state;
+      var newState = PostPrivilegeInitialized(
           postPrivilege: postPrivilege, specificSelectedMembers: await memberService.getFromPostPrivilege(postPrivilege));
+      var equalsState = currentState == newState;
+      yield newState;
     }
   }
 }
