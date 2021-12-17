@@ -155,7 +155,7 @@ class MemberProfileListWidgetState extends State<MemberProfileListWidget> {
               BlocProvider.of<MemberProfileListBloc>(context)
                   .add(DeleteMemberProfileList(value: value));
               Scaffold.of(context).showSnackBar(DeleteSnackBar(
-                message: "MemberProfile " + value.,
+                message: "MemberProfile " + value.documentID,
                 onUndo: () => BlocProvider.of<MemberProfileListBloc>(context)
                     .add(AddMemberProfileList(value: value)),
               ));
@@ -168,7 +168,7 @@ class MemberProfileListWidgetState extends State<MemberProfileListWidget> {
                       if (removedItem != null) {
                         Scaffold.of(context).showSnackBar(
                           DeleteSnackBar(
-                        message: "MemberProfile " + value.,
+                        message: "MemberProfile " + value.documentID,
                             onUndo: () => BlocProvider.of<MemberProfileListBloc>(context)
                                 .add(AddMemberProfileList(value: value)),
                           ),
@@ -214,7 +214,6 @@ class MemberProfileListItem extends StatelessWidget {
       child: ListTile(
         onTap: onTap,
         title: value.documentID != null ? Center(child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, value.documentID!)) : Container(),
-        subtitle: ,
       ),
     );
   }

@@ -155,7 +155,7 @@ class PostCommentListWidgetState extends State<PostCommentListWidget> {
               BlocProvider.of<PostCommentListBloc>(context)
                   .add(DeletePostCommentList(value: value));
               Scaffold.of(context).showSnackBar(DeleteSnackBar(
-                message: "PostComment " + value.,
+                message: "PostComment " + value.documentID,
                 onUndo: () => BlocProvider.of<PostCommentListBloc>(context)
                     .add(AddPostCommentList(value: value)),
               ));
@@ -168,7 +168,7 @@ class PostCommentListWidgetState extends State<PostCommentListWidget> {
                       if (removedItem != null) {
                         Scaffold.of(context).showSnackBar(
                           DeleteSnackBar(
-                        message: "PostComment " + value.,
+                        message: "PostComment " + value.documentID,
                             onUndo: () => BlocProvider.of<PostCommentListBloc>(context)
                                 .add(AddPostCommentList(value: value)),
                           ),

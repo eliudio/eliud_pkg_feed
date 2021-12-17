@@ -155,7 +155,7 @@ class PostListWidgetState extends State<PostListWidget> {
               BlocProvider.of<PostListBloc>(context)
                   .add(DeletePostList(value: value));
               Scaffold.of(context).showSnackBar(DeleteSnackBar(
-                message: "Post " + value.,
+                message: "Post " + value.documentID,
                 onUndo: () => BlocProvider.of<PostListBloc>(context)
                     .add(AddPostList(value: value)),
               ));
@@ -168,7 +168,7 @@ class PostListWidgetState extends State<PostListWidget> {
                       if (removedItem != null) {
                         Scaffold.of(context).showSnackBar(
                           DeleteSnackBar(
-                        message: "Post " + value.,
+                        message: "Post " + value.documentID,
                             onUndo: () => BlocProvider.of<PostListBloc>(context)
                                 .add(AddPostList(value: value)),
                           ),

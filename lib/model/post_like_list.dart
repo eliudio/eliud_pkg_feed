@@ -155,7 +155,7 @@ class PostLikeListWidgetState extends State<PostLikeListWidget> {
               BlocProvider.of<PostLikeListBloc>(context)
                   .add(DeletePostLikeList(value: value));
               Scaffold.of(context).showSnackBar(DeleteSnackBar(
-                message: "PostLike " + value.,
+                message: "PostLike " + value.documentID,
                 onUndo: () => BlocProvider.of<PostLikeListBloc>(context)
                     .add(AddPostLikeList(value: value)),
               ));
@@ -168,7 +168,7 @@ class PostLikeListWidgetState extends State<PostLikeListWidget> {
                       if (removedItem != null) {
                         Scaffold.of(context).showSnackBar(
                           DeleteSnackBar(
-                        message: "PostLike " + value.,
+                        message: "PostLike " + value.documentID,
                             onUndo: () => BlocProvider.of<PostLikeListBloc>(context)
                                 .add(AddPostLikeList(value: value)),
                           ),
