@@ -155,7 +155,7 @@ class ProfileListWidgetState extends State<ProfileListWidget> {
               BlocProvider.of<ProfileListBloc>(context)
                   .add(DeleteProfileList(value: value));
               Scaffold.of(context).showSnackBar(DeleteSnackBar(
-                message: "Profile " + value.documentID,
+                message: "Profile " + value.,
                 onUndo: () => BlocProvider.of<ProfileListBloc>(context)
                     .add(AddProfileList(value: value)),
               ));
@@ -168,7 +168,7 @@ class ProfileListWidgetState extends State<ProfileListWidget> {
                       if (removedItem != null) {
                         Scaffold.of(context).showSnackBar(
                           DeleteSnackBar(
-                        message: "Profile " + value.documentID,
+                        message: "Profile " + value.,
                             onUndo: () => BlocProvider.of<ProfileListBloc>(context)
                                 .add(AddProfileList(value: value)),
                           ),

@@ -64,6 +64,7 @@ class PostMediumDropdownButtonWidgetState extends State<PostMediumDropdownButton
 List<Widget> widgets(PostMediumModel value) {
 var widgets = <Widget>[];
 widgets.add(value.documentID != null ? Center(child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, value.documentID!)) : Container());
+widgets.add();
 return widgets;
 }
 

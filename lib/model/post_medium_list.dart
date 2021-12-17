@@ -155,7 +155,7 @@ class PostMediumListWidgetState extends State<PostMediumListWidget> {
               BlocProvider.of<PostMediumListBloc>(context)
                   .add(DeletePostMediumList(value: value));
               Scaffold.of(context).showSnackBar(DeleteSnackBar(
-                message: "PostMedium " + value.documentID,
+                message: "PostMedium " + value.,
                 onUndo: () => BlocProvider.of<PostMediumListBloc>(context)
                     .add(AddPostMediumList(value: value)),
               ));
@@ -168,7 +168,7 @@ class PostMediumListWidgetState extends State<PostMediumListWidget> {
                       if (removedItem != null) {
                         Scaffold.of(context).showSnackBar(
                           DeleteSnackBar(
-                        message: "PostMedium " + value.documentID,
+                        message: "PostMedium " + value.,
                             onUndo: () => BlocProvider.of<PostMediumListBloc>(context)
                                 .add(AddPostMediumList(value: value)),
                           ),
@@ -214,6 +214,7 @@ class PostMediumListItem extends StatelessWidget {
       child: ListTile(
         onTap: onTap,
         title: value.documentID != null ? Center(child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, value.documentID!)) : Container(),
+        subtitle: ,
       ),
     );
   }

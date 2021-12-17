@@ -155,7 +155,7 @@ class HeaderListWidgetState extends State<HeaderListWidget> {
               BlocProvider.of<HeaderListBloc>(context)
                   .add(DeleteHeaderList(value: value));
               Scaffold.of(context).showSnackBar(DeleteSnackBar(
-                message: "Header " + value.documentID,
+                message: "Header " + value.,
                 onUndo: () => BlocProvider.of<HeaderListBloc>(context)
                     .add(AddHeaderList(value: value)),
               ));
@@ -168,7 +168,7 @@ class HeaderListWidgetState extends State<HeaderListWidget> {
                       if (removedItem != null) {
                         Scaffold.of(context).showSnackBar(
                           DeleteSnackBar(
-                        message: "Header " + value.documentID,
+                        message: "Header " + value.,
                             onUndo: () => BlocProvider.of<HeaderListBloc>(context)
                                 .add(AddHeaderList(value: value)),
                           ),

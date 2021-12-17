@@ -123,7 +123,12 @@ class HeaderCache implements HeaderRepository {
 
   @override
   StreamSubscription<HeaderModel?> listenTo(String documentId, HeaderChanged changed) {
-    return reference.listenTo(documentId, changed);
+    return reference.listenTo(documentId, ((value) {
+      if (value != null) {
+        fullCache[value.documentID] = value;
+      }
+      changed(value);
+    }));
   }
 
   static Future<HeaderModel> refreshRelations(HeaderModel model) async {

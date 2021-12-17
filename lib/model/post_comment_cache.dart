@@ -128,7 +128,12 @@ class PostCommentCache implements PostCommentRepository {
 
   @override
   StreamSubscription<PostCommentModel?> listenTo(String documentId, PostCommentChanged changed) {
-    return reference.listenTo(documentId, changed);
+    return reference.listenTo(documentId, ((value) {
+      if (value != null) {
+        fullCache[value.documentID] = value;
+      }
+      changed(value);
+    }));
   }
 
   static Future<PostCommentModel> refreshRelations(PostCommentModel model) async {

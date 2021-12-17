@@ -123,7 +123,12 @@ class FeedMenuCache implements FeedMenuRepository {
 
   @override
   StreamSubscription<FeedMenuModel?> listenTo(String documentId, FeedMenuChanged changed) {
-    return reference.listenTo(documentId, changed);
+    return reference.listenTo(documentId, ((value) {
+      if (value != null) {
+        fullCache[value.documentID] = value;
+      }
+      changed(value);
+    }));
   }
 
   static Future<FeedMenuModel> refreshRelations(FeedMenuModel model) async {
