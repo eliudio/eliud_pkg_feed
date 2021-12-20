@@ -59,35 +59,35 @@ class RepositorySingleton extends AbstractRepositorySingleton {
     var _profileRepository = HashMap<String, ProfileRepository>();
 
     FeedRepository? feedRepository(String? appId) {
-      if ((appId != null) && (_feedRepository[appId] == null)) _feedRepository[appId] = FeedCache(FeedFirestore(appRepository()!.getSubCollection(appId, 'feed'), appId));
+      if ((appId != null) && (_feedRepository[appId] == null)) _feedRepository[appId] = FeedCache(FeedFirestore(() => appRepository()!.getSubCollection(appId, 'feed'), appId));
       return _feedRepository[appId];
     }
     FeedMenuRepository? feedMenuRepository(String? appId) {
-      if ((appId != null) && (_feedMenuRepository[appId] == null)) _feedMenuRepository[appId] = FeedMenuCache(FeedMenuFirestore(appRepository()!.getSubCollection(appId, 'feedmenu'), appId));
+      if ((appId != null) && (_feedMenuRepository[appId] == null)) _feedMenuRepository[appId] = FeedMenuCache(FeedMenuFirestore(() => appRepository()!.getSubCollection(appId, 'feedmenu'), appId));
       return _feedMenuRepository[appId];
     }
     HeaderRepository? headerRepository(String? appId) {
-      if ((appId != null) && (_headerRepository[appId] == null)) _headerRepository[appId] = HeaderCache(HeaderFirestore(appRepository()!.getSubCollection(appId, 'header'), appId));
+      if ((appId != null) && (_headerRepository[appId] == null)) _headerRepository[appId] = HeaderCache(HeaderFirestore(() => appRepository()!.getSubCollection(appId, 'header'), appId));
       return _headerRepository[appId];
     }
     MemberProfileRepository? memberProfileRepository(String? appId) {
-      if ((appId != null) && (_memberProfileRepository[appId] == null)) _memberProfileRepository[appId] = MemberProfileFirestore(appRepository()!.getSubCollection(appId, 'memberprofile'), appId);
+      if ((appId != null) && (_memberProfileRepository[appId] == null)) _memberProfileRepository[appId] = MemberProfileFirestore(() => appRepository()!.getSubCollection(appId, 'memberprofile'), appId);
       return _memberProfileRepository[appId];
     }
     PostRepository? postRepository(String? appId) {
-      if ((appId != null) && (_postRepository[appId] == null)) _postRepository[appId] = PostCache(PostFirestore(appRepository()!.getSubCollection(appId, 'post'), appId));
+      if ((appId != null) && (_postRepository[appId] == null)) _postRepository[appId] = PostCache(PostFirestore(() => appRepository()!.getSubCollection(appId, 'post'), appId));
       return _postRepository[appId];
     }
     PostCommentRepository? postCommentRepository(String? appId) {
-      if ((appId != null) && (_postCommentRepository[appId] == null)) _postCommentRepository[appId] = PostCommentCache(PostCommentFirestore(appRepository()!.getSubCollection(appId, 'postcomment'), appId));
+      if ((appId != null) && (_postCommentRepository[appId] == null)) _postCommentRepository[appId] = PostCommentCache(PostCommentFirestore(() => appRepository()!.getSubCollection(appId, 'postcomment'), appId));
       return _postCommentRepository[appId];
     }
     PostLikeRepository? postLikeRepository(String? appId) {
-      if ((appId != null) && (_postLikeRepository[appId] == null)) _postLikeRepository[appId] = PostLikeCache(PostLikeFirestore(appRepository()!.getSubCollection(appId, 'postlike'), appId));
+      if ((appId != null) && (_postLikeRepository[appId] == null)) _postLikeRepository[appId] = PostLikeCache(PostLikeFirestore(() => appRepository()!.getSubCollection(appId, 'postlike'), appId));
       return _postLikeRepository[appId];
     }
     ProfileRepository? profileRepository(String? appId) {
-      if ((appId != null) && (_profileRepository[appId] == null)) _profileRepository[appId] = ProfileCache(ProfileFirestore(appRepository()!.getSubCollection(appId, 'profile'), appId));
+      if ((appId != null) && (_profileRepository[appId] == null)) _profileRepository[appId] = ProfileCache(ProfileFirestore(() => appRepository()!.getSubCollection(appId, 'profile'), appId));
       return _profileRepository[appId];
     }
 
