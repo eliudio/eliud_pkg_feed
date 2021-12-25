@@ -1,18 +1,6 @@
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
-import 'package:eliud_core/core/registry.dart';
-import 'package:eliud_core/core/tools/component_info.dart';
-import 'package:eliud_core/core/tools/page_body.dart';
-import 'package:eliud_core/core/widgets/alert_widget.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/model/page_component_bloc.dart';
-import 'package:eliud_core/model/page_component_event.dart';
-import 'package:eliud_core/model/page_component_state.dart';
-import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
-import 'package:eliud_core/style/frontend/has_text.dart';
-import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class EmbeddedPageHelper {
   static Widget postDetails(
