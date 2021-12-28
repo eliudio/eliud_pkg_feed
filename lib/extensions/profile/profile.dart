@@ -1,3 +1,4 @@
+import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/style/frontend/has_container.dart';
 import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
@@ -13,9 +14,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
 
 class Profile extends StatefulWidget {
-  final String appId;
+  final AppModel app;
 
-  Profile({Key? key, required this.appId}) : super(key: key);
+  Profile({Key? key, required this.app}) : super(key: key);
 
   @override
   _ProfileState createState() => _ProfileState();
@@ -26,11 +27,11 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
       if (state is ProfileError)
-        return text(context, 'No profile');
+        return text(widget.app, context, 'No profile');
       if (state is ProfileInitialised) {
         var profile = state.watchingThisProfile();
         var html = state.profileHTML();
-        var child = topicContainer(context,
+        var child = topicContainer(widget.app, context,
             children: ([
               html == null || html.length == 0
                   ? Container(
@@ -48,7 +49,7 @@ class _ProfileState extends State<Profile> {
                 button: getEditIcon(
                   onPressed: () {
                     AbstractTextPlatform.platform!.updateHtmlUsingMemberMedium(context,
-                        widget.appId,
+                        widget.app,
                         ownerId,
                         readAccess,
                         "Profile",
@@ -66,7 +67,7 @@ class _ProfileState extends State<Profile> {
           return child;
         }
       }
-      return progressIndicator(context);
+      return progressIndicator(widget.app, context);
     });
   }
 }

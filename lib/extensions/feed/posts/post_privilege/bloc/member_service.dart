@@ -1,3 +1,4 @@
+import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
@@ -6,11 +7,11 @@ import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 
 /// MemberService
 class MemberService {
-  final String appId;
+  final AppModel app;
   final String feedId;
   final String memberId;
 
-  MemberService(this.appId, this.feedId, this.memberId);
+  MemberService(this.app, this.feedId, this.memberId);
 
   Future<List<SelectedMember>?> getFromPostPrivilege(
       PostPrivilege postPrivilege) async {
@@ -28,7 +29,7 @@ class MemberService {
     var values2 = <SelectedMember>[];
     for (var id in ids) {
       var value =
-          await memberProfileRepository(appId: appId)!.get(id + '-' + feedId);
+          await memberProfileRepository(appId: app.documentID!)!.get(id + '-' + feedId);
       var selectedMember = SelectedMember(
           memberId: value!.authorId != null ? value.authorId! : 'no author id',
           name: value.nameOverride != null ? value.nameOverride! : 'no name',
@@ -40,7 +41,7 @@ class MemberService {
   }
 
   Future<List<SelectedMember>> getMembers(String? query) async {
-    var membersValues = await memberProfileRepository(appId: appId)!.valuesList(
+    var membersValues = await memberProfileRepository(appId: app.documentID!)!.valuesList(
         eliudQuery: EliudQuery()
             .withCondition(EliudQueryCondition('feedId', isEqualTo: feedId))
             .withCondition(EliudQueryCondition('readAccess',

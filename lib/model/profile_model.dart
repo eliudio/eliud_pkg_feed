@@ -80,7 +80,7 @@ class ProfileModel {
     );
   }
 
-  static ProfileModel? fromEntity(String documentID, ProfileEntity? entity) {
+  static Future<ProfileModel?> fromEntity(String documentID, ProfileEntity? entity) async {
     if (entity == null) return null;
     var counter = 0;
     return ProfileModel(
@@ -88,7 +88,7 @@ class ProfileModel {
           appId: entity.appId, 
           description: entity.description, 
           conditions: 
-            StorageConditionsModel.fromEntity(entity.conditions), 
+            await StorageConditionsModel.fromEntity(entity.conditions), 
     );
   }
 

@@ -99,7 +99,7 @@ class _PostWidgetState extends State<PostWidget> {
       widgets.add(_description(postModel));
       widgets.add(_aBitSpace());
     }
-    widgets.add(PostContentsWidget(
+    widgets.add(PostContentsWidget(app: widget.app,
       memberID: widget.memberId,
       postModel: postModel,
       accessBloc: originalAccessBloc,
@@ -113,7 +113,7 @@ class _PostWidgetState extends State<PostWidget> {
     widgets.add(_aBitSpace());
     widgets.add(_postComments(context, widget.details, widget.memberId));
 
-    return topicContainer(context, children: widgets);
+    return topicContainer(widget.app, context, children: widgets);
   }
 
   static double _width(BuildContext context) =>
@@ -121,7 +121,7 @@ class _PostWidgetState extends State<PostWidget> {
 
   Widget _description(PostModel? postModel) {
     if ((postModel != null) && (postModel.description != null)) {
-      return text(context, postModel.description!);
+      return text(widget.app, context, postModel.description!);
     } else {
       return Container(
         height: 0,
@@ -143,7 +143,7 @@ class _PostWidgetState extends State<PostWidget> {
                 widget.pageId,
                 widget.currentMemberId!,
                 widget.currentMemberId,
-                widget.app.documentID!,
+                widget.app,
                 widget.feedId)),
         Container(width: 8),
         Flexible(
@@ -152,7 +152,7 @@ class _PostWidgetState extends State<PostWidget> {
         ),
         Container(width: 8),
         //PostHelper.mediaButtons(context, _photoAvailable, _videoAvailable),
-        button(context,
+        button(widget.app, context,
                 label: 'Ok', onPressed: () => _addComment(context, postDetail)),
       ]);
     }
@@ -168,7 +168,7 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   Widget _textField() {
-    return textField(
+    return textField(widget.app,
       context,
       readOnly: false,
       textAlign: TextAlign.left,
@@ -192,9 +192,9 @@ class _PostWidgetState extends State<PostWidget> {
 
   Widget _heading(BuildContext context, PostModel? postModel) {
     if (postModel == null)
-      return text(context, 'No post');
+      return text(widget.app, context, 'No post');
     if (postModel.authorId == null)
-      return text(context, 'No author');
+      return text(widget.app, context, 'No author');
 
     var timeStamp;
     if (postModel.timestamp == null) {
@@ -213,7 +213,7 @@ class _PostWidgetState extends State<PostWidget> {
               widget.pageId,
               postModel.authorId!,
               widget.currentMemberId,
-              widget.app.documentID!,
+              widget.app,
               widget.feedId)),
       Container(
         width: 8,
@@ -223,8 +223,8 @@ class _PostWidgetState extends State<PostWidget> {
           height: 4,
         ),
         AvatarHelper.nameH5(
-            context, postModel.authorId!, widget.app.documentID!, widget.feedId),
-        h5(context, verboseDateTimeRepresentation(timeStamp), textAlign: TextAlign.left),
+            context, postModel.authorId!, widget.app, widget.feedId),
+        h5(widget.app, context, verboseDateTimeRepresentation(timeStamp), textAlign: TextAlign.left),
       ]),
       Spacer(),
     ];
@@ -249,13 +249,13 @@ class _PostWidgetState extends State<PostWidget> {
     if (PostTypeHelper.canUpdate(type)) {
       items.add(
         PopupMenuItem<int>(
-            child: text(context, 'Update post'),
+            child: text(widget.app, context, 'Update post'),
             value: 1),
       );
     }
     items.add(
       PopupMenuItem<int>(
-          child: text(context, 'Delete post'),
+          child: text(widget.app, context, 'Delete post'),
           value: 0),
     );
 
@@ -264,7 +264,7 @@ class _PostWidgetState extends State<PostWidget> {
         itemBuilder: (_) => items,
         onSelected: (choice) async {
           if (choice == 0) {
-            openAckNackDialog(context, AccessBloc.currentAppId(context) + '/_deletepost',
+            openAckNackDialog(widget.app, context, widget.app.documentID! + '/_deletepost',
                     title: 'Delete post?',
                     message: 'You are sure you want to delete this post?',
                     onSelection: (value) async {
@@ -280,7 +280,7 @@ class _PostWidgetState extends State<PostWidget> {
               case PostType.Album:
               case PostType.OnlyDescription:
                 var pageContextInfo = eliud_router.Router.getPageContextInfo(context,);
-                FeedPostDialog.open(
+                FeedPostDialog.open(widget.app,
                     context,
                     widget.feedId,
                     postModel.authorId!,
@@ -299,7 +299,7 @@ class _PostWidgetState extends State<PostWidget> {
                             : postModel.readAccess!));
                 break;
               case PostType.Html:
-                var postPrivilege = await PostFollowersMemberHelper.determinePostPrivilege(postModel.readAccess!, postModel.appId!, postModel.authorId!);
+                var postPrivilege = await PostFollowersMemberHelper.determinePostPrivilege(postModel.readAccess!, widget.app, postModel.authorId!);
                 var access;
                 switch (postPrivilege.postPrivilegeType) {
                   case PostPrivilegeType.Public:
@@ -309,7 +309,7 @@ class _PostWidgetState extends State<PostWidget> {
                     access = 'followers';
                     break;
                   case PostPrivilegeType.SpecificPeople:
-                    var specificSelectedMembers = await MemberService(postModel.appId!, postModel.feedId!, widget.memberId).getFromIDs(postModel.readAccess);
+                    var specificSelectedMembers = await MemberService(widget.app, postModel.feedId!, widget.memberId).getFromIDs(postModel.readAccess);
                     var names = "";
                     if (specificSelectedMembers != null) {
                       names = specificSelectedMembers.map((e) => e.name).join(", ");
@@ -323,14 +323,14 @@ class _PostWidgetState extends State<PostWidget> {
 
                 AbstractTextPlatform.platform!.updateHtmlUsingMemberMedium(
                     context,
-                    postModel.appId!,
+                    widget.app,
                     postModel.authorId!,
                     postModel.readAccess!,
                     "Article", (newArticle) {
                   BlocProvider.of<PostListPagedBloc>(context).add(
                       UpdatePostPaged(
                           value: postModel.copyWith(html: newArticle)));
-                }, postModel.html == null ? '' : postModel.html!, extraIcons: PagedPostsListState.getAlbumActionIcons(context, access));
+                }, postModel.html == null ? '' : postModel.html!, extraIcons: PagedPostsListState.getAlbumActionIcons(widget.app, context, access));
                 break;
             }
           }
@@ -339,8 +339,8 @@ class _PostWidgetState extends State<PostWidget> {
 
   void allowToAddComment(
       BuildContext context, PostDetails postDetail, String memberId) {
-    openEntryDialog(
-      context, AccessBloc.currentAppId(context) + '/_reply',
+    openEntryDialog(widget.app,
+      context, widget.app.documentID! + '/_reply',
       title: 'Reply to comment',
       ackButtonLabel: 'Reply',
       nackButtonLabel: 'Discard',
@@ -355,7 +355,7 @@ class _PostWidgetState extends State<PostWidget> {
 
   void allowToAddCommentComment(BuildContext context, PostDetails postDetail,
       PostCommentContainer postCommentContainer, String memberId) {
-    openEntryDialog(context, AccessBloc.currentAppId(context) + '/_reply',
+    openEntryDialog(widget.app, context, widget.app.documentID! + '/_reply',
             title: 'Reply to comment',
             hintText: 'Reply',
             ackButtonLabel: 'Reply',
@@ -369,7 +369,7 @@ class _PostWidgetState extends State<PostWidget> {
 
   void allowToUpdateComment(BuildContext context, PostDetails postDetail,
       String? memberId, PostCommentContainer postCommentContainer) {
-    openEntryDialog(context, AccessBloc.currentAppId(context) + '/_updatecomment',
+    openEntryDialog(widget.app, context, widget.app.documentID! + '/_updatecomment',
             title: 'Update comment',
             hintText: 'Comment',
             initialValue: postCommentContainer.comment!,
@@ -384,7 +384,7 @@ class _PostWidgetState extends State<PostWidget> {
 
   void allowToDeleteComment(BuildContext context, PostDetails postDetail,
       String? memberId, PostCommentContainer? postCommentContainer) {
-    openAckNackDialog(context, AccessBloc.currentAppId(context) + '/_deletecomment',
+    openAckNackDialog(widget.app, context, widget.app.documentID! + '/_deletecomment',
             message: "Do you want to delete this comment",
             onSelection: (value) async {
       if (value == 0) {
@@ -412,7 +412,7 @@ class _PostWidgetState extends State<PostWidget> {
   Widget getCommentTreeWidget(BuildContext context, PostDetails postDetail,
       PostCommentContainer? data) {
     if (data == null)
-      return text(context, 'No Comments');
+      return text(widget.app, context, 'No Comments');
 
     var name;
     if (data.member == null) {
@@ -427,7 +427,7 @@ class _PostWidgetState extends State<PostWidget> {
 
     List<Widget> rowChildren = [
       AvatarHelper.avatar(context, 20, widget.pageId, data.member!.documentID!,
-          widget.currentMemberId, widget.app.documentID!, widget.feedId),
+          widget.currentMemberId, widget.app, widget.feedId),
       Container(width: 8),
       Expanded(
           child: Container(
@@ -438,15 +438,15 @@ class _PostWidgetState extends State<PostWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            h5(
-                  context,
+            h5(widget.app,
+              context,
                   '${name}',
                 ),
             SizedBox(
               height: 4,
             ),
-            h5(
-                  context,
+            h5(widget.app,
+              context,
                   '${data.comment}',
                 ),
             SizedBox(
@@ -454,8 +454,8 @@ class _PostWidgetState extends State<PostWidget> {
             ),
             Align(
                 alignment: Alignment.bottomRight,
-                child: h5(
-                      context,
+                child: h5(widget.app,
+                  context,
                       data.postComment == null ||
                               data.postComment!.likes == null
                           ? 'no likes'
@@ -492,7 +492,7 @@ class _PostWidgetState extends State<PostWidget> {
                     .shrinkWrap, //limits the touch area to the button area
                 minWidth: 0, //wraps child's width
                 height: 0, //wraps child's height
-                child: dialogButton(context,
+                child: dialogButton(widget.app, context,
                         label: 'Like',
                         selected: data.thisMemberLikesThisComment!,
                         onPressed: () => widget.isEditable ? _likeComment(
@@ -506,7 +506,7 @@ class _PostWidgetState extends State<PostWidget> {
                       .shrinkWrap, //limits the touch area to the button area
                   minWidth: 0, //wraps child's width
                   height: 0, //wraps child's height
-                  child: dialogButton(context,
+                  child: dialogButton(widget.app, context,
                           label: 'Reply',
                           onPressed: () => widget.isEditable ? allowToAddCommentComment(context,
                               postDetail, data, data.member!.documentID!) : null)),
@@ -546,10 +546,10 @@ class _PostWidgetState extends State<PostWidget> {
         icon: Icon(Icons.more_vert),
         itemBuilder: (_) => <PopupMenuItem<int>>[
               new PopupMenuItem<int>(
-                  child: text(context, 'Update comment'),
+                  child: text(widget.app, context, 'Update comment'),
                   value: 0),
               new PopupMenuItem<int>(
-                  child: text(context, 'Delete comment'),
+                  child: text(widget.app, context, 'Delete comment'),
                   value: 1),
             ],
         onSelected: (choice) {
@@ -574,23 +574,23 @@ class _PostWidgetState extends State<PostWidget> {
     return Row(
       children: <Widget>[
         Spacer(),
-        iconButton(
-              context,
+        iconButton(widget.app,
+          context,
               icon: ImageIcon(_assetThumbUp(thisMemberLikeType)),
               onPressed: () => widget.isEditable ? _like(context, postDetails) : null,
             ),
-        text(
-              context,
+        text(widget.app,
+          context,
               "$likes",
             ),
         Spacer(flex: 3),
-        iconButton(
-              context,
+        iconButton(widget.app,
+          context,
               icon: ImageIcon(_assetThumbDown(thisMemberLikeType)),
               onPressed: () => widget.isEditable ? _dislike(context, postDetails) : null,
             ),
-        text(
-              context,
+        text(widget.app,
+          context,
               "$dislikes",
             ),
         Spacer(),
@@ -672,8 +672,8 @@ class _PostWidgetState extends State<PostWidget> {
     if (dislikes == null) dislikes = 0;
     return Padding(
       padding: const EdgeInsets.only(left: 14.0),
-      child: text(
-            context,
+      child: text(widget.app,
+        context,
             "$likes likes $dislikes dislikes",
             //style: TextStyle(fontWeight: FontWeight.bold),
           ),

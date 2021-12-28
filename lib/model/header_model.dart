@@ -80,7 +80,7 @@ class HeaderModel {
     );
   }
 
-  static HeaderModel? fromEntity(String documentID, HeaderEntity? entity) {
+  static Future<HeaderModel?> fromEntity(String documentID, HeaderEntity? entity) async {
     if (entity == null) return null;
     var counter = 0;
     return HeaderModel(
@@ -88,7 +88,7 @@ class HeaderModel {
           appId: entity.appId, 
           description: entity.description, 
           conditions: 
-            StorageConditionsModel.fromEntity(entity.conditions), 
+            await StorageConditionsModel.fromEntity(entity.conditions), 
     );
   }
 

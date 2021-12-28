@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/bloc/post_privilege_event.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/bloc/post_privilege_state.dart';
 import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
@@ -9,15 +10,15 @@ import 'member_service.dart';
 typedef void PostPrivilegeChanged(PostPrivilege postPrivilege);
 
 class PostPrivilegeBloc extends Bloc<PostPrivilegeEvent, PostPrivilegeState> {
-  final String appId;
+  final AppModel app;
   final String feedId;
   final String memberId;
   late MemberService memberService;
 
   final PostPrivilegeChanged postPrivilegeCallback;
 
-  PostPrivilegeBloc(this.appId, this.feedId, this.memberId, this.postPrivilegeCallback) : super(PostPrivilegeUninitialized()) {
-    memberService = MemberService(appId, feedId, memberId);
+  PostPrivilegeBloc(this.app, this.feedId, this.memberId, this.postPrivilegeCallback) : super(PostPrivilegeUninitialized()) {
+    memberService = MemberService(app, feedId, memberId);
   }
 
   @override
@@ -28,7 +29,7 @@ class PostPrivilegeBloc extends Bloc<PostPrivilegeEvent, PostPrivilegeState> {
     } else if (event is ChangedPostPrivilege) {
       var postPrivilegeType = toPostPrivilegeType(event.value);
       var postPrivilege = await PostPrivilege.construct1(
-          postPrivilegeType, appId, memberId,
+          postPrivilegeType, app, memberId,
           specificFollowers: event.specificFollowers);
       postPrivilegeCallback(postPrivilege);
       var currentState = state;

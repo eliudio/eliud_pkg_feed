@@ -2,6 +2,7 @@ import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
 import 'package:eliud_core/core/blocs/access/state/access_state.dart';
 import 'package:eliud_core/core/widgets/alert_widget.dart';
+import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/tools/component/component_constructor.dart';
@@ -22,20 +23,20 @@ class FeedComponentConstructorDefault implements ComponentConstructor {
   @override
   Widget createNew(
       {Key? key,
-      required String appId,
+      required AppModel app,
       required String id,
       Map<String, dynamic>? parameters}) {
-    return FeedComponent(key: key, appId: appId, id: id);
+    return FeedComponent(key: key, app: app, id: id);
   }
 
   @override
-  Future<dynamic> getModel({required String appId, required String id}) async =>
-      await feedRepository(appId: appId)!.get(id);
+  Future<dynamic> getModel({required AppModel app, required String id}) async =>
+      await feedRepository(appId: app.documentID!)!.get(id);
 }
 
 class FeedComponent extends AbstractFeedComponent {
-  FeedComponent({Key? key, required String appId, required String id})
-      : super(key: key, theAppId: appId, feedId: id);
+  FeedComponent({Key? key, required AppModel app, required String id})
+      : super(key: key, app: app, feedId: id);
 
   @override
   Widget yourWidget(BuildContext context, FeedModel? value) {
@@ -45,14 +46,13 @@ class FeedComponent extends AbstractFeedComponent {
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (context, accessState) {
       if (accessState is AccessDetermined) {
-        var appId = accessState.currentApp.documentID!;
         return BlocProvider<ProfileBloc>(
             create: (context) => ProfileBloc()
-              ..add(InitialiseProfileEvent(appId,
+              ..add(InitialiseProfileEvent(app,
                   feedId, accessState, modalRoute)),
-            child: Feed(value));
+            child: Feed(app, value));
       } else {
-        return progressIndicator(context);
+        return progressIndicator(app, context);
       }
     });
   }

@@ -2,6 +2,7 @@ import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
 import 'package:eliud_core/core/blocs/access/state/access_state.dart';
 import 'package:eliud_core/core/widgets/alert_widget.dart';
+import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
 import 'package:eliud_core/tools/component/component_constructor.dart';
 import 'package:flutter/material.dart';
@@ -22,16 +23,16 @@ class FeedMenuComponentConstructorDefault implements ComponentConstructor {
   FeedMenuComponentConstructorDefault();
 
   @override
-  Widget createNew({Key? key, required String appId, required String id, Map<String, dynamic>? parameters}) {
-    return FeedMenuComponent(key: key, appId: appId, id: id);
+  Widget createNew({Key? key, required AppModel app, required String id, Map<String, dynamic>? parameters}) {
+    return FeedMenuComponent(key: key, app: app, id: id);
   }
 
   @override
-  Future<dynamic> getModel({required String appId, required String id}) async => await feedMenuRepository(appId: appId)!.get(id);
+  Future<dynamic> getModel({required AppModel app, required String id}) async => await feedMenuRepository(appId: app.documentID!)!.get(id);
 }
 
 class FeedMenuComponent extends AbstractFeedMenuComponent {
-  FeedMenuComponent({Key? key, required String appId, required String id}) : super(key: key, theAppId: appId, feedMenuId: id);
+  FeedMenuComponent({Key? key, required AppModel app, required String id}) : super(key: key, app: app, feedMenuId: id);
 
 
   @override
@@ -41,16 +42,15 @@ class FeedMenuComponent extends AbstractFeedMenuComponent {
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (context, accessState) {
           if (accessState is AccessDetermined) {
-            var appId = accessState.currentApp.documentID!;
             return BlocProvider<ProfileBloc>(
                 create: (context) =>
                 ProfileBloc()
-                  ..add(InitialiseProfileEvent(appId,
+                  ..add(InitialiseProfileEvent(app,
                       feedId, accessState, modalRoute)),
-                child: FeedMenu(feedMenuModel)
+                child: FeedMenu(app, feedMenuModel)
             );
           } else {
-            return progressIndicator(context);
+            return progressIndicator(app, context);
           }
         });
   }

@@ -69,7 +69,7 @@ class PostMediumModel {
     );
   }
 
-  static PostMediumModel? fromEntity(String documentID, PostMediumEntity? entity) {
+  static Future<PostMediumModel?> fromEntity(String documentID, PostMediumEntity? entity) async {
     if (entity == null) return null;
     var counter = 0;
     return PostMediumModel(

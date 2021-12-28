@@ -63,7 +63,7 @@
       "fieldType": "Rgb",
       "group": "itemColors",
       "iconName": "color_lens",
-      "bespokeFormField": "RgbField(\"Text color\", state.value!.itemColor, _onItemColorChanged)"
+      "bespokeFormField": "RgbField(widget.app, \"Text color\", state.value!.itemColor, _onItemColorChanged)"
     },
     {
       "fieldName": "selectedItemColor",
@@ -72,7 +72,7 @@
       "group": "itemColors",
       "iconName": "color_lens",
       "defaultValue": "RgbModel(r: 255, g: 255, b: 255, opacity: 1.00)",
-      "bespokeFormField": "RgbField(\"Selected Item Color\", state.value!.selectedItemColor, _onSelectedItemColorChanged)"
+      "bespokeFormField": "RgbField(widget.app, \"Selected Item Color\", state.value!.selectedItemColor, _onSelectedItemColorChanged)"
     },
     {
       "fieldName": "feed",
@@ -107,8 +107,8 @@
     }
  ],
   "listFields": {
-    "title": "value.documentID != null ? Center(child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, value.documentID!)) : Container()",
-    "subTitle": "value.description != null ? Center(child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, value.description!)) : Container()"
+    "title": "value.documentID != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.documentID!)) : Container()",
+    "subTitle": "value.description != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.description!)) : Container()"
   },
   "depends": ["eliud_core"]
 }

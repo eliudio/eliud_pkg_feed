@@ -1,6 +1,7 @@
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
 import 'package:eliud_core/core/blocs/access/state/access_state.dart';
+import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_bloc.dart';
@@ -16,9 +17,10 @@ import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart'
     as posts;
 
 class Feed extends StatefulWidget {
+  final AppModel app;
   final FeedModel feedModel;
 
-  Feed(this.feedModel);
+  Feed(this.app, this.feedModel);
 
   _FeedState createState() => _FeedState();
 }
@@ -35,11 +37,11 @@ class _FeedState extends State<Feed> {
               if (state is ProfileInitialised) {
                 return _getIt(context, widget.feedModel, state);
               } else {
-                return progressIndicator(context);
+                return progressIndicator(widget.app, context);
               }
             });
           } else {
-            return progressIndicator(context);
+            return progressIndicator(widget.app, context);
           }
         });
   }
@@ -51,7 +53,7 @@ class _FeedState extends State<Feed> {
       create: (_) => PostListPagedBloc(state.memberId() ?? 'PUBLIC', eliudQuery,
           postRepository: posts.postRepository(appId: feedModel.appId)!)
         ..add(PostListPagedFetched()),
-      child: PagedPostsList(feedModel),
+      child: PagedPostsList(widget.app, feedModel),
     );
   }
 }

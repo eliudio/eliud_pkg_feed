@@ -122,7 +122,7 @@ class FeedModel {
     );
   }
 
-  static FeedModel? fromEntity(String documentID, FeedEntity? entity) {
+  static Future<FeedModel?> fromEntity(String documentID, FeedEntity? entity) async {
     if (entity == null) return null;
     var counter = 0;
     return FeedModel(
@@ -137,7 +137,7 @@ class FeedModel {
           albumPost: entity.albumPost, 
           articlePost: entity.articlePost, 
           conditions: 
-            StorageConditionsModel.fromEntity(entity.conditions), 
+            await StorageConditionsModel.fromEntity(entity.conditions), 
     );
   }
 

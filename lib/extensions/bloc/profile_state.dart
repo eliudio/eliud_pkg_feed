@@ -1,3 +1,4 @@
+import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_pkg_feed/model/member_profile_model.dart';
@@ -47,11 +48,11 @@ class ProfileStateUninitialized extends ProfileState {
 
 abstract class ProfileInitialised extends ProfileState {
   final String feedId;
-  final String appId;
+  final AppModel app;
   final double? uploadingBGProgress;
   final double? uploadingProfilePhotoProgress;
 
-  const ProfileInitialised(this.feedId, this.appId, this.uploadingBGProgress,
+  const ProfileInitialised(this.feedId, this.app, this.uploadingBGProgress,
       this.uploadingProfilePhotoProgress);
 
   String? memberId();
@@ -76,14 +77,14 @@ abstract class LoggedInProfileInitialized extends ProfileInitialised {
 
   LoggedInProfileInitialized(
       String feedId,
-      String appId,
+      AppModel app,
       this.currentMemberProfileModel,
       this.currentMember,
       this.defaultReadAccess,
       double? uploadingBGProgress,
       double? uploadingProfilePhotoProgress)
       : super(
-            feedId, appId, uploadingBGProgress, uploadingProfilePhotoProgress);
+            feedId, app, uploadingBGProgress, uploadingProfilePhotoProgress);
 
   @override
   String? memberId() => currentMember.documentID!;
@@ -94,7 +95,7 @@ class LoggedInWatchingMyProfile extends LoggedInProfileInitialized {
 
   LoggedInWatchingMyProfile({
     required String feedId,
-    required String appId,
+    required AppModel app,
     required MemberProfileModel currentMemberProfileModel,
     required MemberModel currentMember,
     required List<String> defaultReadAccess,
@@ -103,7 +104,7 @@ class LoggedInWatchingMyProfile extends LoggedInProfileInitialized {
     required double? uploadingProfilePhotoProgress,
   }) : super(
             feedId,
-            appId,
+            app,
             currentMemberProfileModel,
             currentMember,
             defaultReadAccess,
@@ -114,7 +115,7 @@ class LoggedInWatchingMyProfile extends LoggedInProfileInitialized {
       {required MemberProfileModel newMemberProfileModel, double? uploadingBGProgress, double? uploadingProfilePhotoProgress}) {
     return LoggedInWatchingMyProfile(
       feedId: this.feedId,
-      appId: this.appId,
+      app: this.app,
       currentMemberProfileModel: newMemberProfileModel,
       currentMember: this.currentMember,
       defaultReadAccess: this.defaultReadAccess,
@@ -128,7 +129,7 @@ class LoggedInWatchingMyProfile extends LoggedInProfileInitialized {
       {double? uploadingBGProgress, double? uploadingProfilePhotoProgress}) {
     return LoggedInWatchingMyProfile(
       feedId: this.feedId,
-      appId: this.appId,
+      app: this.app,
       currentMemberProfileModel: this.currentMemberProfileModel,
       currentMember: this.currentMember,
       defaultReadAccess: this.defaultReadAccess,
@@ -169,7 +170,7 @@ class LoggedInWatchingMyProfile extends LoggedInProfileInitialized {
   @override
   List<Object?> get props => [
         feedId,
-        appId,
+        app,
         currentMemberProfileModel,
         currentMember,
         defaultReadAccess,
@@ -183,7 +184,7 @@ class LoggedInWatchingMyProfile extends LoggedInProfileInitialized {
       other is LoggedInWatchingMyProfile &&
           runtimeType == other.runtimeType &&
           feedId == other.feedId &&
-          appId == other.appId &&
+          app == other.app &&
           currentMemberProfileModel == other.currentMemberProfileModel &&
           currentMember == other.currentMember &&
           ListEquality().equals(defaultReadAccess, other.defaultReadAccess) &&
@@ -203,7 +204,7 @@ class LoggedInAndWatchingOtherProfile extends LoggedInProfileInitialized {
 
   LoggedInAndWatchingOtherProfile(
       {required String feedId,
-      required String appId,
+      required AppModel app,
       required MemberProfileModel currentMemberProfileModel,
       required MemberModel currentMember,
       required List<String> defaultReadAccess,
@@ -214,7 +215,7 @@ class LoggedInAndWatchingOtherProfile extends LoggedInProfileInitialized {
       required double? uploadingProfilePhotoProgress})
       : super(
             feedId,
-            appId,
+            app,
             currentMemberProfileModel,
             currentMember,
             defaultReadAccess,
@@ -248,7 +249,7 @@ class LoggedInAndWatchingOtherProfile extends LoggedInProfileInitialized {
   @override
   List<Object?> get props => [
         feedId,
-        appId,
+        app,
         currentMemberProfileModel,
         currentMember,
         defaultReadAccess,
@@ -265,7 +266,7 @@ class LoggedInAndWatchingOtherProfile extends LoggedInProfileInitialized {
       other is LoggedInAndWatchingOtherProfile &&
           runtimeType == other.runtimeType &&
           feedId == other.feedId &&
-          appId == other.appId &&
+          app == other.app &&
           currentMemberProfileModel == other.currentMemberProfileModel &&
           currentMember == other.currentMember &&
           ListEquality().equals(defaultReadAccess, other.defaultReadAccess) &&
@@ -284,7 +285,7 @@ class LoggedInAndWatchingOtherProfile extends LoggedInProfileInitialized {
       {double? uploadingBGProgress, double? uploadingProfilePhotoProgress}) {
     return LoggedInAndWatchingOtherProfile(
       feedId: this.feedId,
-      appId: this.appId,
+      app: this.app,
       currentMemberProfileModel: this.currentMemberProfileModel,
       currentMember: this.currentMember,
       defaultReadAccess: this.defaultReadAccess,
@@ -307,12 +308,12 @@ class NotLoggedInWatchingSomeone extends ProfileInitialised {
 
   NotLoggedInWatchingSomeone({
     required String feedId,
-    required String appId,
+    required AppModel app,
     required this.feedProfileModel,
     required this.feedPublicInfoModel,
     required double? uploadingBGProgress,
     required double? uploadingProfilePhotoProgress,
-  }) : super(feedId, appId, uploadingBGProgress, uploadingProfilePhotoProgress);
+  }) : super(feedId, app, uploadingBGProgress, uploadingProfilePhotoProgress);
 
   @override
   String? memberId() => null;
@@ -344,7 +345,7 @@ class NotLoggedInWatchingSomeone extends ProfileInitialised {
   @override
   List<Object?> get props => [
         feedId,
-        appId,
+        app,
         feedProfileModel,
         feedPublicInfoModel,
         uploadingBGProgress,
@@ -372,7 +373,7 @@ class NotLoggedInWatchingSomeone extends ProfileInitialised {
       {double? uploadingBGProgress, double? uploadingProfilePhotoProgress}) {
     return NotLoggedInWatchingSomeone(
       feedId: this.feedId,
-      appId: this.appId,
+      app: this.app,
       feedProfileModel: this.feedProfileModel,
       feedPublicInfoModel: this.feedPublicInfoModel,
       uploadingBGProgress: uploadingBGProgress == null
@@ -388,11 +389,11 @@ class NotLoggedInWatchingSomeone extends ProfileInitialised {
 class WatchingPublicProfile extends ProfileInitialised {
   WatchingPublicProfile(
       {required String feedId,
-      required String appId,
+      required AppModel app,
       required double? uploadingBGProgress,
       required double? uploadingProfilePhotoProgress})
       : super(
-            feedId, appId, uploadingBGProgress, uploadingProfilePhotoProgress);
+            feedId, app, uploadingBGProgress, uploadingProfilePhotoProgress);
 
   String? memberId() => null;
 
@@ -414,7 +415,7 @@ class WatchingPublicProfile extends ProfileInitialised {
 
   @override
   List<Object?> get props =>
-      [feedId, appId, uploadingBGProgress, uploadingProfilePhotoProgress];
+      [feedId, app, uploadingBGProgress, uploadingProfilePhotoProgress];
 
   @override
   bool operator ==(Object other) =>
@@ -422,7 +423,7 @@ class WatchingPublicProfile extends ProfileInitialised {
       other is WatchingPublicProfile &&
           runtimeType == other.runtimeType &&
           feedId == other.feedId &&
-          appId == other.appId &&
+          app == other.app &&
           uploadingBGProgress == other.uploadingBGProgress &&
           uploadingProfilePhotoProgress == other.uploadingProfilePhotoProgress;
 
@@ -436,7 +437,7 @@ class WatchingPublicProfile extends ProfileInitialised {
       {double? uploadingBGProgress, double? uploadingProfilePhotoProgress}) {
     return WatchingPublicProfile(
         feedId: this.feedId,
-        appId: this.appId,
+        app: this.app,
         uploadingBGProgress: this.uploadingBGProgress,
         uploadingProfilePhotoProgress: this.uploadingProfilePhotoProgress);
   }

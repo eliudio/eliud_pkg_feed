@@ -95,7 +95,7 @@ class MemberProfileModel {
     );
   }
 
-  static MemberProfileModel? fromEntity(String documentID, MemberProfileEntity? entity) {
+  static Future<MemberProfileModel?> fromEntity(String documentID, MemberProfileEntity? entity) async {
     if (entity == null) return null;
     var counter = 0;
     return MemberProfileModel(

@@ -2,6 +2,7 @@ import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
 import 'package:eliud_core/core/blocs/access/state/access_state.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
+import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/style/frontend/has_container.dart';
 import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
@@ -18,7 +19,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
 
 class Header extends StatefulWidget {
-  Header({Key? key}) : super(key: key);
+  final AppModel app;
+  Header({Key? key, required this.app}) : super(key: key);
 
   @override
   _HeaderState createState() => _HeaderState();
@@ -92,7 +94,7 @@ class _HeaderState extends State<Header> {
             var pageId = pageContextInfo.pageId;
             return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
               if (state is ProfileError)
-                return h5(context, 'No profile');
+                return h5(widget.app, context, 'No profile');
               if (state is ProfileInitialised) {
                 List<Widget> allRows = [];
 
@@ -113,7 +115,7 @@ class _HeaderState extends State<Header> {
                               pageId,
                               memberId,
                               currentMemberId,
-                              state.appId,
+                              widget.app,
                               state.feedId),
                         )),
                     state.uploadingProfilePhotoProgress,
@@ -145,7 +147,7 @@ class _HeaderState extends State<Header> {
                                 : avatarWidget),
                       ));
                   rows.add(container);
-                  var backgroundPhoto = topicContainer(context,
+                  var backgroundPhoto = topicContainer(widget.app, context,
                       children: rows,
                       image: _background(context, state.watchingThisProfile()));
 
@@ -173,19 +175,19 @@ class _HeaderState extends State<Header> {
                   // Add the name
                   allRows.add(Align(
                       alignment: Alignment.bottomCenter,
-                      child: actionContainer(context,
+                      child: actionContainer(widget.app, context,
                           child: Container(
                               padding: EdgeInsets.all(10.0),
                               child: AvatarHelper.nameH1(
-                                  context, watchingThisProfile.authorId!, state.appId,
+                                  context, watchingThisProfile.authorId!, widget.app,
                                   state.feedId)))));
                 }
                 return Column(children: allRows);
               }
-              return progressIndicator(context);
+              return progressIndicator(widget.app, context);
             });
           } else {
-            return progressIndicator(context);
+            return progressIndicator(widget.app, context);
           }
         });
 
@@ -197,7 +199,7 @@ class _HeaderState extends State<Header> {
       bool isBG, String tooltip) {
     return MediaButtons.mediaButtons(
         context,
-        profileInitialised.appId,
+        widget.app,
         profileInitialised.watchingThisProfile()!.authorId!,
         profileInitialised.watchingThisProfile()!.readAccess!,
         allowCrop: !isBG,

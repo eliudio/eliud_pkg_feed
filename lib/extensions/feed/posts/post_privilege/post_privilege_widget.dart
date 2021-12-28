@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
 import 'package:eliud_core/style/frontend/has_text.dart' as tx;
 import 'package:eliud_core/style/style_registry.dart';
@@ -14,13 +15,13 @@ import 'bloc/post_privilege_event.dart';
 import 'bloc/post_privilege_state.dart';
 
 class PostPrivilegeWidget extends StatefulWidget {
-  final String appId;
+  final AppModel app;
   final String feedId;
   final String memberId;
   final String? currentMemberId;
   final bool canEdit;
 
-  PostPrivilegeWidget(this.appId, this.feedId, this.memberId,
+  PostPrivilegeWidget(this.app, this.feedId, this.memberId,
       this.currentMemberId, this.canEdit);
 
   _PostPrivilegeWidgetState createState() => _PostPrivilegeWidgetState();
@@ -48,10 +49,10 @@ class _PostPrivilegeWidgetState extends State<PostPrivilegeWidget> {
             selected: selected,
             groupValue: _postPrivilegeSelectedRadioTile,
             title: StyleRegistry.registry()
-                .styleWithContext(context)
+                .styleWithApp(widget.app)
                 .frontEndStyle()
                 .textStyle()
-                .text(context, text),
+                .text(widget.app, context, text),
             onChanged: (dynamic value) {
               _setPostSelectedRadioTile(value);
             }) /*,
@@ -97,7 +98,7 @@ class _PostPrivilegeWidgetState extends State<PostPrivilegeWidget> {
           width: width(context),
           child: SingleChildScrollView(
               child: SelectMembersWidget.get(
-            appId: widget.appId,
+            app: widget.app,
             feedId: widget.feedId,
             memberId: widget.currentMemberId!,
             selectedMembersCallback: _selectedMembersCallback,
@@ -114,20 +115,20 @@ class _PostPrivilegeWidgetState extends State<PostPrivilegeWidget> {
     switch (postPrivilege.postPrivilegeType) {
       case PostPrivilegeType.Public:
         return Center(
-            child: tx.text(context, 'Accessible by public'));
+            child: tx.text(widget.app, context, 'Accessible by public'));
       case PostPrivilegeType.Followers:
         return Center(
-            child: tx.text(context, 'Accessible by your followers', maxLines: 5));
+            child: tx.text(widget.app, context, 'Accessible by your followers', maxLines: 5));
       case PostPrivilegeType.SpecificPeople:
         var names;
         if (specificSelectedMembers != null) {
           names = specificSelectedMembers.map((e) => e.name).join(", ");
         }
         return Center(
-            child: tx.text(context, 'Accessible by ' + names));
+            child: tx.text(widget.app, context, 'Accessible by ' + names));
       case PostPrivilegeType.JustMe:
         return Center(
-            child: tx.text(context, 'Accessible by you'));
+            child: tx.text(widget.app, context, 'Accessible by you'));
     }
   }
 
@@ -161,7 +162,7 @@ class _PostPrivilegeWidgetState extends State<PostPrivilegeWidget> {
               state.postPrivilege, state.specificSelectedMembers);
         }
       } else {
-        return progressIndicator(context);
+        return progressIndicator(widget.app, context);
       }
     });
   }

@@ -1,4 +1,5 @@
 import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
+import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,12 +14,12 @@ abstract class ProfileEvent extends Equatable {
 }
 
 class InitialiseProfileEvent extends ProfileEvent {
-  final String appId;
+  final AppModel app;
   final String feedId;
   final AccessDetermined accessDetermined;
   final ModalRoute modalRoute;
 
-  InitialiseProfileEvent(this.appId, this.feedId, this.accessDetermined, this.modalRoute);
+  InitialiseProfileEvent(this.app, this.feedId, this.accessDetermined, this.modalRoute);
 }
 
 class ProfileChangedProfileEvent extends ProfileEvent {

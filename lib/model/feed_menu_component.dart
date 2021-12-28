@@ -26,19 +26,20 @@ import 'package:eliud_core/style/style_registry.dart';
 import 'abstract_repository_singleton.dart';
 import 'package:eliud_core/core/widgets/alert_widget.dart';
 import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
+import 'package:eliud_core/model/app_model.dart';
 
 abstract class AbstractFeedMenuComponent extends StatelessWidget {
   static String componentName = "feedMenus";
-  final String theAppId;
+  final AppModel app;
   final String feedMenuId;
 
-  AbstractFeedMenuComponent({Key? key, required this.theAppId, required this.feedMenuId}): super(key: key);
+  AbstractFeedMenuComponent({Key? key, required this.app, required this.feedMenuId}): super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<FeedMenuComponentBloc> (
           create: (context) => FeedMenuComponentBloc(
-            feedMenuRepository: feedMenuRepository(appId: theAppId)!)
+            feedMenuRepository: feedMenuRepository(appId: app.documentID!)!)
         ..add(FetchFeedMenuComponent(id: feedMenuId)),
       child: _feedMenuBlockBuilder(context),
     );
@@ -48,7 +49,7 @@ abstract class AbstractFeedMenuComponent extends StatelessWidget {
     return BlocBuilder<FeedMenuComponentBloc, FeedMenuComponentState>(builder: (context, state) {
       if (state is FeedMenuComponentLoaded) {
         if (state.value == null) {
-          return AlertWidget(title: "Error", content: 'No FeedMenu defined');
+          return AlertWidget(app: app, title: "Error", content: 'No FeedMenu defined');
         } else {
           return yourWidget(context, state.value);
         }
@@ -59,10 +60,10 @@ abstract class AbstractFeedMenuComponent extends StatelessWidget {
           size: 30.0,
         );
       } else if (state is FeedMenuComponentError) {
-        return AlertWidget(title: 'Error', content: state.message);
+        return AlertWidget(app: app, title: 'Error', content: state.message);
       } else {
         return Center(
-          child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicatorStyle().progressIndicator(context),
+          child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().progressIndicatorStyle().progressIndicator(app, context),
         );
       }
     });

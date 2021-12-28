@@ -1,6 +1,7 @@
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
 import 'package:eliud_core/core/blocs/access/state/access_state.dart';
+import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eliud_core/core/widgets/alert_widget.dart';
@@ -20,16 +21,16 @@ class ProfileComponentConstructorDefault implements ComponentConstructor {
   ProfileComponentConstructorDefault();
 
   @override
-  Widget createNew({Key? key, required String appId, required String id, Map<String, dynamic>? parameters}) {
-    return ProfileComponent(key: key, appId: appId, id: id);
+  Widget createNew({Key? key, required AppModel app, required String id, Map<String, dynamic>? parameters}) {
+    return ProfileComponent(key: key, app: app, id: id);
   }
 
   @override
-  Future<dynamic> getModel({required String appId, required String id}) async => await profileRepository(appId: appId)!.get(id);
+  Future<dynamic> getModel({required AppModel app, required String id}) async => await profileRepository(appId: app.documentID!)!.get(id);
 }
 
 class ProfileComponent extends AbstractProfileComponent {
-  ProfileComponent({Key? key, required String appId, required String id}) : super(key: key, theAppId: appId, profileId: id);
+  ProfileComponent({Key? key, required AppModel app, required String id}) : super(key: key, app: app, profileId: id);
 
   @override
   Widget yourWidget(BuildContext context, ProfileModel? profileModel) {
@@ -39,16 +40,15 @@ class ProfileComponent extends AbstractProfileComponent {
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (context, accessState) {
           if (accessState is AccessDetermined) {
-            var appId = accessState.currentApp.documentID!;
             return BlocProvider<ProfileBloc>(
                 create: (context) =>
                 ProfileBloc()
-                  ..add(InitialiseProfileEvent(appId,
+                  ..add(InitialiseProfileEvent(app,
                       feedId, accessState, modalRoute)),
-                child: Profile(appId: accessState.currentApp.documentID!)
+                child: Profile(app: app)
             );
           } else {
-            return progressIndicator(context);
+            return progressIndicator(app, context);
           }
         });
   }

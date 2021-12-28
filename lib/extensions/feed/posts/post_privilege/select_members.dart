@@ -1,4 +1,5 @@
 import 'package:chips_input/chips_input.dart';
+import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/style/style_registry.dart';
@@ -12,7 +13,7 @@ typedef SelectedMembersCallback(List<String> selectedMembers);
 
 // Perpahs we should only show followed members?
 class SelectMembersWidget extends StatefulWidget {
-  final String appId;
+  final AppModel app;
   final String feedId;
   final String memberId;
   final List<SelectedMember> initiallySelectedMembers;
@@ -21,7 +22,7 @@ class SelectMembersWidget extends StatefulWidget {
 
   const SelectMembersWidget._(
       {Key? key,
-      required this.appId,
+      required this.app,
       required this.feedId,
       required this.memberId,
       required this.initiallySelectedMembers,
@@ -35,17 +36,17 @@ class SelectMembersWidget extends StatefulWidget {
   }
 
   static Widget get(
-      {required String appId,
+      {required AppModel app,
       required String feedId,
       required String memberId,
       required List<SelectedMember>? specificSelectedMembers,
       required SelectedMembersCallback selectedMembersCallback}) {
-    var memberService = MemberService(appId, feedId, memberId);
+    var memberService = MemberService(app, feedId, memberId);
     if (specificSelectedMembers == null)
       specificSelectedMembers = <SelectedMember>[];
 
     return SelectMembersWidget._(
-        appId: appId,
+        app: app,
         feedId: feedId,
         memberId: memberId,
         initiallySelectedMembers: specificSelectedMembers,
@@ -67,7 +68,7 @@ class _SelectMembersWidgetState extends State<SelectMembersWidget> {
               allMembers: snapshot.data!,
             );
           } else {
-            return progressIndicator(context);
+            return progressIndicator(widget.app, context);
           }
         });
   }

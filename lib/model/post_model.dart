@@ -141,7 +141,7 @@ class PostModel {
     );
   }
 
-  static PostModel? fromEntity(String documentID, PostEntity? entity) {
+  static Future<PostModel?> fromEntity(String documentID, PostEntity? entity) async {
     if (entity == null) return null;
     var counter = 0;
     return PostModel(
@@ -161,13 +161,12 @@ class PostModel {
           archived: toPostArchiveStatus(entity.archived), 
           externalLink: entity.externalLink, 
           memberMedia: 
-            entity.memberMedia == null ? null :
-            entity.memberMedia
+            entity.memberMedia == null ? null : List<PostMediumModel>.from(await Future.wait(entity. memberMedia
             !.map((item) {
-              counter++; 
-              return PostMediumModel.fromEntity(counter.toString(), item)!;
+            counter++;
+              return PostMediumModel.fromEntity(counter.toString(), item);
             })
-            .toList(), 
+            .toList())), 
     );
   }
 

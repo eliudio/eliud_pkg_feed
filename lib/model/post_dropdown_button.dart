@@ -13,6 +13,7 @@
 
 */
 
+import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/package/packages.dart';
 
 import 'package:flutter/material.dart';
@@ -32,11 +33,12 @@ import 'package:eliud_pkg_feed/model/post_model.dart';
 typedef PostChanged(String? value);
 
 class PostDropdownButtonWidget extends StatefulWidget {
+  final AppModel app;
   final String? value;
   final PostChanged? trigger;
   final bool? optional;
 
-  PostDropdownButtonWidget({ this.value, this.trigger, this.optional, Key? key }): super(key: key);
+  PostDropdownButtonWidget({ required this.app, this.value, this.trigger, this.optional, Key? key }): super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -62,9 +64,10 @@ class PostDropdownButtonWidgetState extends State<PostDropdownButtonWidget> {
   }
 
 List<Widget> widgets(PostModel value) {
+var app = widget.app;
 var widgets = <Widget>[];
-widgets.add(value.timestamp != null ? Center(child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, value.timestamp!.toString())) : Container());
-widgets.add(value.documentID != null ? Center(child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, value.documentID!)) : Container());
+widgets.add(value.timestamp != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.timestamp!.toString())) : Container());
+widgets.add(value.documentID != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.documentID!)) : Container());
 return widgets;
 }
 
@@ -74,7 +77,7 @@ return widgets;
     var accessState = AccessBloc.getState(context);
     return BlocBuilder<PostListBloc, PostListState>(builder: (context, state) {
       if (state is PostListLoading) {
-        return StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context);
+        return StyleRegistry.registry().styleWithApp(widget.app).adminListStyle().progressIndicator(widget.app, context);
       } else if (state is PostListLoaded) {
         String? valueChosen;
         if (state.values!.indexWhere((v) => (v!.documentID == widget.value)) >= 0)
@@ -117,7 +120,7 @@ return widgets;
                       items: items,
                       value: valueChosen,
                       hint: Text('Select a post'),
-                      onChanged: !accessState.memberIsOwner(AccessBloc.currentAppId(context)) ? null : _onChange,
+                      onChanged: !accessState.memberIsOwner(widget.app.documentID!) ? null : _onChange,
                     );
         if (false) {
           return Container(height:48, child: Center(child: button));
@@ -125,7 +128,7 @@ return widgets;
           return Center(child: button);
         }
       } else {
-        return StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context);
+        return StyleRegistry.registry().styleWithApp(widget.app).adminListStyle().progressIndicator(widget.app, context);
       }
     });
   }

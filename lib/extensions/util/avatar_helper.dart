@@ -1,4 +1,5 @@
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
+import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/style/frontend/has_profile_photo.dart';
 import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
@@ -10,12 +11,12 @@ import 'package:flutter/material.dart';
 
 class AvatarHelper {
   static Future<ProfileAttributes> _getProfileAttributes(
-      String authorId, String appId, String feedId) async {
+      String authorId, AppModel app, String feedId) async {
     var key = authorId + "-" + feedId;
 
     // first try to get the information from memberProfileRepository
     var memberProfileModel =
-        await memberProfileRepository(appId: appId)!.get(key, onError: (err) {});
+        await memberProfileRepository(appId: app.documentID!)!.get(key, onError: (err) {});
     var name;
     var photoURL;
     if (memberProfileModel != null) {
@@ -61,103 +62,103 @@ class AvatarHelper {
   }
 
   static Widget avatar(BuildContext context, double radius, String pageId,
-      String profileMemberId, String? currentMemberId, String appId, String feedId) {
-    return getProfilePhotoButtonFromExternalProvider(context,
+      String profileMemberId, String? currentMemberId, AppModel app, String feedId) {
+    return getProfilePhotoButtonFromExternalProvider(app, context,
             radius: radius,
             externalProfileURLProvider: () =>
-                _getProfileAttributes(profileMemberId, appId, feedId),
+                _getProfileAttributes(profileMemberId, app, feedId),
             onPressed: () {
-              SwitchMember.switchMember(context, appId, pageId, profileMemberId, currentMemberId);
+              SwitchMember.switchMember(context, app, pageId, profileMemberId, currentMemberId);
             });
   }
 
   static Widget nameH1(
-      BuildContext context, String memberId, String appId, String feedId) {
+      BuildContext context, String memberId, AppModel app, String feedId) {
     return FutureBuilder<ProfileAttributes>(
-        future: _getProfileAttributes(memberId, appId, feedId),
+        future: _getProfileAttributes(memberId, app, feedId),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             var profileAttributes = snapshot.data;
             if (profileAttributes!.name != null) {
-              return h1(context, profileAttributes.name);
+              return h1(app, context, profileAttributes.name);
             }
           }
-          return progressIndicator(context);
+          return progressIndicator(app, context);
         });
   }
 
   static Widget nameH2(
-      BuildContext context, String memberId, String appId, String feedId) {
+      BuildContext context, String memberId, AppModel app, String feedId) {
     return FutureBuilder<ProfileAttributes>(
-        future: _getProfileAttributes(memberId, appId, feedId),
+        future: _getProfileAttributes(memberId, app, feedId),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             var profileAttributes = snapshot.data;
             if (profileAttributes!.name != null) {
-              return h2(context, profileAttributes.name);
+              return h2(app, context, profileAttributes.name);
             }
           }
-          return progressIndicator(context);
+          return progressIndicator(app, context);
         });
   }
 
   static Widget nameH3(
-      BuildContext context, String memberId, String appId, String feedId) {
+      BuildContext context, String memberId, AppModel app, String feedId) {
     return FutureBuilder<ProfileAttributes>(
-        future: _getProfileAttributes(memberId, appId, feedId),
+        future: _getProfileAttributes(memberId, app, feedId),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             var profileAttributes = snapshot.data;
             if (profileAttributes!.name != null) {
-              return h3(context, profileAttributes.name);
+              return h3(app, context, profileAttributes.name);
             }
           }
-          return progressIndicator(context);
+          return progressIndicator(app, context);
         });
   }
 
   static Widget nameH4(
-      BuildContext context, String memberId, String appId, String feedId) {
+      BuildContext context, String memberId, AppModel app, String feedId) {
     return FutureBuilder<ProfileAttributes>(
-        future: _getProfileAttributes(memberId, appId, feedId),
+        future: _getProfileAttributes(memberId, app, feedId),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             var profileAttributes = snapshot.data;
             if (profileAttributes!.name != null) {
-              return h4(context, profileAttributes.name);
+              return h4(app, context, profileAttributes.name);
             }
           }
-          return progressIndicator(context);
+          return progressIndicator(app, context);
         });
   }
 
   static Widget nameH5(
-      BuildContext context, String memberId, String appId, String feedId) {
+      BuildContext context, String memberId, AppModel app, String feedId) {
     return FutureBuilder<ProfileAttributes>(
-        future: _getProfileAttributes(memberId, appId, feedId),
+        future: _getProfileAttributes(memberId, app, feedId),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             var profileAttributes = snapshot.data;
             if (profileAttributes!.name != null) {
-              return h5(context, profileAttributes.name);
+              return h5(app, context, profileAttributes.name);
             }
           }
-          return progressIndicator(context);
+          return progressIndicator(app, context);
         });
   }
 
   static Widget nameText(
-      BuildContext context, String memberId, String appId, String feedId) {
+      BuildContext context, String memberId, AppModel app, String feedId) {
     return FutureBuilder<ProfileAttributes>(
-        future: _getProfileAttributes(memberId, appId, feedId),
+        future: _getProfileAttributes(memberId, app, feedId),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             var profileAttributes = snapshot.data;
             if (profileAttributes!.name != null) {
-              return text(context, profileAttributes.name);
+              return text(app, context, profileAttributes.name);
             }
           }
-          return progressIndicator(context);
+          return progressIndicator(app, context);
         });
   }
 }

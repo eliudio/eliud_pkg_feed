@@ -1,4 +1,5 @@
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
+import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/tools/storage/member_image_model_widget.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_type_helper.dart';
@@ -13,6 +14,7 @@ import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:eliud_pkg_medium/platform/medium_platform.dart';
 
 class PostContentsWidget extends StatefulWidget {
+  final AppModel app;
   final String? memberID;
   final PostModel postModel;
   final AccessBloc accessBloc;
@@ -20,6 +22,7 @@ class PostContentsWidget extends StatefulWidget {
 
   const PostContentsWidget(
       {Key? key,
+      required this.app,
       this.memberID,
       required this.postModel,
       required this.accessBloc,
@@ -95,16 +98,16 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
         // Photos & videos
         //widgets.add(PostMediaHelper.videoAndPhotoDivider(context));
         widgets.add(PostMediaHelper.staggeredMemberMediumModelFromPostMedia(
-            context, memberMedia, viewAction: (index) {
+            context, widget.app, memberMedia, viewAction: (index) {
           _action(memberMedia, index);
         }));
         return Column(children: widgets);
       case PostType.ExternalLink:
-        return text(context, 'External link not supported yet');
+        return text(widget.app, context, 'External link not supported yet');
       case PostType.Html:
         return AbstractTextPlatform.platform!.htmlWidget(postModel.html!);
       case PostType.Unknown:
-        return text(context, 'Type not determined');
+        return text(widget.app, context, 'Type not determined');
       case PostType.OnlyDescription:
         return Container(height: 1);
     }
@@ -118,7 +121,7 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
       showPhotosFromPostMedia(context, memberMedia, index);
     } else {
       AbstractMediumPlatform.platform!
-          .showVideo(context, postMedium.memberMedium!);
+          .showVideo(context, widget.app, postMedium.memberMedium!);
     }
   }
 
@@ -126,7 +129,7 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
       BuildContext context, List<PostMediumModel> postMedia, int initialPage) {
     if (postMedia.length > 0) {
       var photos = postMedia.map((pm) => pm.memberMedium!).toList();
-      AbstractMediumPlatform.platform!.showPhotos(context, photos, initialPage);
+      AbstractMediumPlatform.platform!.showPhotos(context, widget.app, photos, initialPage);
     }
   }
 }

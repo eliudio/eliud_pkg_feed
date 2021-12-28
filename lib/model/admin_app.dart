@@ -239,7 +239,7 @@ class AdminApp extends AdminAppInstallerBase {
 
 class AdminMenu extends AdminAppMenuInstallerBase {
 
-  Future<MenuDefModel> menu(String appId) async {
+  Future<MenuDefModel> menu(AppModel app) async {
     var menuItems = <MenuItemModel>[];
 
     menuItems.add(
@@ -248,7 +248,7 @@ class AdminMenu extends AdminAppMenuInstallerBase {
         text: "Feeds",
         description: "Feeds",
         icon: IconModel(codePoint: 0xe88a, fontFamily: "MaterialIcons"),
-        action: GotoPage(appId, pageID: "eliud_pkg_feed_feeds_page"))
+        action: GotoPage(app, pageID: "eliud_pkg_feed_feeds_page"))
     );
 
 
@@ -258,7 +258,7 @@ class AdminMenu extends AdminAppMenuInstallerBase {
         text: "FeedMenus",
         description: "FeedMenus",
         icon: IconModel(codePoint: 0xe88a, fontFamily: "MaterialIcons"),
-        action: GotoPage(appId, pageID: "eliud_pkg_feed_feedmenus_page"))
+        action: GotoPage(app, pageID: "eliud_pkg_feed_feedmenus_page"))
     );
 
 
@@ -268,7 +268,7 @@ class AdminMenu extends AdminAppMenuInstallerBase {
         text: "Headers",
         description: "Headers",
         icon: IconModel(codePoint: 0xe88a, fontFamily: "MaterialIcons"),
-        action: GotoPage(appId, pageID: "eliud_pkg_feed_headers_page"))
+        action: GotoPage(app, pageID: "eliud_pkg_feed_headers_page"))
     );
 
 
@@ -278,7 +278,7 @@ class AdminMenu extends AdminAppMenuInstallerBase {
         text: "Posts",
         description: "Posts",
         icon: IconModel(codePoint: 0xe88a, fontFamily: "MaterialIcons"),
-        action: GotoPage(appId, pageID: "eliud_pkg_feed_posts_page"))
+        action: GotoPage(app, pageID: "eliud_pkg_feed_posts_page"))
     );
 
 
@@ -288,7 +288,7 @@ class AdminMenu extends AdminAppMenuInstallerBase {
         text: "PostComments",
         description: "PostComments",
         icon: IconModel(codePoint: 0xe88a, fontFamily: "MaterialIcons"),
-        action: GotoPage(appId, pageID: "eliud_pkg_feed_postcomments_page"))
+        action: GotoPage(app, pageID: "eliud_pkg_feed_postcomments_page"))
     );
 
 
@@ -298,7 +298,7 @@ class AdminMenu extends AdminAppMenuInstallerBase {
         text: "PostLikes",
         description: "PostLikes",
         icon: IconModel(codePoint: 0xe88a, fontFamily: "MaterialIcons"),
-        action: GotoPage(appId, pageID: "eliud_pkg_feed_postlikes_page"))
+        action: GotoPage(app, pageID: "eliud_pkg_feed_postlikes_page"))
     );
 
 
@@ -308,18 +308,18 @@ class AdminMenu extends AdminAppMenuInstallerBase {
         text: "Profiles",
         description: "Profiles",
         icon: IconModel(codePoint: 0xe88a, fontFamily: "MaterialIcons"),
-        action: GotoPage(appId, pageID: "eliud_pkg_feed_profiles_page"))
+        action: GotoPage(app, pageID: "eliud_pkg_feed_profiles_page"))
     );
 
 
     MenuDefModel menu = MenuDefModel(
       admin: true,
       documentID: "eliud_pkg_feed_admin_menu",
-      appId: appId,
+      appId: app.documentID,
       name: "eliud_pkg_feed",
       menuItems: menuItems
     );
-    await menuDefRepository(appId: appId)!.add(menu);
+    await menuDefRepository(appId: app.documentID!)!.add(menu);
     return menu;
   }
 }

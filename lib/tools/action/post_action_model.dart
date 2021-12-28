@@ -1,3 +1,4 @@
+import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/display_conditions_model.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/tools/action/action_entity.dart';
@@ -12,7 +13,7 @@ class PostActionModel extends ActionModel {
   // Post to which feed, which could be the feed of a different app
   final FeedModel? feed;
 
-  PostActionModel(String appId, { this.feed, DisplayConditionsModel? conditions} ) : super(appId, actionType: PostActionEntity.label, conditions: conditions);
+  PostActionModel(AppModel app, { this.feed, DisplayConditionsModel? conditions} ) : super(app, actionType: PostActionEntity.label, conditions: conditions);
 
   @override
   ActionEntity toEntity({String? appId}) {
@@ -22,15 +23,15 @@ class PostActionModel extends ActionModel {
         appId: appId);
   }
 
-  static ActionModel? fromEntity(PostActionEntity entity) {
+  static Future<ActionModel?> fromEntity(AppModel app, PostActionEntity entity) async {
     if (entity.appID == null) throw Exception('entity PostActionModel.appID is null');
     return PostActionModel(
-      entity.appID!,
-      conditions: DisplayConditionsModel.fromEntity(entity.conditions),
+      app,
+      conditions: await DisplayConditionsModel.fromEntity(entity.conditions),
     );
   }
 
-  static Future<ActionModel> fromEntityPlus(PostActionEntity entity, { String? appId}) async {
+  static Future<ActionModel> fromEntityPlus(AppModel app, PostActionEntity entity, { String? appId}) async {
     if (entity.appID == null) throw Exception('entity PostActionModel.appID is null');
     FeedModel? feedModel;
     if (entity.feedId != null) {
@@ -42,8 +43,8 @@ class PostActionModel extends ActionModel {
     }
 
     return PostActionModel(
-        entity.appID!,
-        conditions: DisplayConditionsModel.fromEntity(entity.conditions),
+        app,
+        conditions: await DisplayConditionsModel.fromEntity(entity.conditions),
         feed: feedModel
     );
   }
@@ -58,10 +59,10 @@ class PostActionModel extends ActionModel {
 
 class PostActionMapper implements ActionModelMapper {
   @override
-  ActionModel? fromEntity(ActionEntity entity) => PostActionModel.fromEntity(entity as PostActionEntity);
+  Future<ActionModel?> fromEntity(AppModel app, ActionEntity entity) => PostActionModel.fromEntity(app, entity as PostActionEntity);
 
   @override
-  Future<ActionModel> fromEntityPlus(ActionEntity entity) => PostActionModel.fromEntityPlus(entity as PostActionEntity);
+  Future<ActionModel> fromEntityPlus(AppModel app, ActionEntity entity) => PostActionModel.fromEntityPlus(app, entity as PostActionEntity);
 
   @override
   ActionEntity fromMap(Map map) => PostActionEntity.fromMap(map);

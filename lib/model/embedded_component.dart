@@ -17,6 +17,7 @@
 import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
+import 'package:eliud_core/model/app_model.dart';
 
 import 'dart:async';
 
@@ -39,12 +40,12 @@ import '../model/post_medium_repository.dart';
 typedef MemberProfileListChanged(List<MemberProfileModel> values);
 typedef PostMediumListChanged(List<PostMediumModel> values);
 
-memberProfilesList(context, value, trigger) => EmbeddedComponentFactory.memberProfilesList(context, value, trigger);
-postMediumsList(context, value, trigger) => EmbeddedComponentFactory.postMediumsList(context, value, trigger);
+memberProfilesList(app, context, value, trigger) => EmbeddedComponentFactory.memberProfilesList(app, context, value, trigger);
+postMediumsList(app, context, value, trigger) => EmbeddedComponentFactory.postMediumsList(app, context, value, trigger);
 
 class EmbeddedComponentFactory {
 
-static Widget memberProfilesList(BuildContext context, List<MemberProfileModel> values, MemberProfileListChanged trigger) {
+static Widget memberProfilesList(BuildContext context, AppModel app, List<MemberProfileModel> values, MemberProfileListChanged trigger) {
   MemberProfileInMemoryRepository inMemoryRepository = MemberProfileInMemoryRepository(trigger, values,);
   return MultiBlocProvider(
     providers: [
@@ -54,11 +55,11 @@ static Widget memberProfilesList(BuildContext context, List<MemberProfileModel> 
           )..add(LoadMemberProfileList()),
         )
         ],
-    child: MemberProfileListWidget(isEmbedded: true),
+    child: MemberProfileListWidget(app: app, isEmbedded: true),
   );
 }
 
-static Widget postMediumsList(BuildContext context, List<PostMediumModel> values, PostMediumListChanged trigger) {
+static Widget postMediumsList(BuildContext context, AppModel app, List<PostMediumModel> values, PostMediumListChanged trigger) {
   PostMediumInMemoryRepository inMemoryRepository = PostMediumInMemoryRepository(trigger, values,);
   return MultiBlocProvider(
     providers: [
@@ -68,7 +69,7 @@ static Widget postMediumsList(BuildContext context, List<PostMediumModel> values
           )..add(LoadPostMediumList()),
         )
         ],
-    child: PostMediumListWidget(isEmbedded: true),
+    child: PostMediumListWidget(app: app, isEmbedded: true),
   );
 }
 

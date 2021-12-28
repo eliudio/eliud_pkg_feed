@@ -1,3 +1,4 @@
+import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/style/frontend/has_container.dart';
@@ -21,12 +22,13 @@ enum PostType { PostPhoto, PostVideo }
  * It's a photo or video button which allows to do just that.
  */
 class PostButton extends StatefulWidget {
+  final AppModel app;
   final FeedModel feedModel;
   final PostType postType;
   List<String> readAccess;
   MemberModel author;
 
-  PostButton(this.feedModel, this.postType, this.readAccess, this.author);
+  PostButton(this.app, this.feedModel, this.postType, this.readAccess, this.author);
 
   PostButtonState createState() => PostButtonState();
 }
@@ -42,7 +44,7 @@ class PostButtonState extends State<PostButton> {
           "assets/images/segoshvishna.fiverr.com/photo.png",
           package: "eliud_pkg_feed");
       if (uploadingProgress == null) {
-        return MediaButtons.mediaButtons(context, widget.feedModel.appId!,
+        return MediaButtons.mediaButtons(context, widget.app,
             widget.author.documentID!, widget.readAccess,
             allowCrop: false,
             tooltip: 'Add photo', photoFeedbackFunction: (photo) {
@@ -65,7 +67,7 @@ class PostButtonState extends State<PostButton> {
           "assets/images/segoshvishna.fiverr.com/video.png",
           package: "eliud_pkg_feed");
       if (uploadingProgress == null) {
-        return MediaButtons.mediaButtons(context, widget.feedModel.appId!,
+        return MediaButtons.mediaButtons(context, widget.app,
             widget.author.documentID!, widget.readAccess,
             allowCrop: false,
             tooltip: 'Add video', videoFeedbackFunction: (video) {
@@ -107,13 +109,13 @@ class PostButtonState extends State<PostButton> {
 
   Widget _getIcon(Widget child) {
     if (uploadingProgress == null) {
-      return formatIcon(context, child);
+      return formatIcon(context, widget.app, child);
     } else {
       return Stack(children: [
-        formatIcon(context, child),
+        formatIcon(context, widget.app, child),
         Container(
             width: 60,
-            child: progressIndicatorWithValue(context, value: uploadingProgress!))
+            child: progressIndicatorWithValue(widget.app, context, value: uploadingProgress!))
       ]);
 
 /*
@@ -146,11 +148,11 @@ class PostButtonState extends State<PostButton> {
     }
   }
 
-  static Widget formatIcon(BuildContext context, Widget child,
+  static Widget formatIcon(BuildContext context, AppModel app, Widget child,
       {double? width}) {
     return Container(
         padding: const EdgeInsets.only(top: 22.5, bottom: 22.5),
-        child: actionContainer(context,
+        child: actionContainer(app, context,
                 child: Center(
                     child: Container(
                         padding: EdgeInsets.all(2.0),

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:eliud_core/core/blocs/access/state/logged_in.dart';
+import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_event.dart';
@@ -11,13 +12,13 @@ import 'feed_post_form_state.dart';
 import 'feed_post_model_details.dart';
 
 class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
-  final String appId;
+  final AppModel app;
   final PostListPagedBloc postListPagedBloc;
   final String memberId;
   final String feedId;
   final LoggedIn accessState;
 
-  FeedPostFormBloc(this.appId, this.postListPagedBloc,
+  FeedPostFormBloc(this.app, this.postListPagedBloc,
       this.memberId, this.feedId, this.accessState)
       : super(FeedPostFormUninitialized());
 
@@ -60,7 +61,7 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
         postModelDetails: FeedPostModelDetails(
           description: "",
           memberMedia: [],
-          postPrivilege: await PostPrivilege.construct1(PostPrivilegeType.Public, appId, memberId),
+          postPrivilege: await PostPrivilege.construct1(PostPrivilegeType.Public, app, memberId),
         ));
   }
 
@@ -70,7 +71,7 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
         postModelDetails: FeedPostModelDetails(
           description: event.description,
           memberMedia: event.memberMedia,
-          postPrivilege: await PostFollowersHelper.determinePostPrivilege(readAccess, appId, memberId),
+          postPrivilege: await PostFollowersHelper.determinePostPrivilege(readAccess, app, memberId),
         ));
   }
 
@@ -79,7 +80,7 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
     PostModel postModel = PostModel(
         documentID: newRandomKey(),
         authorId: memberId,
-        appId: appId,
+        appId: app.documentID,
         feedId: feedId,
         description: feedPostModelDetails.description,
         likes: 0,

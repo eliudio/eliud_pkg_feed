@@ -26,14 +26,14 @@ import 'bloc/feed_post_form_event.dart';
 import 'bloc/feed_post_form_state.dart';
 
 class MyFeedPostForm extends StatefulWidget {
-  final String appId;
+  final AppModel app;
   final String feedId;
   final String memberId;
   final String? currentMemberId;
   final String photoURL;
   final eliud_router.PageContextInfo pageContextInfo;
 
-  MyFeedPostForm(this.appId, this.feedId, this.memberId, this.currentMemberId,
+  MyFeedPostForm(this.app, this.feedId, this.memberId, this.currentMemberId,
       this.photoURL, this.pageContextInfo);
 
   _MyFeedPostFormState createState() => _MyFeedPostFormState();
@@ -55,17 +55,16 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
     return BlocBuilder<AccessBloc, AccessState>(
     builder: (context, accessState) {
     if (accessState is LoggedIn) {
-      var app = accessState.currentApp;
-      return complexAckNackDialog(context,
+      return complexAckNackDialog(widget.app, context,
           title: 'New Album',
-          child: _contents(context, widget.pageContextInfo, app, accessState),
+          child: _contents(context, widget.pageContextInfo, widget.app, accessState),
           onSelection: (value) {
             if (value == 0) {
               BlocProvider.of<FeedPostFormBloc>(context).add(SubmitPost());
             }
           });
     } else {
-      return text(context, 'Not logged in');
+      return text(widget.app, context, 'Not logged in');
     }});
   }
 
@@ -93,9 +92,8 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
             }
 
             rows.add(BlocProvider<PostPrivilegeBloc>(
-                create: (context) => PostPrivilegeBloc(widget.appId, widget.feedId, widget.memberId, _postPrivilegeChanged)..add(InitialisePostPrivilegeEvent(postPrivilege: state.postModelDetails.postPrivilege)),
-              child: PostPrivilegeWidget(
-              widget.appId, widget.feedId, widget.memberId, widget.currentMemberId, state.postModelDetails.memberMedia.length == 0)
+                create: (context) => PostPrivilegeBloc(widget.app, widget.feedId, widget.memberId, _postPrivilegeChanged)..add(InitialisePostPrivilegeEvent(postPrivilege: state.postModelDetails.postPrivilege)),
+              child: PostPrivilegeWidget(widget.app, widget.feedId, widget.memberId, widget.currentMemberId, state.postModelDetails.memberMedia.length == 0)
 
               ),
             );
@@ -105,7 +103,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
               children: rows,
             );
           } else {
-            return progressIndicator(context);
+            return progressIndicator(app, context);
           }
         });
   }
@@ -122,7 +120,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
       pageId,
       widget.memberId,
       widget.currentMemberId,
-      app.documentID!,
+      app,
       widget.feedId,
     );
     return Row(children: [
@@ -161,7 +159,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
     List<String> readAccess = state.postModelDetails.postPrivilege.readAccess;
 
     return MediaButtons.mediaButtons(
-        context, app.documentID!, memberId, readAccess,
+        context, app, memberId, readAccess,
         tooltip: 'Add video or photo',
         photoFeedbackFunction: (photo) {
           if (photo != null) {
@@ -196,7 +194,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         media.add(medium.memberMedium!);
       }
     });
-    return MediaHelper.staggeredMemberMediumModel(context, media,
+    return MediaHelper.staggeredMemberMediumModel(widget.app, context, media,
         progressLabel: 'Uploading...',
         progressExtra: progressValue, deleteAction: (index) {
           var memberMedia = state.postModelDetails.memberMedia;
@@ -207,9 +205,9 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
           var medium = media[index];
           if (medium.mediumType == MediumType.Photo) {
             var photos = media;
-            AbstractMediumPlatform.platform!.showPhotos(context, photos, index);
+            AbstractMediumPlatform.platform!.showPhotos(context, widget.app, photos, index);
           } else {
-            AbstractMediumPlatform.platform!.showVideo(context, medium);
+            AbstractMediumPlatform.platform!.showVideo(context, widget.app, medium);
           }
         });
   }
@@ -218,7 +216,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
       AppModel app,
       FeedPostFormInitialized state,
       ) {
-    return textField(
+    return textField(app,
       context,
       readOnly: false,
       textAlign: TextAlign.left,

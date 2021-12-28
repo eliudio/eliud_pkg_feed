@@ -104,7 +104,7 @@ class PostCommentModel {
     );
   }
 
-  static PostCommentModel? fromEntity(String documentID, PostCommentEntity? entity) {
+  static Future<PostCommentModel?> fromEntity(String documentID, PostCommentEntity? entity) async {
     if (entity == null) return null;
     var counter = 0;
     return PostCommentModel(
@@ -118,13 +118,12 @@ class PostCommentModel {
           likes: entity.likes, 
           dislikes: entity.dislikes, 
           memberMedia: 
-            entity.memberMedia == null ? null :
-            entity.memberMedia
+            entity.memberMedia == null ? null : List<MemberMediumModel>.from(await Future.wait(entity. memberMedia
             !.map((item) {
-              counter++; 
-              return MemberMediumModel.fromEntity(counter.toString(), item)!;
+            counter++;
+              return MemberMediumModel.fromEntity(counter.toString(), item);
             })
-            .toList(), 
+            .toList())), 
     );
   }
 

@@ -2,6 +2,7 @@ import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
 import 'package:eliud_core/core/blocs/access/state/access_state.dart';
 import 'package:eliud_core/core/tools/component_info.dart';
+import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/style/frontend/has_page_body.dart';
 import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
 import 'package:eliud_core/tools/component/component_constructor.dart';
@@ -24,9 +25,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
  *
  */
 class ProfileWidgetWrapper extends ComponentWidgetWrapper {
+  final AppModel app;
   final String feedId;
 
-  ProfileWidgetWrapper(this.feedId);
+  ProfileWidgetWrapper(this.app, this.feedId);
 
   @override
   Widget wrapWidget(BuildContext context, ComponentInfo componentInfo) {
@@ -37,15 +39,15 @@ class ProfileWidgetWrapper extends ComponentWidgetWrapper {
             return BlocProvider<ProfileBloc>(
                 create: (context) =>
                 ProfileBloc()
-                  ..add(InitialiseProfileEvent(accessState.currentApp.documentID!,
+                  ..add(InitialiseProfileEvent(app,
                       feedId, accessState, modalRoute)),
-                child: pageBody(context,
+                child: pageBody(app, context,
                     backgroundOverride: componentInfo.backgroundOverride,
                     components: componentInfo.widgets,
                     layout: componentInfo.layout,
                     gridView: componentInfo.gridView));
           } else {
-            return progressIndicator(context);
+            return progressIndicator(app, context);
           }
         });
   }

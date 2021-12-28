@@ -1,6 +1,7 @@
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
 import 'package:eliud_core/core/blocs/access/state/access_state.dart';
+import 'package:eliud_core/model/app_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 import 'package:eliud_core/core/tools/page_helper.dart';
@@ -20,9 +21,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorful_tab/flutter_colorful_tab.dart';
 
 class FeedMenu extends StatefulWidget {
+  final AppModel app;
   final FeedMenuModel feedMenuModel;
 
-  FeedMenu(this.feedMenuModel);
+  FeedMenu(this.app, this.feedMenuModel);
 
   _FeedMenuState createState() => _FeedMenuState();
 }
@@ -74,26 +76,27 @@ class _FeedMenuState extends State<FeedMenu>
                   }
                 }
 
-                return FeedMenuItems(
+                return FeedMenuItems(widget.app,
                     useTheseItems, actions, selectedPage, parameters);
               } else {
-                return progressIndicator(context);
+                return progressIndicator(widget.app, context);
               }
             });
           } else {
-            return progressIndicator(context);
+            return progressIndicator(widget.app, context);
           }
         });
   }
 }
 
 class FeedMenuItems extends StatefulWidget {
+  final AppModel app;
   final List<String> items;
   final List<ActionModel> actions;
   final int active;
   final Map<String, dynamic>? parameters;
 
-  FeedMenuItems(this.items, this.actions, this.active, this.parameters);
+  FeedMenuItems(this.app, this.items, this.actions, this.active, this.parameters);
 
   _FeedMenuItemsState createState() =>
       _FeedMenuItemsState(items, active, actions, parameters);
@@ -130,7 +133,7 @@ class _FeedMenuItemsState extends State<FeedMenuItems>
   @override
   Widget build(BuildContext context) {
     if (_tabController != null) {
-      return tabBar(context, items: items, tabController: _tabController!);
+      return tabBar(widget.app, context, items: items, tabController: _tabController!);
     } else {
       return Text('No controller');
     }

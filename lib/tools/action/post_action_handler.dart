@@ -4,6 +4,7 @@ import 'package:eliud_core/core/blocs/access/state/logged_in.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 import 'package:eliud_core/core/navigate/router.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
+import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/style/frontend/has_dialog.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/action/action_model.dart';
@@ -24,16 +25,16 @@ class PostActionHandler extends PackageActionHandler {
     if (action is PostActionModel) {
       var accessState = AccessBloc.getState(context);
       if (accessState is LoggedIn) {
-        String name = action.appID;
+        String name = action.app.documentID!;
 
-        openSelectionDialog(context, action.appID + "/_addpagetofeed",
+        openSelectionDialog(action.app, context, action.app.documentID! + "/_addpagetofeed",
             title: 'Add page to feed ' + name,
             options: ['Only Me', 'My followers', 'Public'],
             onSelection: (int choice) {
               switch (choice) {
                 case 0: addToMe(context, action, accessState); break;
-                case 1: addToFollowers(context, action, accessState); break;
-                case 2: addToPublic(context, action, accessState); break;
+                case 1: addToFollowers(context, action.app, action, accessState); break;
+                case 2: addToPublic(context, action.app, action, accessState); break;
               }
             });
       }
@@ -46,16 +47,16 @@ class PostActionHandler extends PackageActionHandler {
         PostFollowersHelper.asMe(accessState.member.documentID!), accessState);
   }
 
-  Future<void> addToFollowers(BuildContext context, PostActionModel action,
+  Future<void> addToFollowers(BuildContext context, AppModel app, PostActionModel action,
       LoggedIn accessState) async {
     executePostIt(context, action,
-        await PostFollowersHelper.asFollowers(context, accessState), accessState);
+        await PostFollowersHelper.asFollowers(context, app, accessState), accessState);
   }
 
-  Future<void> addToPublic(BuildContext context, PostActionModel action,
+  Future<void> addToPublic(BuildContext context, AppModel app, PostActionModel action,
       LoggedIn accessState) async {
     executePostIt(context, action,
-        await PostFollowersHelper.asPublic(context, accessState), accessState);
+        await PostFollowersHelper.asPublic(context, app, accessState), accessState);
   }
 
   Future<void> executePostIt(BuildContext context, PostActionModel action,
@@ -67,10 +68,10 @@ class PostActionHandler extends PackageActionHandler {
     // What is the current page?
     // Can we actually add the current page? (page should have an indicator if it's allowed to be added)
 
-    postRepository(appId: action.appID)!.add(PostModel(
+    postRepository(appId: action.app.documentID!)!.add(PostModel(
       documentID: newRandomKey(),
       authorId: accessState.member.documentID,
-      appId: action.appID,
+      appId: action.app.documentID,
       postAppId: postAppId,
       feedId: action.feed!.documentID,
       postPageId: postPageId,

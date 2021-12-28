@@ -2,6 +2,7 @@ import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
 import 'package:eliud_core/core/blocs/access/state/access_state.dart';
+import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/style/frontend/has_button.dart';
 import 'package:eliud_core/style/frontend/has_container.dart';
@@ -28,8 +29,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PagedPostsList extends StatefulWidget {
   final FeedModel feedModel;
+  final AppModel app;
 
   const PagedPostsList(
+      this.app,
     this.feedModel, {
     Key? key,
   }) : super(key: key);
@@ -58,7 +61,7 @@ class PagedPostsListState extends State<PagedPostsList> {
   Widget _getIcon(Widget child) {
     return Container(
         padding: const EdgeInsets.only(top: 22.5, bottom: 22.5),
-        child: actionContainer(context,
+        child: actionContainer(widget.app, context,
             child: Center(
                 child: Container(
                     padding: EdgeInsets.all(2.0),
@@ -99,14 +102,14 @@ class PagedPostsListState extends State<PagedPostsList> {
 
       // Photo
       if (widget.feedModel.photoPost!) {
-        widgets.add(PostButton(
+        widgets.add(PostButton(widget.app,
             widget.feedModel, PostType.PostPhoto, readAccess, author));
         widgets.add(Spacer());
       }
 
       // Video
       if (widget.feedModel.videoPost != null && widget.feedModel.videoPost!) {
-        widgets.add(PostButton(
+        widgets.add(PostButton(widget.app,
             widget.feedModel, PostType.PostVideo, readAccess, author));
         widgets.add(Spacer());
       }
@@ -117,10 +120,10 @@ class PagedPostsListState extends State<PagedPostsList> {
         var message = Image.asset(
             "assets/images/segoshvishna.fiverr.com/message.png",
             package: "eliud_pkg_feed");
-        widgets.add(actionContainer(context,
-            child: iconButton(context, icon: message, tooltip: 'Message',
+        widgets.add(actionContainer(widget.app, context,
+            child: iconButton(widget.app, context, icon: message, tooltip: 'Message',
                 onPressed: () {
-              openEntryDialog(context, AccessBloc.currentAppId(context) + '/_message', title: 'Say something',
+              openEntryDialog(widget.app, context, widget.app.documentID! + '/_message', title: 'Say something',
                   onPressed: (value) {
                 if (value != null) {
                   _addPost(
@@ -139,7 +142,7 @@ class PagedPostsListState extends State<PagedPostsList> {
         var audio = Image.asset(
             "assets/images/segoshvishna.fiverr.com/audio.png",
             package: "eliud_pkg_feed");
-        widgets.add(iconButton(context,
+        widgets.add(iconButton(widget.app, context,
             icon: audio, tooltip: 'Audio', onPressed: () {}));
         widgets.add(Spacer());
       }
@@ -149,11 +152,11 @@ class PagedPostsListState extends State<PagedPostsList> {
         var album = Image.asset(
             "assets/images/segoshvishna.fiverr.com/album.png",
             package: "eliud_pkg_feed");
-        widgets.add(actionContainer(context,
-            child: iconButton(context,
+        widgets.add(actionContainer(widget.app, context,
+            child: iconButton(widget.app, context,
                 icon: album,
                 tooltip: 'Album',
-                onPressed: () => FeedPostDialog.open(
+                onPressed: () => FeedPostDialog.open(widget.app,
                     context,
                     widget.feedModel.documentID!,
                     profileInitialized.watchingThisProfile()!.authorId!,
@@ -167,7 +170,7 @@ class PagedPostsListState extends State<PagedPostsList> {
       // Article
       if (widget.feedModel.articlePost != null &&
           widget.feedModel.articlePost!) {
-        widgets.add(articleButton(widget.feedModel.appId!, author.documentID!));
+        widgets.add(articleButton(widget.app, author.documentID!));
 
         widgets.add(Spacer());
       }
@@ -178,25 +181,25 @@ class PagedPostsListState extends State<PagedPostsList> {
     }
   }
 
-  Widget articleButton(String appId, String memberId) {
+  Widget articleButton(AppModel app, String memberId) {
     var articleIcon = Image.asset(
         "assets/images/segoshvishna.fiverr.com/article.png",
         package: "eliud_pkg_feed");
 
-    var article = PostButtonState.formatIcon(context, articleIcon);
+    var article = PostButtonState.formatIcon(context, app, articleIcon);
 
     var items = <PopupMenuItem<int>>[];
     items.add(
       PopupMenuItem<int>(
-          child: text(context, 'Publish article for public'), value: 0),
+          child: text(app, context, 'Publish article for public'), value: 0),
     );
     items.add(
       PopupMenuItem<int>(
-          child: text(context, 'Publish article for followers'), value: 1),
+          child: text(app, context, 'Publish article for followers'), value: 1),
     );
     items.add(
       PopupMenuItem<int>(
-          child: text(context, 'Publish article for me'), value: 2),
+          child: text(app, context, 'Publish article for me'), value: 2),
     );
     return PopupMenuButton(
         tooltip: 'Add article',
@@ -208,22 +211,22 @@ class PagedPostsListState extends State<PagedPostsList> {
           var access;
           if (choice == 0) {
             postPrivilege = await PostPrivilege.construct1(
-                PostPrivilegeType.Public, appId, memberId);
+                PostPrivilegeType.Public, app, memberId);
             access = 'public';
           }
           if (choice == 1) {
             postPrivilege = await PostPrivilege.construct1(
-                PostPrivilegeType.Followers, appId, memberId);
+                PostPrivilegeType.Followers, app, memberId);
             access = 'followers';
           }
           if (choice == 2) {
             postPrivilege = await PostPrivilege.construct1(
-                PostPrivilegeType.Public, appId, memberId);
+                PostPrivilegeType.Public, app, memberId);
             access = 'just me';
           }
 
           AbstractTextPlatform.platform!.updateHtmlUsingMemberMedium(
-              context, appId, memberId, postPrivilege.readAccess, "Article",
+              context, app, memberId, postPrivilege.readAccess, "Article",
               (newArticle) {
             _addPost(
               html: newArticle,
@@ -231,16 +234,16 @@ class PagedPostsListState extends State<PagedPostsList> {
               readAccess: postPrivilege.readAccess,
             );
           }, 'Add article for ' + access,
-              extraIcons: getAlbumActionIcons(context, access));
+              extraIcons: getAlbumActionIcons(widget.app, context, access));
         });
   }
 
-  static List<Widget> getAlbumActionIcons(
+  static List<Widget> getAlbumActionIcons(AppModel app,
       BuildContext context, String accessible) {
     return [
-      dialogButton(context, label: 'Audience', onPressed: () {
-        openMessageDialog(
-          context, AccessBloc.currentAppId(context) + '/_accessible',
+      dialogButton(app, context, label: 'Audience', onPressed: () {
+        openMessageDialog(app,
+          context, app.documentID! + '/_accessible',
           title: 'Accessible',
           message: 'Article accessible by: ' + accessible,
         );
@@ -258,7 +261,6 @@ class PagedPostsListState extends State<PagedPostsList> {
         return BlocBuilder<ProfileBloc, ProfileState>(
             builder: (context, profileState) {
           if (profileState is ProfileInitialised) {
-            var app = accessState.currentApp;
             return BlocBuilder<PostListPagedBloc, PostListPagedState>(
               builder: (context, state) {
                 if (state is PostListPagedState) {
@@ -275,7 +277,7 @@ class PagedPostsListState extends State<PagedPostsList> {
                   for (int i = 0; i < state.values.length; i++) {
                     widgets.add(PostWidget(
                       thumbStyle: widget.feedModel.thumbImage,
-                      app: app,
+                      app: widget.app,
                       feedId: widget.feedModel.documentID!,
                       details: state.values[i],
                       pageId: pageId,
@@ -291,23 +293,23 @@ class PagedPostsListState extends State<PagedPostsList> {
                       physics: ScrollPhysics(),
                       children: widgets);
                 } else {
-                  return progressIndicator(context);
+                  return progressIndicator(widget.app, context);
                 }
               },
             );
           } else {
-            return progressIndicator(context);
+            return progressIndicator(widget.app, context);
           }
         });
       } else {
-        return progressIndicator(context);
+        return progressIndicator(widget.app, context);
       }
     });
   }
 
   Widget _buttonNextPage(bool mightHaveMore) {
     if (mightHaveMore) {
-      return MyButton(
+      return MyButton(app: widget.app,
         onClickFunction: _onClick,
       );
     } else {
@@ -322,7 +324,7 @@ class PagedPostsListState extends State<PagedPostsList> {
               );
             } else {
               return Center(
-                  child: h5(
+                  child: h5(widget.app,
                 context,
                 "That's all folks",
               ));
@@ -339,10 +341,11 @@ class PagedPostsListState extends State<PagedPostsList> {
 typedef OnClickFunction();
 
 class MyButton extends StatefulWidget {
+  final AppModel app;
   //final RgbModel? buttonColor;
   final OnClickFunction? onClickFunction;
 
-  const MyButton({Key? key, /*this.buttonColor, */ this.onClickFunction})
+  const MyButton({Key? key, required this.app, /*this.buttonColor, */ this.onClickFunction})
       : super(key: key);
 
   @override
@@ -361,7 +364,7 @@ class _MyButtonState extends State<MyButton> {
   @override
   Widget build(BuildContext context) {
     if (!clicked) {
-      return button(
+      return button(widget.app,
         context,
         label: 'More...',
         onPressed: () {
@@ -372,7 +375,7 @@ class _MyButtonState extends State<MyButton> {
         },
       );
     } else {
-      return progressIndicator(context);
+      return progressIndicator(widget.app, context);
     }
   }
 }

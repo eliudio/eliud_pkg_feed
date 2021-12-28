@@ -92,7 +92,7 @@ class FeedMenuModel {
     );
   }
 
-  static FeedMenuModel? fromEntity(String documentID, FeedMenuEntity? entity) {
+  static Future<FeedMenuModel?> fromEntity(String documentID, FeedMenuEntity? entity) async {
     if (entity == null) return null;
     var counter = 0;
     return FeedMenuModel(
@@ -100,11 +100,11 @@ class FeedMenuModel {
           appId: entity.appId, 
           description: entity.description, 
           itemColor: 
-            RgbModel.fromEntity(entity.itemColor), 
+            await RgbModel.fromEntity(entity.itemColor), 
           selectedItemColor: 
-            RgbModel.fromEntity(entity.selectedItemColor), 
+            await RgbModel.fromEntity(entity.selectedItemColor), 
           conditions: 
-            StorageConditionsModel.fromEntity(entity.conditions), 
+            await StorageConditionsModel.fromEntity(entity.conditions), 
     );
   }
 
