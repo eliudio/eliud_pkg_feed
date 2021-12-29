@@ -45,7 +45,7 @@ postMediumsList(app, context, value, trigger) => EmbeddedComponentFactory.postMe
 
 class EmbeddedComponentFactory {
 
-static Widget memberProfilesList(BuildContext context, AppModel app, List<MemberProfileModel> values, MemberProfileListChanged trigger) {
+static Widget memberProfilesList(AppModel app, BuildContext context, List<MemberProfileModel> values, MemberProfileListChanged trigger) {
   MemberProfileInMemoryRepository inMemoryRepository = MemberProfileInMemoryRepository(trigger, values,);
   return MultiBlocProvider(
     providers: [
@@ -59,7 +59,7 @@ static Widget memberProfilesList(BuildContext context, AppModel app, List<Member
   );
 }
 
-static Widget postMediumsList(BuildContext context, AppModel app, List<PostMediumModel> values, PostMediumListChanged trigger) {
+static Widget postMediumsList(AppModel app, BuildContext context, List<PostMediumModel> values, PostMediumListChanged trigger) {
   PostMediumInMemoryRepository inMemoryRepository = PostMediumInMemoryRepository(trigger, values,);
   return MultiBlocProvider(
     providers: [
