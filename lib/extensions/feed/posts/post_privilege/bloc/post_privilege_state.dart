@@ -1,6 +1,5 @@
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/bloc/member_service.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
-import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:collection/collection.dart';
@@ -37,19 +36,21 @@ class PostPrivilegeUninitialized extends PostPrivilegeState {
 }
 
 class PostPrivilegeInitialized extends PostPrivilegeState {
-  final PostPrivilege postPrivilege;
+  final PostAccessibleByGroup postAccessibleByGroup;
   final List<SelectedMember>? specificSelectedMembers;
 
-  const PostPrivilegeInitialized({ required this.postPrivilege, required this.specificSelectedMembers });
+  const PostPrivilegeInitialized({ required this.postAccessibleByGroup, this.specificSelectedMembers });
 
   @override
-  List<Object?> get props => [ postPrivilege,specificSelectedMembers ];
+  List<Object?> get props => [ postAccessibleByGroup, specificSelectedMembers ];
 
   @override
   bool operator == (Object other) =>
       identical(this, other) ||
           other is PostPrivilegeInitialized &&
               runtimeType == other.runtimeType &&
-              postPrivilege == other.postPrivilege &&
+              postAccessibleByGroup == other.postAccessibleByGroup &&
               ListEquality().equals(specificSelectedMembers, other.specificSelectedMembers);
+
+  List<String>? getPostAccessibleByMembers() => specificSelectedMembers == null ? null : specificSelectedMembers!.map((e) => e.memberId).toList();
 }

@@ -1,5 +1,6 @@
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/style/frontend/has_button.dart';
 import 'package:eliud_core/style/frontend/has_container.dart';
 import 'package:eliud_core/style/frontend/has_dialog.dart';
@@ -14,6 +15,7 @@ import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_eve
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_state.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/paged_posts_list.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/bloc/member_service.dart';
+import 'package:eliud_pkg_feed/extensions/util/access_group_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_contents_widget.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_type_helper.dart';
@@ -21,7 +23,6 @@ import 'package:eliud_pkg_feed/model/feed_model.dart';
 import 'package:eliud_pkg_feed/model/post_like_model.dart';
 import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
-import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 import 'package:eliud_pkg_text/platform/text_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -99,7 +100,8 @@ class _PostWidgetState extends State<PostWidget> {
       widgets.add(_description(postModel));
       widgets.add(_aBitSpace());
     }
-    widgets.add(PostContentsWidget(app: widget.app,
+    widgets.add(PostContentsWidget(
+      app: widget.app,
       memberID: widget.memberId,
       postModel: postModel,
       accessBloc: originalAccessBloc,
@@ -153,7 +155,7 @@ class _PostWidgetState extends State<PostWidget> {
         Container(width: 8),
         //PostHelper.mediaButtons(context, _photoAvailable, _videoAvailable),
         button(widget.app, context,
-                label: 'Ok', onPressed: () => _addComment(context, postDetail)),
+            label: 'Ok', onPressed: () => _addComment(context, postDetail)),
       ]);
     }
   }
@@ -168,7 +170,8 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   Widget _textField() {
-    return textField(widget.app,
+    return textField(
+      widget.app,
       context,
       readOnly: false,
       textAlign: TextAlign.left,
@@ -191,8 +194,7 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   Widget _heading(BuildContext context, PostModel? postModel) {
-    if (postModel == null)
-      return text(widget.app, context, 'No post');
+    if (postModel == null) return text(widget.app, context, 'No post');
     if (postModel.authorId == null)
       return text(widget.app, context, 'No author');
 
@@ -224,7 +226,8 @@ class _PostWidgetState extends State<PostWidget> {
         ),
         AvatarHelper.nameH5(
             context, postModel.authorId!, widget.app, widget.feedId),
-        h5(widget.app, context, verboseDateTimeRepresentation(timeStamp), textAlign: TextAlign.left),
+        h5(widget.app, context, verboseDateTimeRepresentation(timeStamp),
+            textAlign: TextAlign.left),
       ]),
       Spacer(),
     ];
@@ -249,14 +252,12 @@ class _PostWidgetState extends State<PostWidget> {
     if (PostTypeHelper.canUpdate(type)) {
       items.add(
         PopupMenuItem<int>(
-            child: text(widget.app, context, 'Update post'),
-            value: 1),
+            child: text(widget.app, context, 'Update post'), value: 1),
       );
     }
     items.add(
       PopupMenuItem<int>(
-          child: text(widget.app, context, 'Delete post'),
-          value: 0),
+          child: text(widget.app, context, 'Delete post'), value: 0),
     );
 
     return PopupMenuButton(
@@ -264,10 +265,11 @@ class _PostWidgetState extends State<PostWidget> {
         itemBuilder: (_) => items,
         onSelected: (choice) async {
           if (choice == 0) {
-            openAckNackDialog(widget.app, context, widget.app.documentID! + '/_deletepost',
-                    title: 'Delete post?',
-                    message: 'You are sure you want to delete this post?',
-                    onSelection: (value) async {
+            openAckNackDialog(
+                widget.app, context, widget.app.documentID! + '/_deletepost',
+                title: 'Delete post?',
+                message: 'You are sure you want to delete this post?',
+                onSelection: (value) async {
               if (value == 0) {
                 BlocProvider.of<PostListPagedBloc>(context)
                     .add(DeletePostPaged(value: postModel));
@@ -279,8 +281,11 @@ class _PostWidgetState extends State<PostWidget> {
               case PostType.SinglePhoto:
               case PostType.Album:
               case PostType.OnlyDescription:
-                var pageContextInfo = eliud_router.Router.getPageContextInfo(context,);
-                FeedPostDialog.open(widget.app,
+                var pageContextInfo = eliud_router.Router.getPageContextInfo(
+                  context,
+                );
+                FeedPostDialog.open(
+                    widget.app,
                     context,
                     widget.feedId,
                     postModel.authorId!,
@@ -294,43 +299,28 @@ class _PostWidgetState extends State<PostWidget> {
                         postModel.memberMedia == null
                             ? <PostMediumModel>[]
                             : postModel.memberMedia!,
-                        postModel.readAccess == null
-                            ? []
-                            : postModel.readAccess!));
+                        postModel.accessibleByGroup ??
+                            PostAccessibleByGroup.Public,
+                        postAccessibleByMembers:
+                            postModel.accessibleByMembers == null
+                                ? []
+                                : postModel.accessibleByMembers!));
                 break;
               case PostType.Html:
-                var postPrivilege = await PostFollowersMemberHelper.determinePostPrivilege(postModel.readAccess!, widget.app, postModel.authorId!);
-                var access;
-                switch (postPrivilege.postPrivilegeType) {
-                  case PostPrivilegeType.Public:
-                    access = 'public';
-                    break;
-                  case PostPrivilegeType.Followers:
-                    access = 'followers';
-                    break;
-                  case PostPrivilegeType.SpecificPeople:
-                    var specificSelectedMembers = await MemberService(widget.app, postModel.feedId!, widget.memberId).getFromIDs(postModel.readAccess);
-                    var names = "";
-                    if (specificSelectedMembers != null) {
-                      names = specificSelectedMembers.map((e) => e.name).join(", ");
-                    }
-                    access = names;
-                    break;
-                  case PostPrivilegeType.JustMe:
-                    access = 'just me';
-                    break;
-                }
-
                 AbstractTextPlatform.platform!.updateHtmlUsingMemberMedium(
                     context,
                     widget.app,
                     postModel.authorId!,
-                    postModel.readAccess!,
+                    toMemberMediumAccessibleByGroup(
+                        postModel.accessibleByGroup!.index),
                     "Article", (newArticle) {
                   BlocProvider.of<PostListPagedBloc>(context).add(
                       UpdatePostPaged(
                           value: postModel.copyWith(html: newArticle)));
-                }, postModel.html == null ? '' : postModel.html!, extraIcons: PagedPostsListState.getAlbumActionIcons(widget.app, context, access));
+                }, postModel.html == null ? '' : postModel.html!,
+                    accessibleByMembers: postModel.accessibleByMembers,
+                    extraIcons: PagedPostsListState.getAlbumActionIcons(
+                        widget.app, context, AccessGroupHelper.nameForPostAccessibleByGroup(postModel.accessibleByGroup!)));
                 break;
             }
           }
@@ -339,8 +329,10 @@ class _PostWidgetState extends State<PostWidget> {
 
   void allowToAddComment(
       BuildContext context, PostDetails postDetail, String memberId) {
-    openEntryDialog(widget.app,
-      context, widget.app.documentID! + '/_reply',
+    openEntryDialog(
+      widget.app,
+      context,
+      widget.app.documentID! + '/_reply',
       title: 'Reply to comment',
       ackButtonLabel: 'Reply',
       nackButtonLabel: 'Discard',
@@ -356,10 +348,10 @@ class _PostWidgetState extends State<PostWidget> {
   void allowToAddCommentComment(BuildContext context, PostDetails postDetail,
       PostCommentContainer postCommentContainer, String memberId) {
     openEntryDialog(widget.app, context, widget.app.documentID! + '/_reply',
-            title: 'Reply to comment',
-            hintText: 'Reply',
-            ackButtonLabel: 'Reply',
-            nackButtonLabel: 'Discard', onPressed: (comment) {
+        title: 'Reply to comment',
+        hintText: 'Reply',
+        ackButtonLabel: 'Reply',
+        nackButtonLabel: 'Discard', onPressed: (comment) {
       if (comment != null) {
         BlocProvider.of<PostListPagedBloc>(context).add(
             AddCommentCommentEvent(postDetail, postCommentContainer, comment));
@@ -369,12 +361,13 @@ class _PostWidgetState extends State<PostWidget> {
 
   void allowToUpdateComment(BuildContext context, PostDetails postDetail,
       String? memberId, PostCommentContainer postCommentContainer) {
-    openEntryDialog(widget.app, context, widget.app.documentID! + '/_updatecomment',
-            title: 'Update comment',
-            hintText: 'Comment',
-            initialValue: postCommentContainer.comment!,
-            ackButtonLabel: 'Reply',
-            nackButtonLabel: 'Discard', onPressed: (comment) {
+    openEntryDialog(
+        widget.app, context, widget.app.documentID! + '/_updatecomment',
+        title: 'Update comment',
+        hintText: 'Comment',
+        initialValue: postCommentContainer.comment!,
+        ackButtonLabel: 'Reply',
+        nackButtonLabel: 'Discard', onPressed: (comment) {
       if (comment != null) {
         BlocProvider.of<PostListPagedBloc>(context).add(UpdateCommentEvent(
             postDetail, postCommentContainer.postComment!, comment));
@@ -384,9 +377,10 @@ class _PostWidgetState extends State<PostWidget> {
 
   void allowToDeleteComment(BuildContext context, PostDetails postDetail,
       String? memberId, PostCommentContainer? postCommentContainer) {
-    openAckNackDialog(widget.app, context, widget.app.documentID! + '/_deletecomment',
-            message: "Do you want to delete this comment",
-            onSelection: (value) async {
+    openAckNackDialog(
+        widget.app, context, widget.app.documentID! + '/_deletecomment',
+        message: "Do you want to delete this comment",
+        onSelection: (value) async {
       if (value == 0) {
         BlocProvider.of<PostListPagedBloc>(context).add(
             DeleteCommentEvent(postDetail, postCommentContainer!.postComment!));
@@ -411,8 +405,7 @@ class _PostWidgetState extends State<PostWidget> {
 
   Widget getCommentTreeWidget(BuildContext context, PostDetails postDetail,
       PostCommentContainer? data) {
-    if (data == null)
-      return text(widget.app, context, 'No Comments');
+    if (data == null) return text(widget.app, context, 'No Comments');
 
     var name;
     if (data.member == null) {
@@ -438,29 +431,31 @@ class _PostWidgetState extends State<PostWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            h5(widget.app,
+            h5(
+              widget.app,
               context,
-                  '${name}',
-                ),
+              '${name}',
+            ),
             SizedBox(
               height: 4,
             ),
-            h5(widget.app,
+            h5(
+              widget.app,
               context,
-                  '${data.comment}',
-                ),
+              '${data.comment}',
+            ),
             SizedBox(
               height: 4,
             ),
             Align(
                 alignment: Alignment.bottomRight,
-                child: h5(widget.app,
+                child: h5(
+                  widget.app,
                   context,
-                      data.postComment == null ||
-                              data.postComment!.likes == null
-                          ? 'no likes'
-                          : '${data.postComment!.likes} likes',
-                    )),
+                  data.postComment == null || data.postComment!.likes == null
+                      ? 'no likes'
+                      : '${data.postComment!.likes} likes',
+                )),
           ],
         ),
       )),
@@ -493,10 +488,11 @@ class _PostWidgetState extends State<PostWidget> {
                 minWidth: 0, //wraps child's width
                 height: 0, //wraps child's height
                 child: dialogButton(widget.app, context,
-                        label: 'Like',
-                        selected: data.thisMemberLikesThisComment!,
-                        onPressed: () => widget.isEditable ? _likeComment(
-                            context, postDetail, data) : null), //your original button
+                    label: 'Like',
+                    selected: data.thisMemberLikesThisComment!,
+                    onPressed: () => widget.isEditable
+                        ? _likeComment(context, postDetail, data)
+                        : null), //your original button
               ),
               ButtonTheme(
                   padding: EdgeInsets.symmetric(
@@ -507,9 +503,11 @@ class _PostWidgetState extends State<PostWidget> {
                   minWidth: 0, //wraps child's width
                   height: 0, //wraps child's height
                   child: dialogButton(widget.app, context,
-                          label: 'Reply',
-                          onPressed: () => widget.isEditable ? allowToAddCommentComment(context,
-                              postDetail, data, data.member!.documentID!) : null)),
+                      label: 'Reply',
+                      onPressed: () => widget.isEditable
+                          ? allowToAddCommentComment(context, postDetail, data,
+                              data.member!.documentID!)
+                          : null)),
             ]),
           ],
         ));
@@ -546,11 +544,9 @@ class _PostWidgetState extends State<PostWidget> {
         icon: Icon(Icons.more_vert),
         itemBuilder: (_) => <PopupMenuItem<int>>[
               new PopupMenuItem<int>(
-                  child: text(widget.app, context, 'Update comment'),
-                  value: 0),
+                  child: text(widget.app, context, 'Update comment'), value: 0),
               new PopupMenuItem<int>(
-                  child: text(widget.app, context, 'Delete comment'),
-                  value: 1),
+                  child: text(widget.app, context, 'Delete comment'), value: 1),
             ],
         onSelected: (choice) {
           if (choice == 0)
@@ -574,25 +570,31 @@ class _PostWidgetState extends State<PostWidget> {
     return Row(
       children: <Widget>[
         Spacer(),
-        iconButton(widget.app,
+        iconButton(
+          widget.app,
           context,
-              icon: ImageIcon(_assetThumbUp(thisMemberLikeType)),
-              onPressed: () => widget.isEditable ? _like(context, postDetails) : null,
-            ),
-        text(widget.app,
+          icon: ImageIcon(_assetThumbUp(thisMemberLikeType)),
+          onPressed: () =>
+              widget.isEditable ? _like(context, postDetails) : null,
+        ),
+        text(
+          widget.app,
           context,
-              "$likes",
-            ),
+          "$likes",
+        ),
         Spacer(flex: 3),
-        iconButton(widget.app,
+        iconButton(
+          widget.app,
           context,
-              icon: ImageIcon(_assetThumbDown(thisMemberLikeType)),
-              onPressed: () => widget.isEditable ? _dislike(context, postDetails) : null,
-            ),
-        text(widget.app,
+          icon: ImageIcon(_assetThumbDown(thisMemberLikeType)),
+          onPressed: () =>
+              widget.isEditable ? _dislike(context, postDetails) : null,
+        ),
+        text(
+          widget.app,
           context,
-              "$dislikes",
-            ),
+          "$dislikes",
+        ),
         Spacer(),
       ],
     );
@@ -672,11 +674,12 @@ class _PostWidgetState extends State<PostWidget> {
     if (dislikes == null) dislikes = 0;
     return Padding(
       padding: const EdgeInsets.only(left: 14.0),
-      child: text(widget.app,
+      child: text(
+        widget.app,
         context,
-            "$likes likes $dislikes dislikes",
-            //style: TextStyle(fontWeight: FontWeight.bold),
-          ),
+        "$likes likes $dislikes dislikes",
+        //style: TextStyle(fontWeight: FontWeight.bold),
+      ),
     );
   }
 

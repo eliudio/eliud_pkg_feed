@@ -6,7 +6,6 @@ import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_event.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
-import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 import 'feed_post_form_event.dart';
 import 'feed_post_form_state.dart';
 import 'feed_post_model_details.dart';
@@ -38,7 +37,7 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
       }
       if (event is ChangedFeedPostPrivilege) {
         var newValue =
-            currentState.postModelDetails.copyWith(postPrivilege: event.postPrivilege);
+            currentState.postModelDetails.copyWith(postAccessibleByGroup: event.postAccessibleByGroup, postAccessibleByMembers: event.postAccessibleByMembers);
         yield SubmittableFeedPostForm(postModelDetails: newValue);
       }
       if (event is UploadingMedium) {
@@ -61,17 +60,16 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
         postModelDetails: FeedPostModelDetails(
           description: "",
           memberMedia: [],
-          postPrivilege: await PostPrivilege.construct1(PostPrivilegeType.Public, app, memberId),
+          postAccessibleByGroup: PostAccessibleByGroup.Public
         ));
   }
 
   Future<FeedPostFormLoaded> _initialiseUpdate(InitialiseUpdateFeedPostFormEvent event) async {
-    var readAccess = event.readAccess;
     return FeedPostFormLoaded(
         postModelDetails: FeedPostModelDetails(
           description: event.description,
           memberMedia: event.memberMedia,
-          postPrivilege: await PostFollowersHelper.determinePostPrivilege(readAccess, app, memberId),
+          postAccessibleByGroup: PostAccessibleByGroup.Public
         ));
   }
 
@@ -85,9 +83,12 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
         description: feedPostModelDetails.description,
         likes: 0,
         dislikes: 0,
-        readAccess: feedPostModelDetails.postPrivilege.readAccess,
+        accessibleByGroup: feedPostModelDetails.postAccessibleByGroup,
+        accessibleByMembers: feedPostModelDetails.postAccessibleByMembers,
         archived: PostArchiveStatus.Active,
-        memberMedia: feedPostModelDetails.memberMedia);
+        memberMedia: feedPostModelDetails.memberMedia,
+        readAccess: [memberId],  // default readAccess to the owner. The function will expand this based on accessibleByGroup/Members
+        );
 
     // Now tell the list bloc to add the post
     postListPagedBloc.add(AddPostPaged(value: postModel));

@@ -2,6 +2,7 @@ import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_pkg_feed/model/member_profile_model.dart';
+import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:collection/collection.dart';
@@ -73,18 +74,19 @@ abstract class ProfileInitialised extends ProfileState {
 abstract class LoggedInProfileInitialized extends ProfileInitialised {
   final MemberProfileModel currentMemberProfileModel;
   final MemberModel currentMember;
-  final List<String> defaultReadAccess;
+  final PostAccessibleByGroup postAccessibleByGroup;
+  final List<String>? postAccessibleByMembers;
 
   LoggedInProfileInitialized(
       String feedId,
       AppModel app,
       this.currentMemberProfileModel,
       this.currentMember,
-      this.defaultReadAccess,
+      this.postAccessibleByGroup,
+      this.postAccessibleByMembers,
       double? uploadingBGProgress,
       double? uploadingProfilePhotoProgress)
-      : super(
-            feedId, app, uploadingBGProgress, uploadingProfilePhotoProgress);
+      : super(feedId, app, uploadingBGProgress, uploadingProfilePhotoProgress);
 
   @override
   String? memberId() => currentMember.documentID!;
@@ -98,7 +100,8 @@ class LoggedInWatchingMyProfile extends LoggedInProfileInitialized {
     required AppModel app,
     required MemberProfileModel currentMemberProfileModel,
     required MemberModel currentMember,
-    required List<String> defaultReadAccess,
+    required PostAccessibleByGroup postAccessibleByGroup,
+    List<String>? postAccessibleByMembers,
     required this.onlyMyPosts,
     required double? uploadingBGProgress,
     required double? uploadingProfilePhotoProgress,
@@ -107,21 +110,29 @@ class LoggedInWatchingMyProfile extends LoggedInProfileInitialized {
             app,
             currentMemberProfileModel,
             currentMember,
-            defaultReadAccess,
+            postAccessibleByGroup,
+            postAccessibleByMembers,
             uploadingBGProgress,
             uploadingProfilePhotoProgress);
 
   LoggedInWatchingMyProfile copyWith(
-      {required MemberProfileModel newMemberProfileModel, double? uploadingBGProgress, double? uploadingProfilePhotoProgress}) {
+      {required MemberProfileModel newMemberProfileModel,
+      double? uploadingBGProgress,
+      double? uploadingProfilePhotoProgress}) {
     return LoggedInWatchingMyProfile(
       feedId: this.feedId,
       app: this.app,
       currentMemberProfileModel: newMemberProfileModel,
       currentMember: this.currentMember,
-      defaultReadAccess: this.defaultReadAccess,
+      postAccessibleByGroup: this.postAccessibleByGroup,
+      postAccessibleByMembers: this.postAccessibleByMembers,
       onlyMyPosts: this.onlyMyPosts,
-      uploadingBGProgress: uploadingBGProgress == null ? uploadingBGProgress : this.uploadingBGProgress,
-      uploadingProfilePhotoProgress: uploadingProfilePhotoProgress == null ? uploadingProfilePhotoProgress : this.uploadingProfilePhotoProgress,
+      uploadingBGProgress: uploadingBGProgress == null
+          ? uploadingBGProgress
+          : this.uploadingBGProgress,
+      uploadingProfilePhotoProgress: uploadingProfilePhotoProgress == null
+          ? uploadingProfilePhotoProgress
+          : this.uploadingProfilePhotoProgress,
     );
   }
 
@@ -132,7 +143,8 @@ class LoggedInWatchingMyProfile extends LoggedInProfileInitialized {
       app: this.app,
       currentMemberProfileModel: this.currentMemberProfileModel,
       currentMember: this.currentMember,
-      defaultReadAccess: this.defaultReadAccess,
+      postAccessibleByGroup: this.postAccessibleByGroup,
+      postAccessibleByMembers: this.postAccessibleByMembers,
       onlyMyPosts: this.onlyMyPosts,
       uploadingBGProgress: uploadingBGProgress == null
           ? this.uploadingBGProgress
@@ -173,7 +185,8 @@ class LoggedInWatchingMyProfile extends LoggedInProfileInitialized {
         app,
         currentMemberProfileModel,
         currentMember,
-        defaultReadAccess,
+        postAccessibleByGroup,
+        postAccessibleByMembers,
         uploadingBGProgress,
         uploadingProfilePhotoProgress
       ];
@@ -187,7 +200,8 @@ class LoggedInWatchingMyProfile extends LoggedInProfileInitialized {
           app == other.app &&
           currentMemberProfileModel == other.currentMemberProfileModel &&
           currentMember == other.currentMember &&
-          ListEquality().equals(defaultReadAccess, other.defaultReadAccess) &&
+          postAccessibleByGroup == other.postAccessibleByGroup &&
+          ListEquality().equals(postAccessibleByMembers, other.postAccessibleByMembers) &&
           uploadingBGProgress == other.uploadingBGProgress &&
           uploadingProfilePhotoProgress == other.uploadingProfilePhotoProgress;
 
@@ -207,7 +221,8 @@ class LoggedInAndWatchingOtherProfile extends LoggedInProfileInitialized {
       required AppModel app,
       required MemberProfileModel currentMemberProfileModel,
       required MemberModel currentMember,
-      required List<String> defaultReadAccess,
+      required PostAccessibleByGroup postAccessibleByGroup,
+      List<String>? postAccessibleByMembers,
       required this.feedProfileModel,
       required this.feedPublicInfoModel,
       required this.iFollowThisPerson,
@@ -218,7 +233,8 @@ class LoggedInAndWatchingOtherProfile extends LoggedInProfileInitialized {
             app,
             currentMemberProfileModel,
             currentMember,
-            defaultReadAccess,
+      postAccessibleByGroup,
+      postAccessibleByMembers,
             uploadingBGProgress,
             uploadingProfilePhotoProgress);
 
@@ -252,7 +268,8 @@ class LoggedInAndWatchingOtherProfile extends LoggedInProfileInitialized {
         app,
         currentMemberProfileModel,
         currentMember,
-        defaultReadAccess,
+    postAccessibleByGroup,
+    postAccessibleByMembers,
         iFollowThisPerson,
         feedProfileModel,
         feedPublicInfoModel,
@@ -269,7 +286,8 @@ class LoggedInAndWatchingOtherProfile extends LoggedInProfileInitialized {
           app == other.app &&
           currentMemberProfileModel == other.currentMemberProfileModel &&
           currentMember == other.currentMember &&
-          ListEquality().equals(defaultReadAccess, other.defaultReadAccess) &&
+          postAccessibleByGroup == other.postAccessibleByGroup &&
+          ListEquality().equals(postAccessibleByMembers, other.postAccessibleByMembers) &&
           iFollowThisPerson == other.iFollowThisPerson &&
           feedProfileModel == other.feedProfileModel &&
           feedPublicInfoModel == other.feedPublicInfoModel &&
@@ -288,7 +306,8 @@ class LoggedInAndWatchingOtherProfile extends LoggedInProfileInitialized {
       app: this.app,
       currentMemberProfileModel: this.currentMemberProfileModel,
       currentMember: this.currentMember,
-      defaultReadAccess: this.defaultReadAccess,
+      postAccessibleByGroup: this.postAccessibleByGroup,
+      postAccessibleByMembers: this.postAccessibleByMembers,
       feedProfileModel: this.feedProfileModel,
       feedPublicInfoModel: this.feedPublicInfoModel,
       iFollowThisPerson: this.iFollowThisPerson,
@@ -392,8 +411,7 @@ class WatchingPublicProfile extends ProfileInitialised {
       required AppModel app,
       required double? uploadingBGProgress,
       required double? uploadingProfilePhotoProgress})
-      : super(
-            feedId, app, uploadingBGProgress, uploadingProfilePhotoProgress);
+      : super(feedId, app, uploadingBGProgress, uploadingProfilePhotoProgress);
 
   String? memberId() => null;
 

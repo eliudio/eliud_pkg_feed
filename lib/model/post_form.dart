@@ -139,6 +139,7 @@ class _MyPostFormState extends State<MyPostForm> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _likesController = TextEditingController();
   final TextEditingController _dislikesController = TextEditingController();
+  int? _accessibleByGroupSelectedRadioTile;
   int? _archivedSelectedRadioTile;
   final TextEditingController _externalLinkController = TextEditingController();
 
@@ -159,6 +160,7 @@ class _MyPostFormState extends State<MyPostForm> {
     _descriptionController.addListener(_onDescriptionChanged);
     _likesController.addListener(_onLikesChanged);
     _dislikesController.addListener(_onDislikesChanged);
+    _accessibleByGroupSelectedRadioTile = 0;
     _archivedSelectedRadioTile = 0;
     _externalLinkController.addListener(_onExternalLinkChanged);
   }
@@ -212,6 +214,10 @@ class _MyPostFormState extends State<MyPostForm> {
           _dislikesController.text = state.value!.dislikes.toString();
         else
           _dislikesController.text = "";
+        if (state.value!.accessibleByGroup != null)
+          _accessibleByGroupSelectedRadioTile = state.value!.accessibleByGroup!.index;
+        else
+          _accessibleByGroupSelectedRadioTile = 0;
         if (state.value!.archived != null)
           _archivedSelectedRadioTile = state.value!.archived!.index;
         else
@@ -229,6 +235,23 @@ class _MyPostFormState extends State<MyPostForm> {
                   child: StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().groupTitle(widget.app, context, 'General')
                 ));
 
+
+        children.add(
+
+                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _accessibleByGroupSelectedRadioTile, 'Public', 'Public', !accessState.memberIsOwner(widget.app.documentID!) ? null : (dynamic val) => setSelectionAccessibleByGroup(val))
+          );
+        children.add(
+
+                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _accessibleByGroupSelectedRadioTile, 'Followers', 'Followers', !accessState.memberIsOwner(widget.app.documentID!) ? null : (dynamic val) => setSelectionAccessibleByGroup(val))
+          );
+        children.add(
+
+                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _accessibleByGroupSelectedRadioTile, 'Me', 'Me', !accessState.memberIsOwner(widget.app.documentID!) ? null : (dynamic val) => setSelectionAccessibleByGroup(val))
+          );
+        children.add(
+
+                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _accessibleByGroupSelectedRadioTile, 'SpecificMembers', 'SpecificMembers', !accessState.memberIsOwner(widget.app.documentID!) ? null : (dynamic val) => setSelectionAccessibleByGroup(val))
+          );
 
         children.add(
 
@@ -362,6 +385,8 @@ class _MyPostFormState extends State<MyPostForm> {
                               description: state.value!.description, 
                               likes: state.value!.likes, 
                               dislikes: state.value!.dislikes, 
+                              accessibleByGroup: state.value!.accessibleByGroup, 
+                              accessibleByMembers: state.value!.accessibleByMembers, 
                               readAccess: state.value!.readAccess, 
                               archived: state.value!.archived, 
                               externalLink: state.value!.externalLink, 
@@ -382,6 +407,8 @@ class _MyPostFormState extends State<MyPostForm> {
                               description: state.value!.description, 
                               likes: state.value!.likes, 
                               dislikes: state.value!.dislikes, 
+                              accessibleByGroup: state.value!.accessibleByGroup, 
+                              accessibleByMembers: state.value!.accessibleByMembers, 
                               readAccess: state.value!.readAccess, 
                               archived: state.value!.archived, 
                               externalLink: state.value!.externalLink, 
@@ -459,6 +486,20 @@ class _MyPostFormState extends State<MyPostForm> {
 
   void _onDislikesChanged() {
     _myFormBloc.add(ChangedPostDislikes(value: _dislikesController.text));
+  }
+
+
+  void setSelectionAccessibleByGroup(int? val) {
+    setState(() {
+      _accessibleByGroupSelectedRadioTile = val;
+    });
+    _myFormBloc.add(ChangedPostAccessibleByGroup(value: toPostAccessibleByGroup(val)));
+  }
+
+
+  void _onAccessibleByMembersChanged(value) {
+    _myFormBloc.add(ChangedPostAccessibleByMembers(value: value));
+    setState(() {});
   }
 
 

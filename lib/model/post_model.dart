@@ -38,10 +38,24 @@ import 'package:eliud_pkg_feed/model/post_entity.dart';
 
 import 'package:eliud_core/tools/random.dart';
 
+enum PostAccessibleByGroup {
+  Public, Followers, Me, SpecificMembers, Unknown
+}
+
 enum PostArchiveStatus {
   Active, Archived, Unknown
 }
 
+
+PostAccessibleByGroup toPostAccessibleByGroup(int? index) {
+  switch (index) {
+    case 0: return PostAccessibleByGroup.Public;
+    case 1: return PostAccessibleByGroup.Followers;
+    case 2: return PostAccessibleByGroup.Me;
+    case 3: return PostAccessibleByGroup.SpecificMembers;
+  }
+  return PostAccessibleByGroup.Unknown;
+}
 
 PostArchiveStatus toPostArchiveStatus(int? index) {
   switch (index) {
@@ -73,21 +87,25 @@ class PostModel {
   String? description;
   int? likes;
   int? dislikes;
+  PostAccessibleByGroup? accessibleByGroup;
+
+  // In case accessibleByGroup == SpecificMembers, then these are the members
+  List<String>? accessibleByMembers;
   List<String>? readAccess;
   PostArchiveStatus? archived;
   String? externalLink;
   List<PostMediumModel>? memberMedia;
 
-  PostModel({this.documentID, this.authorId, this.timestamp, this.appId, this.feedId, this.postAppId, this.postPageId, this.pageParameters, this.html, this.description, this.likes, this.dislikes, this.readAccess, this.archived, this.externalLink, this.memberMedia, })  {
+  PostModel({this.documentID, this.authorId, this.timestamp, this.appId, this.feedId, this.postAppId, this.postPageId, this.pageParameters, this.html, this.description, this.likes, this.dislikes, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, this.archived, this.externalLink, this.memberMedia, })  {
     assert(documentID != null);
   }
 
-  PostModel copyWith({String? documentID, String? authorId, DateTime? timestamp, String? appId, String? feedId, String? postAppId, String? postPageId, Map<String, dynamic>? pageParameters, String? html, String? description, int? likes, int? dislikes, List<String>? readAccess, PostArchiveStatus? archived, String? externalLink, List<PostMediumModel>? memberMedia, }) {
-    return PostModel(documentID: documentID ?? this.documentID, authorId: authorId ?? this.authorId, timestamp: timestamp ?? this.timestamp, appId: appId ?? this.appId, feedId: feedId ?? this.feedId, postAppId: postAppId ?? this.postAppId, postPageId: postPageId ?? this.postPageId, pageParameters: pageParameters ?? this.pageParameters, html: html ?? this.html, description: description ?? this.description, likes: likes ?? this.likes, dislikes: dislikes ?? this.dislikes, readAccess: readAccess ?? this.readAccess, archived: archived ?? this.archived, externalLink: externalLink ?? this.externalLink, memberMedia: memberMedia ?? this.memberMedia, );
+  PostModel copyWith({String? documentID, String? authorId, DateTime? timestamp, String? appId, String? feedId, String? postAppId, String? postPageId, Map<String, dynamic>? pageParameters, String? html, String? description, int? likes, int? dislikes, PostAccessibleByGroup? accessibleByGroup, List<String>? accessibleByMembers, List<String>? readAccess, PostArchiveStatus? archived, String? externalLink, List<PostMediumModel>? memberMedia, }) {
+    return PostModel(documentID: documentID ?? this.documentID, authorId: authorId ?? this.authorId, timestamp: timestamp ?? this.timestamp, appId: appId ?? this.appId, feedId: feedId ?? this.feedId, postAppId: postAppId ?? this.postAppId, postPageId: postPageId ?? this.postPageId, pageParameters: pageParameters ?? this.pageParameters, html: html ?? this.html, description: description ?? this.description, likes: likes ?? this.likes, dislikes: dislikes ?? this.dislikes, accessibleByGroup: accessibleByGroup ?? this.accessibleByGroup, accessibleByMembers: accessibleByMembers ?? this.accessibleByMembers, readAccess: readAccess ?? this.readAccess, archived: archived ?? this.archived, externalLink: externalLink ?? this.externalLink, memberMedia: memberMedia ?? this.memberMedia, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ authorId.hashCode ^ timestamp.hashCode ^ appId.hashCode ^ feedId.hashCode ^ postAppId.hashCode ^ postPageId.hashCode ^ pageParameters.hashCode ^ html.hashCode ^ description.hashCode ^ likes.hashCode ^ dislikes.hashCode ^ readAccess.hashCode ^ archived.hashCode ^ externalLink.hashCode ^ memberMedia.hashCode;
+  int get hashCode => documentID.hashCode ^ authorId.hashCode ^ timestamp.hashCode ^ appId.hashCode ^ feedId.hashCode ^ postAppId.hashCode ^ postPageId.hashCode ^ pageParameters.hashCode ^ html.hashCode ^ description.hashCode ^ likes.hashCode ^ dislikes.hashCode ^ accessibleByGroup.hashCode ^ accessibleByMembers.hashCode ^ readAccess.hashCode ^ archived.hashCode ^ externalLink.hashCode ^ memberMedia.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -106,6 +124,8 @@ class PostModel {
           description == other.description &&
           likes == other.likes &&
           dislikes == other.dislikes &&
+          accessibleByGroup == other.accessibleByGroup &&
+          ListEquality().equals(accessibleByMembers, other.accessibleByMembers) &&
           ListEquality().equals(readAccess, other.readAccess) &&
           archived == other.archived &&
           externalLink == other.externalLink &&
@@ -113,10 +133,11 @@ class PostModel {
 
   @override
   String toString() {
+    String accessibleByMembersCsv = (accessibleByMembers == null) ? '' : accessibleByMembers!.join(', ');
     String readAccessCsv = (readAccess == null) ? '' : readAccess!.join(', ');
     String memberMediaCsv = (memberMedia == null) ? '' : memberMedia!.join(', ');
 
-    return 'PostModel{documentID: $documentID, authorId: $authorId, timestamp: $timestamp, appId: $appId, feedId: $feedId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, html: $html, description: $description, likes: $likes, dislikes: $dislikes, readAccess: String[] { $readAccessCsv }, archived: $archived, externalLink: $externalLink, memberMedia: PostMedium[] { $memberMediaCsv }}';
+    return 'PostModel{documentID: $documentID, authorId: $authorId, timestamp: $timestamp, appId: $appId, feedId: $feedId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, html: $html, description: $description, likes: $likes, dislikes: $dislikes, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }, archived: $archived, externalLink: $externalLink, memberMedia: PostMedium[] { $memberMediaCsv }}';
   }
 
   PostEntity toEntity({String? appId}) {
@@ -132,6 +153,8 @@ class PostModel {
           description: (description != null) ? description : null, 
           likes: (likes != null) ? likes : null, 
           dislikes: (dislikes != null) ? dislikes : null, 
+          accessibleByGroup: (accessibleByGroup != null) ? accessibleByGroup!.index : null, 
+          accessibleByMembers: (accessibleByMembers != null) ? accessibleByMembers : null, 
           readAccess: (readAccess != null) ? readAccess : null, 
           archived: (archived != null) ? archived!.index : null, 
           externalLink: (externalLink != null) ? externalLink : null, 
@@ -157,6 +180,8 @@ class PostModel {
           description: entity.description, 
           likes: entity.likes, 
           dislikes: entity.dislikes, 
+          accessibleByGroup: toPostAccessibleByGroup(entity.accessibleByGroup), 
+          accessibleByMembers: entity.accessibleByMembers, 
           readAccess: entity.readAccess, 
           archived: toPostArchiveStatus(entity.archived), 
           externalLink: entity.externalLink, 
@@ -187,6 +212,8 @@ class PostModel {
           description: entity.description, 
           likes: entity.likes, 
           dislikes: entity.dislikes, 
+          accessibleByGroup: toPostAccessibleByGroup(entity.accessibleByGroup), 
+          accessibleByMembers: entity.accessibleByMembers, 
           readAccess: entity.readAccess, 
           archived: toPostArchiveStatus(entity.archived), 
           externalLink: entity.externalLink, 

@@ -191,6 +191,38 @@ class NameOverrideMemberProfileFormError extends MemberProfileFormError {
 }
 
 
+class AccessibleByGroupMemberProfileFormError extends MemberProfileFormError { 
+  const AccessibleByGroupMemberProfileFormError({ String? message, MemberProfileModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''AccessibleByGroupMemberProfileFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
+class AccessibleByMembersMemberProfileFormError extends MemberProfileFormError { 
+  const AccessibleByMembersMemberProfileFormError({ String? message, MemberProfileModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''AccessibleByMembersMemberProfileFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
 class ReadAccessMemberProfileFormError extends MemberProfileFormError { 
   const ReadAccessMemberProfileFormError({ String? message, MemberProfileModel? value }): super(message: message, value: value);
 

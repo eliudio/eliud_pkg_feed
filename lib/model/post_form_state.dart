@@ -255,6 +255,38 @@ class DislikesPostFormError extends PostFormError {
 }
 
 
+class AccessibleByGroupPostFormError extends PostFormError { 
+  const AccessibleByGroupPostFormError({ String? message, PostModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''AccessibleByGroupPostFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
+class AccessibleByMembersPostFormError extends PostFormError { 
+  const AccessibleByMembersPostFormError({ String? message, PostModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''AccessibleByMembersPostFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
 class ReadAccessPostFormError extends PostFormError { 
   const ReadAccessPostFormError({ String? message, PostModel? value }): super(message: message, value: value);
 

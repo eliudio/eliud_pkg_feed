@@ -1,8 +1,3 @@
-import 'package:eliud_core/model/member_medium_model.dart';
-import 'package:eliud_core/tools/storage/medium_base.dart';
-import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
-
-import 'feed_post_model_details.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:eliud_pkg_feed/model/model_export.dart';
@@ -21,12 +16,13 @@ class InitialiseNewFeedPostFormEvent extends FeedPostFormEvent {
 class InitialiseUpdateFeedPostFormEvent extends FeedPostFormEvent {
   final String description;
   final List<PostMediumModel> memberMedia;
-  List<String> readAccess;
+  final PostAccessibleByGroup postAccessibleByGroup;
+  final List<String>? postAccessibleByMembers;
 
-  InitialiseUpdateFeedPostFormEvent(this.description, this.memberMedia, this.readAccess);
+  InitialiseUpdateFeedPostFormEvent(this.description, this.memberMedia, this.postAccessibleByGroup, {this.postAccessibleByMembers});
 
   @override
-  List<Object?> get props => [description, memberMedia, readAccess];
+  List<Object?> get props => [description, memberMedia, postAccessibleByGroup, postAccessibleByMembers];
 }
 
 class ChangedFeedPostDescription extends FeedPostFormEvent {
@@ -42,15 +38,16 @@ class ChangedFeedPostDescription extends FeedPostFormEvent {
 }
 
 class ChangedFeedPostPrivilege extends FeedPostFormEvent {
-  final PostPrivilege postPrivilege;
+  final PostAccessibleByGroup postAccessibleByGroup;
+  final List<String>? postAccessibleByMembers;
 
-  ChangedFeedPostPrivilege({required this.postPrivilege });
-
-  @override
-  List<Object?> get props => [ postPrivilege ];
+  ChangedFeedPostPrivilege({required this.postAccessibleByGroup, this.postAccessibleByMembers });
 
   @override
-  String toString() => 'ChangedFeedPostPrivilege{ value: $postPrivilege }';
+  List<Object?> get props => [ postAccessibleByGroup, postAccessibleByMembers ];
+
+  @override
+  String toString() => 'ChangedFeedPostPrivilege{ postAccessibleByGroup: $postAccessibleByGroup, postAccessibleByMembers: $postAccessibleByMembers }';
 }
 
 class ChangedMedia extends FeedPostFormEvent {

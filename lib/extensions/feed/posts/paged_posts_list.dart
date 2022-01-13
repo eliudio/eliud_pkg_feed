@@ -3,6 +3,7 @@ import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
 import 'package:eliud_core/core/blocs/access/state/access_state.dart';
 import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/style/frontend/has_button.dart';
 import 'package:eliud_core/style/frontend/has_container.dart';
@@ -17,7 +18,7 @@ import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_eve
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_state.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_button.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_widget.dart';
-import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
+import 'package:eliud_pkg_feed/model/member_profile_model.dart';
 import 'package:eliud_pkg_text/platform/text_platform.dart';
 import 'new_post/bloc/feed_post_form_event.dart';
 import 'new_post/feed_post_dialog.dart';
@@ -74,7 +75,8 @@ class PagedPostsListState extends State<PagedPostsList> {
       {String? html,
       String? description,
       required String authorId,
-      List<String>? readAccess,
+      required PostAccessibleByGroup postAccessibleByGroup,
+      List<String>? postAccessibleByMembers,
       List<PostMediumModel>? postMemberMedia}) {
     BlocProvider.of<PostListPagedBloc>(context).add(AddPostPaged(
         value: PostModel(
@@ -85,15 +87,19 @@ class PagedPostsListState extends State<PagedPostsList> {
             likes: 0,
             dislikes: 0,
             description: description,
-            readAccess: readAccess,
+            accessibleByGroup: postAccessibleByGroup,
+            accessibleByMembers: postAccessibleByMembers,
             archived: PostArchiveStatus.Active,
             html: html,
-            memberMedia: postMemberMedia)));
+            memberMedia: postMemberMedia,
+            readAccess: [authorId],  // default readAccess to the owner. The function will expand this based on accessibleByGroup/Members
+          )));
   }
 
   Widget _newPostForm(
       MemberModel author,
-      List<String> readAccess,
+      PostAccessibleByGroup postAccessibleByGroup,
+      List<String>? postAccessibleByMembers,
       LoggedInProfileInitialized profileInitialized,
       eliudrouter.PageContextInfo pageContextInfo) {
     if (profileInitialized is LoggedInWatchingMyProfile) {
@@ -103,14 +109,14 @@ class PagedPostsListState extends State<PagedPostsList> {
       // Photo
       if (widget.feedModel.photoPost!) {
         widgets.add(PostButton(widget.app,
-            widget.feedModel, PostType.PostPhoto, readAccess, author));
+            widget.feedModel, PostType.PostPhoto, postAccessibleByGroup, postAccessibleByMembers, author));
         widgets.add(Spacer());
       }
 
       // Video
       if (widget.feedModel.videoPost != null && widget.feedModel.videoPost!) {
         widgets.add(PostButton(widget.app,
-            widget.feedModel, PostType.PostVideo, readAccess, author));
+            widget.feedModel, PostType.PostVideo, postAccessibleByGroup, postAccessibleByMembers, author));
         widgets.add(Spacer());
       }
 
@@ -129,7 +135,8 @@ class PagedPostsListState extends State<PagedPostsList> {
                   _addPost(
                     description: value,
                     authorId: author.documentID!,
-                    readAccess: readAccess,
+                    postAccessibleByGroup: postAccessibleByGroup,
+                    postAccessibleByMembers: postAccessibleByMembers
                   );
                 }
               });
@@ -170,7 +177,7 @@ class PagedPostsListState extends State<PagedPostsList> {
       // Article
       if (widget.feedModel.articlePost != null &&
           widget.feedModel.articlePost!) {
-        widgets.add(articleButton(widget.app, author.documentID!));
+        widgets.add(articleButton(widget.app, author.documentID!, postAccessibleByGroup, postAccessibleByMembers));
 
         widgets.add(Spacer());
       }
@@ -181,7 +188,7 @@ class PagedPostsListState extends State<PagedPostsList> {
     }
   }
 
-  Widget articleButton(AppModel app, String memberId) {
+  Widget articleButton(AppModel app, String memberId, PostAccessibleByGroup postAccessibleByGroup, List<String>? postAccessibleByMembers,) {
     var articleIcon = Image.asset(
         "assets/images/segoshvishna.fiverr.com/article.png",
         package: "eliud_pkg_feed");
@@ -207,34 +214,31 @@ class PagedPostsListState extends State<PagedPostsList> {
         child: article,
         itemBuilder: (_) => items,
         onSelected: (choice) async {
-          var postPrivilege;
+
           var access;
           if (choice == 0) {
-            postPrivilege = await PostPrivilege.construct1(
-                PostPrivilegeType.Public, app, memberId);
             access = 'public';
           }
           if (choice == 1) {
-            postPrivilege = await PostPrivilege.construct1(
-                PostPrivilegeType.Followers, app, memberId);
             access = 'followers';
           }
           if (choice == 2) {
-            postPrivilege = await PostPrivilege.construct1(
-                PostPrivilegeType.Public, app, memberId);
             access = 'just me';
           }
 
           AbstractTextPlatform.platform!.updateHtmlUsingMemberMedium(
-              context, app, memberId, postPrivilege.readAccess, "Article",
+              context, app, memberId, toMemberMediumAccessibleByGroup(postAccessibleByGroup.index), "Article",
               (newArticle) {
             _addPost(
               html: newArticle,
               authorId: memberId,
-              readAccess: postPrivilege.readAccess,
+                postAccessibleByGroup: postAccessibleByGroup,
+                postAccessibleByMembers: postAccessibleByMembers
             );
           }, 'Add article for ' + access,
-              extraIcons: getAlbumActionIcons(widget.app, context, access));
+              extraIcons: getAlbumActionIcons(widget.app, context, access)
+          , accessibleByMembers: postAccessibleByMembers
+          );
         });
   }
 
@@ -270,7 +274,8 @@ class PagedPostsListState extends State<PagedPostsList> {
                   if (profileState is LoggedInProfileInitialized) {
                     widgets.add(_newPostForm(
                         profileState.currentMember,
-                        profileState.defaultReadAccess,
+                        profileState.postAccessibleByGroup,
+                        profileState.postAccessibleByMembers,
                         profileState,
                         pageContextInfo));
                   }

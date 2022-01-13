@@ -30,18 +30,21 @@ class MemberProfileEntity {
   final String? profileBackgroundId;
   final String? profileOverride;
   final String? nameOverride;
+  final int? accessibleByGroup;
+  final List<String>? accessibleByMembers;
   final List<String>? readAccess;
 
-  MemberProfileEntity({this.appId, this.feedId, this.authorId, this.profile, this.profileBackgroundId, this.profileOverride, this.nameOverride, this.readAccess, });
+  MemberProfileEntity({this.appId, this.feedId, this.authorId, this.profile, this.profileBackgroundId, this.profileOverride, this.nameOverride, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, });
 
 
-  List<Object?> get props => [appId, feedId, authorId, profile, profileBackgroundId, profileOverride, nameOverride, readAccess, ];
+  List<Object?> get props => [appId, feedId, authorId, profile, profileBackgroundId, profileOverride, nameOverride, accessibleByGroup, accessibleByMembers, readAccess, ];
 
   @override
   String toString() {
+    String accessibleByMembersCsv = (accessibleByMembers == null) ? '' : accessibleByMembers!.join(', ');
     String readAccessCsv = (readAccess == null) ? '' : readAccess!.join(', ');
 
-    return 'MemberProfileEntity{appId: $appId, feedId: $feedId, authorId: $authorId, profile: $profile, profileBackgroundId: $profileBackgroundId, profileOverride: $profileOverride, nameOverride: $nameOverride, readAccess: String[] { $readAccessCsv }}';
+    return 'MemberProfileEntity{appId: $appId, feedId: $feedId, authorId: $authorId, profile: $profile, profileBackgroundId: $profileBackgroundId, profileOverride: $profileOverride, nameOverride: $nameOverride, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }}';
   }
 
   static MemberProfileEntity? fromMap(Object? o) {
@@ -56,6 +59,8 @@ class MemberProfileEntity {
       profileBackgroundId: map['profileBackgroundId'], 
       profileOverride: map['profileOverride'], 
       nameOverride: map['nameOverride'], 
+      accessibleByGroup: map['accessibleByGroup'], 
+      accessibleByMembers: map['accessibleByMembers'] == null ? null : List.from(map['accessibleByMembers']), 
       readAccess: map['readAccess'] == null ? null : List.from(map['readAccess']), 
     );
   }
@@ -76,6 +81,10 @@ class MemberProfileEntity {
       else theDocument["profileOverride"] = null;
     if (nameOverride != null) theDocument["nameOverride"] = nameOverride;
       else theDocument["nameOverride"] = null;
+    if (accessibleByGroup != null) theDocument["accessibleByGroup"] = accessibleByGroup;
+      else theDocument["accessibleByGroup"] = null;
+    if (accessibleByMembers != null) theDocument["accessibleByMembers"] = accessibleByMembers!.toList();
+      else theDocument["accessibleByMembers"] = null;
     if (readAccess != null) theDocument["readAccess"] = readAccess!.toList();
       else theDocument["readAccess"] = null;
     return theDocument;

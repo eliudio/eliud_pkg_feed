@@ -3,7 +3,7 @@ import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/member_profile_model.dart';
-import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
+import 'package:eliud_pkg_feed/model/post_model.dart';
 
 /// MemberService
 class MemberService {
@@ -13,11 +13,9 @@ class MemberService {
 
   MemberService(this.app, this.feedId, this.memberId);
 
-  Future<List<SelectedMember>?> getFromPostPrivilege(
-      PostPrivilege postPrivilege) async {
-    if (postPrivilege.postPrivilegeType == PostPrivilegeType.SpecificPeople) {
-      var ids = postPrivilege.specificFollowers;
-      return getFromIDs(ids);
+  Future<List<SelectedMember>?> getFromPostPrivilege(PostAccessibleByGroup postAccessibleByGroup, List<String>? postAccessibleByMembers) async {
+    if (postAccessibleByGroup == PostAccessibleByGroup.SpecificMembers) {
+      return getFromIDs(postAccessibleByMembers);
     } else {
       return Future.value(null);
     }
@@ -40,7 +38,7 @@ class MemberService {
     return values2;
   }
 
-  Future<List<SelectedMember>> getMembers(String? query) async {
+    Future<List<SelectedMember>> getMembers(String? query) async {
     var membersValues = await memberProfileRepository(appId: app.documentID!)!.valuesList(
         eliudQuery: EliudQuery()
             .withCondition(EliudQueryCondition('feedId', isEqualTo: feedId))

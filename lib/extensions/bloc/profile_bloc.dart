@@ -10,7 +10,6 @@ import 'package:eliud_pkg_feed/extensions/util/switch_member.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/member_profile_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
-import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 import 'package:eliud_pkg_follow/tools/follower_helper.dart';
 
 import 'profile_event.dart';
@@ -73,10 +72,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       MemberProfileModel newMemberProfileModel) async {
     await memberProfileRepository(appId: myState.app.documentID!)!
         .update(newMemberProfileModel);
-    return myState.copyWith(newMemberProfileModel: newMemberProfileModel, uploadingBGProgress: null, uploadingProfilePhotoProgress: null);
+    return myState.copyWith(
+        newMemberProfileModel: newMemberProfileModel,
+        uploadingBGProgress: null,
+        uploadingProfilePhotoProgress: null);
   }
 
-  Future<ProfileState> determineProfileState(      InitialiseProfileEvent event) async {
+  Future<ProfileState> determineProfileState(
+      InitialiseProfileEvent event) async {
     var accessState = event.accessDetermined;
     var currentMemberModel = accessState.getMember();
     var pageContextInfo =
@@ -96,7 +99,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         } else {
           var feedPublicInfoModel = await getMemberPublicInfo(param);
           var feedProfileModel = await getMemberProfileModelWithPublicInfo(
-              false, app, feedId, feedPublicInfoModel, null);
+              false,
+              app,
+              feedId,
+              feedPublicInfoModel,
+              MemberProfileAccessibleByGroup.Public,
+              null);
           return NotLoggedInWatchingSomeone(
               app: app,
               feedId: feedId,
@@ -113,7 +121,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             uploadingBGProgress: null);
       }
     } else {
-      var defaultReadAccess = await PostFollowersMemberHelper.asFollowers(app, currentMemberModel.documentID!);
+      var defaultPostGroup = PostAccessibleByGroup.Public;
+      var defaultMemberProfileGroup =
+          toMemberProfileAccessibleByGroup(defaultPostGroup.index);
+      var defaultMembers = null;
       // Determine current member
       var param;
       if (pageContextInfo.parameters != null) {
@@ -123,32 +134,43 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
       if (param == null) {
         var currentMemberProfileModel =
-            await getMemberProfileModelWithCurrentMemberModel(
-                true, app, feedId, currentMemberModel, defaultReadAccess);
+            await getMemberProfileModelWithCurrentMemberModel(true, app, feedId,
+                currentMemberModel, defaultMemberProfileGroup, defaultMembers);
         return LoggedInWatchingMyProfile(
             feedId: feedId,
             app: app,
             currentMemberProfileModel: currentMemberProfileModel,
             currentMember: currentMemberModel,
-            defaultReadAccess: defaultReadAccess,
+            postAccessibleByGroup: defaultPostGroup,
+            postAccessibleByMembers: defaultMembers,
             onlyMyPosts: false,
             uploadingProfilePhotoProgress: null,
             uploadingBGProgress: null);
       } else {
         var currentMemberProfileModel =
             await getMemberProfileModelWithCurrentMemberModel(
-                false, app, feedId, currentMemberModel, defaultReadAccess);
-        var following = await FollowerHelper.following(
-            currentMemberModel.documentID!, app);
+                false,
+                app,
+                feedId,
+                currentMemberModel,
+                defaultMemberProfileGroup,
+                defaultMembers);
+        var following =
+            await FollowerHelper.following(currentMemberModel.documentID!, app);
         var feedPublicInfoModel = await getMemberPublicInfo(param);
         var feedProfileModel = await getMemberProfileModelWithPublicInfo(
-            false, app, feedId, feedPublicInfoModel, null);
+            false,
+            app,
+            feedId,
+            feedPublicInfoModel,
+            MemberProfileAccessibleByGroup.Public,
+            null);
         return LoggedInAndWatchingOtherProfile(
             feedId: feedId,
             app: app,
             currentMemberProfileModel: currentMemberProfileModel,
             currentMember: currentMemberModel,
-            defaultReadAccess: defaultReadAccess,
+            postAccessibleByGroup: PostAccessibleByGroup.Public,
             feedProfileModel: feedProfileModel,
             feedPublicInfoModel: feedPublicInfoModel,
             iFollowThisPerson: following.contains(
@@ -174,9 +196,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       AppModel app,
       String feedId,
       MemberModel member,
-      List<String>? readAccess) async {
+      MemberProfileAccessibleByGroup accessibleByGroup,
+      List<String>? accessibleByMembers) async {
     return getMemberProfileModel(create, app, feedId, member.documentID!,
-        member.photoURL!, member.name!, readAccess);
+        member.photoURL!, member.name!, accessibleByGroup, accessibleByMembers);
   }
 
   static Future<MemberProfileModel> getMemberProfileModelWithPublicInfo(
@@ -184,9 +207,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       AppModel app,
       String feedId,
       MemberPublicInfoModel member,
-      List<String>? readAccess) async {
+      MemberProfileAccessibleByGroup accessibleByGroup,
+      List<String>? accessibleByMembers) async {
     return getMemberProfileModel(create, app, feedId, member.documentID!,
-        member.photoURL!, member.name!, readAccess);
+        member.photoURL!, member.name!, accessibleByGroup, accessibleByMembers);
   }
 
   static Future<MemberProfileModel> getMemberProfileModel(
@@ -196,10 +220,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       String memberId,
       String photoURL,
       String name,
-      List<String>? readAccess) async {
+      MemberProfileAccessibleByGroup accessibleByGroup,
+      List<String>? accessibleByMembers) async {
     var key = memberId + "-" + feedId;
-    var memberProfileModel = await memberProfileRepository(appId: app.documentID!)!
-        .get(key, onError: (exception) {});
+    var memberProfileModel =
+        await memberProfileRepository(appId: app.documentID!)!
+            .get(key, onError: (exception) {});
     if (memberProfileModel == null) {
       // create default profile
       memberProfileModel = MemberProfileModel(
@@ -207,11 +233,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           appId: app.documentID,
           feedId: feedId,
           authorId: memberId,
-          readAccess: readAccess,
+          accessibleByGroup: accessibleByGroup,
+          accessibleByMembers: accessibleByMembers,
           profileOverride: photoURL,
-          nameOverride: name);
+          nameOverride: name,
+          readAccess: [memberId],  // default readAccess to the owner. The function will expand this based on accessibleByGroup/Members
+          );
       if (create) {
-        await memberProfileRepository(appId: app.documentID!)!.add(memberProfileModel);
+        await memberProfileRepository(appId: app.documentID!)!
+            .add(memberProfileModel);
       }
     }
     return memberProfileModel;

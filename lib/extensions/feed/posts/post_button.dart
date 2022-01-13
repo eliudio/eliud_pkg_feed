@@ -1,4 +1,5 @@
 import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/style/frontend/has_container.dart';
@@ -25,10 +26,11 @@ class PostButton extends StatefulWidget {
   final AppModel app;
   final FeedModel feedModel;
   final PostType postType;
-  List<String> readAccess;
+  PostAccessibleByGroup postAccessibleByGroup;
+  List<String>? postAccessibleByMembers;
   MemberModel author;
 
-  PostButton(this.app, this.feedModel, this.postType, this.readAccess, this.author);
+  PostButton(this.app, this.feedModel, this.postType, this.postAccessibleByGroup, this.postAccessibleByMembers, this.author);
 
   PostButtonState createState() => PostButtonState();
 }
@@ -45,7 +47,7 @@ class PostButtonState extends State<PostButton> {
           package: "eliud_pkg_feed");
       if (uploadingProgress == null) {
         return MediaButtons.mediaButtons(context, widget.app,
-            widget.author.documentID!, widget.readAccess,
+            widget.author.documentID!, toMemberMediumAccessibleByGroup(widget.postAccessibleByGroup.index), accessibleByMembers: widget.postAccessibleByMembers,
             allowCrop: false,
             tooltip: 'Add photo', photoFeedbackFunction: (photo) {
           if (photo != null) {
@@ -68,7 +70,7 @@ class PostButtonState extends State<PostButton> {
           package: "eliud_pkg_feed");
       if (uploadingProgress == null) {
         return MediaButtons.mediaButtons(context, widget.app,
-            widget.author.documentID!, widget.readAccess,
+            widget.author.documentID!, toMemberMediumAccessibleByGroup(widget.postAccessibleByGroup.index), accessibleByMembers: widget.postAccessibleByMembers,
             allowCrop: false,
             tooltip: 'Add video', videoFeedbackFunction: (video) {
           if (video != null) {
@@ -101,10 +103,13 @@ class PostButtonState extends State<PostButton> {
             likes: 0,
             dislikes: 0,
             description: description,
-            readAccess: widget.readAccess,
+            accessibleByGroup: widget.postAccessibleByGroup,
+            accessibleByMembers: widget.postAccessibleByMembers,
             archived: PostArchiveStatus.Active,
             html: html,
-            memberMedia: postMemberMedia)));
+            memberMedia: postMemberMedia,
+            readAccess: widget.author.documentID != null ? [widget.author.documentID!] : null,  // default readAccess to the owner. The function will expand this based on accessibleByGroup/Members
+          )));
   }
 
   Widget _getIcon(Widget child) {

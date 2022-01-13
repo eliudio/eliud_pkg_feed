@@ -13,9 +13,7 @@ import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/bloc/post_pr
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/post_privilege_widget.dart';
 import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
 import 'package:eliud_pkg_medium/tools/media_buttons.dart';
-import 'package:eliud_pkg_feed/extensions/util/post_media_helper.dart';
 import 'package:eliud_pkg_feed/model/post_medium_model.dart';
-import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 import 'package:eliud_pkg_medium/platform/medium_platform.dart';
 import 'package:eliud_pkg_medium/tools/media_helper.dart';
 import 'package:flutter/material.dart';
@@ -92,7 +90,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
             }
 
             rows.add(BlocProvider<PostPrivilegeBloc>(
-                create: (context) => PostPrivilegeBloc(widget.app, widget.feedId, widget.memberId, _postPrivilegeChanged)..add(InitialisePostPrivilegeEvent(postPrivilege: state.postModelDetails.postPrivilege)),
+                create: (context) => PostPrivilegeBloc(widget.app, widget.feedId, widget.memberId, )..add(InitialisePostPrivilegeEvent(postAccessibleByGroup: state.postModelDetails.postAccessibleByGroup, postAccessibleByMembers: state.postModelDetails.postAccessibleByMembers)),
               child: PostPrivilegeWidget(widget.app, widget.feedId, widget.memberId, widget.currentMemberId, state.postModelDetails.memberMedia.length == 0)
 
               ),
@@ -106,11 +104,6 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
             return progressIndicator(app, context);
           }
         });
-  }
-
-  void _postPrivilegeChanged(PostPrivilege postPrivilege) {
-    BlocProvider.of<FeedPostFormBloc>(context).add(
-        ChangedFeedPostPrivilege(postPrivilege: postPrivilege));
   }
 
   Widget _row1(String pageId, AppModel app, FeedPostFormInitialized state) {
@@ -156,10 +149,9 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
 
   PopupMenuButton _mediaButtons(BuildContext context, AppModel app,
       FeedPostFormInitialized state, String memberId) {
-    List<String> readAccess = state.postModelDetails.postPrivilege.readAccess;
-
     return MediaButtons.mediaButtons(
-        context, app, memberId, readAccess,
+        context, app, memberId, toMemberMediumAccessibleByGroup(state.postModelDetails.postAccessibleByGroup.index),
+        accessibleByMembers: state.postModelDetails.postAccessibleByMembers,
         tooltip: 'Add video or photo',
         photoFeedbackFunction: (photo) {
           if (photo != null) {

@@ -1,23 +1,22 @@
+import 'package:eliud_pkg_feed/model/model_export.dart';
 import 'package:eliud_pkg_feed/model/post_medium_model.dart';
-import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 import 'package:equatable/equatable.dart';
 import 'package:collection/collection.dart';
 
 class FeedPostModelDetails extends Equatable {
   final String description;
-  // final List<MemberMediumModel> memberMedia;
   final List<PostMediumModel> memberMedia;
-  final PostPrivilege postPrivilege;
-  //final List<String> readAccess;
+  final PostAccessibleByGroup postAccessibleByGroup;
+  final List<String>? postAccessibleByMembers;
 
-  FeedPostModelDetails({required this.description, required this.memberMedia, required this.postPrivilege/*, required this.readAccess*/});
+  FeedPostModelDetails({required this.description, required this.memberMedia, required this.postAccessibleByGroup, this.postAccessibleByMembers});
 
-  FeedPostModelDetails copyWith({String? description, List<PostMediumModel>? memberMedia, PostPrivilege? postPrivilege/*, List<String>? readAccess*/}) {
-    return FeedPostModelDetails(description: description ?? this.description, memberMedia: memberMedia ?? this.memberMedia, postPrivilege: postPrivilege ?? this.postPrivilege/*, readAccess: readAccess ?? this.readAccess*/);
+  FeedPostModelDetails copyWith({String? description, List<PostMediumModel>? memberMedia, PostAccessibleByGroup? postAccessibleByGroup, List<String>? postAccessibleByMembers}) {
+    return FeedPostModelDetails(description: description ?? this.description, memberMedia: memberMedia ?? this.memberMedia, postAccessibleByGroup: postAccessibleByGroup ?? this.postAccessibleByGroup, postAccessibleByMembers: postAccessibleByMembers == null ? this.postAccessibleByMembers : postAccessibleByMembers.isNotEmpty ? postAccessibleByMembers : null);
   }
 
   @override
-  List<Object?> get props => [description, memberMedia, postPrivilege];
+  List<Object?> get props => [description, memberMedia, postAccessibleByGroup, postAccessibleByMembers, ];
 
   @override
   bool operator == (Object other) =>
@@ -26,5 +25,6 @@ class FeedPostModelDetails extends Equatable {
               runtimeType == other.runtimeType &&
               description == other.description &&
               ListEquality().equals(memberMedia, other.memberMedia) &&
-              postPrivilege == other.postPrivilege;
+              postAccessibleByGroup == other.postAccessibleByGroup &&
+              ListEquality().equals(postAccessibleByMembers, other.postAccessibleByMembers);
 }

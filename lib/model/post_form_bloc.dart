@@ -67,6 +67,7 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
                                  description: "",
                                  likes: 0,
                                  dislikes: 0,
+                                 accessibleByMembers: [],
                                  readAccess: [],
                                  archived: PostArchiveStatus.Active, 
                                  externalLink: "",
@@ -175,6 +176,12 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
           newValue = currentState.value!.copyWith(dislikes: 0);
           yield DislikesPostFormError(message: "Value should be a number", value: newValue);
         }
+        return;
+      }
+      if (event is ChangedPostAccessibleByGroup) {
+        newValue = currentState.value!.copyWith(accessibleByGroup: event.value);
+        yield SubmittablePostForm(value: newValue);
+
         return;
       }
       if (event is ChangedPostArchived) {

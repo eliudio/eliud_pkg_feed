@@ -1,17 +1,12 @@
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
-import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
 import 'package:eliud_core/core/blocs/access/state/logged_in.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 import 'package:eliud_core/core/navigate/router.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/style/frontend/has_dialog.dart';
-import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/action/action_model.dart';
 import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/tools/action/post_action_model.dart';
-import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:flutter/material.dart';
 
@@ -32,35 +27,16 @@ class PostActionHandler extends PackageActionHandler {
             options: ['Only Me', 'My followers', 'Public'],
             onSelection: (int choice) {
               switch (choice) {
-                case 0: addToMe(context, action, accessState); break;
-                case 1: addToFollowers(context, action.app, action, accessState); break;
-                case 2: addToPublic(context, action.app, action, accessState); break;
+                case 0: executePostIt(context, action, accessState, PostAccessibleByGroup.Me); break;
+                case 1: executePostIt(context, action, accessState, PostAccessibleByGroup.Followers); break;
+                case 2: executePostIt(context, action, accessState, PostAccessibleByGroup.Public); break;
               }
             });
       }
     }
   }
 
-  void addToMe(
-      BuildContext context, PostActionModel action, LoggedIn accessState) {
-    executePostIt(context, action,
-        PostFollowersHelper.asMe(accessState.member.documentID!), accessState);
-  }
-
-  Future<void> addToFollowers(BuildContext context, AppModel app, PostActionModel action,
-      LoggedIn accessState) async {
-    executePostIt(context, action,
-        await PostFollowersHelper.asFollowers(context, app, accessState), accessState);
-  }
-
-  Future<void> addToPublic(BuildContext context, AppModel app, PostActionModel action,
-      LoggedIn accessState) async {
-    executePostIt(context, action,
-        await PostFollowersHelper.asPublic(context, app, accessState), accessState);
-  }
-
-  Future<void> executePostIt(BuildContext context, PostActionModel action,
-      List<String> readAccess, LoggedIn accessState) async {
+  Future<void> executePostIt(BuildContext context, PostActionModel action, LoggedIn accessState, PostAccessibleByGroup postAccessibleByGroup) async {
     var pageContextInfo = eliudrouter.Router.getPageContextInfo(context);
     var postAppId = pageContextInfo.appId;
     var postPageId = pageContextInfo.pageId;
@@ -78,7 +54,8 @@ class PostActionHandler extends PackageActionHandler {
       archived: PostArchiveStatus.Active,
       pageParameters: parameters,
       description: "Post added by Add To Post button",
-      readAccess: readAccess,
+      accessibleByGroup: postAccessibleByGroup,
+      readAccess: accessState.member.documentID != null ? [accessState.member.documentID!] : null,  // default readAccess to the owner. The function will expand this based on accessibleByGroup/Members
     ));
   }
 }

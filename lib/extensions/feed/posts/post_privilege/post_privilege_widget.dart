@@ -6,7 +6,7 @@ import 'package:eliud_core/style/frontend/has_text.dart' as tx;
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/bloc/post_privilege_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/select_members.dart';
-import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
+import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -82,17 +82,18 @@ class _PostPrivilegeWidgetState extends State<PostPrivilegeWidget> {
   static double width(BuildContext context) => max(
       (MediaQuery.of(context).size.width * 0.9 - 2 * SPACE_INBETWEEN) / 2, 200);
 
-  Widget _editableAudience(PostPrivilege postPrivilege,
+  Widget _editableAudience(PostAccessibleByGroup postAccessibleByGroup,
       List<SelectedMember>? specificSelectedMembers) {
 
     var col1 = _getList(
-        _radioPrivilegeTile('Public', 0, postPrivilege.postPrivilegeType == PostPrivilegeType.Public),
-        _radioPrivilegeTile('Followers', 1, postPrivilege.postPrivilegeType == PostPrivilegeType.Followers),
-        _radioPrivilegeTile('Specific People', 2, postPrivilege.postPrivilegeType == PostPrivilegeType.SpecificPeople),
-        _radioPrivilegeTile('Just Me', 3, postPrivilege.postPrivilegeType == PostPrivilegeType.JustMe));
+        _radioPrivilegeTile('Public', 0, PostAccessibleByGroup.Public.index == PostAccessibleByGroup.Public),
+        _radioPrivilegeTile('Followers', 1, PostAccessibleByGroup.Followers.index == PostAccessibleByGroup.Followers),
+        _radioPrivilegeTile('Just Me', 2, PostAccessibleByGroup.Me.index == PostAccessibleByGroup.Me),
+      _radioPrivilegeTile('Specific People', PostAccessibleByGroup.SpecificMembers.index, postAccessibleByGroup == PostAccessibleByGroup.SpecificMembers),
+    );
 
     // specific followers
-    if (_postPrivilegeSelectedRadioTile == 2) {
+    if (_postPrivilegeSelectedRadioTile == PostAccessibleByGroup.SpecificMembers.index) {
       var col2 = Container(
           height: 300,
           width: width(context),
@@ -110,26 +111,28 @@ class _PostPrivilegeWidgetState extends State<PostPrivilegeWidget> {
     }
   }
 
-  Widget _displayAudience(PostPrivilege postPrivilege,
+  Widget _displayAudience(PostAccessibleByGroup postAccessibleByGroup,
       List<SelectedMember>? specificSelectedMembers) {
-    switch (postPrivilege.postPrivilegeType) {
-      case PostPrivilegeType.Public:
+    switch (postAccessibleByGroup) {
+      case PostAccessibleByGroup.Public:
         return Center(
             child: tx.text(widget.app, context, 'Accessible by public'));
-      case PostPrivilegeType.Followers:
+      case PostAccessibleByGroup.Followers:
         return Center(
             child: tx.text(widget.app, context, 'Accessible by your followers', maxLines: 5));
-      case PostPrivilegeType.SpecificPeople:
+      case PostAccessibleByGroup.SpecificMembers:
         var names;
         if (specificSelectedMembers != null) {
           names = specificSelectedMembers.map((e) => e.name).join(", ");
         }
         return Center(
             child: tx.text(widget.app, context, 'Accessible by ' + names));
-      case PostPrivilegeType.JustMe:
+      case PostAccessibleByGroup.Me:
         return Center(
             child: tx.text(widget.app, context, 'Accessible by you'));
     }
+    return Center(
+        child: tx.text(widget.app, context, 'Accessible not determined'));
   }
 
   Widget spacer() {
@@ -138,14 +141,12 @@ class _PostPrivilegeWidgetState extends State<PostPrivilegeWidget> {
 
   void _selectedMembersCallback(List<String> selectedMembers) {
     BlocProvider.of<PostPrivilegeBloc>(context).add(
-        ChangedPostPrivilege(value: 2, specificFollowers: selectedMembers));
+        ChangedPostPrivilege(postAccessibleByGroup: PostAccessibleByGroup.SpecificMembers, postAccessibleByMembers: selectedMembers));
   }
 
   void _setPostSelectedRadioTile(int? val) {
-    if (val != null) {
-      BlocProvider.of<PostPrivilegeBloc>(context)
-          .add(ChangedPostPrivilege(value: val));
-    }
+    BlocProvider.of<PostPrivilegeBloc>(context)
+          .add(ChangedPostPrivilege.get(val));
   }
 
   @override
@@ -153,13 +154,13 @@ class _PostPrivilegeWidgetState extends State<PostPrivilegeWidget> {
     return BlocBuilder<PostPrivilegeBloc, PostPrivilegeState>(
         builder: (context, state) {
       if (state is PostPrivilegeInitialized) {
-        _postPrivilegeSelectedRadioTile = state.postPrivilege.postPrivilegeType.index;
+        _postPrivilegeSelectedRadioTile = state.postAccessibleByGroup.index;
         if (widget.canEdit) {
           return _editableAudience(
-              state.postPrivilege, state.specificSelectedMembers);
+              state.postAccessibleByGroup, state.specificSelectedMembers);
         } else {
           return _displayAudience(
-              state.postPrivilege, state.specificSelectedMembers);
+              state.postAccessibleByGroup, state.specificSelectedMembers);
         }
       } else {
         return progressIndicator(widget.app, context);

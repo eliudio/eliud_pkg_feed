@@ -35,24 +35,27 @@ class PostEntity {
   final String? description;
   final int? likes;
   final int? dislikes;
+  final int? accessibleByGroup;
+  final List<String>? accessibleByMembers;
   final List<String>? readAccess;
   final int? archived;
   final String? externalLink;
   final List<PostMediumEntity>? memberMedia;
 
-  PostEntity({this.authorId, this.timestamp, this.appId, this.feedId, this.postAppId, this.postPageId, this.pageParameters, this.html, this.description, this.likes, this.dislikes, this.readAccess, this.archived, this.externalLink, this.memberMedia, });
+  PostEntity({this.authorId, this.timestamp, this.appId, this.feedId, this.postAppId, this.postPageId, this.pageParameters, this.html, this.description, this.likes, this.dislikes, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, this.archived, this.externalLink, this.memberMedia, });
 
   PostEntity copyWith({Object? timestamp, }) {
-    return PostEntity(authorId: authorId, timestamp : timestamp, appId: appId, feedId: feedId, postAppId: postAppId, postPageId: postPageId, pageParameters: pageParameters, html: html, description: description, likes: likes, dislikes: dislikes, readAccess: readAccess, archived: archived, externalLink: externalLink, memberMedia: memberMedia, );
+    return PostEntity(authorId: authorId, timestamp : timestamp, appId: appId, feedId: feedId, postAppId: postAppId, postPageId: postPageId, pageParameters: pageParameters, html: html, description: description, likes: likes, dislikes: dislikes, accessibleByGroup: accessibleByGroup, accessibleByMembers: accessibleByMembers, readAccess: readAccess, archived: archived, externalLink: externalLink, memberMedia: memberMedia, );
   }
-  List<Object?> get props => [authorId, timestamp, appId, feedId, postAppId, postPageId, pageParameters, html, description, likes, dislikes, readAccess, archived, externalLink, memberMedia, ];
+  List<Object?> get props => [authorId, timestamp, appId, feedId, postAppId, postPageId, pageParameters, html, description, likes, dislikes, accessibleByGroup, accessibleByMembers, readAccess, archived, externalLink, memberMedia, ];
 
   @override
   String toString() {
+    String accessibleByMembersCsv = (accessibleByMembers == null) ? '' : accessibleByMembers!.join(', ');
     String readAccessCsv = (readAccess == null) ? '' : readAccess!.join(', ');
     String memberMediaCsv = (memberMedia == null) ? '' : memberMedia!.join(', ');
 
-    return 'PostEntity{authorId: $authorId, timestamp: $timestamp, appId: $appId, feedId: $feedId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, html: $html, description: $description, likes: $likes, dislikes: $dislikes, readAccess: String[] { $readAccessCsv }, archived: $archived, externalLink: $externalLink, memberMedia: PostMedium[] { $memberMediaCsv }}';
+    return 'PostEntity{authorId: $authorId, timestamp: $timestamp, appId: $appId, feedId: $feedId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, html: $html, description: $description, likes: $likes, dislikes: $dislikes, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }, archived: $archived, externalLink: $externalLink, memberMedia: PostMedium[] { $memberMediaCsv }}';
   }
 
   static PostEntity? fromMap(Object? o) {
@@ -84,6 +87,8 @@ class PostEntity {
       description: map['description'], 
       likes: int.tryParse(map['likes'].toString()), 
       dislikes: int.tryParse(map['dislikes'].toString()), 
+      accessibleByGroup: map['accessibleByGroup'], 
+      accessibleByMembers: map['accessibleByMembers'] == null ? null : List.from(map['accessibleByMembers']), 
       readAccess: map['readAccess'] == null ? null : List.from(map['readAccess']), 
       archived: map['archived'], 
       externalLink: map['externalLink'], 
@@ -118,6 +123,10 @@ class PostEntity {
       else theDocument["likes"] = null;
     if (dislikes != null) theDocument["dislikes"] = dislikes;
       else theDocument["dislikes"] = null;
+    if (accessibleByGroup != null) theDocument["accessibleByGroup"] = accessibleByGroup;
+      else theDocument["accessibleByGroup"] = null;
+    if (accessibleByMembers != null) theDocument["accessibleByMembers"] = accessibleByMembers!.toList();
+      else theDocument["accessibleByMembers"] = null;
     if (readAccess != null) theDocument["readAccess"] = readAccess!.toList();
       else theDocument["readAccess"] = null;
     if (archived != null) theDocument["archived"] = archived;

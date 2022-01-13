@@ -1,4 +1,5 @@
 import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/style/frontend/has_container.dart';
 import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
@@ -43,7 +44,8 @@ class _ProfileState extends State<Profile> {
         if (state  is LoggedInProfileInitialized) {
           var ownerId = profile!.authorId!;
           if (state.canEditThisProfile()) {
-            var readAccess = state.watchingThisProfile()!.readAccess!;
+            var accessibleByGroup = state.watchingThisProfile()!.accessibleByGroup;
+            var accessibleByMembers = state.watchingThisProfile()!.accessibleByMembers;
             return EditableWidget(
                 child: child,
                 button: getEditIcon(
@@ -51,12 +53,12 @@ class _ProfileState extends State<Profile> {
                     AbstractTextPlatform.platform!.updateHtmlUsingMemberMedium(context,
                         widget.app,
                         ownerId,
-                        readAccess,
+                        toMemberMediumAccessibleByGroup(accessibleByGroup!.index),
                         "Profile",
                             (value) =>
                             BlocProvider.of<ProfileBloc>(context)
                                 .add(ProfileChangedProfileEvent(value)),
-                        html);
+                        html, accessibleByMembers: accessibleByMembers);
                   },
                 )
             );

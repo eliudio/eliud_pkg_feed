@@ -1,5 +1,4 @@
-
-import 'package:eliud_pkg_feed/tools/etc/post_followers_helper.dart';
+import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
@@ -12,27 +11,41 @@ abstract class PostPrivilegeEvent extends Equatable {
 }
 
 class InitialisePostPrivilegeEvent extends PostPrivilegeEvent {
-  final PostPrivilege postPrivilege;
+  final PostAccessibleByGroup postAccessibleByGroup;
+  final List<String>? postAccessibleByMembers;
 
-  InitialisePostPrivilegeEvent({required this.postPrivilege });
-
-  @override
-  List<Object?> get props => [ postPrivilege ];
+  InitialisePostPrivilegeEvent({required this.postAccessibleByGroup, this.postAccessibleByMembers });
 
   @override
-  String toString() => 'InitialisePostPrivilegeEvent{ value: $postPrivilege }';
+  List<Object?> get props => [ postAccessibleByGroup, postAccessibleByMembers ];
+
+  @override
+  String toString() => 'InitialisePostPrivilegeEvent{ postAccessibleByGroup: $postAccessibleByGroup, postAccessibleByMembers: $postAccessibleByMembers }';
 }
 
 class ChangedPostPrivilege extends PostPrivilegeEvent {
-  final int value;
-  final List<String>? specificFollowers;
+  final PostAccessibleByGroup postAccessibleByGroup;
+  final List<String>? postAccessibleByMembers;
 
-  ChangedPostPrivilege({required this.value, this.specificFollowers });
-
-  @override
-  List<Object?> get props => [ value, specificFollowers ];
+  ChangedPostPrivilege({required this.postAccessibleByGroup, this.postAccessibleByMembers });
 
   @override
-  String toString() => 'ChangedPostPrivilege{ value: $value }';
+  List<Object?> get props => [ postAccessibleByGroup, postAccessibleByMembers ];
+
+  @override
+  String toString() => 'ChangedPostPrivilege{ postAccessibleByGroup: $postAccessibleByGroup }';
+
+  static ChangedPostPrivilege get(int? index) {
+    if (index == PostAccessibleByGroup.Public.index) {
+      return ChangedPostPrivilege(postAccessibleByGroup: PostAccessibleByGroup.Public);
+    } else if (index == PostAccessibleByGroup.Followers.index) {
+      return ChangedPostPrivilege(postAccessibleByGroup: PostAccessibleByGroup.Followers);
+    } else if (index == PostAccessibleByGroup.SpecificMembers.index) {
+      return ChangedPostPrivilege(postAccessibleByGroup: PostAccessibleByGroup.SpecificMembers);
+    } else if (index == PostAccessibleByGroup.Me.index) {
+      return ChangedPostPrivilege(postAccessibleByGroup: PostAccessibleByGroup.Me);
+    }
+    return ChangedPostPrivilege(postAccessibleByGroup: PostAccessibleByGroup.Unknown);
+  }
 }
 

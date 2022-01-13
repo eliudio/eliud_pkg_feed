@@ -155,6 +155,30 @@ class ChangedMemberProfileNameOverride extends MemberProfileFormEvent {
   String toString() => 'ChangedMemberProfileNameOverride{ value: $value }';
 }
 
+class ChangedMemberProfileAccessibleByGroup extends MemberProfileFormEvent {
+  final MemberProfileAccessibleByGroup? value;
+
+  ChangedMemberProfileAccessibleByGroup({this.value});
+
+  @override
+  List<Object?> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedMemberProfileAccessibleByGroup{ value: $value }';
+}
+
+class ChangedMemberProfileAccessibleByMembers extends MemberProfileFormEvent {
+  final String? value;
+
+  ChangedMemberProfileAccessibleByMembers({this.value});
+
+  @override
+  List<Object?> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedMemberProfileAccessibleByMembers{ value: $value }';
+}
+
 class ChangedMemberProfileReadAccess extends MemberProfileFormEvent {
   final String? value;
 

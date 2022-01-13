@@ -60,6 +60,7 @@ class MemberProfileFormBloc extends Bloc<MemberProfileFormEvent, MemberProfileFo
                                  profile: "",
                                  profileOverride: "",
                                  nameOverride: "",
+                                 accessibleByMembers: [],
                                  readAccess: [],
 
         ));
@@ -122,6 +123,8 @@ class MemberProfileFormBloc extends Bloc<MemberProfileFormEvent, MemberProfileFo
                                  profileBackground: null,
                                  profileOverride: currentState.value!.profileOverride,
                                  nameOverride: currentState.value!.nameOverride,
+                                 accessibleByGroup: currentState.value!.accessibleByGroup,
+                                 accessibleByMembers: currentState.value!.accessibleByMembers,
                                  readAccess: currentState.value!.readAccess,
           );
         yield SubmittableMemberProfileForm(value: newValue);
@@ -136,6 +139,12 @@ class MemberProfileFormBloc extends Bloc<MemberProfileFormEvent, MemberProfileFo
       }
       if (event is ChangedMemberProfileNameOverride) {
         newValue = currentState.value!.copyWith(nameOverride: event.value);
+        yield SubmittableMemberProfileForm(value: newValue);
+
+        return;
+      }
+      if (event is ChangedMemberProfileAccessibleByGroup) {
+        newValue = currentState.value!.copyWith(accessibleByGroup: event.value);
         yield SubmittableMemberProfileForm(value: newValue);
 
         return;

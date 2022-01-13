@@ -207,6 +207,30 @@ class ChangedPostDislikes extends PostFormEvent {
   String toString() => 'ChangedPostDislikes{ value: $value }';
 }
 
+class ChangedPostAccessibleByGroup extends PostFormEvent {
+  final PostAccessibleByGroup? value;
+
+  ChangedPostAccessibleByGroup({this.value});
+
+  @override
+  List<Object?> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedPostAccessibleByGroup{ value: $value }';
+}
+
+class ChangedPostAccessibleByMembers extends PostFormEvent {
+  final String? value;
+
+  ChangedPostAccessibleByMembers({this.value});
+
+  @override
+  List<Object?> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedPostAccessibleByMembers{ value: $value }';
+}
+
 class ChangedPostReadAccess extends PostFormEvent {
   final String? value;
 

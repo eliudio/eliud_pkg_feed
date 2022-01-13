@@ -34,6 +34,20 @@ import 'package:eliud_pkg_feed/model/member_profile_entity.dart';
 
 import 'package:eliud_core/tools/random.dart';
 
+enum MemberProfileAccessibleByGroup {
+  Public, Followers, Me, SpecificMembers, Unknown
+}
+
+
+MemberProfileAccessibleByGroup toMemberProfileAccessibleByGroup(int? index) {
+  switch (index) {
+    case 0: return MemberProfileAccessibleByGroup.Public;
+    case 1: return MemberProfileAccessibleByGroup.Followers;
+    case 2: return MemberProfileAccessibleByGroup.Me;
+    case 3: return MemberProfileAccessibleByGroup.SpecificMembers;
+  }
+  return MemberProfileAccessibleByGroup.Unknown;
+}
 
 
 class MemberProfileModel {
@@ -47,18 +61,22 @@ class MemberProfileModel {
   MemberMediumModel? profileBackground;
   String? profileOverride;
   String? nameOverride;
+  MemberProfileAccessibleByGroup? accessibleByGroup;
+
+  // In case accessibleByGroup == SpecificMembers, then these are the members
+  List<String>? accessibleByMembers;
   List<String>? readAccess;
 
-  MemberProfileModel({this.documentID, this.appId, this.feedId, this.authorId, this.profile, this.profileBackground, this.profileOverride, this.nameOverride, this.readAccess, })  {
+  MemberProfileModel({this.documentID, this.appId, this.feedId, this.authorId, this.profile, this.profileBackground, this.profileOverride, this.nameOverride, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, })  {
     assert(documentID != null);
   }
 
-  MemberProfileModel copyWith({String? documentID, String? appId, String? feedId, String? authorId, String? profile, MemberMediumModel? profileBackground, String? profileOverride, String? nameOverride, List<String>? readAccess, }) {
-    return MemberProfileModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, feedId: feedId ?? this.feedId, authorId: authorId ?? this.authorId, profile: profile ?? this.profile, profileBackground: profileBackground ?? this.profileBackground, profileOverride: profileOverride ?? this.profileOverride, nameOverride: nameOverride ?? this.nameOverride, readAccess: readAccess ?? this.readAccess, );
+  MemberProfileModel copyWith({String? documentID, String? appId, String? feedId, String? authorId, String? profile, MemberMediumModel? profileBackground, String? profileOverride, String? nameOverride, MemberProfileAccessibleByGroup? accessibleByGroup, List<String>? accessibleByMembers, List<String>? readAccess, }) {
+    return MemberProfileModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, feedId: feedId ?? this.feedId, authorId: authorId ?? this.authorId, profile: profile ?? this.profile, profileBackground: profileBackground ?? this.profileBackground, profileOverride: profileOverride ?? this.profileOverride, nameOverride: nameOverride ?? this.nameOverride, accessibleByGroup: accessibleByGroup ?? this.accessibleByGroup, accessibleByMembers: accessibleByMembers ?? this.accessibleByMembers, readAccess: readAccess ?? this.readAccess, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ appId.hashCode ^ feedId.hashCode ^ authorId.hashCode ^ profile.hashCode ^ profileBackground.hashCode ^ profileOverride.hashCode ^ nameOverride.hashCode ^ readAccess.hashCode;
+  int get hashCode => documentID.hashCode ^ appId.hashCode ^ feedId.hashCode ^ authorId.hashCode ^ profile.hashCode ^ profileBackground.hashCode ^ profileOverride.hashCode ^ nameOverride.hashCode ^ accessibleByGroup.hashCode ^ accessibleByMembers.hashCode ^ readAccess.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -73,13 +91,16 @@ class MemberProfileModel {
           profileBackground == other.profileBackground &&
           profileOverride == other.profileOverride &&
           nameOverride == other.nameOverride &&
+          accessibleByGroup == other.accessibleByGroup &&
+          ListEquality().equals(accessibleByMembers, other.accessibleByMembers) &&
           ListEquality().equals(readAccess, other.readAccess);
 
   @override
   String toString() {
+    String accessibleByMembersCsv = (accessibleByMembers == null) ? '' : accessibleByMembers!.join(', ');
     String readAccessCsv = (readAccess == null) ? '' : readAccess!.join(', ');
 
-    return 'MemberProfileModel{documentID: $documentID, appId: $appId, feedId: $feedId, authorId: $authorId, profile: $profile, profileBackground: $profileBackground, profileOverride: $profileOverride, nameOverride: $nameOverride, readAccess: String[] { $readAccessCsv }}';
+    return 'MemberProfileModel{documentID: $documentID, appId: $appId, feedId: $feedId, authorId: $authorId, profile: $profile, profileBackground: $profileBackground, profileOverride: $profileOverride, nameOverride: $nameOverride, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }}';
   }
 
   MemberProfileEntity toEntity({String? appId}) {
@@ -91,6 +112,8 @@ class MemberProfileModel {
           profileBackgroundId: (profileBackground != null) ? profileBackground!.documentID : null, 
           profileOverride: (profileOverride != null) ? profileOverride : null, 
           nameOverride: (nameOverride != null) ? nameOverride : null, 
+          accessibleByGroup: (accessibleByGroup != null) ? accessibleByGroup!.index : null, 
+          accessibleByMembers: (accessibleByMembers != null) ? accessibleByMembers : null, 
           readAccess: (readAccess != null) ? readAccess : null, 
     );
   }
@@ -106,6 +129,8 @@ class MemberProfileModel {
           profile: entity.profile, 
           profileOverride: entity.profileOverride, 
           nameOverride: entity.nameOverride, 
+          accessibleByGroup: toMemberProfileAccessibleByGroup(entity.accessibleByGroup), 
+          accessibleByMembers: entity.accessibleByMembers, 
           readAccess: entity.readAccess, 
     );
   }
@@ -134,6 +159,8 @@ class MemberProfileModel {
           profileBackground: profileBackgroundHolder, 
           profileOverride: entity.profileOverride, 
           nameOverride: entity.nameOverride, 
+          accessibleByGroup: toMemberProfileAccessibleByGroup(entity.accessibleByGroup), 
+          accessibleByMembers: entity.accessibleByMembers, 
           readAccess: entity.readAccess, 
     );
   }

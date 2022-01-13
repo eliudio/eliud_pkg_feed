@@ -132,6 +132,7 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
   String? _profileBackground;
   final TextEditingController _profileOverrideController = TextEditingController();
   final TextEditingController _nameOverrideController = TextEditingController();
+  int? _accessibleByGroupSelectedRadioTile;
 
 
   _MyMemberProfileFormState(this.formAction);
@@ -147,6 +148,7 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
     _profileController.addListener(_onProfileChanged);
     _profileOverrideController.addListener(_onProfileOverrideChanged);
     _nameOverrideController.addListener(_onNameOverrideChanged);
+    _accessibleByGroupSelectedRadioTile = 0;
   }
 
   @override
@@ -190,6 +192,10 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
           _nameOverrideController.text = state.value!.nameOverride.toString();
         else
           _nameOverrideController.text = "";
+        if (state.value!.accessibleByGroup != null)
+          _accessibleByGroupSelectedRadioTile = state.value!.accessibleByGroup!.index;
+        else
+          _accessibleByGroupSelectedRadioTile = 0;
       }
       if (state is MemberProfileFormInitialized) {
         List<Widget> children = [];
@@ -212,6 +218,23 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
         children.add(
 
                   StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().textFormField(widget.app, context, labelText: 'Profile Override', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _profileOverrideController, keyboardType: TextInputType.text, validator: (_) => state is ProfileOverrideMemberProfileFormError ? state.message : null, hintText: null)
+          );
+
+        children.add(
+
+                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _accessibleByGroupSelectedRadioTile, 'Public', 'Public', !accessState.memberIsOwner(widget.app.documentID!) ? null : (dynamic val) => setSelectionAccessibleByGroup(val))
+          );
+        children.add(
+
+                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _accessibleByGroupSelectedRadioTile, 'Followers', 'Followers', !accessState.memberIsOwner(widget.app.documentID!) ? null : (dynamic val) => setSelectionAccessibleByGroup(val))
+          );
+        children.add(
+
+                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _accessibleByGroupSelectedRadioTile, 'Me', 'Me', !accessState.memberIsOwner(widget.app.documentID!) ? null : (dynamic val) => setSelectionAccessibleByGroup(val))
+          );
+        children.add(
+
+                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _accessibleByGroupSelectedRadioTile, 'SpecificMembers', 'SpecificMembers', !accessState.memberIsOwner(widget.app.documentID!) ? null : (dynamic val) => setSelectionAccessibleByGroup(val))
           );
 
 
@@ -289,6 +312,8 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
                               profileBackground: state.value!.profileBackground, 
                               profileOverride: state.value!.profileOverride, 
                               nameOverride: state.value!.nameOverride, 
+                              accessibleByGroup: state.value!.accessibleByGroup, 
+                              accessibleByMembers: state.value!.accessibleByMembers, 
                               readAccess: state.value!.readAccess, 
                         )));
                       } else {
@@ -302,6 +327,8 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
                               profileBackground: state.value!.profileBackground, 
                               profileOverride: state.value!.profileOverride, 
                               nameOverride: state.value!.nameOverride, 
+                              accessibleByGroup: state.value!.accessibleByGroup, 
+                              accessibleByMembers: state.value!.accessibleByMembers, 
                               readAccess: state.value!.readAccess, 
                           )));
                       }
@@ -369,6 +396,20 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
 
   void _onNameOverrideChanged() {
     _myFormBloc.add(ChangedMemberProfileNameOverride(value: _nameOverrideController.text));
+  }
+
+
+  void setSelectionAccessibleByGroup(int? val) {
+    setState(() {
+      _accessibleByGroupSelectedRadioTile = val;
+    });
+    _myFormBloc.add(ChangedMemberProfileAccessibleByGroup(value: toMemberProfileAccessibleByGroup(val)));
+  }
+
+
+  void _onAccessibleByMembersChanged(value) {
+    _myFormBloc.add(ChangedMemberProfileAccessibleByMembers(value: value));
+    setState(() {});
   }
 
 
