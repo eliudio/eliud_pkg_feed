@@ -8,10 +8,12 @@ import 'package:eliud_core/style/frontend/has_dialog_widget.dart';
 import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/style/frontend/has_text_form_field.dart';
+import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/bloc/member_service.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/bloc/post_privilege_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/bloc/post_privilege_event.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/post_privilege_widget.dart';
 import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
+import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:eliud_pkg_medium/tools/media_buttons.dart';
 import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:eliud_pkg_medium/platform/medium_platform.dart';
@@ -71,13 +73,8 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
     return BlocBuilder<FeedPostFormBloc, FeedPostFormState>(
         builder: (context, state) {
           if (state is FeedPostFormLoaded) {
-            if (state.postModelDetails.description != null) {
               _descriptionController.text =
                   state.postModelDetails.description.toString();
-            } else {
-              _descriptionController.text = "";
-            }
-
           }
           if (state is FeedPostFormInitialized) {
             List<Widget> rows = [];
@@ -90,7 +87,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
             }
 
             rows.add(BlocProvider<PostPrivilegeBloc>(
-                create: (context) => PostPrivilegeBloc(widget.app, widget.feedId, widget.memberId, )..add(InitialisePostPrivilegeEvent(postAccessibleByGroup: state.postModelDetails.postAccessibleByGroup, postAccessibleByMembers: state.postModelDetails.postAccessibleByMembers)),
+                create: (context) => PostPrivilegeBloc(widget.app, widget.feedId, widget.memberId, _postPrivilegeFeedback)..add(InitialisePostPrivilegeEvent(postAccessibleByGroup: state.postModelDetails.postAccessibleByGroup, postAccessibleByMembers: state.postModelDetails.postAccessibleByMembers)),
               child: PostPrivilegeWidget(widget.app, widget.feedId, widget.memberId, widget.currentMemberId, state.postModelDetails.memberMedia.length == 0)
 
               ),
@@ -106,19 +103,23 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         });
   }
 
+  void _postPrivilegeFeedback(PostAccessibleByGroup postAccessibleByGroup, List<SelectedMember>? specificSelectedMembers) {
+    BlocProvider.of<FeedPostFormBloc>(context).add(
+        ChangedFeedPostPrivilege(postAccessibleByGroup: postAccessibleByGroup, postAccessibleByMembers: specificSelectedMembers != null ? specificSelectedMembers.map((e) => e.memberId).toList() : null));
+  }
+
   Widget _row1(String pageId, AppModel app, FeedPostFormInitialized state) {
-    var avatar = AvatarHelper.avatar(
-      context,
-      60,
-      pageId,
-      widget.memberId,
-      widget.currentMemberId,
-      app,
-      widget.feedId,
-    );
     return Row(children: [
       Container(
-          height: 60, width: 60, child: avatar == null ? Container() : avatar),
+          height: 60, width: 60, child: AvatarHelper.avatar(
+        context,
+        60,
+        pageId,
+        widget.memberId,
+        widget.currentMemberId,
+        app,
+        widget.feedId,
+      )),
       Container(width: 8),
       Flexible(
         child: Container(

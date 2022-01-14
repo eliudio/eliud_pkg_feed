@@ -1,7 +1,7 @@
 import 'package:eliud_pkg_feed/model/post_model.dart';
 
 class AccessGroupHelper {
-  static String nameForPostAccessibleByGroup(PostAccessibleByGroup postAccessibleByGroup) {
+  static String nameForPostAccessibleByGroup(PostAccessibleByGroup? postAccessibleByGroup) {
     switch (postAccessibleByGroup) {
       case PostAccessibleByGroup.Public: return 'Public';
       case PostAccessibleByGroup.Followers: return 'Followers';

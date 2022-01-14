@@ -235,6 +235,19 @@ class _PostWidgetState extends State<PostWidget> {
     // allow to update / delete
     if ((widget.currentMemberId != null) &&
         (widget.currentMemberId == postModel.authorId)) {
+      children
+          .add(Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Container(
+          height: 4,
+        ),
+        Center(child: Icon(Icons.visibility)),
+        h5(
+            widget.app,
+            context,
+            AccessGroupHelper.nameForPostAccessibleByGroup(
+                postModel.accessibleByGroup)),
+      ]));
+      children.add(Spacer());
       children.add(Spacer());
       children.add(_optionsPost(context, postModel, widget.currentMemberId!));
     }
@@ -320,7 +333,10 @@ class _PostWidgetState extends State<PostWidget> {
                 }, postModel.html == null ? '' : postModel.html!,
                     accessibleByMembers: postModel.accessibleByMembers,
                     extraIcons: PagedPostsListState.getAlbumActionIcons(
-                        widget.app, context, AccessGroupHelper.nameForPostAccessibleByGroup(postModel.accessibleByGroup!)));
+                        widget.app,
+                        context,
+                        AccessGroupHelper.nameForPostAccessibleByGroup(
+                            postModel.accessibleByGroup!)));
                 break;
             }
           }

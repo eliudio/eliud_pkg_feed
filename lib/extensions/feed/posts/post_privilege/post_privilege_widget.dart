@@ -22,7 +22,7 @@ class PostPrivilegeWidget extends StatefulWidget {
   final bool canEdit;
 
   PostPrivilegeWidget(this.app, this.feedId, this.memberId,
-      this.currentMemberId, this.canEdit);
+      this.currentMemberId, this.canEdit, );
 
   _PostPrivilegeWidgetState createState() => _PostPrivilegeWidgetState();
 }
