@@ -138,10 +138,10 @@ class PostCache implements PostRepository {
 
   static Future<PostModel> refreshRelations(PostModel model) async {
 
-    List<PostMediumModel>? memberMediaHolder;
+    List<MemberMediumContainerModel>? memberMediaHolder;
     if (model.memberMedia != null) {
-      memberMediaHolder = List<PostMediumModel>.from(await Future.wait(await model.memberMedia!.map((element) async {
-        return await PostMediumCache.refreshRelations(element);
+      memberMediaHolder = List<MemberMediumContainerModel>.from(await Future.wait(await model.memberMedia!.map((element) async {
+        return await MemberMediumContainerCache.refreshRelations(element);
       }))).toList();
     }
 

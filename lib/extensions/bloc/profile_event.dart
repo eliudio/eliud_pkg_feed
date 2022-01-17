@@ -1,5 +1,6 @@
 import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
 import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core/model/member_medium_container_model.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,15 +24,16 @@ class InitialiseProfileEvent extends ProfileEvent {
 }
 
 class ProfileChangedProfileEvent extends ProfileEvent {
-  final String? value;
+  final String? html;
+  final List<MemberMediumContainerModel> memberMedia;
 
-  ProfileChangedProfileEvent(this.value);
-
-  @override
-  List<Object?> get props => [ value ];
+  ProfileChangedProfileEvent(this.html, this.memberMedia);
 
   @override
-  String toString() => 'ChangedProfileEventProfile{ value: $value }';
+  List<Object?> get props => [ html, memberMedia ];
+
+  @override
+  String toString() => 'ChangedProfileEventProfile{ value: $html, memberMedia: $memberMedia }';
 }
 
 class ProfilePhotoChangedProfileEvent extends ProfileEvent {

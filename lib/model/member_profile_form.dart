@@ -237,6 +237,14 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
                   StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _accessibleByGroupSelectedRadioTile, 'SpecificMembers', 'SpecificMembers', !accessState.memberIsOwner(widget.app.documentID!) ? null : (dynamic val) => setSelectionAccessibleByGroup(val))
           );
 
+        children.add(
+
+                new Container(
+                    height: (fullScreenHeight(context) / 2.5), 
+                    child: memberMediumContainersList(widget.app, context, state.value!.memberMedia, _onMemberMediaChanged)
+                )
+          );
+
 
         children.add(Container(height: 20.0));
         children.add(StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().divider(widget.app, context));
@@ -315,6 +323,7 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
                               accessibleByGroup: state.value!.accessibleByGroup, 
                               accessibleByMembers: state.value!.accessibleByMembers, 
                               readAccess: state.value!.readAccess, 
+                              memberMedia: state.value!.memberMedia, 
                         )));
                       } else {
                         BlocProvider.of<MemberProfileListBloc>(context).add(
@@ -330,6 +339,7 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
                               accessibleByGroup: state.value!.accessibleByGroup, 
                               accessibleByMembers: state.value!.accessibleByMembers, 
                               readAccess: state.value!.readAccess, 
+                              memberMedia: state.value!.memberMedia, 
                           )));
                       }
                       if (widget.submitAction != null) {
@@ -415,6 +425,12 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
 
   void _onReadAccessChanged(value) {
     _myFormBloc.add(ChangedMemberProfileReadAccess(value: value));
+    setState(() {});
+  }
+
+
+  void _onMemberMediaChanged(value) {
+    _myFormBloc.add(ChangedMemberProfileMemberMedia(value: value));
     setState(() {});
   }
 

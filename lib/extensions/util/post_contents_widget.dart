@@ -1,5 +1,6 @@
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core/model/member_medium_container_model.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/tools/storage/member_image_model_widget.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_type_helper.dart';
@@ -8,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
-import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_media_helper.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:eliud_pkg_medium/platform/medium_platform.dart';
@@ -93,7 +93,7 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
         }
         break;
       case PostType.Album:
-        List<PostMediumModel> memberMedia = postModel.memberMedia!;
+        List<MemberMediumContainerModel> memberMedia = postModel.memberMedia!;
         List<Widget> widgets = [];
         // Photos & videos
         //widgets.add(PostMediaHelper.videoAndPhotoDivider(context));
@@ -115,7 +115,7 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
     return Container(height: 1); // nothing
   }
 
-  void _action(List<PostMediumModel> memberMedia, int index) {
+  void _action(List<MemberMediumContainerModel> memberMedia, int index) {
     var postMedium = memberMedia[index];
     if (postMedium.memberMedium!.mediumType! == MediumType.Photo) {
       showPhotosFromPostMedia(context, memberMedia, index);
@@ -126,7 +126,7 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
   }
 
   void showPhotosFromPostMedia(
-      BuildContext context, List<PostMediumModel> postMedia, int initialPage) {
+      BuildContext context, List<MemberMediumContainerModel> postMedia, int initialPage) {
     if (postMedia.length > 0) {
       var photos = postMedia.map((pm) => pm.memberMedium!).toList();
       AbstractMediumPlatform.platform!.showPhotos(context, widget.app, photos, initialPage);

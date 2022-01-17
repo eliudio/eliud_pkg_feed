@@ -1,5 +1,6 @@
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core/model/member_medium_container_model.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/style/frontend/has_button.dart';
 import 'package:eliud_core/style/frontend/has_container.dart';
@@ -8,6 +9,7 @@ import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/style/frontend/has_text_form_field.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/firestore/firestore_tools.dart';
+import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_core/tools/storage/medium_base.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliud_router;
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_bloc.dart';
@@ -21,7 +23,6 @@ import 'package:eliud_pkg_feed/extensions/util/post_contents_widget.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_type_helper.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
 import 'package:eliud_pkg_feed/model/post_like_model.dart';
-import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:eliud_pkg_text/platform/text_platform.dart';
 import 'package:flutter/material.dart';
@@ -310,7 +311,7 @@ class _PostWidgetState extends State<PostWidget> {
                             ? ''
                             : postModel.description!,
                         postModel.memberMedia == null
-                            ? <PostMediumModel>[]
+                            ? <MemberMediumContainerModel>[]
                             : postModel.memberMedia!,
                         postModel.accessibleByGroup ??
                             PostAccessibleByGroup.Public,
@@ -320,23 +321,34 @@ class _PostWidgetState extends State<PostWidget> {
                                 : postModel.accessibleByMembers!));
                 break;
               case PostType.Html:
-                AbstractTextPlatform.platform!.updateHtmlUsingMemberMedium(
-                    context,
-                    widget.app,
-                    postModel.authorId!,
-                    toMemberMediumAccessibleByGroup(
-                        postModel.accessibleByGroup!.index),
-                    "Article", (newArticle) {
-                  BlocProvider.of<PostListPagedBloc>(context).add(
-                      UpdatePostPaged(
-                          value: postModel.copyWith(html: newArticle)));
-                }, postModel.html == null ? '' : postModel.html!,
-                    accessibleByMembers: postModel.accessibleByMembers,
-                    extraIcons: PagedPostsListState.getAlbumActionIcons(
-                        widget.app,
+                List<MemberMediumContainerModel> postMediumModels =
+                    postModel.memberMedia ?? [];
+                AbstractTextPlatform.platform!
+                    .updateHtmlWithMemberMediumCallback(
                         context,
-                        AccessGroupHelper.nameForPostAccessibleByGroup(
-                            postModel.accessibleByGroup!)));
+                        widget.app,
+                        postModel.authorId!,
+                        (value) {
+                          postMediumModels.add(MemberMediumContainerModel(
+                              documentID: newRandomKey(), memberMedium: value));
+                        },
+                        toMemberMediumAccessibleByGroup(
+                            postModel.accessibleByGroup!.index),
+                        (newArticle) {
+                          BlocProvider.of<PostListPagedBloc>(context).add(
+                              UpdatePostPaged(
+                                  value: postModel.copyWith(
+                                      html: newArticle,
+                                      memberMedia: postMediumModels)));
+                        },
+                        "Article",
+                        postModel.html == null ? '' : postModel.html!,
+                        accessibleByMembers: postModel.accessibleByMembers,
+                        extraIcons: PagedPostsListState.getAlbumActionIcons(
+                            widget.app,
+                            context,
+                            AccessGroupHelper.nameForPostAccessibleByGroup(
+                                postModel.accessibleByGroup!)));
                 break;
             }
           }

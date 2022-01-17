@@ -268,7 +268,7 @@ class ChangedPostExternalLink extends PostFormEvent {
 }
 
 class ChangedPostMemberMedia extends PostFormEvent {
-  final List<PostMediumModel>? value;
+  final List<MemberMediumContainerModel>? value;
 
   ChangedPostMemberMedia({this.value});
 

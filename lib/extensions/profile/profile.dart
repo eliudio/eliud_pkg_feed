@@ -1,9 +1,11 @@
 import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core/model/member_medium_container_model.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/style/frontend/has_container.dart';
 import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/style/style_registry.dart';
+import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_event.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_state.dart';
@@ -44,20 +46,26 @@ class _ProfileState extends State<Profile> {
         if (state  is LoggedInProfileInitialized) {
           var ownerId = profile!.authorId!;
           if (state.canEditThisProfile()) {
-            var accessibleByGroup = state.watchingThisProfile()!.accessibleByGroup;
-            var accessibleByMembers = state.watchingThisProfile()!.accessibleByMembers;
+            var memberProfile = state.watchingThisProfile()!;
+            var accessibleByGroup = memberProfile.accessibleByGroup;
+            var accessibleByMembers = memberProfile.accessibleByMembers;
             return EditableWidget(
                 child: child,
                 button: getEditIcon(
                   onPressed: () {
-                    AbstractTextPlatform.platform!.updateHtmlUsingMemberMedium(context,
+                    List<MemberMediumContainerModel> memberMedia =
+                        memberProfile.memberMedia ?? [];
+                    AbstractTextPlatform.platform!.updateHtmlWithMemberMediumCallback(context,
                         widget.app,
                         ownerId,
+                            (value) {
+                              memberMedia.add(MemberMediumContainerModel(documentID: newRandomKey(), memberMedium: value));
+                        },
                         toMemberMediumAccessibleByGroup(accessibleByGroup!.index),
-                        "Profile",
                             (value) =>
                             BlocProvider.of<ProfileBloc>(context)
-                                .add(ProfileChangedProfileEvent(value)),
+                                .add(ProfileChangedProfileEvent(value, memberMedia)),
+                        "Profile",
                         html, accessibleByMembers: accessibleByMembers);
                   },
                 )

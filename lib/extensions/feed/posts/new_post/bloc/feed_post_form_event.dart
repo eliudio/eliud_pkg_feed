@@ -1,3 +1,4 @@
+import 'package:eliud_core/model/member_medium_container_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:eliud_pkg_feed/model/model_export.dart';
@@ -15,7 +16,7 @@ class InitialiseNewFeedPostFormEvent extends FeedPostFormEvent {
 
 class InitialiseUpdateFeedPostFormEvent extends FeedPostFormEvent {
   final String description;
-  final List<PostMediumModel> memberMedia;
+  final List<MemberMediumContainerModel> memberMedia;
   final PostAccessibleByGroup postAccessibleByGroup;
   final List<String>? postAccessibleByMembers;
 
@@ -51,7 +52,7 @@ class ChangedFeedPostPrivilege extends FeedPostFormEvent {
 }
 
 class ChangedMedia extends FeedPostFormEvent {
-  final List<PostMediumModel> memberMedia;
+  final List<MemberMediumContainerModel> memberMedia;
 
   ChangedMedia({required this.memberMedia});
 

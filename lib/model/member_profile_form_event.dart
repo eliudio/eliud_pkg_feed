@@ -191,3 +191,15 @@ class ChangedMemberProfileReadAccess extends MemberProfileFormEvent {
   String toString() => 'ChangedMemberProfileReadAccess{ value: $value }';
 }
 
+class ChangedMemberProfileMemberMedia extends MemberProfileFormEvent {
+  final List<MemberMediumContainerModel>? value;
+
+  ChangedMemberProfileMemberMedia({this.value});
+
+  @override
+  List<Object?> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedMemberProfileMemberMedia{ value: $value }';
+}
+

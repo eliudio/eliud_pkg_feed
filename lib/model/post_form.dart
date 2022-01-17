@@ -355,7 +355,7 @@ class _MyPostFormState extends State<MyPostForm> {
 
                 new Container(
                     height: (fullScreenHeight(context) / 2.5), 
-                    child: postMediumsList(widget.app, context, state.value!.memberMedia, _onMemberMediaChanged)
+                    child: memberMediumContainersList(widget.app, context, state.value!.memberMedia, _onMemberMediaChanged)
                 )
           );
 

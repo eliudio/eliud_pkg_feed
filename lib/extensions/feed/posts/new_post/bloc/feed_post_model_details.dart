@@ -1,17 +1,17 @@
+import 'package:eliud_core/model/member_medium_container_model.dart';
 import 'package:eliud_pkg_feed/model/model_export.dart';
-import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:collection/collection.dart';
 
 class FeedPostModelDetails extends Equatable {
   final String description;
-  final List<PostMediumModel> memberMedia;
+  final List<MemberMediumContainerModel> memberMedia;
   final PostAccessibleByGroup postAccessibleByGroup;
   final List<String>? postAccessibleByMembers;
 
   FeedPostModelDetails({required this.description, required this.memberMedia, required this.postAccessibleByGroup, this.postAccessibleByMembers});
 
-  FeedPostModelDetails copyWith({String? description, List<PostMediumModel>? memberMedia, PostAccessibleByGroup? postAccessibleByGroup, List<String>? postAccessibleByMembers}) {
+  FeedPostModelDetails copyWith({String? description, List<MemberMediumContainerModel>? memberMedia, PostAccessibleByGroup? postAccessibleByGroup, List<String>? postAccessibleByMembers}) {
     return FeedPostModelDetails(description: description ?? this.description, memberMedia: memberMedia ?? this.memberMedia, postAccessibleByGroup: postAccessibleByGroup ?? this.postAccessibleByGroup, postAccessibleByMembers: postAccessibleByMembers == null ? this.postAccessibleByMembers : postAccessibleByMembers.isNotEmpty ? postAccessibleByMembers : null);
   }
 

@@ -33,23 +33,34 @@ class MemberProfileEntity {
   final int? accessibleByGroup;
   final List<String>? accessibleByMembers;
   final List<String>? readAccess;
+  final List<MemberMediumContainerEntity>? memberMedia;
 
-  MemberProfileEntity({this.appId, this.feedId, this.authorId, this.profile, this.profileBackgroundId, this.profileOverride, this.nameOverride, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, });
+  MemberProfileEntity({this.appId, this.feedId, this.authorId, this.profile, this.profileBackgroundId, this.profileOverride, this.nameOverride, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, this.memberMedia, });
 
 
-  List<Object?> get props => [appId, feedId, authorId, profile, profileBackgroundId, profileOverride, nameOverride, accessibleByGroup, accessibleByMembers, readAccess, ];
+  List<Object?> get props => [appId, feedId, authorId, profile, profileBackgroundId, profileOverride, nameOverride, accessibleByGroup, accessibleByMembers, readAccess, memberMedia, ];
 
   @override
   String toString() {
     String accessibleByMembersCsv = (accessibleByMembers == null) ? '' : accessibleByMembers!.join(', ');
     String readAccessCsv = (readAccess == null) ? '' : readAccess!.join(', ');
+    String memberMediaCsv = (memberMedia == null) ? '' : memberMedia!.join(', ');
 
-    return 'MemberProfileEntity{appId: $appId, feedId: $feedId, authorId: $authorId, profile: $profile, profileBackgroundId: $profileBackgroundId, profileOverride: $profileOverride, nameOverride: $nameOverride, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }}';
+    return 'MemberProfileEntity{appId: $appId, feedId: $feedId, authorId: $authorId, profile: $profile, profileBackgroundId: $profileBackgroundId, profileOverride: $profileOverride, nameOverride: $nameOverride, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }, memberMedia: MemberMediumContainer[] { $memberMediaCsv }}';
   }
 
   static MemberProfileEntity? fromMap(Object? o) {
     if (o == null) return null;
     var map = o as Map<String, dynamic>;
+
+    var memberMediaFromMap;
+    memberMediaFromMap = map['memberMedia'];
+    var memberMediaList;
+    if (memberMediaFromMap != null)
+      memberMediaList = (map['memberMedia'] as List<dynamic>)
+        .map((dynamic item) =>
+        MemberMediumContainerEntity.fromMap(item as Map)!)
+        .toList();
 
     return MemberProfileEntity(
       appId: map['appId'], 
@@ -62,10 +73,15 @@ class MemberProfileEntity {
       accessibleByGroup: map['accessibleByGroup'], 
       accessibleByMembers: map['accessibleByMembers'] == null ? null : List.from(map['accessibleByMembers']), 
       readAccess: map['readAccess'] == null ? null : List.from(map['readAccess']), 
+      memberMedia: memberMediaList, 
     );
   }
 
   Map<String, Object?> toDocument() {
+    final List<Map<String?, dynamic>>? memberMediaListMap = memberMedia != null 
+        ? memberMedia!.map((item) => item.toDocument()).toList()
+        : null;
+
     Map<String, Object?> theDocument = HashMap();
     if (appId != null) theDocument["appId"] = appId;
       else theDocument["appId"] = null;
@@ -87,6 +103,8 @@ class MemberProfileEntity {
       else theDocument["accessibleByMembers"] = null;
     if (readAccess != null) theDocument["readAccess"] = readAccess!.toList();
       else theDocument["readAccess"] = null;
+    if (memberMedia != null) theDocument["memberMedia"] = memberMediaListMap;
+      else theDocument["memberMedia"] = null;
     return theDocument;
   }
 

@@ -3,6 +3,7 @@ import 'package:eliud_core/core/blocs/access/state/access_state.dart';
 import 'package:eliud_core/core/blocs/access/state/logged_in.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliud_router;
 import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core/model/member_medium_container_model.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/style/frontend/has_dialog_widget.dart';
 import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
@@ -15,7 +16,6 @@ import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/post_privile
 import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:eliud_pkg_medium/tools/media_buttons.dart';
-import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:eliud_pkg_medium/platform/medium_platform.dart';
 import 'package:eliud_pkg_medium/tools/media_helper.dart';
 import 'package:flutter/material.dart';
@@ -157,7 +157,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         photoFeedbackFunction: (photo) {
           if (photo != null) {
             var memberMedia = state.postModelDetails.memberMedia;
-            memberMedia.add(PostMediumModel(
+            memberMedia.add(MemberMediumContainerModel(
                 documentID: photo.documentID, memberMedium: photo));
             BlocProvider.of<FeedPostFormBloc>(context)
                 .add(ChangedMedia(memberMedia: memberMedia));
@@ -167,7 +167,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
         videoFeedbackFunction: (video) {
           if (video != null) {
             var memberMedia = state.postModelDetails.memberMedia;
-            memberMedia.add(PostMediumModel(
+            memberMedia.add(MemberMediumContainerModel(
                 documentID: video.documentID, memberMedium: video));
             BlocProvider.of<FeedPostFormBloc>(context)
                 .add(ChangedMedia(memberMedia: memberMedia));

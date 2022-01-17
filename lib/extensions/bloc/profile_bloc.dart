@@ -47,7 +47,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       if (state is LoggedInWatchingMyProfile) {
         var myState = state as LoggedInWatchingMyProfile;
         yield await _updated(myState,
-            myState.currentMemberProfileModel.copyWith(profile: event.value));
+            myState.currentMemberProfileModel.copyWith(profile: event.html, memberMedia: event.memberMedia));
       }
     } else if (event is ProfilePhotoChangedProfileEvent) {
       if (state is LoggedInWatchingMyProfile) {

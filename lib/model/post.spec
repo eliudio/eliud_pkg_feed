@@ -140,7 +140,7 @@
     },
     {
       "fieldName": "memberMedia",
-      "fieldType": "PostMedium",
+      "fieldType": "MemberMediumContainer",
       "displayName": "Media",
       "group": "media",
       "arrayType": "Array"

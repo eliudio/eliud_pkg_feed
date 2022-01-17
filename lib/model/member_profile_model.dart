@@ -66,17 +66,18 @@ class MemberProfileModel {
   // In case accessibleByGroup == SpecificMembers, then these are the members
   List<String>? accessibleByMembers;
   List<String>? readAccess;
+  List<MemberMediumContainerModel>? memberMedia;
 
-  MemberProfileModel({this.documentID, this.appId, this.feedId, this.authorId, this.profile, this.profileBackground, this.profileOverride, this.nameOverride, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, })  {
+  MemberProfileModel({this.documentID, this.appId, this.feedId, this.authorId, this.profile, this.profileBackground, this.profileOverride, this.nameOverride, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, this.memberMedia, })  {
     assert(documentID != null);
   }
 
-  MemberProfileModel copyWith({String? documentID, String? appId, String? feedId, String? authorId, String? profile, MemberMediumModel? profileBackground, String? profileOverride, String? nameOverride, MemberProfileAccessibleByGroup? accessibleByGroup, List<String>? accessibleByMembers, List<String>? readAccess, }) {
-    return MemberProfileModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, feedId: feedId ?? this.feedId, authorId: authorId ?? this.authorId, profile: profile ?? this.profile, profileBackground: profileBackground ?? this.profileBackground, profileOverride: profileOverride ?? this.profileOverride, nameOverride: nameOverride ?? this.nameOverride, accessibleByGroup: accessibleByGroup ?? this.accessibleByGroup, accessibleByMembers: accessibleByMembers ?? this.accessibleByMembers, readAccess: readAccess ?? this.readAccess, );
+  MemberProfileModel copyWith({String? documentID, String? appId, String? feedId, String? authorId, String? profile, MemberMediumModel? profileBackground, String? profileOverride, String? nameOverride, MemberProfileAccessibleByGroup? accessibleByGroup, List<String>? accessibleByMembers, List<String>? readAccess, List<MemberMediumContainerModel>? memberMedia, }) {
+    return MemberProfileModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, feedId: feedId ?? this.feedId, authorId: authorId ?? this.authorId, profile: profile ?? this.profile, profileBackground: profileBackground ?? this.profileBackground, profileOverride: profileOverride ?? this.profileOverride, nameOverride: nameOverride ?? this.nameOverride, accessibleByGroup: accessibleByGroup ?? this.accessibleByGroup, accessibleByMembers: accessibleByMembers ?? this.accessibleByMembers, readAccess: readAccess ?? this.readAccess, memberMedia: memberMedia ?? this.memberMedia, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ appId.hashCode ^ feedId.hashCode ^ authorId.hashCode ^ profile.hashCode ^ profileBackground.hashCode ^ profileOverride.hashCode ^ nameOverride.hashCode ^ accessibleByGroup.hashCode ^ accessibleByMembers.hashCode ^ readAccess.hashCode;
+  int get hashCode => documentID.hashCode ^ appId.hashCode ^ feedId.hashCode ^ authorId.hashCode ^ profile.hashCode ^ profileBackground.hashCode ^ profileOverride.hashCode ^ nameOverride.hashCode ^ accessibleByGroup.hashCode ^ accessibleByMembers.hashCode ^ readAccess.hashCode ^ memberMedia.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -93,14 +94,16 @@ class MemberProfileModel {
           nameOverride == other.nameOverride &&
           accessibleByGroup == other.accessibleByGroup &&
           ListEquality().equals(accessibleByMembers, other.accessibleByMembers) &&
-          ListEquality().equals(readAccess, other.readAccess);
+          ListEquality().equals(readAccess, other.readAccess) &&
+          ListEquality().equals(memberMedia, other.memberMedia);
 
   @override
   String toString() {
     String accessibleByMembersCsv = (accessibleByMembers == null) ? '' : accessibleByMembers!.join(', ');
     String readAccessCsv = (readAccess == null) ? '' : readAccess!.join(', ');
+    String memberMediaCsv = (memberMedia == null) ? '' : memberMedia!.join(', ');
 
-    return 'MemberProfileModel{documentID: $documentID, appId: $appId, feedId: $feedId, authorId: $authorId, profile: $profile, profileBackground: $profileBackground, profileOverride: $profileOverride, nameOverride: $nameOverride, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }}';
+    return 'MemberProfileModel{documentID: $documentID, appId: $appId, feedId: $feedId, authorId: $authorId, profile: $profile, profileBackground: $profileBackground, profileOverride: $profileOverride, nameOverride: $nameOverride, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }, memberMedia: MemberMediumContainer[] { $memberMediaCsv }}';
   }
 
   MemberProfileEntity toEntity({String? appId}) {
@@ -115,6 +118,9 @@ class MemberProfileModel {
           accessibleByGroup: (accessibleByGroup != null) ? accessibleByGroup!.index : null, 
           accessibleByMembers: (accessibleByMembers != null) ? accessibleByMembers : null, 
           readAccess: (readAccess != null) ? readAccess : null, 
+          memberMedia: (memberMedia != null) ? memberMedia
+            !.map((item) => item.toEntity(appId: appId))
+            .toList() : null, 
     );
   }
 
@@ -132,6 +138,13 @@ class MemberProfileModel {
           accessibleByGroup: toMemberProfileAccessibleByGroup(entity.accessibleByGroup), 
           accessibleByMembers: entity.accessibleByMembers, 
           readAccess: entity.readAccess, 
+          memberMedia: 
+            entity.memberMedia == null ? null : List<MemberMediumContainerModel>.from(await Future.wait(entity. memberMedia
+            !.map((item) {
+            counter++;
+              return MemberMediumContainerModel.fromEntity(counter.toString(), item);
+            })
+            .toList())), 
     );
   }
 
@@ -162,6 +175,12 @@ class MemberProfileModel {
           accessibleByGroup: toMemberProfileAccessibleByGroup(entity.accessibleByGroup), 
           accessibleByMembers: entity.accessibleByMembers, 
           readAccess: entity.readAccess, 
+          memberMedia: 
+            entity. memberMedia == null ? null : List<MemberMediumContainerModel>.from(await Future.wait(entity. memberMedia
+            !.map((item) {
+            counter++;
+            return MemberMediumContainerModel.fromEntityPlus(counter.toString(), item, appId: appId);})
+            .toList())), 
     );
   }
 

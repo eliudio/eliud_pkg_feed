@@ -239,6 +239,22 @@ class ReadAccessMemberProfileFormError extends MemberProfileFormError {
 }
 
 
+class MemberMediaMemberProfileFormError extends MemberProfileFormError { 
+  const MemberMediaMemberProfileFormError({ String? message, MemberProfileModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''MemberMediaMemberProfileFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
 class MemberProfileFormLoaded extends MemberProfileFormInitialized { 
   const MemberProfileFormLoaded({ MemberProfileModel? value }): super(value: value);
 

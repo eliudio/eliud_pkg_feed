@@ -20,5 +20,4 @@ export '../model/member_profile_entity.dart';
 export '../model/post_entity.dart';
 export '../model/post_comment_entity.dart';
 export '../model/post_like_entity.dart';
-export '../model/post_medium_entity.dart';
 export '../model/profile_entity.dart';

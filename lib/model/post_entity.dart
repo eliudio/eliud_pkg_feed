@@ -40,7 +40,7 @@ class PostEntity {
   final List<String>? readAccess;
   final int? archived;
   final String? externalLink;
-  final List<PostMediumEntity>? memberMedia;
+  final List<MemberMediumContainerEntity>? memberMedia;
 
   PostEntity({this.authorId, this.timestamp, this.appId, this.feedId, this.postAppId, this.postPageId, this.pageParameters, this.html, this.description, this.likes, this.dislikes, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, this.archived, this.externalLink, this.memberMedia, });
 
@@ -55,7 +55,7 @@ class PostEntity {
     String readAccessCsv = (readAccess == null) ? '' : readAccess!.join(', ');
     String memberMediaCsv = (memberMedia == null) ? '' : memberMedia!.join(', ');
 
-    return 'PostEntity{authorId: $authorId, timestamp: $timestamp, appId: $appId, feedId: $feedId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, html: $html, description: $description, likes: $likes, dislikes: $dislikes, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }, archived: $archived, externalLink: $externalLink, memberMedia: PostMedium[] { $memberMediaCsv }}';
+    return 'PostEntity{authorId: $authorId, timestamp: $timestamp, appId: $appId, feedId: $feedId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, html: $html, description: $description, likes: $likes, dislikes: $dislikes, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }, archived: $archived, externalLink: $externalLink, memberMedia: MemberMediumContainer[] { $memberMediaCsv }}';
   }
 
   static PostEntity? fromMap(Object? o) {
@@ -72,7 +72,7 @@ class PostEntity {
     if (memberMediaFromMap != null)
       memberMediaList = (map['memberMedia'] as List<dynamic>)
         .map((dynamic item) =>
-        PostMediumEntity.fromMap(item as Map)!)
+        MemberMediumContainerEntity.fromMap(item as Map)!)
         .toList();
 
     return PostEntity(

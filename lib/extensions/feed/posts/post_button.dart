@@ -1,4 +1,5 @@
 import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core/model/member_medium_container_model.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
@@ -10,7 +11,6 @@ import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_blo
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_event.dart';
 import 'package:eliud_pkg_medium/tools/media_buttons.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
-import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -52,7 +52,7 @@ class PostButtonState extends State<PostButton> {
             tooltip: 'Add photo', photoFeedbackFunction: (photo) {
           if (photo != null) {
             _addPost(postMemberMedia: [
-              PostMediumModel(documentID: newRandomKey(), memberMedium: photo)
+              MemberMediumContainerModel(documentID: newRandomKey(), memberMedium: photo)
             ]);
           }
           uploadingProgress = null;
@@ -75,7 +75,7 @@ class PostButtonState extends State<PostButton> {
             tooltip: 'Add video', videoFeedbackFunction: (video) {
           if (video != null) {
             _addPost(postMemberMedia: [
-              PostMediumModel(documentID: newRandomKey(), memberMedium: video)
+              MemberMediumContainerModel(documentID: newRandomKey(), memberMedium: video)
             ]);
           }
           uploadingProgress = null;
@@ -93,7 +93,7 @@ class PostButtonState extends State<PostButton> {
   void _addPost(
       {String? html,
       String? description,
-      List<PostMediumModel>? postMemberMedia}) {
+      List<MemberMediumContainerModel>? postMemberMedia}) {
     BlocProvider.of<PostListPagedBloc>(context).add(AddPostPaged(
         value: PostModel(
             documentID: newRandomKey(),

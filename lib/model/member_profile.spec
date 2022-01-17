@@ -96,6 +96,13 @@
       "iconName": "text_format",
       "arrayType": "Array",
       "hidden": true
+    },
+    {
+      "fieldName": "memberMedia",
+      "fieldType": "MemberMediumContainer",
+      "displayName": "Media",
+      "group": "media",
+      "arrayType": "Array"
     }
   ],
   "groups": [

@@ -1,9 +1,8 @@
-
+import 'package:eliud_core/model/member_medium_container_model.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
-import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 
 class FilterMemberMedia {
-  final List<PostMediumModel> memberMedia;
+  final List<MemberMediumContainerModel> memberMedia;
 
   FilterMemberMedia(this.memberMedia);
 

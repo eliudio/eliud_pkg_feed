@@ -36,8 +36,6 @@ import '../model/post_comment_cache.dart';
 import '../model/post_like_firestore.dart';
 import '../model/post_like_repository.dart';
 import '../model/post_like_cache.dart';
-import '../model/post_medium_repository.dart';
-import '../model/post_medium_cache.dart';
 import '../model/profile_firestore.dart';
 import '../model/profile_repository.dart';
 import '../model/profile_cache.dart';
@@ -45,7 +43,6 @@ import '../model/profile_cache.dart';
 import '../model/feed_menu_model.dart';
 import '../model/header_model.dart';
 import '../model/member_profile_model.dart';
-import '../model/post_medium_model.dart';
 import '../model/profile_model.dart';
 
 class RepositorySingleton extends AbstractRepositorySingleton {

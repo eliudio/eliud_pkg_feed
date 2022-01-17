@@ -20,5 +20,4 @@ export '../model/member_profile_repository.dart';
 export '../model/post_repository.dart';
 export '../model/post_comment_repository.dart';
 export '../model/post_like_repository.dart';
-export '../model/post_medium_repository.dart';
 export '../model/profile_repository.dart';

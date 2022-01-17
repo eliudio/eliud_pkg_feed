@@ -3,6 +3,7 @@ import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
 import 'package:eliud_core/core/blocs/access/state/access_state.dart';
 import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core/model/member_medium_container_model.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/style/frontend/has_button.dart';
@@ -23,7 +24,6 @@ import 'package:eliud_pkg_text/platform/text_platform.dart';
 import 'new_post/bloc/feed_post_form_event.dart';
 import 'new_post/feed_post_dialog.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
-import 'package:eliud_pkg_feed/model/post_medium_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,7 +33,7 @@ class PagedPostsList extends StatefulWidget {
   final AppModel app;
 
   const PagedPostsList(
-      this.app,
+    this.app,
     this.feedModel, {
     Key? key,
   }) : super(key: key);
@@ -77,23 +77,25 @@ class PagedPostsListState extends State<PagedPostsList> {
       required String authorId,
       required PostAccessibleByGroup postAccessibleByGroup,
       List<String>? postAccessibleByMembers,
-      List<PostMediumModel>? postMemberMedia}) {
+      List<MemberMediumContainerModel>? postMemberMedia}) {
     BlocProvider.of<PostListPagedBloc>(context).add(AddPostPaged(
         value: PostModel(
-            documentID: newRandomKey(),
-            authorId: authorId,
-            appId: widget.feedModel.appId!,
-            feedId: widget.feedModel.documentID!,
-            likes: 0,
-            dislikes: 0,
-            description: description,
-            accessibleByGroup: postAccessibleByGroup,
-            accessibleByMembers: postAccessibleByMembers,
-            archived: PostArchiveStatus.Active,
-            html: html,
-            memberMedia: postMemberMedia,
-            readAccess: [authorId],  // default readAccess to the owner. The function will expand this based on accessibleByGroup/Members
-          )));
+      documentID: newRandomKey(),
+      authorId: authorId,
+      appId: widget.feedModel.appId!,
+      feedId: widget.feedModel.documentID!,
+      likes: 0,
+      dislikes: 0,
+      description: description,
+      accessibleByGroup: postAccessibleByGroup,
+      accessibleByMembers: postAccessibleByMembers,
+      archived: PostArchiveStatus.Active,
+      html: html,
+      memberMedia: postMemberMedia,
+      readAccess: [
+        authorId
+      ], // default readAccess to the owner. The function will expand this based on accessibleByGroup/Members
+    )));
   }
 
   Widget _newPostForm(
@@ -108,15 +110,15 @@ class PagedPostsListState extends State<PagedPostsList> {
 
       // Photo
       if (widget.feedModel.photoPost!) {
-        widgets.add(PostButton(widget.app,
-            widget.feedModel, PostType.PostPhoto, postAccessibleByGroup, postAccessibleByMembers, author));
+        widgets.add(PostButton(widget.app, widget.feedModel, PostType.PostPhoto,
+            postAccessibleByGroup, postAccessibleByMembers, author));
         widgets.add(Spacer());
       }
 
       // Video
       if (widget.feedModel.videoPost != null && widget.feedModel.videoPost!) {
-        widgets.add(PostButton(widget.app,
-            widget.feedModel, PostType.PostVideo, postAccessibleByGroup, postAccessibleByMembers, author));
+        widgets.add(PostButton(widget.app, widget.feedModel, PostType.PostVideo,
+            postAccessibleByGroup, postAccessibleByMembers, author));
         widgets.add(Spacer());
       }
 
@@ -127,17 +129,17 @@ class PagedPostsListState extends State<PagedPostsList> {
             "assets/images/segoshvishna.fiverr.com/message.png",
             package: "eliud_pkg_feed");
         widgets.add(actionContainer(widget.app, context,
-            child: iconButton(widget.app, context, icon: message, tooltip: 'Message',
-                onPressed: () {
-              openEntryDialog(widget.app, context, widget.app.documentID! + '/_message', title: 'Say something',
-                  onPressed: (value) {
+            child: iconButton(widget.app, context,
+                icon: message, tooltip: 'Message', onPressed: () {
+              openEntryDialog(
+                  widget.app, context, widget.app.documentID! + '/_message',
+                  title: 'Say something', onPressed: (value) {
                 if (value != null) {
                   _addPost(
-                    description: value,
-                    authorId: author.documentID!,
-                    postAccessibleByGroup: postAccessibleByGroup,
-                    postAccessibleByMembers: postAccessibleByMembers
-                  );
+                      description: value,
+                      authorId: author.documentID!,
+                      postAccessibleByGroup: postAccessibleByGroup,
+                      postAccessibleByMembers: postAccessibleByMembers);
                 }
               });
             })));
@@ -163,7 +165,8 @@ class PagedPostsListState extends State<PagedPostsList> {
             child: iconButton(widget.app, context,
                 icon: album,
                 tooltip: 'Album',
-                onPressed: () => FeedPostDialog.open(widget.app,
+                onPressed: () => FeedPostDialog.open(
+                    widget.app,
                     context,
                     widget.feedModel.documentID!,
                     profileInitialized.watchingThisProfile()!.authorId!,
@@ -177,7 +180,8 @@ class PagedPostsListState extends State<PagedPostsList> {
       // Article
       if (widget.feedModel.articlePost != null &&
           widget.feedModel.articlePost!) {
-        widgets.add(articleButton(widget.app, author.documentID!, postAccessibleByGroup, postAccessibleByMembers));
+        widgets.add(articleButton(widget.app, author.documentID!,
+            postAccessibleByGroup, postAccessibleByMembers));
 
         widgets.add(Spacer());
       }
@@ -188,7 +192,12 @@ class PagedPostsListState extends State<PagedPostsList> {
     }
   }
 
-  Widget articleButton(AppModel app, String memberId, PostAccessibleByGroup postAccessibleByGroup, List<String>? postAccessibleByMembers,) {
+  Widget articleButton(
+    AppModel app,
+    String memberId,
+    PostAccessibleByGroup postAccessibleByGroup,
+    List<String>? postAccessibleByMembers,
+  ) {
     var articleIcon = Image.asset(
         "assets/images/segoshvishna.fiverr.com/article.png",
         package: "eliud_pkg_feed");
@@ -214,7 +223,6 @@ class PagedPostsListState extends State<PagedPostsList> {
         child: article,
         itemBuilder: (_) => items,
         onSelected: (choice) async {
-
           var access;
           if (choice == 0) {
             access = 'public';
@@ -226,28 +234,36 @@ class PagedPostsListState extends State<PagedPostsList> {
             access = 'just me';
           }
 
-          AbstractTextPlatform.platform!.updateHtmlUsingMemberMedium(
-              context, app, memberId, toMemberMediumAccessibleByGroup(postAccessibleByGroup.index), "Article",
+          List<MemberMediumContainerModel> postMediumModels = [];
+          AbstractTextPlatform.platform!.updateHtmlWithMemberMediumCallback(
+              context,
+              app,
+              memberId,
+              (value) {
+                postMediumModels.add(MemberMediumContainerModel(documentID: newRandomKey(), memberMedium: value));
+              },
+              toMemberMediumAccessibleByGroup(postAccessibleByGroup.index),
               (newArticle) {
             _addPost(
-              html: newArticle,
-              authorId: memberId,
+                html: newArticle,
+                authorId: memberId,
                 postAccessibleByGroup: postAccessibleByGroup,
-                postAccessibleByMembers: postAccessibleByMembers
-            );
-          }, 'Add article for ' + access,
-              extraIcons: getAlbumActionIcons(widget.app, context, access)
-          , accessibleByMembers: postAccessibleByMembers
-          );
+                postAccessibleByMembers: postAccessibleByMembers,
+                postMemberMedia: postMediumModels );
+          }, "Article", 'Add article for ' + access,
+              extraIcons: getAlbumActionIcons(widget.app, context, access),
+              accessibleByMembers: postAccessibleByMembers);
         });
   }
 
-  static List<Widget> getAlbumActionIcons(AppModel app,
-      BuildContext context, String accessible) {
+  static List<Widget> getAlbumActionIcons(
+      AppModel app, BuildContext context, String accessible) {
     return [
       dialogButton(app, context, label: 'Audience', onPressed: () {
-        openMessageDialog(app,
-          context, app.documentID! + '/_accessible',
+        openMessageDialog(
+          app,
+          context,
+          app.documentID! + '/_accessible',
           title: 'Accessible',
           message: 'Article accessible by: ' + accessible,
         );
@@ -314,7 +330,8 @@ class PagedPostsListState extends State<PagedPostsList> {
 
   Widget _buttonNextPage(bool mightHaveMore) {
     if (mightHaveMore) {
-      return MyButton(app: widget.app,
+      return MyButton(
+        app: widget.app,
         onClickFunction: _onClick,
       );
     } else {
@@ -329,7 +346,8 @@ class PagedPostsListState extends State<PagedPostsList> {
               );
             } else {
               return Center(
-                  child: h5(widget.app,
+                  child: h5(
+                widget.app,
                 context,
                 "That's all folks",
               ));
@@ -350,7 +368,10 @@ class MyButton extends StatefulWidget {
   //final RgbModel? buttonColor;
   final OnClickFunction? onClickFunction;
 
-  const MyButton({Key? key, required this.app, /*this.buttonColor, */ this.onClickFunction})
+  const MyButton(
+      {Key? key,
+      required this.app,
+      /*this.buttonColor, */ this.onClickFunction})
       : super(key: key);
 
   @override
@@ -369,7 +390,8 @@ class _MyButtonState extends State<MyButton> {
   @override
   Widget build(BuildContext context) {
     if (!clicked) {
-      return button(widget.app,
+      return button(
+        widget.app,
         context,
         label: 'More...',
         onPressed: () {
