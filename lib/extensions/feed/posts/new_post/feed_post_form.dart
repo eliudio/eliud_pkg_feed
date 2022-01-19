@@ -20,6 +20,7 @@ import 'package:eliud_pkg_medium/platform/medium_platform.dart';
 import 'package:eliud_pkg_medium/tools/media_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tuple/tuple.dart';
 
 import 'bloc/feed_post_form_bloc.dart';
 import 'bloc/feed_post_form_event.dart';
@@ -151,8 +152,8 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
   PopupMenuButton _mediaButtons(BuildContext context, AppModel app,
       FeedPostFormInitialized state, String memberId) {
     return MediaButtons.mediaButtons(
-        context, app, memberId, toMemberMediumAccessibleByGroup(state.postModelDetails.postAccessibleByGroup.index),
-        accessibleByMembers: state.postModelDetails.postAccessibleByMembers,
+        context, app, memberId, () => Tuple2(toMemberMediumAccessibleByGroup(state.postModelDetails.postAccessibleByGroup.index),
+        state.postModelDetails.postAccessibleByMembers),
         tooltip: 'Add video or photo',
         photoFeedbackFunction: (photo) {
           if (photo != null) {

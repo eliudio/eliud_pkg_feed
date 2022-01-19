@@ -26,7 +26,7 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
     final currentState = state;
     if (currentState is FeedPostFormUninitialized) {
       if (event is InitialiseNewFeedPostFormEvent) {
-        yield await _initialiseNew();
+        yield await _initialiseNew(event.postAccessibleByGroup, event.postAccessibleByMembers);
       } else if (event is InitialiseUpdateFeedPostFormEvent) {
         yield await _initialiseUpdate(event);
       }
@@ -55,12 +55,13 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
     }
   }
 
-  Future<FeedPostFormLoaded> _initialiseNew() async {
+  Future<FeedPostFormLoaded> _initialiseNew(PostAccessibleByGroup postAccessibleByGroup, List<String>? postAccessibleByMembers) async {
     return FeedPostFormLoaded(
         postModelDetails: FeedPostModelDetails(
           description: "",
           memberMedia: [],
-          postAccessibleByGroup: PostAccessibleByGroup.Public
+          postAccessibleByGroup: postAccessibleByGroup,
+          postAccessibleByMembers: postAccessibleByMembers,
         ));
   }
 
@@ -69,7 +70,8 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
         postModelDetails: FeedPostModelDetails(
           description: event.description,
           memberMedia: event.memberMedia,
-          postAccessibleByGroup: PostAccessibleByGroup.Public
+          postAccessibleByGroup: event.postAccessibleByGroup,
+          postAccessibleByMembers: event.postAccessibleByMembers,
         ));
   }
 
@@ -94,6 +96,6 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
     postListPagedBloc.add(AddPostPaged(value: postModel));
 
     // reset the form
-    return _initialiseNew();
+    return _initialiseNew(feedPostModelDetails.postAccessibleByGroup, feedPostModelDetails.postAccessibleByMembers);
   }
 }

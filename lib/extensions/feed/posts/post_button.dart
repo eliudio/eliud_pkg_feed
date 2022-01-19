@@ -15,8 +15,11 @@ import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tuple/tuple.dart';
 
 enum PostType { PostPhoto, PostVideo }
+
+typedef Tuple2<PostAccessibleByGroup, List<String>?> PostAccessibleProviderFunction();
 
 /*
  * PostButton is used to be able to add photos or videos to the feed.
@@ -26,11 +29,10 @@ class PostButton extends StatefulWidget {
   final AppModel app;
   final FeedModel feedModel;
   final PostType postType;
-  PostAccessibleByGroup postAccessibleByGroup;
-  List<String>? postAccessibleByMembers;
+  PostAccessibleProviderFunction postAccessibleProviderFunction;
   MemberModel author;
 
-  PostButton(this.app, this.feedModel, this.postType, this.postAccessibleByGroup, this.postAccessibleByMembers, this.author);
+  PostButton(this.app, this.feedModel, this.postType, this.postAccessibleProviderFunction, this.author);
 
   PostButtonState createState() => PostButtonState();
 }
@@ -47,7 +49,7 @@ class PostButtonState extends State<PostButton> {
           package: "eliud_pkg_feed");
       if (uploadingProgress == null) {
         return MediaButtons.mediaButtons(context, widget.app,
-            widget.author.documentID!, toMemberMediumAccessibleByGroup(widget.postAccessibleByGroup.index), accessibleByMembers: widget.postAccessibleByMembers,
+            widget.author.documentID!, () => Tuple2(toMemberMediumAccessibleByGroup(widget.postAccessibleProviderFunction().item1.index), widget.postAccessibleProviderFunction().item2),
             allowCrop: false,
             tooltip: 'Add photo', photoFeedbackFunction: (photo) {
           if (photo != null) {
@@ -70,7 +72,7 @@ class PostButtonState extends State<PostButton> {
           package: "eliud_pkg_feed");
       if (uploadingProgress == null) {
         return MediaButtons.mediaButtons(context, widget.app,
-            widget.author.documentID!, toMemberMediumAccessibleByGroup(widget.postAccessibleByGroup.index), accessibleByMembers: widget.postAccessibleByMembers,
+            widget.author.documentID!, () => Tuple2(toMemberMediumAccessibleByGroup(widget.postAccessibleProviderFunction().item1.index), widget.postAccessibleProviderFunction().item2),
             allowCrop: false,
             tooltip: 'Add video', videoFeedbackFunction: (video) {
           if (video != null) {
@@ -103,8 +105,8 @@ class PostButtonState extends State<PostButton> {
             likes: 0,
             dislikes: 0,
             description: description,
-            accessibleByGroup: widget.postAccessibleByGroup,
-            accessibleByMembers: widget.postAccessibleByMembers,
+            accessibleByGroup: widget.postAccessibleProviderFunction().item1,
+            accessibleByMembers: widget.postAccessibleProviderFunction().item2,
             archived: PostArchiveStatus.Active,
             html: html,
             memberMedia: postMemberMedia,

@@ -12,6 +12,13 @@ abstract class FeedPostFormEvent extends Equatable {
 }
 
 class InitialiseNewFeedPostFormEvent extends FeedPostFormEvent {
+  final PostAccessibleByGroup postAccessibleByGroup;
+  final List<String>? postAccessibleByMembers;
+
+  InitialiseNewFeedPostFormEvent(this.postAccessibleByGroup, this.postAccessibleByMembers);
+
+  @override
+  List<Object?> get props => [postAccessibleByGroup, postAccessibleByMembers];
 }
 
 class InitialiseUpdateFeedPostFormEvent extends FeedPostFormEvent {

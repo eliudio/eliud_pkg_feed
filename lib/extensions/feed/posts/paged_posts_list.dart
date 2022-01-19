@@ -1,3 +1,4 @@
+import 'package:tuple/tuple.dart';
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
@@ -18,8 +19,9 @@ import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_blo
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_event.dart';
 import 'package:eliud_pkg_feed/extensions/feed/postlist_paged/postlist_paged_state.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_button.dart';
+import 'package:eliud_pkg_feed/extensions/feed/posts/post_privilege/post_privilege_dialog.dart';
 import 'package:eliud_pkg_feed/extensions/feed/posts/post_widget.dart';
-import 'package:eliud_pkg_feed/model/member_profile_model.dart';
+import 'package:eliud_pkg_feed/extensions/util/access_group_helper.dart';
 import 'package:eliud_pkg_text/platform/text_platform.dart';
 import 'new_post/bloc/feed_post_form_event.dart';
 import 'new_post/feed_post_dialog.dart';
@@ -46,10 +48,14 @@ class PagedPostsListState extends State<PagedPostsList> {
   late PostListPagedBloc _postBloc;
   double? photoUploadingProgress;
   double? videoUploadingProgress;
+  late PostAccessibleByGroup currentPostAccessibleByGroup;
+  List<String>? currentPostAccessibleByMembers;
 
   @override
   void initState() {
     super.initState();
+    currentPostAccessibleByGroup = PostAccessibleByGroup.Public;
+    currentPostAccessibleByMembers = [];
     _postBloc = BlocProvider.of<PostListPagedBloc>(context);
   }
 
@@ -98,10 +104,12 @@ class PagedPostsListState extends State<PagedPostsList> {
     )));
   }
 
+  Tuple2<PostAccessibleByGroup, List<String>?> _retrievePostAccessibile() {
+    return Tuple2(currentPostAccessibleByGroup, currentPostAccessibleByMembers);
+  }
+
   Widget _newPostForm(
       MemberModel author,
-      PostAccessibleByGroup postAccessibleByGroup,
-      List<String>? postAccessibleByMembers,
       LoggedInProfileInitialized profileInitialized,
       eliudrouter.PageContextInfo pageContextInfo) {
     if (profileInitialized is LoggedInWatchingMyProfile) {
@@ -111,14 +119,14 @@ class PagedPostsListState extends State<PagedPostsList> {
       // Photo
       if (widget.feedModel.photoPost!) {
         widgets.add(PostButton(widget.app, widget.feedModel, PostType.PostPhoto,
-            postAccessibleByGroup, postAccessibleByMembers, author));
+            _retrievePostAccessibile, author));
         widgets.add(Spacer());
       }
 
       // Video
       if (widget.feedModel.videoPost != null && widget.feedModel.videoPost!) {
         widgets.add(PostButton(widget.app, widget.feedModel, PostType.PostVideo,
-            postAccessibleByGroup, postAccessibleByMembers, author));
+            _retrievePostAccessibile, author));
         widgets.add(Spacer());
       }
 
@@ -138,8 +146,8 @@ class PagedPostsListState extends State<PagedPostsList> {
                   _addPost(
                       description: value,
                       authorId: author.documentID!,
-                      postAccessibleByGroup: postAccessibleByGroup,
-                      postAccessibleByMembers: postAccessibleByMembers);
+                      postAccessibleByGroup: currentPostAccessibleByGroup,
+                      postAccessibleByMembers: currentPostAccessibleByMembers);
                 }
               });
             })));
@@ -173,87 +181,86 @@ class PagedPostsListState extends State<PagedPostsList> {
                     profileInitialized.memberId(),
                     profileInitialized.profileUrl(),
                     pageContextInfo,
-                    InitialiseNewFeedPostFormEvent()))));
+                    InitialiseNewFeedPostFormEvent(
+                        currentPostAccessibleByGroup, currentPostAccessibleByMembers)))));
         widgets.add(Spacer());
       }
 
       // Article
       if (widget.feedModel.articlePost != null &&
           widget.feedModel.articlePost!) {
+        var articleIcon = Image.asset(
+            "assets/images/segoshvishna.fiverr.com/article.png",
+            package: "eliud_pkg_feed");
+
+        widgets.add(actionContainer(widget.app, context,
+            child: iconButton(widget.app, context,
+                icon: articleIcon, tooltip: 'Article', onPressed: () {
+              List<MemberMediumContainerModel> postMediumModels = [];
+              AbstractTextPlatform.platform!.updateHtmlWithMemberMediumCallback(
+                  context,
+                  widget.app,
+                  author.documentID!,
+                  (value) {
+                    postMediumModels.add(MemberMediumContainerModel(
+                        documentID: newRandomKey(), memberMedium: value));
+                  },
+                  toMemberMediumAccessibleByGroup(currentPostAccessibleByGroup.index),
+                  (newArticle) {
+                    _addPost(
+                        html: newArticle,
+                        authorId: author.documentID!,
+                        postAccessibleByGroup: currentPostAccessibleByGroup,
+                        postAccessibleByMembers: currentPostAccessibleByMembers,
+                        postMemberMedia: postMediumModels);
+                  },
+                  "Article",
+                  'Add article for ' +
+                      AccessGroupHelper.nameForPostAccessibleByGroup(
+                          currentPostAccessibleByGroup),
+                  extraIcons: getAlbumActionIcons(
+                      widget.app,
+                      context,
+                      AccessGroupHelper.nameForPostAccessibleByGroup(
+                          currentPostAccessibleByGroup)),
+                  accessibleByMembers: currentPostAccessibleByMembers);
+            })));
+
+/*
         widgets.add(articleButton(widget.app, author.documentID!,
             postAccessibleByGroup, postAccessibleByMembers));
 
+*/
         widgets.add(Spacer());
       }
+
+      var accessIcon = Image.asset(
+          "assets/images/icons8.com/icons8-eye-100.png",
+          package: "eliud_pkg_feed");
+      widgets.add(actionContainer(widget.app, context,
+          child: iconButton(widget.app, context,
+              icon: accessIcon, tooltip: 'Visibility', onPressed: () {
+            PostPrivilegeDialog.openIt(
+                widget.app,
+                context,
+                'Visibility',
+                widget.feedModel.documentID!,
+                author.documentID!,
+                author.documentID!,
+                currentPostAccessibleByGroup,
+                currentPostAccessibleByMembers,
+                (postAccessibleByGroup, postAccessibleByMembers) {
+              currentPostAccessibleByGroup = postAccessibleByGroup;
+              currentPostAccessibleByMembers = postAccessibleByMembers;
+            });
+          })));
+
+      widgets.add(Spacer());
 
       return Container(height: 110, child: Row(children: widgets));
     } else {
       return Container(height: 0);
     }
-  }
-
-  Widget articleButton(
-    AppModel app,
-    String memberId,
-    PostAccessibleByGroup postAccessibleByGroup,
-    List<String>? postAccessibleByMembers,
-  ) {
-    var articleIcon = Image.asset(
-        "assets/images/segoshvishna.fiverr.com/article.png",
-        package: "eliud_pkg_feed");
-
-    var article = PostButtonState.formatIcon(context, app, articleIcon);
-
-    var items = <PopupMenuItem<int>>[];
-    items.add(
-      PopupMenuItem<int>(
-          child: text(app, context, 'Publish article for public'), value: 0),
-    );
-    items.add(
-      PopupMenuItem<int>(
-          child: text(app, context, 'Publish article for followers'), value: 1),
-    );
-    items.add(
-      PopupMenuItem<int>(
-          child: text(app, context, 'Publish article for me'), value: 2),
-    );
-    return PopupMenuButton(
-        tooltip: 'Add article',
-        padding: EdgeInsets.all(0.0),
-        child: article,
-        itemBuilder: (_) => items,
-        onSelected: (choice) async {
-          var access;
-          if (choice == 0) {
-            access = 'public';
-          }
-          if (choice == 1) {
-            access = 'followers';
-          }
-          if (choice == 2) {
-            access = 'just me';
-          }
-
-          List<MemberMediumContainerModel> postMediumModels = [];
-          AbstractTextPlatform.platform!.updateHtmlWithMemberMediumCallback(
-              context,
-              app,
-              memberId,
-              (value) {
-                postMediumModels.add(MemberMediumContainerModel(documentID: newRandomKey(), memberMedium: value));
-              },
-              toMemberMediumAccessibleByGroup(postAccessibleByGroup.index),
-              (newArticle) {
-            _addPost(
-                html: newArticle,
-                authorId: memberId,
-                postAccessibleByGroup: postAccessibleByGroup,
-                postAccessibleByMembers: postAccessibleByMembers,
-                postMemberMedia: postMediumModels );
-          }, "Article", 'Add article for ' + access,
-              extraIcons: getAlbumActionIcons(widget.app, context, access),
-              accessibleByMembers: postAccessibleByMembers);
-        });
   }
 
   static List<Widget> getAlbumActionIcons(
@@ -290,8 +297,6 @@ class PagedPostsListState extends State<PagedPostsList> {
                   if (profileState is LoggedInProfileInitialized) {
                     widgets.add(_newPostForm(
                         profileState.currentMember,
-                        profileState.postAccessibleByGroup,
-                        profileState.postAccessibleByMembers,
                         profileState,
                         pageContextInfo));
                   }

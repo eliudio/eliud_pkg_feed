@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:tuple/tuple.dart';
 
 class Header extends StatefulWidget {
   final AppModel app;
@@ -195,10 +196,9 @@ class _HeaderState extends State<Header> {
         context,
         widget.app,
         profileInitialised.watchingThisProfile()!.authorId!,
-        toMemberMediumAccessibleByGroup(
+        () => Tuple2(toMemberMediumAccessibleByGroup(
             profileInitialised.watchingThisProfile()!.accessibleByGroup!.index),
-        accessibleByMembers:
-            profileInitialised.watchingThisProfile()!.accessibleByMembers,
+            profileInitialised.watchingThisProfile()!.accessibleByMembers),
         allowCrop: !isBG,
         tooltip: tooltip, photoFeedbackFunction: (photo) {
       if (!isBG) {

@@ -9,6 +9,8 @@ class PostTypeHelper {
   static PostType determineType(PostModel postModel) {
     if (postModel.postPageId != null) {
       return PostType.EmbeddedPage;
+    } else if (postModel.html != null) {
+      return PostType.Html;
     } else if ((postModel.memberMedia != null) &&
         (postModel.memberMedia!.length > 0)) {
       if (postModel.memberMedia!.length == 1) {
@@ -21,8 +23,6 @@ class PostTypeHelper {
       }
     } else if (postModel.externalLink != null) {
       return PostType.ExternalLink;
-    } else if (postModel.html != null) {
-      return PostType.Html;
     } else {
       return PostType.OnlyDescription;
     }
