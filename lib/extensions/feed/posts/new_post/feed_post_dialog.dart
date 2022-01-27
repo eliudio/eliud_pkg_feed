@@ -88,6 +88,7 @@ class _FeedPostDialogState extends State<FeedPostDialog> {
               widget.currentMemberId,
               widget.photoURL,
               widget.pageContextInfo,
+              widget.initialiseEvent is InitialiseNewFeedPostFormEvent
             ));
       } else {
         return StyleRegistry.registry()

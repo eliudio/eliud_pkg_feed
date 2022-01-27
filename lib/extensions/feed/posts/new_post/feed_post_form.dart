@@ -33,9 +33,10 @@ class MyFeedPostForm extends StatefulWidget {
   final String? currentMemberId;
   final String photoURL;
   final eliud_router.PageContextInfo pageContextInfo;
+  final bool isNew;
 
   MyFeedPostForm(this.app, this.feedId, this.memberId, this.currentMemberId,
-      this.photoURL, this.pageContextInfo);
+      this.photoURL, this.pageContextInfo, this.isNew);
 
   _MyFeedPostFormState createState() => _MyFeedPostFormState();
 }
@@ -57,7 +58,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
     builder: (context, accessState) {
     if (accessState is LoggedIn) {
       return complexAckNackDialog(widget.app, context,
-          title: 'New Album',
+          title: widget.isNew ? 'New Post' : 'Update Post',
           child: _contents(context, widget.pageContextInfo, widget.app, accessState),
           onSelection: (value) {
             if (value == 0) {

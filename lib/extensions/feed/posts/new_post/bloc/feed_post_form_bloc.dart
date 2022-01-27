@@ -16,6 +16,7 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
   final String memberId;
   final String feedId;
   final LoggedIn accessState;
+  late PostModel? post; // if this is an update then this is the post being updated
 
   FeedPostFormBloc(this.app, this.postListPagedBloc,
       this.memberId, this.feedId, this.accessState)
@@ -26,8 +27,10 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
     final currentState = state;
     if (currentState is FeedPostFormUninitialized) {
       if (event is InitialiseNewFeedPostFormEvent) {
+        post = null;
         yield await _initialiseNew(event.postAccessibleByGroup, event.postAccessibleByMembers);
       } else if (event is InitialiseUpdateFeedPostFormEvent) {
+        post = event.originalPost;
         yield await _initialiseUpdate(event);
       }
 
@@ -78,7 +81,7 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
   Future<FeedPostFormState> _submit(
       FeedPostModelDetails feedPostModelDetails) async {
     PostModel postModel = PostModel(
-        documentID: newRandomKey(),
+        documentID: post != null ? post!.documentID : newRandomKey(),
         authorId: memberId,
         appId: app.documentID,
         feedId: feedId,
@@ -93,8 +96,11 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
         );
 
     // Now tell the list bloc to add the post
-    postListPagedBloc.add(AddPostPaged(value: postModel));
-
+    if (post == null) {
+      postListPagedBloc.add(AddPostPaged(value: postModel));
+    } else {
+      postListPagedBloc.add(UpdatePostPaged(value: postModel));
+    }
     // reset the form
     return _initialiseNew(feedPostModelDetails.postAccessibleByGroup, feedPostModelDetails.postAccessibleByMembers);
   }

@@ -26,8 +26,9 @@ class InitialiseUpdateFeedPostFormEvent extends FeedPostFormEvent {
   final List<MemberMediumContainerModel> memberMedia;
   final PostAccessibleByGroup postAccessibleByGroup;
   final List<String>? postAccessibleByMembers;
+  final PostModel originalPost;
 
-  InitialiseUpdateFeedPostFormEvent(this.description, this.memberMedia, this.postAccessibleByGroup, {this.postAccessibleByMembers});
+  InitialiseUpdateFeedPostFormEvent(this.originalPost, this.description, this.memberMedia, this.postAccessibleByGroup, {this.postAccessibleByMembers});
 
   @override
   List<Object?> get props => [description, memberMedia, postAccessibleByGroup, postAccessibleByMembers];

@@ -307,6 +307,7 @@ class _PostWidgetState extends State<PostWidget> {
                     widget.photoURL!,
                     pageContextInfo,
                     InitialiseUpdateFeedPostFormEvent(
+                      postModel,
                         postModel.description == null
                             ? ''
                             : postModel.description!,
