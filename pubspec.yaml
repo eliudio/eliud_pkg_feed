@@ -17,6 +17,9 @@ dependencies:
   eliud_core:
     path: ../eliud_core
 
+  eliud_pkg_create:
+    path: ../eliud_pkg_create
+
   eliud_pkg_follow:
     path: ../eliud_pkg_follow
 

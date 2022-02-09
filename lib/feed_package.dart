@@ -3,9 +3,11 @@ import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/package/package.dart';
 import 'package:eliud_core/core/registry.dart';
+import 'package:eliud_pkg_create/registry/registry.dart';
 import 'package:eliud_pkg_feed/tools/action/post_action_entity.dart';
 import 'package:eliud_pkg_feed/tools/action/post_action_handler.dart';
 import 'package:eliud_pkg_feed/tools/action/post_action_model.dart';
+import 'package:eliud_pkg_feed/wizards/feed_wizard.dart';
 import 'package:eliud_pkg_follow/follow_package.dart';
 import 'package:flutter_bloc/src/bloc_provider.dart';
 import 'package:eliud_core/model/access_model.dart';
@@ -31,6 +33,9 @@ abstract class FeedPackage extends Package {
     ComponentRegistry().init();
 
     AbstractRepositorySingleton.singleton = RepositorySingleton();
+
+    // register new app wizard for feed
+    NewAppWizardRegistry.registry().register(FeedWizard());
 
     // Register action handler for the feed action
     eliud_router.Router.register(PostActionHandler());
