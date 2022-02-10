@@ -188,6 +188,13 @@ class FeedWizard extends NewAppWizardInfo {
 
   @override
   AppModel updateApp(NewAppWizardParameters parameters, AppModel adjustMe, ) => adjustMe;
+
+  @override
+  String? getPageID(String pageType) {
+    if (pageType == 'profilePageId') return PROFILE_PAGE_ID;
+    else if (pageType == 'pageIdProvider') return FEED_PAGE_ID;
+    return null;
+  }
 }
 
 class FeedParameters extends NewAppWizardParameters {
