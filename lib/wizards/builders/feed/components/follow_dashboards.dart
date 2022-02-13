@@ -1,5 +1,5 @@
 import 'package:eliud_core/model/model_export.dart';
-import 'package:eliud_pkg_create/widgets/new_app_bloc/builders/helpers/profile_and_feed_to_action.dart';
+import 'package:eliud_pkg_membership/wizards/builders/helpers/profile_and_feed_to_action.dart';
 import 'package:eliud_pkg_follow/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_follow/model/follow_requests_dashboard_model.dart';
 import 'package:eliud_pkg_follow/model/following_dashboard_model.dart';
