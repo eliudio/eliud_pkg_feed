@@ -3,6 +3,7 @@ import 'package:eliud_core/core/wizards/registry/registry.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/model/menu_item_model.dart';
+import 'package:eliud_core/tools/action/action_model.dart';
 import 'builders/feed/feed_page_builder.dart';
 import 'builders/feed/follow_requests_dashboard_page_builder.dart';
 import 'builders/feed/followers_dashboard_page_builder.dart';
@@ -215,4 +216,7 @@ class FeedWizard extends NewAppWizardInfoWithActionSpecification {
     else if (pageType == 'pageIdProvider') return FEED_PAGE_ID;
     return null;
   }
+
+  @override
+  ActionModel? getAction(AppModel app, String actionType) => null;
 }
