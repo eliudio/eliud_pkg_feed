@@ -1,3 +1,4 @@
+import 'package:eliud_core/core/wizards/registry/registry.dart';
 import 'package:eliud_core/model/app_bar_model.dart';
 import 'package:eliud_core/model/drawer_model.dart';
 import 'package:eliud_core/model/home_menu_model.dart';
@@ -19,9 +20,12 @@ class FollowRequestsDashboardPageBuilder extends OtherFeedPageBuilder {
       HomeMenuModel theHomeMenu,
       AppBarModel theAppBar,
       DrawerModel leftDrawer,
-      DrawerModel rightDrawer)
+      DrawerModel rightDrawer,
+      PageProvider pageProvider,
+      ActionProvider actionProvider
+      )
       : super(pageId, app, memberId, theHomeMenu, theAppBar, leftDrawer,
-            rightDrawer);
+            rightDrawer, pageProvider, actionProvider);
 
   Future<PageModel> run(
       {required String componentIdentifier,

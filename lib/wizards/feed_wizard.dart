@@ -56,6 +56,8 @@ class FeedWizard extends NewAppWizardInfoWithActionSpecification {
     AppBarProvider appBarProvider,
     DrawerProvider leftDrawerProvider,
     DrawerProvider rightDrawerProvider,
+    PageProvider pageProvider,
+    ActionProvider actionProvider,
   ) {
     if (parameters is ActionSpecificationParametersBase) {
       var feedSpecifications = parameters.actionSpecifications;
@@ -72,7 +74,7 @@ class FeedWizard extends NewAppWizardInfoWithActionSpecification {
                   homeMenuProvider(),
                   appBarProvider(),
                   leftDrawerProvider(),
-                  rightDrawerProvider())
+                  rightDrawerProvider(), pageProvider, actionProvider)
               .run(
                   feedMenuComponentIdentifier: FEED_MENU_COMPONENT_IDENTIFIER,
                   headerComponentIdentifier: FEED_HEADER_COMPONENT_IDENTIFIER,
@@ -95,7 +97,7 @@ class FeedWizard extends NewAppWizardInfoWithActionSpecification {
                   homeMenuProvider(),
                   appBarProvider(),
                   leftDrawerProvider(),
-                  rightDrawerProvider())
+                  rightDrawerProvider(), pageProvider, actionProvider)
               .run(
             componentIdentifier: FOLLOW_REQUEST_COMPONENT_ID,
             profilePageId: PROFILE_PAGE_ID,
@@ -113,7 +115,7 @@ class FeedWizard extends NewAppWizardInfoWithActionSpecification {
                   homeMenuProvider(),
                   appBarProvider(),
                   leftDrawerProvider(),
-                  rightDrawerProvider())
+                  rightDrawerProvider(), pageProvider, actionProvider)
               .run(
             componentIdentifier: FOLLOWERS_COMPONENT_IDENTIFIER,
             profilePageId: PROFILE_PAGE_ID,
@@ -131,7 +133,7 @@ class FeedWizard extends NewAppWizardInfoWithActionSpecification {
                   homeMenuProvider(),
                   appBarProvider(),
                   leftDrawerProvider(),
-                  rightDrawerProvider())
+                  rightDrawerProvider(), pageProvider, actionProvider)
               .run(
             componentIdentifier: FOLLOWING_COMPONENT_IDENTIFIER,
             profilePageId: PROFILE_PAGE_ID,
@@ -149,7 +151,7 @@ class FeedWizard extends NewAppWizardInfoWithActionSpecification {
                   homeMenuProvider(),
                   appBarProvider(),
                   leftDrawerProvider(),
-                  rightDrawerProvider())
+                  rightDrawerProvider(), pageProvider, actionProvider)
               .run(
             componentIdentifier: INVITE_COMPONENT_IDENTIFIER,
             profilePageId: PROFILE_PAGE_ID,
@@ -167,7 +169,7 @@ class FeedWizard extends NewAppWizardInfoWithActionSpecification {
                   homeMenuProvider(),
                   appBarProvider(),
                   leftDrawerProvider(),
-                  rightDrawerProvider())
+                  rightDrawerProvider(), pageProvider, actionProvider)
               .run(
             componentIdentifier: MEMBERSHIP_COMPONENT_IDENTIFIER,
             profilePageId: PROFILE_PAGE_ID,
@@ -185,7 +187,7 @@ class FeedWizard extends NewAppWizardInfoWithActionSpecification {
                   homeMenuProvider(),
                   appBarProvider(),
                   leftDrawerProvider(),
-                  rightDrawerProvider())
+                  rightDrawerProvider(), pageProvider, actionProvider)
               .run(
             feed: feedModel,
             member: member,
@@ -210,7 +212,7 @@ class FeedWizard extends NewAppWizardInfoWithActionSpecification {
       adjustMe;
 
   @override
-  String? getPageID(String pageType) {
+  String? getPageID(NewAppWizardParameters parameters, String pageType) {
     if (pageType == 'profilePageId')
       return PROFILE_PAGE_ID;
     else if (pageType == 'pageIdProvider') return FEED_PAGE_ID;
@@ -218,5 +220,5 @@ class FeedWizard extends NewAppWizardInfoWithActionSpecification {
   }
 
   @override
-  ActionModel? getAction(AppModel app, String actionType, ) => null;
+  ActionModel? getAction(NewAppWizardParameters parameters, AppModel app, String actionType, ) => null;
 }
