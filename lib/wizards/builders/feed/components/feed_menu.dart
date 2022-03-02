@@ -1,3 +1,4 @@
+import 'package:eliud_core/core/wizards/tools/documentIdentifier.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart'
     as coreRepo;
 import 'package:eliud_core/model/menu_def_model.dart';
@@ -10,6 +11,7 @@ import 'package:eliud_pkg_feed/wizards/builders/feed/helpers/menu_helpers.dart';
 import 'package:flutter/material.dart';
 
 class FeedMenu {
+  final String uniqueId;
   final AppModel app;
   final String feedPageId;
   final String profilePageId;
@@ -19,7 +21,7 @@ class FeedMenu {
   final String fiendFriendsPageId;
   final String appMembersPageId;
 
-  FeedMenu(this.app,
+  FeedMenu(this.uniqueId, this.app,
       {required this.feedPageId,
       required this.profilePageId,
       required this.followRequestPageId,
@@ -38,7 +40,7 @@ class FeedMenu {
       icon: IconModel(
           codePoint: Icons.people.codePoint,
           fontFamily: Icons.settings.fontFamily),
-      action: GotoPage(app, pageID: feedPageId));
+      action: GotoPage(app, pageID: constructDocumentId(uniqueId: uniqueId, documentId: feedPageId)));
 
   MenuItemModel profileMenuItem() => MenuItemModel(
       documentID: '2',
@@ -47,25 +49,25 @@ class FeedMenu {
       icon: IconModel(
           codePoint: Icons.person.codePoint,
           fontFamily: Icons.settings.fontFamily),
-      action: GotoPage(app, pageID: profilePageId));
+      action: GotoPage(app, pageID: constructDocumentId(uniqueId: uniqueId, documentId: profilePageId)));
 
   MenuDefModel menuDefCurrentMember() {
     var menuItems = <MenuItemModel>[
       feedMenuItem(),
       profileMenuItem(),
-      menuItemFollowRequestsPage(app, followRequestPageId,
+      menuItemFollowRequestsPage(uniqueId, app, followRequestPageId,
           PrivilegeLevelRequired.NoPrivilegeRequired),
-      menuItemFollowersPage(
-          app, followersPageId, PrivilegeLevelRequired.NoPrivilegeRequired),
-      menuItemFollowingPage(
-          app, followingPageId, PrivilegeLevelRequired.NoPrivilegeRequired),
-      menuItemFiendFriendsPage(app, fiendFriendsPageId,
+      menuItemFollowersPage(uniqueId, app, followersPageId,
           PrivilegeLevelRequired.NoPrivilegeRequired),
-      menuItemAppMembersPage(app, appMembersPageId,
+      menuItemFollowingPage(uniqueId, app, followingPageId,
+          PrivilegeLevelRequired.NoPrivilegeRequired),
+      menuItemFiendFriendsPage(uniqueId, app, fiendFriendsPageId,
+          PrivilegeLevelRequired.NoPrivilegeRequired),
+      menuItemAppMembersPage(uniqueId, app, appMembersPageId,
           PrivilegeLevelRequired.OwnerPrivilegeRequired),
     ];
     MenuDefModel menu = MenuDefModel(
-        documentID: FEED_MENU_ID_CURRENT_MEMBER,
+        documentID: constructDocumentId(uniqueId: uniqueId, documentId: FEED_MENU_ID_CURRENT_MEMBER),
         appId: app.documentID!,
         name: "Current Member Feed Menu",
         menuItems: menuItems);
@@ -78,7 +80,7 @@ class FeedMenu {
       profileMenuItem(),
     ];
     MenuDefModel menu = MenuDefModel(
-        documentID: FEED_MENU_ID_OTHER_MEMBER,
+        documentID: constructDocumentId(uniqueId: uniqueId, documentId: FEED_MENU_ID_OTHER_MEMBER),
         appId: app.documentID!,
         name: "Other Member Feed Menu",
         menuItems: menuItems);
@@ -104,7 +106,7 @@ class FeedMenu {
     required MenuDefModel menuOtherMember,
   }) {
     return FeedMenuModel(
-      documentID: feedMenuComponentIdentifier,
+      documentID: constructDocumentId(uniqueId: uniqueId, documentId: feedMenuComponentIdentifier),
       appId: app.documentID!,
       description: "Feed Menu",
       feed: feed,
@@ -146,4 +148,3 @@ class FeedMenu {
         menuOtherMember: menuDefOtherMember);
   }
 }
-

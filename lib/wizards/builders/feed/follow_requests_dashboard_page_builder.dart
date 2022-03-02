@@ -14,6 +14,7 @@ import 'other_feed_pages_builder.dart';
 
 class FollowRequestsDashboardPageBuilder extends OtherFeedPageBuilder {
   FollowRequestsDashboardPageBuilder(
+      String uniqueId,
       String pageId,
       AppModel app,
       String memberId,
@@ -22,10 +23,9 @@ class FollowRequestsDashboardPageBuilder extends OtherFeedPageBuilder {
       DrawerModel leftDrawer,
       DrawerModel rightDrawer,
       PageProvider pageProvider,
-      ActionProvider actionProvider
-      )
-      : super(pageId, app, memberId, theHomeMenu, theAppBar, leftDrawer,
-            rightDrawer, pageProvider, actionProvider);
+      ActionProvider actionProvider)
+      : super(uniqueId, pageId, app, memberId, theHomeMenu, theAppBar,
+            leftDrawer, rightDrawer, pageProvider, actionProvider);
 
   Future<PageModel> run(
       {required String componentIdentifier,
@@ -34,7 +34,7 @@ class FollowRequestsDashboardPageBuilder extends OtherFeedPageBuilder {
       required String profilePageId,
       required String feedPageId}) async {
     await FollowRequestDashboard(
-            app, componentIdentifier, profilePageId, feedPageId)
+            uniqueId, app, componentIdentifier, profilePageId, feedPageId)
         .run();
     return await doIt(
         componentName: AbstractFollowRequestsDashboardComponent.componentName,

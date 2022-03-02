@@ -1,3 +1,4 @@
+import 'package:eliud_core/core/wizards/tools/documentIdentifier.dart';
 import 'package:eliud_core/model/model_export.dart';
 import 'package:eliud_pkg_membership/wizards/builders/helpers/profile_and_feed_to_action.dart';
 import 'package:eliud_pkg_follow/model/abstract_repository_singleton.dart';
@@ -8,6 +9,7 @@ import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_membership/model/membership_dashboard_model.dart';
 
 class FollowingDashboard {
+  final String uniqueId;
   final AppModel app;
   final String componentIdentifier;
   final String title;
@@ -15,19 +17,27 @@ class FollowingDashboard {
   final String? profilePageId;
   final String? feedPageId;
 
-  FollowingDashboard(this.app, this.componentIdentifier, this.title, this.view,
-      this.profilePageId, this.feedPageId, );
+  FollowingDashboard(
+    this.uniqueId,
+    this.app,
+    this.componentIdentifier,
+    this.title,
+    this.view,
+    this.profilePageId,
+    this.feedPageId,
+  );
 
   FollowingDashboardModel _dashboardModel() {
     return FollowingDashboardModel(
-        documentID: componentIdentifier,
-        appId: app.documentID!,
-        description: title,
-        view: view,
-        memberActions: ProfileAndFeedToAction.getMemberActionModels(app, profilePageId, feedPageId),
-        conditions: StorageConditionsModel(
-            privilegeLevelRequired: PrivilegeLevelRequiredSimple.NoPrivilegeRequiredSimple
-        ),
+      documentID: constructDocumentId(uniqueId: uniqueId, documentId: componentIdentifier),
+      appId: app.documentID!,
+      description: title,
+      view: view,
+      memberActions: ProfileAndFeedToAction.getMemberActionModels(
+          uniqueId, app, profilePageId, feedPageId),
+      conditions: StorageConditionsModel(
+          privilegeLevelRequired:
+              PrivilegeLevelRequiredSimple.NoPrivilegeRequiredSimple),
     );
   }
 
@@ -42,22 +52,25 @@ class FollowingDashboard {
 }
 
 class FollowRequestDashboard {
+  final String uniqueId;
   final AppModel app;
   final String componentIdentifier;
   final String? profilePageId;
   final String? feedPageId;
 
-  FollowRequestDashboard(this.app, this.componentIdentifier, this.profilePageId, this.feedPageId);
+  FollowRequestDashboard(this.uniqueId, this.app, this.componentIdentifier,
+      this.profilePageId, this.feedPageId);
 
   FollowRequestsDashboardModel _dashboardModel() {
     return FollowRequestsDashboardModel(
-      documentID: componentIdentifier,
+      documentID: constructDocumentId(uniqueId: uniqueId, documentId: componentIdentifier),
       appId: app.documentID!,
       description: "Follow requests",
-      memberActions: ProfileAndFeedToAction.getMemberActionModels(app, profilePageId, feedPageId),
+      memberActions: ProfileAndFeedToAction.getMemberActionModels(
+          uniqueId, app, profilePageId, feedPageId),
       conditions: StorageConditionsModel(
-          privilegeLevelRequired: PrivilegeLevelRequiredSimple.NoPrivilegeRequiredSimple
-      ),
+          privilegeLevelRequired:
+              PrivilegeLevelRequiredSimple.NoPrivilegeRequiredSimple),
     );
   }
 
@@ -72,22 +85,25 @@ class FollowRequestDashboard {
 }
 
 class InviteDashboard {
+  final String uniqueId;
   final AppModel app;
   final String componentIdentifier;
   final String? profilePageId;
   final String? feedPageId;
 
-  InviteDashboard(this.app, this.componentIdentifier, this.profilePageId, this.feedPageId);
+  InviteDashboard(this.uniqueId, this.app, this.componentIdentifier,
+      this.profilePageId, this.feedPageId);
 
   InviteDashboardModel _dashboardModel() {
     return InviteDashboardModel(
-      documentID: componentIdentifier,
+      documentID: constructDocumentId(uniqueId: uniqueId, documentId: componentIdentifier),
       appId: app.documentID!,
       description: "Follow members",
-      memberActions: ProfileAndFeedToAction.getMemberActionModels(app, profilePageId, feedPageId),
+      memberActions: ProfileAndFeedToAction.getMemberActionModels(
+          uniqueId, app, profilePageId, feedPageId),
       conditions: StorageConditionsModel(
-          privilegeLevelRequired: PrivilegeLevelRequiredSimple.NoPrivilegeRequiredSimple
-      ),
+          privilegeLevelRequired:
+              PrivilegeLevelRequiredSimple.NoPrivilegeRequiredSimple),
     );
   }
 
@@ -101,24 +117,26 @@ class InviteDashboard {
   }
 }
 
-
 class MembershipDashboard {
+  final String uniqueId;
   final AppModel app;
   final String componentIdentifier;
   final String? profilePageId;
   final String? feedPageId;
 
-  MembershipDashboard(this.app, this.componentIdentifier, this.profilePageId, this.feedPageId);
+  MembershipDashboard(this.uniqueId, this.app, this.componentIdentifier,
+      this.profilePageId, this.feedPageId);
 
   MembershipDashboardModel _dashboardModel() {
     return MembershipDashboardModel(
-      documentID: componentIdentifier,
+      documentID: constructDocumentId(uniqueId: uniqueId, documentId: componentIdentifier),
       appId: app.documentID!,
       description: "Members",
-      memberActions: ProfileAndFeedToAction.getMemberActionModels(app, profilePageId, feedPageId),
+      memberActions: ProfileAndFeedToAction.getMemberActionModels(
+          uniqueId, app, profilePageId, feedPageId),
       conditions: StorageConditionsModel(
-          privilegeLevelRequired: PrivilegeLevelRequiredSimple.NoPrivilegeRequiredSimple
-      ),
+          privilegeLevelRequired:
+              PrivilegeLevelRequiredSimple.NoPrivilegeRequiredSimple),
     );
   }
 

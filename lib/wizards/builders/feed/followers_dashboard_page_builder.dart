@@ -14,6 +14,7 @@ import 'other_feed_pages_builder.dart';
 
 class FollowersDashboardPageBuilder extends OtherFeedPageBuilder {
   FollowersDashboardPageBuilder(
+      String uniqueId,
       String pageId,
       AppModel app,
       String memberId,
@@ -22,10 +23,9 @@ class FollowersDashboardPageBuilder extends OtherFeedPageBuilder {
       DrawerModel leftDrawer,
       DrawerModel rightDrawer,
       PageProvider pageProvider,
-      ActionProvider actionProvider
-      )
-      : super(pageId, app, memberId, theHomeMenu, theAppBar, leftDrawer,
-            rightDrawer, pageProvider, actionProvider);
+      ActionProvider actionProvider)
+      : super(uniqueId, pageId, app, memberId, theHomeMenu, theAppBar,
+            leftDrawer, rightDrawer, pageProvider, actionProvider);
 
   Future<PageModel> run(
       {required String componentIdentifier,
@@ -33,7 +33,7 @@ class FollowersDashboardPageBuilder extends OtherFeedPageBuilder {
       required String headerComponentIdentifier,
       required String profilePageId,
       required String feedPageId}) async {
-    await FollowingDashboard(app, componentIdentifier, "Followers",
+    await FollowingDashboard(uniqueId, app, componentIdentifier, "Followers",
             FollowingView.Followers, profilePageId, feedPageId)
         .run();
     return await doIt(

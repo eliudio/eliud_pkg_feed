@@ -1,5 +1,6 @@
 import 'package:eliud_core/core/wizards/builders/page_builder.dart';
 import 'package:eliud_core/core/wizards/registry/registry.dart';
+import 'package:eliud_core/core/wizards/tools/documentIdentifier.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart'
     as corerepo;
 import 'package:eliud_core/model/app_bar_model.dart';
@@ -13,6 +14,7 @@ import 'package:eliud_pkg_feed/model/header_component.dart';
 
 class OtherFeedPageBuilder extends PageBuilder {
   OtherFeedPageBuilder(
+      String uniqueId,
       String pageId,
       AppModel app,
       String memberId,
@@ -21,10 +23,9 @@ class OtherFeedPageBuilder extends PageBuilder {
       DrawerModel leftDrawer,
       DrawerModel rightDrawer,
       PageProvider pageProvider,
-      ActionProvider actionProvider
-      )
-      : super(pageId, app, memberId, theHomeMenu, theAppBar, leftDrawer,
-            rightDrawer, pageProvider, actionProvider);
+      ActionProvider actionProvider)
+      : super(uniqueId, pageId, app, memberId, theHomeMenu, theAppBar,
+            leftDrawer, rightDrawer, pageProvider, actionProvider);
 
   Future<PageModel> _setupPage(
       {required String componentName,
@@ -52,18 +53,18 @@ class OtherFeedPageBuilder extends PageBuilder {
     components.add(BodyComponentModel(
         documentID: "1",
         componentName: AbstractFeedMenuComponent.componentName,
-        componentId: feedMenuComponentIdentifier));
+        componentId: constructDocumentId(uniqueId: uniqueId, documentId: feedMenuComponentIdentifier)));
     components.add(BodyComponentModel(
         documentID: "2",
         componentName: AbstractHeaderComponent.componentName,
-        componentId: headerComponentIdentifier));
+        componentId: constructDocumentId(uniqueId: uniqueId, documentId: headerComponentIdentifier)));
     components.add(BodyComponentModel(
         documentID: "3",
         componentName: componentName,
-        componentId: componentIdentifier));
+        componentId: constructDocumentId(uniqueId: uniqueId, documentId: componentIdentifier)));
 
     return PageModel(
-        documentID: pageId,
+        documentID: constructDocumentId(uniqueId: uniqueId, documentId: pageId),
         appId: app.documentID!,
         title: title,
         drawer: leftDrawer,

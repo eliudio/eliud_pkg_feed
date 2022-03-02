@@ -1,14 +1,10 @@
 import 'package:eliud_core/core/wizards/builders/page_builder.dart';
 import 'package:eliud_core/core/wizards/registry/registry.dart';
+import 'package:eliud_core/core/wizards/tools/documentIdentifier.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart'
     as corerepo;
-import 'package:eliud_core/model/app_bar_model.dart';
-import 'package:eliud_core/model/body_component_model.dart';
-import 'package:eliud_core/model/drawer_model.dart';
-import 'package:eliud_core/model/home_menu_model.dart';
 import 'package:eliud_core/model/menu_def_model.dart';
 import 'package:eliud_core/model/model_export.dart';
-import 'package:eliud_core/model/page_model.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/feed_menu_component.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
@@ -18,6 +14,7 @@ import 'package:eliud_pkg_feed/model/profile_model.dart';
 
 class ProfilePageBuilder extends PageBuilder {
   ProfilePageBuilder(
+      String uniqueId,
       String pageId,
       AppModel app,
       String memberId,
@@ -26,10 +23,9 @@ class ProfilePageBuilder extends PageBuilder {
       DrawerModel leftDrawer,
       DrawerModel rightDrawer,
       PageProvider pageProvider,
-      ActionProvider actionProvider
-      )
-      : super(pageId, app, memberId, theHomeMenu, theAppBar, leftDrawer,
-            rightDrawer, pageProvider, actionProvider);
+      ActionProvider actionProvider)
+      : super(uniqueId, pageId, app, memberId, theHomeMenu, theAppBar,
+            leftDrawer, rightDrawer, pageProvider, actionProvider);
 
   Future<PageModel> _setupPage({
     required String profileComponentIdentifier,
@@ -53,18 +49,18 @@ class ProfilePageBuilder extends PageBuilder {
     components.add(BodyComponentModel(
         documentID: "1",
         componentName: AbstractFeedMenuComponent.componentName,
-        componentId: feedMenuComponentIdentifier));
+        componentId: constructDocumentId(uniqueId: uniqueId, documentId: feedMenuComponentIdentifier)));
     components.add(BodyComponentModel(
         documentID: "2",
         componentName: AbstractHeaderComponent.componentName,
-        componentId: headerComponentIdentifier));
+        componentId: constructDocumentId(uniqueId: uniqueId, documentId: headerComponentIdentifier)));
     components.add(BodyComponentModel(
         documentID: "3",
         componentName: AbstractProfileComponent.componentName,
-        componentId: profileComponentIdentifier));
+        componentId: constructDocumentId(uniqueId: uniqueId, documentId: profileComponentIdentifier)));
 
     return PageModel(
-        documentID: pageId,
+        documentID: constructDocumentId(uniqueId: uniqueId, documentId: pageId),
         appId: app.documentID!,
         title: "Profile",
         drawer: leftDrawer,
@@ -82,7 +78,7 @@ class ProfilePageBuilder extends PageBuilder {
   ProfileModel profileModel(
       {required FeedModel feed, required String profileComponentIdentifier}) {
     return ProfileModel(
-      documentID: profileComponentIdentifier,
+      documentID: constructDocumentId(uniqueId: uniqueId, documentId: profileComponentIdentifier),
       feed: feed,
       appId: app.documentID!,
       description: "My Profile",
@@ -113,7 +109,6 @@ class ProfilePageBuilder extends PageBuilder {
     return await _setupPage(
         profileComponentIdentifier: profileComponentIdentifier,
         feedMenuComponentIdentifier: feedMenuComponentIdentifier,
-        headerComponentIdentifier: headerComponentIdentifier
-    );
+        headerComponentIdentifier: headerComponentIdentifier);
   }
 }

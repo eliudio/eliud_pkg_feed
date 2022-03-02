@@ -1,5 +1,6 @@
 import 'package:eliud_core/core/wizards/builders/page_builder.dart';
 import 'package:eliud_core/core/wizards/registry/registry.dart';
+import 'package:eliud_core/core/wizards/tools/documentIdentifier.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart'
     as corerepo;
 import 'package:eliud_core/model/app_bar_model.dart';
@@ -20,6 +21,7 @@ import 'components/profile_component.dart';
 
 class FeedPageBuilder extends PageBuilder {
   FeedPageBuilder(
+      String uniqueId,
       String pageId,
       AppModel app,
       String memberId,
@@ -28,34 +30,39 @@ class FeedPageBuilder extends PageBuilder {
       DrawerModel leftDrawer,
       DrawerModel rightDrawer,
       PageProvider pageProvider,
-      ActionProvider actionProvider
-      )
-      : super(pageId, app, memberId, theHomeMenu, theAppBar, leftDrawer,
-            rightDrawer, pageProvider, actionProvider);
+      ActionProvider actionProvider)
+      : super(uniqueId, pageId, app, memberId, theHomeMenu, theAppBar,
+            leftDrawer, rightDrawer, pageProvider, actionProvider);
 
-  Future<PageModel> _setupPage({required String feedMenuComponentIdentifier, required String headerComponentIdentifier}) async {
+  Future<PageModel> _setupPage(
+      {required String feedMenuComponentIdentifier,
+      required String headerComponentIdentifier}) async {
     return await corerepo.AbstractRepositorySingleton.singleton
         .pageRepository(app.documentID!)!
-        .add(_page(feedMenuComponentIdentifier: feedMenuComponentIdentifier, headerComponentIdentifier: headerComponentIdentifier));
+        .add(_page(
+            feedMenuComponentIdentifier: feedMenuComponentIdentifier,
+            headerComponentIdentifier: headerComponentIdentifier));
   }
 
-  PageModel _page({required String feedMenuComponentIdentifier, required String headerComponentIdentifier}) {
+  PageModel _page(
+      {required String feedMenuComponentIdentifier,
+      required String headerComponentIdentifier}) {
     List<BodyComponentModel> components = [];
     components.add(BodyComponentModel(
         documentID: "1",
         componentName: AbstractFeedMenuComponent.componentName,
-        componentId: feedMenuComponentIdentifier));
+        componentId: constructDocumentId(uniqueId: uniqueId, documentId: feedMenuComponentIdentifier)));
     components.add(BodyComponentModel(
         documentID: "2",
         componentName: AbstractHeaderComponent.componentName,
-        componentId: headerComponentIdentifier));
+        componentId: constructDocumentId(uniqueId: uniqueId, documentId: headerComponentIdentifier)));
     components.add(BodyComponentModel(
         documentID: "3",
         componentName: AbstractFeedComponent.componentName,
-        componentId: pageId));
+        componentId: constructDocumentId(uniqueId: uniqueId, documentId: pageId)));
 
     return PageModel(
-        documentID: pageId,
+        documentID: constructDocumentId(uniqueId: uniqueId, documentId: pageId),
         appId: app.documentID!,
         title: "Feed",
         drawer: leftDrawer,
@@ -70,22 +77,21 @@ class FeedPageBuilder extends PageBuilder {
         bodyComponents: components);
   }
 
-  FeedModel feedModel() =>
-     FeedModel(
-      documentID: pageId,
-      appId: app.documentID!,
-      description: "My Feed",
-      thumbImage: ThumbStyle.Thumbs,
-      photoPost: true,
-      videoPost: true,
-      messagePost: true,
-      audioPost: false,
-      albumPost: true,
-      articlePost: true,
-      conditions: StorageConditionsModel(
-          privilegeLevelRequired:
-              PrivilegeLevelRequiredSimple.NoPrivilegeRequiredSimple),
-    );
+  FeedModel feedModel() => FeedModel(
+        documentID: constructDocumentId(uniqueId: uniqueId, documentId: pageId),
+        appId: app.documentID!,
+        description: "My Feed",
+        thumbImage: ThumbStyle.Thumbs,
+        photoPost: true,
+        videoPost: true,
+        messagePost: true,
+        audioPost: false,
+        albumPost: true,
+        articlePost: true,
+        conditions: StorageConditionsModel(
+            privilegeLevelRequired:
+                PrivilegeLevelRequiredSimple.NoPrivilegeRequiredSimple),
+      );
 
   Future<FeedModel> _setupFeed() async {
     return await AbstractRepositorySingleton.singleton
@@ -96,8 +102,7 @@ class FeedPageBuilder extends PageBuilder {
   Future<FeedModel> run(
       {required String feedMenuComponentIdentifier,
       required String headerComponentIdentifier,
-        required String profileComponentIdentifier,
-
+      required String profileComponentIdentifier,
       required String feedPageId,
       required String profilePageId,
       required String followRequestPageId,
@@ -107,6 +112,7 @@ class FeedPageBuilder extends PageBuilder {
       required String appMembersPageId}) async {
     var feed = await _setupFeed();
     await FeedMenu(
+      uniqueId,
       app,
       feedPageId: feedPageId,
       profilePageId: profilePageId,
@@ -116,12 +122,16 @@ class FeedPageBuilder extends PageBuilder {
       fiendFriendsPageId: fiendFriendsPageId,
       appMembersPageId: appMembersPageId,
     ).run(feed: feed, feedMenuComponentIdentifier: feedMenuComponentIdentifier);
-    await ProfileComponent(app.documentID!).run(feed: feed, profileComponentId: profileComponentIdentifier);
-    await HeaderComponent(app.documentID!)
+    await ProfileComponent(uniqueId, app.documentID!)
+        .run(feed: feed, profileComponentId: profileComponentIdentifier);
+    await HeaderComponent(uniqueId, app.documentID!)
         .run(feed: feed, headerComponentIdentifier: headerComponentIdentifier);
 
     // Specific to feed page
-    await _setupPage(feedMenuComponentIdentifier: feedMenuComponentIdentifier, headerComponentIdentifier: headerComponentIdentifier, );
+    await _setupPage(
+      feedMenuComponentIdentifier: feedMenuComponentIdentifier,
+      headerComponentIdentifier: headerComponentIdentifier,
+    );
     return feed;
   }
 }
