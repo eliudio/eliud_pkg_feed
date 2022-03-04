@@ -57,27 +57,41 @@ class _FeedMenuState extends State<FeedMenu>
                 } else {
                   items = widget.feedMenuModel.menuCurrentMember!.menuItems!;
                 }
-                var useTheseItems = <String>[];
-                var actions = <ActionModel>[];
-                var selectedPage = 0;
-                var i = 0;
-                for (var item in items) {
-                  if (accessState.menuItemHasAccess(item)) {
-                    var isActive =
-                    PageHelper.isActivePage(pageContextInfo.pageId, item.action);
-                    if (isActive) {
-                      selectedPage = i;
-                    }
-                    if (item.text != null) {
-                      useTheseItems.add(item.text!);
-                      actions.add(item.action!);
-                    }
-                    i++;
-                  }
-                }
 
-                return FeedMenuItems(widget.app,
-                    useTheseItems, actions, selectedPage, parameters);
+                return FutureBuilder<List<bool>>(
+                future: accessState.hasNAccess(items),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    var access = snapshot.data!;
+
+                    var useTheseItems = <String>[];
+                    var actions = <ActionModel>[];
+                    var selectedPage = 0;
+
+                    var i = 0;
+                    for (var item in items) {
+                      if (access[i]) {
+                        var isActive =
+                        PageHelper.isActivePage(
+                            pageContextInfo.pageId, item.action);
+                        if (isActive) {
+                          selectedPage = i;
+                        }
+                        if (item.text != null) {
+                          useTheseItems.add(item.text!);
+                          actions.add(item.action!);
+                        }
+                      }
+                      i++;
+                    }
+
+                    return FeedMenuItems(widget.app,
+                        useTheseItems, actions, selectedPage, parameters);
+                  } else {
+                    return progressIndicator(widget.app, context);
+                  }
+                });
+
               } else {
                 return progressIndicator(widget.app, context);
               }
