@@ -59,7 +59,6 @@ class FeedWizard extends NewAppWizardInfoWithActionSpecification {
     DrawerProvider leftDrawerProvider,
     DrawerProvider rightDrawerProvider,
     PageProvider pageProvider,
-    ActionProvider actionProvider,
   ) {
     if (parameters is ActionSpecificationParametersBase) {
       var feedSpecifications = parameters.actionSpecifications;
@@ -79,7 +78,7 @@ class FeedWizard extends NewAppWizardInfoWithActionSpecification {
                   leftDrawerProvider(),
                   rightDrawerProvider(),
                   pageProvider,
-                  actionProvider)
+                  )
               .run(
                   feedMenuComponentIdentifier:
                       feedMenuComponentIdentifier,
@@ -108,7 +107,7 @@ class FeedWizard extends NewAppWizardInfoWithActionSpecification {
                   leftDrawerProvider(),
                   rightDrawerProvider(),
                   pageProvider,
-                  actionProvider)
+                  )
               .run(
             componentIdentifier: followRequestComponentId,
             profilePageId: profilePageId,
@@ -131,7 +130,7 @@ class FeedWizard extends NewAppWizardInfoWithActionSpecification {
                   leftDrawerProvider(),
                   rightDrawerProvider(),
                   pageProvider,
-                  actionProvider)
+                  )
               .run(
             componentIdentifier: followersComponentId,
             profilePageId: profilePageId,
@@ -154,7 +153,7 @@ class FeedWizard extends NewAppWizardInfoWithActionSpecification {
                   leftDrawerProvider(),
                   rightDrawerProvider(),
                   pageProvider,
-                  actionProvider)
+                  )
               .run(
             componentIdentifier: followingComponentId,
             profilePageId: profilePageId,
@@ -177,7 +176,7 @@ class FeedWizard extends NewAppWizardInfoWithActionSpecification {
                   leftDrawerProvider(),
                   rightDrawerProvider(),
                   pageProvider,
-                  actionProvider)
+                  )
               .run(
             componentIdentifier: inviteComponentId,
             profilePageId: profilePageId,
@@ -200,7 +199,7 @@ class FeedWizard extends NewAppWizardInfoWithActionSpecification {
                   leftDrawerProvider(),
                   rightDrawerProvider(),
                   pageProvider,
-                  actionProvider)
+                  )
               .run(
             componentIdentifier: membershipComponentId,
             profilePageId: profilePageId,
@@ -223,7 +222,7 @@ class FeedWizard extends NewAppWizardInfoWithActionSpecification {
                   leftDrawerProvider(),
                   rightDrawerProvider(),
                   pageProvider,
-                  actionProvider)
+                  )
               .run(
             feed: feedModel,
             member: member,

@@ -23,9 +23,9 @@ class MembershipDashboardPageBuilder extends OtherFeedPageBuilder {
       DrawerModel leftDrawer,
       DrawerModel rightDrawer,
       PageProvider pageProvider,
-      ActionProvider actionProvider)
+      )
       : super(uniqueId, pageId, app, memberId, theHomeMenu, theAppBar,
-            leftDrawer, rightDrawer, pageProvider, actionProvider);
+            leftDrawer, rightDrawer, pageProvider, );
 
   Future<PageModel> run(
       {required String componentIdentifier,
