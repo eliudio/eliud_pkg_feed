@@ -35,6 +35,9 @@ class FeedWizard extends NewAppWizardInfoWithActionSpecification {
   FeedWizard() : super('feed', 'Feed', 'Generate a default Feed');
 
   @override
+  String getPackageName() => "eliud_pkg_feed";
+
+  @override
   NewAppWizardParameters newAppWizardParameters() =>
       ActionSpecificationParametersBase(
         requiresAccessToLocalFileSystem: false,
