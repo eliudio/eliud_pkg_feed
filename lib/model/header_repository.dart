@@ -32,11 +32,12 @@ import 'package:eliud_pkg_feed/model/entity_export.dart';
 import 'dart:async';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
+import 'package:eliud_core/tools/repository_base.dart';
 
 typedef HeaderModelTrigger(List<HeaderModel?> list);
 typedef HeaderChanged(HeaderModel? value);
 
-abstract class HeaderRepository {
+abstract class HeaderRepository extends RepositoryBase<HeaderModel> {
   Future<HeaderModel> add(HeaderModel value);
   Future<void> delete(HeaderModel value);
   Future<HeaderModel?> get(String? id, { Function(Exception)? onError });

@@ -32,11 +32,12 @@ import 'package:eliud_pkg_feed/model/entity_export.dart';
 import 'dart:async';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
+import 'package:eliud_core/tools/repository_base.dart';
 
 typedef FeedMenuModelTrigger(List<FeedMenuModel?> list);
 typedef FeedMenuChanged(FeedMenuModel? value);
 
-abstract class FeedMenuRepository {
+abstract class FeedMenuRepository extends RepositoryBase<FeedMenuModel> {
   Future<FeedMenuModel> add(FeedMenuModel value);
   Future<void> delete(FeedMenuModel value);
   Future<FeedMenuModel?> get(String? id, { Function(Exception)? onError });

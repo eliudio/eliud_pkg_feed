@@ -32,11 +32,12 @@ import 'package:eliud_pkg_feed/model/entity_export.dart';
 import 'dart:async';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
+import 'package:eliud_core/tools/repository_base.dart';
 
 typedef ProfileModelTrigger(List<ProfileModel?> list);
 typedef ProfileChanged(ProfileModel? value);
 
-abstract class ProfileRepository {
+abstract class ProfileRepository extends RepositoryBase<ProfileModel> {
   Future<ProfileModel> add(ProfileModel value);
   Future<void> delete(ProfileModel value);
   Future<ProfileModel?> get(String? id, { Function(Exception)? onError });

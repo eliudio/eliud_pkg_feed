@@ -36,11 +36,12 @@ import 'package:eliud_pkg_feed/model/entity_export.dart';
 import 'dart:async';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
+import 'package:eliud_core/tools/repository_base.dart';
 
 typedef PostLikeModelTrigger(List<PostLikeModel?> list);
 typedef PostLikeChanged(PostLikeModel? value);
 
-abstract class PostLikeRepository {
+abstract class PostLikeRepository extends RepositoryBase<PostLikeModel> {
   Future<PostLikeModel> add(PostLikeModel value);
   Future<void> delete(PostLikeModel value);
   Future<PostLikeModel?> get(String? id, { Function(Exception)? onError });
