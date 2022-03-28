@@ -13,6 +13,7 @@
 
 */
 
+import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:equatable/equatable.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
 
@@ -73,5 +74,17 @@ class FeedListUpdated extends FeedListEvent {
 
   @override
   String toString() => 'FeedListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
+}
+
+class FeedChangeQuery extends FeedListEvent {
+  final EliudQuery newQuery;
+
+  const FeedChangeQuery({ required this.newQuery });
+
+  @override
+  List<Object?> get props => [ newQuery ];
+
+  @override
+  String toString() => 'FeedChangeQuery{ value: $newQuery }';
 }
 

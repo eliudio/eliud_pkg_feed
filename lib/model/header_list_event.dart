@@ -13,6 +13,7 @@
 
 */
 
+import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:equatable/equatable.dart';
 import 'package:eliud_pkg_feed/model/header_model.dart';
 
@@ -73,5 +74,17 @@ class HeaderListUpdated extends HeaderListEvent {
 
   @override
   String toString() => 'HeaderListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
+}
+
+class HeaderChangeQuery extends HeaderListEvent {
+  final EliudQuery newQuery;
+
+  const HeaderChangeQuery({ required this.newQuery });
+
+  @override
+  List<Object?> get props => [ newQuery ];
+
+  @override
+  String toString() => 'HeaderChangeQuery{ value: $newQuery }';
 }
 

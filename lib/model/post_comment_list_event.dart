@@ -13,6 +13,7 @@
 
 */
 
+import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:equatable/equatable.dart';
 import 'package:eliud_pkg_feed/model/post_comment_model.dart';
 
@@ -73,5 +74,17 @@ class PostCommentListUpdated extends PostCommentListEvent {
 
   @override
   String toString() => 'PostCommentListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
+}
+
+class PostCommentChangeQuery extends PostCommentListEvent {
+  final EliudQuery newQuery;
+
+  const PostCommentChangeQuery({ required this.newQuery });
+
+  @override
+  List<Object?> get props => [ newQuery ];
+
+  @override
+  String toString() => 'PostCommentChangeQuery{ value: $newQuery }';
 }
 

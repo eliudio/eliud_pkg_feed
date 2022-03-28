@@ -13,6 +13,7 @@
 
 */
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:eliud_pkg_feed/model/feed_menu_model.dart';
 
@@ -36,6 +37,13 @@ class FeedMenuListLoaded extends FeedMenuListState {
 
   @override
   String toString() => 'FeedMenuListLoaded { values: $values }';
+
+  @override
+  bool operator ==(Object other) => 
+          other is FeedMenuListLoaded &&
+              runtimeType == other.runtimeType &&
+              ListEquality().equals(values, other.values) &&
+              mightHaveMore == other.mightHaveMore;
 }
 
 class FeedMenuNotLoaded extends FeedMenuListState {}

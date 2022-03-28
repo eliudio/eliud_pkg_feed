@@ -13,6 +13,7 @@
 
 */
 
+import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:equatable/equatable.dart';
 import 'package:eliud_pkg_feed/model/post_like_model.dart';
 
@@ -73,5 +74,17 @@ class PostLikeListUpdated extends PostLikeListEvent {
 
   @override
   String toString() => 'PostLikeListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
+}
+
+class PostLikeChangeQuery extends PostLikeListEvent {
+  final EliudQuery newQuery;
+
+  const PostLikeChangeQuery({ required this.newQuery });
+
+  @override
+  List<Object?> get props => [ newQuery ];
+
+  @override
+  String toString() => 'PostLikeChangeQuery{ value: $newQuery }';
 }
 

@@ -13,6 +13,7 @@
 
 */
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 
@@ -36,6 +37,13 @@ class PostListLoaded extends PostListState {
 
   @override
   String toString() => 'PostListLoaded { values: $values }';
+
+  @override
+  bool operator ==(Object other) => 
+          other is PostListLoaded &&
+              runtimeType == other.runtimeType &&
+              ListEquality().equals(values, other.values) &&
+              mightHaveMore == other.mightHaveMore;
 }
 
 class PostNotLoaded extends PostListState {}

@@ -27,7 +27,7 @@ import 'package:eliud_core/tools/query/query_tools.dart';
 class PostLikeListBloc extends Bloc<PostLikeListEvent, PostLikeListState> {
   final PostLikeRepository _postLikeRepository;
   StreamSubscription? _postLikesListSubscription;
-  final EliudQuery? eliudQuery;
+  EliudQuery? eliudQuery;
   int pages = 1;
   final bool? paged;
   final String? orderBy;
@@ -99,6 +99,13 @@ class PostLikeListBloc extends Bloc<PostLikeListEvent, PostLikeListState> {
     if (event is NewPage) {
       pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
       yield* _mapLoadPostLikeListWithDetailsToState();
+    } else if (event is PostLikeChangeQuery) {
+      eliudQuery = event.newQuery;
+      if ((detailed == null) || (!detailed!)) {
+        yield* _mapLoadPostLikeListToState();
+      } else {
+        yield* _mapLoadPostLikeListWithDetailsToState();
+      }
     } else if (event is AddPostLikeList) {
       yield* _mapAddPostLikeListToState(event);
     } else if (event is UpdatePostLikeList) {

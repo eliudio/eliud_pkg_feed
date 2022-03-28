@@ -27,7 +27,7 @@ import 'package:eliud_core/tools/query/query_tools.dart';
 class FeedMenuListBloc extends Bloc<FeedMenuListEvent, FeedMenuListState> {
   final FeedMenuRepository _feedMenuRepository;
   StreamSubscription? _feedMenusListSubscription;
-  final EliudQuery? eliudQuery;
+  EliudQuery? eliudQuery;
   int pages = 1;
   final bool? paged;
   final String? orderBy;
@@ -99,6 +99,13 @@ class FeedMenuListBloc extends Bloc<FeedMenuListEvent, FeedMenuListState> {
     if (event is NewPage) {
       pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
       yield* _mapLoadFeedMenuListWithDetailsToState();
+    } else if (event is FeedMenuChangeQuery) {
+      eliudQuery = event.newQuery;
+      if ((detailed == null) || (!detailed!)) {
+        yield* _mapLoadFeedMenuListToState();
+      } else {
+        yield* _mapLoadFeedMenuListWithDetailsToState();
+      }
     } else if (event is AddFeedMenuList) {
       yield* _mapAddFeedMenuListToState(event);
     } else if (event is UpdateFeedMenuList) {

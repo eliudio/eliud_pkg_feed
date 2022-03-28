@@ -27,7 +27,7 @@ import 'package:eliud_core/tools/query/query_tools.dart';
 class PostCommentListBloc extends Bloc<PostCommentListEvent, PostCommentListState> {
   final PostCommentRepository _postCommentRepository;
   StreamSubscription? _postCommentsListSubscription;
-  final EliudQuery? eliudQuery;
+  EliudQuery? eliudQuery;
   int pages = 1;
   final bool? paged;
   final String? orderBy;
@@ -99,6 +99,13 @@ class PostCommentListBloc extends Bloc<PostCommentListEvent, PostCommentListStat
     if (event is NewPage) {
       pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
       yield* _mapLoadPostCommentListWithDetailsToState();
+    } else if (event is PostCommentChangeQuery) {
+      eliudQuery = event.newQuery;
+      if ((detailed == null) || (!detailed!)) {
+        yield* _mapLoadPostCommentListToState();
+      } else {
+        yield* _mapLoadPostCommentListWithDetailsToState();
+      }
     } else if (event is AddPostCommentList) {
       yield* _mapAddPostCommentListToState(event);
     } else if (event is UpdatePostCommentList) {

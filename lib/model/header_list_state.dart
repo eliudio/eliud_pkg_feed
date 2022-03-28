@@ -13,6 +13,7 @@
 
 */
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:eliud_pkg_feed/model/header_model.dart';
 
@@ -36,6 +37,13 @@ class HeaderListLoaded extends HeaderListState {
 
   @override
   String toString() => 'HeaderListLoaded { values: $values }';
+
+  @override
+  bool operator ==(Object other) => 
+          other is HeaderListLoaded &&
+              runtimeType == other.runtimeType &&
+              ListEquality().equals(values, other.values) &&
+              mightHaveMore == other.mightHaveMore;
 }
 
 class HeaderNotLoaded extends HeaderListState {}

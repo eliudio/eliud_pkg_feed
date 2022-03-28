@@ -27,7 +27,7 @@ import 'package:eliud_core/tools/query/query_tools.dart';
 class MemberProfileListBloc extends Bloc<MemberProfileListEvent, MemberProfileListState> {
   final MemberProfileRepository _memberProfileRepository;
   StreamSubscription? _memberProfilesListSubscription;
-  final EliudQuery? eliudQuery;
+  EliudQuery? eliudQuery;
   int pages = 1;
   final bool? paged;
   final String? orderBy;
@@ -99,6 +99,13 @@ class MemberProfileListBloc extends Bloc<MemberProfileListEvent, MemberProfileLi
     if (event is NewPage) {
       pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
       yield* _mapLoadMemberProfileListWithDetailsToState();
+    } else if (event is MemberProfileChangeQuery) {
+      eliudQuery = event.newQuery;
+      if ((detailed == null) || (!detailed!)) {
+        yield* _mapLoadMemberProfileListToState();
+      } else {
+        yield* _mapLoadMemberProfileListWithDetailsToState();
+      }
     } else if (event is AddMemberProfileList) {
       yield* _mapAddMemberProfileListToState(event);
     } else if (event is UpdateMemberProfileList) {

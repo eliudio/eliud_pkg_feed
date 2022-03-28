@@ -27,7 +27,7 @@ import 'package:eliud_core/tools/query/query_tools.dart';
 class PostListBloc extends Bloc<PostListEvent, PostListState> {
   final PostRepository _postRepository;
   StreamSubscription? _postsListSubscription;
-  final EliudQuery? eliudQuery;
+  EliudQuery? eliudQuery;
   int pages = 1;
   final bool? paged;
   final String? orderBy;
@@ -99,6 +99,13 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
     if (event is NewPage) {
       pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
       yield* _mapLoadPostListWithDetailsToState();
+    } else if (event is PostChangeQuery) {
+      eliudQuery = event.newQuery;
+      if ((detailed == null) || (!detailed!)) {
+        yield* _mapLoadPostListToState();
+      } else {
+        yield* _mapLoadPostListWithDetailsToState();
+      }
     } else if (event is AddPostList) {
       yield* _mapAddPostListToState(event);
     } else if (event is UpdatePostList) {

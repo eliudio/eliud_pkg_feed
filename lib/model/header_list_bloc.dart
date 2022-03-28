@@ -27,7 +27,7 @@ import 'package:eliud_core/tools/query/query_tools.dart';
 class HeaderListBloc extends Bloc<HeaderListEvent, HeaderListState> {
   final HeaderRepository _headerRepository;
   StreamSubscription? _headersListSubscription;
-  final EliudQuery? eliudQuery;
+  EliudQuery? eliudQuery;
   int pages = 1;
   final bool? paged;
   final String? orderBy;
@@ -99,6 +99,13 @@ class HeaderListBloc extends Bloc<HeaderListEvent, HeaderListState> {
     if (event is NewPage) {
       pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
       yield* _mapLoadHeaderListWithDetailsToState();
+    } else if (event is HeaderChangeQuery) {
+      eliudQuery = event.newQuery;
+      if ((detailed == null) || (!detailed!)) {
+        yield* _mapLoadHeaderListToState();
+      } else {
+        yield* _mapLoadHeaderListWithDetailsToState();
+      }
     } else if (event is AddHeaderList) {
       yield* _mapAddHeaderListToState(event);
     } else if (event is UpdateHeaderList) {
