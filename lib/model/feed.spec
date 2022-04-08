@@ -3,7 +3,7 @@
   "packageName": "eliud_pkg_feed",
   "isAppModel": true,
   "generate": {
-    "generateComponent": true,
+    "generateComponent": false,
     "generateRepository": true,
     "generateCache": true,
 	"hasPersistentRepository": true,
@@ -16,7 +16,7 @@
     "generateDropDownButton": true,
     "generateInternalComponent": true,
     "generateEmbeddedComponent": false,
-    "isExtension": true,
+    "isExtension": false,
     "documentSubCollectionOf": "app"
   },
   "fields": [
@@ -82,22 +82,12 @@
       "displayName": "Article Post",
       "remark": "Allow article posts",
       "fieldType": "bool"
-    },
-    {
-      "fieldName": "conditions",
-      "displayName": "Conditions",
-      "fieldType": "StorageConditions",
-      "group": "conditions"
     }
   ],
   "groups": [
     {
         "group": "general",
         "description": "General"
-    },
-    {
-        "group": "conditions",
-        "description": "Conditions"
     }
  ],
   "listFields": {

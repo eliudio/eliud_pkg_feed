@@ -282,18 +282,6 @@ class _MyFeedFormState extends State<MyFeedForm> {
         children.add(StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().divider(widget.app, context));
 
 
-         children.add(Container(
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                  child: StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().groupTitle(widget.app, context, 'Conditions')
-                ));
-
-
-
-        children.add(Container(height: 20.0));
-        children.add(StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().divider(widget.app, context));
-
-
         if ((formAction != FormAction.ShowData) && (formAction != FormAction.ShowPreloadedData))
           children.add(StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().button(widget.app, context, label: 'Submit',
                   onPressed: _readOnly(accessState, state) ? null : () {
@@ -313,7 +301,6 @@ class _MyFeedFormState extends State<MyFeedForm> {
                               audioPost: state.value!.audioPost, 
                               albumPost: state.value!.albumPost, 
                               articlePost: state.value!.articlePost, 
-                              conditions: state.value!.conditions, 
                         )));
                       } else {
                         BlocProvider.of<FeedListBloc>(context).add(
@@ -328,7 +315,6 @@ class _MyFeedFormState extends State<MyFeedForm> {
                               audioPost: state.value!.audioPost, 
                               albumPost: state.value!.albumPost, 
                               articlePost: state.value!.articlePost, 
-                              conditions: state.value!.conditions, 
                           )));
                       }
                       if (widget.submitAction != null) {

@@ -3,12 +3,9 @@ import 'package:eliud_core/core/wizards/registry/registry.dart';
 import 'package:eliud_core/core/wizards/tools/documentIdentifier.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart'
     as corerepo;
-import 'package:eliud_core/model/menu_def_model.dart';
 import 'package:eliud_core/model/model_export.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_feed/model/feed_menu_component.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
-import 'package:eliud_pkg_feed/model/header_component.dart';
 import 'package:eliud_pkg_feed/model/profile_component.dart';
 import 'package:eliud_pkg_feed/model/profile_model.dart';
 
@@ -29,31 +26,17 @@ class ProfilePageBuilder extends PageBuilder {
 
   Future<PageModel> _setupPage({
     required String profileComponentIdentifier,
-    required String feedMenuComponentIdentifier,
-    required String headerComponentIdentifier,
   }) async {
     return await corerepo.AbstractRepositorySingleton.singleton
         .pageRepository(app.documentID!)!
         .add(_page(
           profileComponentIdentifier: profileComponentIdentifier,
-          feedMenuComponentIdentifier: feedMenuComponentIdentifier,
-          headerComponentIdentifier: headerComponentIdentifier,
         ));
   }
 
   PageModel _page(
-      {required String profileComponentIdentifier,
-      required String feedMenuComponentIdentifier,
-      required String headerComponentIdentifier}) {
+      {required String profileComponentIdentifier,}) {
     List<BodyComponentModel> components = [];
-    components.add(BodyComponentModel(
-        documentID: "1",
-        componentName: AbstractFeedMenuComponent.componentName,
-        componentId: constructDocumentId(uniqueId: uniqueId, documentId: feedMenuComponentIdentifier)));
-    components.add(BodyComponentModel(
-        documentID: "2",
-        componentName: AbstractHeaderComponent.componentName,
-        componentId: constructDocumentId(uniqueId: uniqueId, documentId: headerComponentIdentifier)));
     components.add(BodyComponentModel(
         documentID: "3",
         componentName: AbstractProfileComponent.componentName,
@@ -75,10 +58,9 @@ class ProfilePageBuilder extends PageBuilder {
         bodyComponents: components);
   }
 
-  ProfileModel profileModel(
-      {required FeedModel feed, required String profileComponentIdentifier}) {
+  static ProfileModel profileModel(AppModel app, String uniqueId, String componentIdentifier, FeedModel feed,) {
     return ProfileModel(
-      documentID: constructDocumentId(uniqueId: uniqueId, documentId: profileComponentIdentifier),
+      documentID: constructDocumentId(uniqueId: uniqueId, documentId: componentIdentifier),
       feed: feed,
       appId: app.documentID!,
       description: "My Profile",
@@ -88,27 +70,19 @@ class ProfilePageBuilder extends PageBuilder {
     );
   }
 
-  Future<ProfileModel> _setupProfile(
-      {required FeedModel feed,
-      required String profileComponentIdentifier}) async {
+  static Future<ProfileModel> setupDashboard(AppModel app, String uniqueId, String componentIdentifier, FeedModel feed,) async {
     return await AbstractRepositorySingleton.singleton
         .profileRepository(app.documentID!)!
-        .add(profileModel(
-            feed: feed,
-            profileComponentIdentifier: profileComponentIdentifier));
+        .add(profileModel(app, uniqueId, componentIdentifier, feed,));
   }
 
   Future<PageModel> run(
       {required MemberModel member,
       required FeedModel feed,
-      required String profileComponentIdentifier,
-      required String feedMenuComponentIdentifier,
-      required String headerComponentIdentifier}) async {
-    await _setupProfile(
-        feed: feed, profileComponentIdentifier: profileComponentIdentifier);
+      required String componentIdentifier,
+      }) async {
+    await setupDashboard(app, uniqueId, componentIdentifier, feed, );
     return await _setupPage(
-        profileComponentIdentifier: profileComponentIdentifier,
-        feedMenuComponentIdentifier: feedMenuComponentIdentifier,
-        headerComponentIdentifier: headerComponentIdentifier);
+        profileComponentIdentifier: componentIdentifier,);
   }
 }

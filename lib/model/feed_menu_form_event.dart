@@ -95,28 +95,52 @@ class ChangedFeedMenuDescription extends FeedMenuFormEvent {
   String toString() => 'ChangedFeedMenuDescription{ value: $value }';
 }
 
-class ChangedFeedMenuMenuCurrentMember extends FeedMenuFormEvent {
+class ChangedFeedMenuBodyComponentsCurrentMemberLabels extends FeedMenuFormEvent {
   final String? value;
 
-  ChangedFeedMenuMenuCurrentMember({this.value});
+  ChangedFeedMenuBodyComponentsCurrentMemberLabels({this.value});
 
   @override
   List<Object?> get props => [ value ];
 
   @override
-  String toString() => 'ChangedFeedMenuMenuCurrentMember{ value: $value }';
+  String toString() => 'ChangedFeedMenuBodyComponentsCurrentMemberLabels{ value: $value }';
 }
 
-class ChangedFeedMenuMenuOtherMember extends FeedMenuFormEvent {
-  final String? value;
+class ChangedFeedMenuBodyComponentsCurrentMember extends FeedMenuFormEvent {
+  final List<BodyComponentModel>? value;
 
-  ChangedFeedMenuMenuOtherMember({this.value});
+  ChangedFeedMenuBodyComponentsCurrentMember({this.value});
 
   @override
   List<Object?> get props => [ value ];
 
   @override
-  String toString() => 'ChangedFeedMenuMenuOtherMember{ value: $value }';
+  String toString() => 'ChangedFeedMenuBodyComponentsCurrentMember{ value: $value }';
+}
+
+class ChangedFeedMenuBodyComponentsOtherMemberLabels extends FeedMenuFormEvent {
+  final String? value;
+
+  ChangedFeedMenuBodyComponentsOtherMemberLabels({this.value});
+
+  @override
+  List<Object?> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedFeedMenuBodyComponentsOtherMemberLabels{ value: $value }';
+}
+
+class ChangedFeedMenuBodyComponentsOtherMember extends FeedMenuFormEvent {
+  final List<BodyComponentModel>? value;
+
+  ChangedFeedMenuBodyComponentsOtherMember({this.value});
+
+  @override
+  List<Object?> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedFeedMenuBodyComponentsOtherMember{ value: $value }';
 }
 
 class ChangedFeedMenuItemColor extends FeedMenuFormEvent {
@@ -143,16 +167,16 @@ class ChangedFeedMenuSelectedItemColor extends FeedMenuFormEvent {
   String toString() => 'ChangedFeedMenuSelectedItemColor{ value: $value }';
 }
 
-class ChangedFeedMenuFeed extends FeedMenuFormEvent {
+class ChangedFeedMenuFeedFront extends FeedMenuFormEvent {
   final String? value;
 
-  ChangedFeedMenuFeed({this.value});
+  ChangedFeedMenuFeedFront({this.value});
 
   @override
   List<Object?> get props => [ value ];
 
   @override
-  String toString() => 'ChangedFeedMenuFeed{ value: $value }';
+  String toString() => 'ChangedFeedMenuFeedFront{ value: $value }';
 }
 
 class ChangedFeedMenuConditions extends FeedMenuFormEvent {

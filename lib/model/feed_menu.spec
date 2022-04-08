@@ -41,20 +41,34 @@
       "group": "general"
     },
     {
-      "fieldName": "menuCurrentMember",
-      "displayName": "Menu For Current Member",
-      "fieldType": "MenuDef",
-      "association": true,
-      "optional": true,
-      "group": "iconMenu"
+      "fieldName": "bodyComponentsCurrentMemberLabels",
+      "displayName": "Components Current Member",
+      "fieldType": "String",
+      "arrayType": "Array",
+      "group": "components",
+      "hidden": true
     },
     {
-      "fieldName": "menuOtherMember",
-      "displayName": "Menu For Other Member",
-      "fieldType": "MenuDef",
-      "association": true,
-      "optional": true,
-      "group": "iconMenu"
+      "fieldName": "bodyComponentsCurrentMember",
+      "displayName": "Components Current Member",
+      "fieldType": "BodyComponent",
+      "arrayType": "Array",
+      "group": "components"
+    },
+    {
+      "fieldName": "bodyComponentsOtherMemberLabels",
+      "displayName": "Components Other Member",
+      "fieldType": "String",
+      "arrayType": "Array",
+      "group": "components",
+      "hidden": true
+    },
+    {
+      "fieldName": "bodyComponentsOtherMember",
+      "displayName": "Components Other Member",
+      "fieldType": "BodyComponent",
+      "arrayType": "Array",
+      "group": "components"
     },
     {
       "fieldName": "itemColor",
@@ -75,9 +89,9 @@
       "bespokeFormField": "RgbField(widget.app, \"Selected Item Color\", state.value!.selectedItemColor, _onSelectedItemColorChanged)"
     },
     {
-      "fieldName": "feed",
-      "displayName": "Feed",
-      "fieldType": "Feed",
+      "fieldName": "feedFront",
+      "displayName": "Feed Front",
+      "fieldType": "FeedFront",
       "association": true,
       "group": "general"
     },

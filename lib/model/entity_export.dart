@@ -14,10 +14,10 @@
 */
 
 export '../model/feed_entity.dart';
-export '../model/feed_menu_entity.dart';
-export '../model/header_entity.dart';
 export '../model/member_profile_entity.dart';
 export '../model/post_entity.dart';
 export '../model/post_comment_entity.dart';
 export '../model/post_like_entity.dart';
 export '../model/profile_entity.dart';
+export '../model/feed_menu_entity.dart';
+export '../model/feed_front_entity.dart';

@@ -179,15 +179,3 @@ class ChangedFeedArticlePost extends FeedFormEvent {
   String toString() => 'ChangedFeedArticlePost{ value: $value }';
 }
 
-class ChangedFeedConditions extends FeedFormEvent {
-  final StorageConditionsModel? value;
-
-  ChangedFeedConditions({this.value});
-
-  @override
-  List<Object?> get props => [ value ];
-
-  @override
-  String toString() => 'ChangedFeedConditions{ value: $value }';
-}
-

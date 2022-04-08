@@ -37,8 +37,11 @@ class FeedMenuComponent extends AbstractFeedMenuComponent {
 
   @override
   Widget yourWidget(BuildContext context, FeedMenuModel? feedMenuModel) {
+    if (feedMenuModel == null) return text(app, context, "feedMenuModel is null");
+    if (feedMenuModel.feedFront == null) return text(app, context, "feedMenuModel.feedFront is null");
+    if (feedMenuModel.feedFront!.feed == null) return text(app, context, "feedMenuModel.feedFront!.feed is null");
     var modalRoute = ModalRoute.of(context) as ModalRoute;
-    var feedId = feedMenuModel!.feed!.documentID!;
+    var feedId = feedMenuModel.feedFront!.feed!.documentID!;
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (context, accessState) {
           if (accessState is AccessDetermined) {

@@ -127,9 +127,7 @@ class _MyFeedMenuFormState extends State<MyFeedMenuForm> {
   final TextEditingController _documentIDController = TextEditingController();
   final TextEditingController _appIdController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  String? _menuCurrentMember;
-  String? _menuOtherMember;
-  String? _feed;
+  String? _feedFront;
 
 
   _MyFeedMenuFormState(this.formAction);
@@ -164,18 +162,10 @@ class _MyFeedMenuFormState extends State<MyFeedMenuForm> {
           _descriptionController.text = state.value!.description.toString();
         else
           _descriptionController.text = "";
-        if (state.value!.menuCurrentMember != null)
-          _menuCurrentMember= state.value!.menuCurrentMember!.documentID;
+        if (state.value!.feedFront != null)
+          _feedFront= state.value!.feedFront!.documentID;
         else
-          _menuCurrentMember= "";
-        if (state.value!.menuOtherMember != null)
-          _menuOtherMember= state.value!.menuOtherMember!.documentID;
-        else
-          _menuOtherMember= "";
-        if (state.value!.feed != null)
-          _feed= state.value!.feed!.documentID;
-        else
-          _feed= "";
+          _feedFront= "";
       }
       if (state is FeedMenuFormInitialized) {
         List<Widget> children = [];
@@ -187,12 +177,18 @@ class _MyFeedMenuFormState extends State<MyFeedMenuForm> {
 
         children.add(
 
-                DropdownButtonComponentFactory().createNew(app: widget.app, id: "menuDefs", value: _menuCurrentMember, trigger: _onMenuCurrentMemberSelected, optional: true),
+                new Container(
+                    height: (fullScreenHeight(context) / 2.5), 
+                    child: bodyComponentsList(widget.app, context, state.value!.bodyComponentsCurrentMember, _onBodyComponentsCurrentMemberChanged)
+                )
           );
 
         children.add(
 
-                DropdownButtonComponentFactory().createNew(app: widget.app, id: "menuDefs", value: _menuOtherMember, trigger: _onMenuOtherMemberSelected, optional: true),
+                new Container(
+                    height: (fullScreenHeight(context) / 2.5), 
+                    child: bodyComponentsList(widget.app, context, state.value!.bodyComponentsOtherMember, _onBodyComponentsOtherMemberChanged)
+                )
           );
 
 
@@ -223,7 +219,7 @@ class _MyFeedMenuFormState extends State<MyFeedMenuForm> {
 
         children.add(
 
-                DropdownButtonComponentFactory().createNew(app: widget.app, id: "feeds", value: _feed, trigger: _onFeedSelected, optional: false),
+                DropdownButtonComponentFactory().createNew(app: widget.app, id: "feedFronts", value: _feedFront, trigger: _onFeedFrontSelected, optional: false),
           );
 
 
@@ -287,11 +283,13 @@ class _MyFeedMenuFormState extends State<MyFeedMenuForm> {
                               documentID: state.value!.documentID, 
                               appId: state.value!.appId, 
                               description: state.value!.description, 
-                              menuCurrentMember: state.value!.menuCurrentMember, 
-                              menuOtherMember: state.value!.menuOtherMember, 
+                              bodyComponentsCurrentMemberLabels: state.value!.bodyComponentsCurrentMemberLabels, 
+                              bodyComponentsCurrentMember: state.value!.bodyComponentsCurrentMember, 
+                              bodyComponentsOtherMemberLabels: state.value!.bodyComponentsOtherMemberLabels, 
+                              bodyComponentsOtherMember: state.value!.bodyComponentsOtherMember, 
                               itemColor: state.value!.itemColor, 
                               selectedItemColor: state.value!.selectedItemColor, 
-                              feed: state.value!.feed, 
+                              feedFront: state.value!.feedFront, 
                               conditions: state.value!.conditions, 
                         )));
                       } else {
@@ -300,11 +298,13 @@ class _MyFeedMenuFormState extends State<MyFeedMenuForm> {
                               documentID: state.value!.documentID, 
                               appId: state.value!.appId, 
                               description: state.value!.description, 
-                              menuCurrentMember: state.value!.menuCurrentMember, 
-                              menuOtherMember: state.value!.menuOtherMember, 
+                              bodyComponentsCurrentMemberLabels: state.value!.bodyComponentsCurrentMemberLabels, 
+                              bodyComponentsCurrentMember: state.value!.bodyComponentsCurrentMember, 
+                              bodyComponentsOtherMemberLabels: state.value!.bodyComponentsOtherMemberLabels, 
+                              bodyComponentsOtherMember: state.value!.bodyComponentsOtherMember, 
                               itemColor: state.value!.itemColor, 
                               selectedItemColor: state.value!.selectedItemColor, 
-                              feed: state.value!.feed, 
+                              feedFront: state.value!.feedFront, 
                               conditions: state.value!.conditions, 
                           )));
                       }
@@ -347,19 +347,27 @@ class _MyFeedMenuFormState extends State<MyFeedMenuForm> {
   }
 
 
-  void _onMenuCurrentMemberSelected(String? val) {
-    setState(() {
-      _menuCurrentMember = val;
-    });
-    _myFormBloc.add(ChangedFeedMenuMenuCurrentMember(value: val));
+  void _onBodyComponentsCurrentMemberLabelsChanged(value) {
+    _myFormBloc.add(ChangedFeedMenuBodyComponentsCurrentMemberLabels(value: value));
+    setState(() {});
   }
 
 
-  void _onMenuOtherMemberSelected(String? val) {
-    setState(() {
-      _menuOtherMember = val;
-    });
-    _myFormBloc.add(ChangedFeedMenuMenuOtherMember(value: val));
+  void _onBodyComponentsCurrentMemberChanged(value) {
+    _myFormBloc.add(ChangedFeedMenuBodyComponentsCurrentMember(value: value));
+    setState(() {});
+  }
+
+
+  void _onBodyComponentsOtherMemberLabelsChanged(value) {
+    _myFormBloc.add(ChangedFeedMenuBodyComponentsOtherMemberLabels(value: value));
+    setState(() {});
+  }
+
+
+  void _onBodyComponentsOtherMemberChanged(value) {
+    _myFormBloc.add(ChangedFeedMenuBodyComponentsOtherMember(value: value));
+    setState(() {});
   }
 
 
@@ -375,11 +383,11 @@ class _MyFeedMenuFormState extends State<MyFeedMenuForm> {
   }
 
 
-  void _onFeedSelected(String? val) {
+  void _onFeedFrontSelected(String? val) {
     setState(() {
-      _feed = val;
+      _feedFront = val;
     });
-    _myFormBloc.add(ChangedFeedMenuFeed(value: val));
+    _myFormBloc.add(ChangedFeedMenuFeedFront(value: val));
   }
 
 

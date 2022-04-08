@@ -133,39 +133,35 @@ class FeedMenuCache implements FeedMenuRepository {
 
   static Future<FeedMenuModel> refreshRelations(FeedMenuModel model) async {
 
-    MenuDefModel? menuCurrentMemberHolder;
-    if (model.menuCurrentMember != null) {
+    FeedFrontModel? feedFrontHolder;
+    if (model.feedFront != null) {
       try {
-        await menuDefRepository(appId: model.appId)!.get(model.menuCurrentMember!.documentID).then((val) {
-          menuCurrentMemberHolder = val;
+        await feedFrontRepository(appId: model.appId)!.get(model.feedFront!.documentID).then((val) {
+          feedFrontHolder = val;
         }).catchError((error) {});
       } catch (_) {}
     }
 
-    MenuDefModel? menuOtherMemberHolder;
-    if (model.menuOtherMember != null) {
-      try {
-        await menuDefRepository(appId: model.appId)!.get(model.menuOtherMember!.documentID).then((val) {
-          menuOtherMemberHolder = val;
-        }).catchError((error) {});
-      } catch (_) {}
+    List<BodyComponentModel>? bodyComponentsCurrentMemberHolder;
+    if (model.bodyComponentsCurrentMember != null) {
+      bodyComponentsCurrentMemberHolder = List<BodyComponentModel>.from(await Future.wait(await model.bodyComponentsCurrentMember!.map((element) async {
+        return await BodyComponentCache.refreshRelations(element);
+      }))).toList();
     }
 
-    FeedModel? feedHolder;
-    if (model.feed != null) {
-      try {
-        await feedRepository(appId: model.appId)!.get(model.feed!.documentID).then((val) {
-          feedHolder = val;
-        }).catchError((error) {});
-      } catch (_) {}
+    List<BodyComponentModel>? bodyComponentsOtherMemberHolder;
+    if (model.bodyComponentsOtherMember != null) {
+      bodyComponentsOtherMemberHolder = List<BodyComponentModel>.from(await Future.wait(await model.bodyComponentsOtherMember!.map((element) async {
+        return await BodyComponentCache.refreshRelations(element);
+      }))).toList();
     }
 
     return model.copyWith(
-        menuCurrentMember: menuCurrentMemberHolder,
+        feedFront: feedFrontHolder,
 
-        menuOtherMember: menuOtherMemberHolder,
+        bodyComponentsCurrentMember: bodyComponentsCurrentMemberHolder,
 
-        feed: feedHolder,
+        bodyComponentsOtherMember: bodyComponentsOtherMemberHolder,
 
 
     );

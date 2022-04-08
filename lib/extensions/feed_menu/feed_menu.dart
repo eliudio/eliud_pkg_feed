@@ -1,7 +1,10 @@
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
 import 'package:eliud_core/core/blocs/access/state/access_state.dart';
+import 'package:eliud_core/core/registry.dart';
 import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_pkg_feed/extensions/feed_menu/tabbed_feed_menu_items.dart';
+import 'package:eliud_pkg_feed/extensions/header/header.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 import 'package:eliud_core/core/tools/page_helper.dart';
@@ -20,6 +23,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorful_tab/flutter_colorful_tab.dart';
 
+
 class FeedMenu extends StatefulWidget {
   final AppModel app;
   final FeedMenuModel feedMenuModel;
@@ -35,63 +39,40 @@ class _FeedMenuState extends State<FeedMenu>
 
   @override
   Widget build(BuildContext context) {
+    if (widget.feedMenuModel.feedFront == null) return text(widget.app, context, "feedMenuModel.feedFront == null");
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (context, accessState) {
           if (accessState is AccessDetermined) {
             var pageContextInfo = eliudrouter.Router.getPageContextInfo(context,);
             var parameters = pageContextInfo.parameters;
-            var theState = AccessBloc.getState(context);
             bool otherMember = false;
             if (parameters != null) {
-              var openingForMemberId =
-              parameters[SwitchMember.switchMemberFeedPageParameter];
-              if (openingForMemberId != theState.getMember()!.documentID!) {
+              var openingForMemberId = parameters[SwitchMember.switchMemberFeedPageParameter];
+              if (openingForMemberId != accessState.getMember()!.documentID!) {
                 otherMember = true;
               }
             }
             return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
               if (state is ProfileInitialised) {
                 var items;
+                var labels;
                 if (otherMember) {
-                  items = widget.feedMenuModel.menuOtherMember!.menuItems!;
+                  items = widget.feedMenuModel.bodyComponentsOtherMember;
+                  labels = widget.feedMenuModel.bodyComponentsOtherMemberLabels;
                 } else {
-                  items = widget.feedMenuModel.menuCurrentMember!.menuItems!;
+                  items = widget.feedMenuModel.bodyComponentsCurrentMember;
+                  labels = widget.feedMenuModel.bodyComponentsCurrentMemberLabels;
                 }
 
-                return FutureBuilder<List<bool>>(
-                future: accessState.hasNAccess(items),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    var access = snapshot.data!;
+                // add feed and profile
 
-                    var useTheseItems = <String>[];
-                    var actions = <ActionModel>[];
-                    var selectedPage = 0;
-
-                    var i = 0;
-                    for (var item in items) {
-                      if (access[i]) {
-                        var isActive =
-                        PageHelper.isActivePage(
-                            pageContextInfo.pageId, item.action);
-                        if (isActive) {
-                          selectedPage = i;
-                        }
-                        if (item.text != null) {
-                          useTheseItems.add(item.text!);
-                          actions.add(item.action!);
-                        }
-                      }
-                      i++;
-                    }
-
-                    return FeedMenuItems(widget.app,
-                        useTheseItems, actions, selectedPage, parameters);
-                  } else {
-                    return progressIndicator(widget.app, context);
-                  }
-                });
-
+                return ListView(
+                    shrinkWrap: true,
+                    physics: ScrollPhysics(),
+                    children: [
+                    Header(app: widget.app),
+              TabbedFeedMenuItems(widget.app, items, labels, parameters, widget.feedMenuModel.feedFront!),]);
+//                return FeedMenuItems(widget.app, items, labels, parameters);
               } else {
                 return progressIndicator(widget.app, context);
               }
@@ -100,63 +81,5 @@ class _FeedMenuState extends State<FeedMenu>
             return progressIndicator(widget.app, context);
           }
         });
-  }
-}
-
-class FeedMenuItems extends StatefulWidget {
-  final AppModel app;
-  final List<String> items;
-  final List<ActionModel> actions;
-  final int active;
-  final Map<String, dynamic>? parameters;
-
-  FeedMenuItems(this.app, this.items, this.actions, this.active, this.parameters);
-
-  _FeedMenuItemsState createState() =>
-      _FeedMenuItemsState(items, active, actions, parameters);
-}
-
-class _FeedMenuItemsState extends State<FeedMenuItems>
-    with SingleTickerProviderStateMixin {
-  TabController? _tabController;
-  final List<String> items;
-  final int active;
-  final List<ActionModel> actions;
-  final Map<String, dynamic>? parameters;
-
-  _FeedMenuItemsState(this.items, this.active, this.actions, this.parameters);
-
-  @override
-  void initState() {
-    var size = items.length;
-    _tabController = TabController(vsync: this, length: size);
-    _tabController!.addListener(_handleTabSelection);
-    _tabController!.index = active;
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    if (_tabController != null) {
-      _tabController!.dispose();
-    }
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (_tabController != null) {
-      return tabBar(widget.app, context, items: items, tabController: _tabController!);
-    } else {
-      return Text('No controller');
-    }
-  }
-
-  void _handleTabSelection() {
-    if ((_tabController != null) && (_tabController!.indexIsChanging)) {
-      var action = actions[_tabController!.index];
-      eliudrouter.Router.navigateTo(context, action, parameters: parameters);
-    }
   }
 }

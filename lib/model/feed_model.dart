@@ -72,18 +72,17 @@ class FeedModel {
 
   // Allow article posts
   bool? articlePost;
-  StorageConditionsModel? conditions;
 
-  FeedModel({this.documentID, this.appId, this.description, this.thumbImage, this.photoPost, this.videoPost, this.messagePost, this.audioPost, this.albumPost, this.articlePost, this.conditions, })  {
+  FeedModel({this.documentID, this.appId, this.description, this.thumbImage, this.photoPost, this.videoPost, this.messagePost, this.audioPost, this.albumPost, this.articlePost, })  {
     assert(documentID != null);
   }
 
-  FeedModel copyWith({String? documentID, String? appId, String? description, ThumbStyle? thumbImage, bool? photoPost, bool? videoPost, bool? messagePost, bool? audioPost, bool? albumPost, bool? articlePost, StorageConditionsModel? conditions, }) {
-    return FeedModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, thumbImage: thumbImage ?? this.thumbImage, photoPost: photoPost ?? this.photoPost, videoPost: videoPost ?? this.videoPost, messagePost: messagePost ?? this.messagePost, audioPost: audioPost ?? this.audioPost, albumPost: albumPost ?? this.albumPost, articlePost: articlePost ?? this.articlePost, conditions: conditions ?? this.conditions, );
+  FeedModel copyWith({String? documentID, String? appId, String? description, ThumbStyle? thumbImage, bool? photoPost, bool? videoPost, bool? messagePost, bool? audioPost, bool? albumPost, bool? articlePost, }) {
+    return FeedModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, thumbImage: thumbImage ?? this.thumbImage, photoPost: photoPost ?? this.photoPost, videoPost: videoPost ?? this.videoPost, messagePost: messagePost ?? this.messagePost, audioPost: audioPost ?? this.audioPost, albumPost: albumPost ?? this.albumPost, articlePost: articlePost ?? this.articlePost, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ appId.hashCode ^ description.hashCode ^ thumbImage.hashCode ^ photoPost.hashCode ^ videoPost.hashCode ^ messagePost.hashCode ^ audioPost.hashCode ^ albumPost.hashCode ^ articlePost.hashCode ^ conditions.hashCode;
+  int get hashCode => documentID.hashCode ^ appId.hashCode ^ description.hashCode ^ thumbImage.hashCode ^ photoPost.hashCode ^ videoPost.hashCode ^ messagePost.hashCode ^ audioPost.hashCode ^ albumPost.hashCode ^ articlePost.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -99,12 +98,11 @@ class FeedModel {
           messagePost == other.messagePost &&
           audioPost == other.audioPost &&
           albumPost == other.albumPost &&
-          articlePost == other.articlePost &&
-          conditions == other.conditions;
+          articlePost == other.articlePost;
 
   @override
   String toString() {
-    return 'FeedModel{documentID: $documentID, appId: $appId, description: $description, thumbImage: $thumbImage, photoPost: $photoPost, videoPost: $videoPost, messagePost: $messagePost, audioPost: $audioPost, albumPost: $albumPost, articlePost: $articlePost, conditions: $conditions}';
+    return 'FeedModel{documentID: $documentID, appId: $appId, description: $description, thumbImage: $thumbImage, photoPost: $photoPost, videoPost: $videoPost, messagePost: $messagePost, audioPost: $audioPost, albumPost: $albumPost, articlePost: $articlePost}';
   }
 
   FeedEntity toEntity({String? appId}) {
@@ -118,7 +116,6 @@ class FeedModel {
           audioPost: (audioPost != null) ? audioPost : null, 
           albumPost: (albumPost != null) ? albumPost : null, 
           articlePost: (articlePost != null) ? articlePost : null, 
-          conditions: (conditions != null) ? conditions!.toEntity(appId: appId) : null, 
     );
   }
 
@@ -136,8 +133,6 @@ class FeedModel {
           audioPost: entity.audioPost, 
           albumPost: entity.albumPost, 
           articlePost: entity.articlePost, 
-          conditions: 
-            await StorageConditionsModel.fromEntity(entity.conditions), 
     );
   }
 
@@ -156,8 +151,6 @@ class FeedModel {
           audioPost: entity.audioPost, 
           albumPost: entity.albumPost, 
           articlePost: entity.articlePost, 
-          conditions: 
-            await StorageConditionsModel.fromEntityPlus(entity.conditions, appId: appId), 
     );
   }
 

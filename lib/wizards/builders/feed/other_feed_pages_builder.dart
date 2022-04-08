@@ -9,8 +9,6 @@ import 'package:eliud_core/model/drawer_model.dart';
 import 'package:eliud_core/model/home_menu_model.dart';
 import 'package:eliud_core/model/model_export.dart';
 import 'package:eliud_core/model/page_model.dart';
-import 'package:eliud_pkg_feed/model/feed_menu_component.dart';
-import 'package:eliud_pkg_feed/model/header_component.dart';
 
 class OtherFeedPageBuilder extends PageBuilder {
   OtherFeedPageBuilder(
@@ -29,37 +27,23 @@ class OtherFeedPageBuilder extends PageBuilder {
 
   Future<PageModel> _setupPage(
       {required String componentName,
-      required String feedMenuComponentIdentifier,
-      required String headerComponentIdentifier,
       required String componentIdentifier,
       required String title}) async {
     return await corerepo.AbstractRepositorySingleton.singleton
         .pageRepository(app.documentID!)!
         .add(_page(
             componentName: componentName,
-            feedMenuComponentIdentifier: feedMenuComponentIdentifier,
-            headerComponentIdentifier: headerComponentIdentifier,
             componentIdentifier: componentIdentifier,
             title: title));
   }
 
   PageModel _page(
       {required String componentName,
-      required String feedMenuComponentIdentifier,
       required String componentIdentifier,
-      required String headerComponentIdentifier,
       required String title}) {
     List<BodyComponentModel> components = [];
     components.add(BodyComponentModel(
         documentID: "1",
-        componentName: AbstractFeedMenuComponent.componentName,
-        componentId: constructDocumentId(uniqueId: uniqueId, documentId: feedMenuComponentIdentifier)));
-    components.add(BodyComponentModel(
-        documentID: "2",
-        componentName: AbstractHeaderComponent.componentName,
-        componentId: constructDocumentId(uniqueId: uniqueId, documentId: headerComponentIdentifier)));
-    components.add(BodyComponentModel(
-        documentID: "3",
         componentName: componentName,
         componentId: constructDocumentId(uniqueId: uniqueId, documentId: componentIdentifier)));
 
@@ -81,14 +65,10 @@ class OtherFeedPageBuilder extends PageBuilder {
 
   Future<PageModel> doIt(
       {required String componentName,
-      required String feedMenuComponentIdentifier,
-      required String headerComponentIdentifier,
       required String componentIdentifier,
       required String title}) async {
     return await _setupPage(
         componentName: componentName,
-        headerComponentIdentifier: headerComponentIdentifier,
-        feedMenuComponentIdentifier: feedMenuComponentIdentifier,
         componentIdentifier: componentIdentifier,
         title: title);
   }

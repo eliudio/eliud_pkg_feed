@@ -140,12 +140,6 @@ class FeedFormBloc extends Bloc<FeedFormEvent, FeedFormState> {
 
         return;
       }
-      if (event is ChangedFeedConditions) {
-        newValue = currentState.value!.copyWith(conditions: event.value);
-        yield SubmittableFeedForm(value: newValue);
-
-        return;
-      }
     }
   }
 

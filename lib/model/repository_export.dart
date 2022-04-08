@@ -14,10 +14,10 @@
 */
 
 export '../model/feed_repository.dart';
-export '../model/feed_menu_repository.dart';
-export '../model/header_repository.dart';
 export '../model/member_profile_repository.dart';
 export '../model/post_repository.dart';
 export '../model/post_comment_repository.dart';
 export '../model/post_like_repository.dart';
 export '../model/profile_repository.dart';
+export '../model/feed_menu_repository.dart';
+export '../model/feed_front_repository.dart';

@@ -111,15 +111,15 @@ class DescriptionFeedMenuFormError extends FeedMenuFormError {
 }
 
 
-class MenuCurrentMemberFeedMenuFormError extends FeedMenuFormError { 
-  const MenuCurrentMemberFeedMenuFormError({ String? message, FeedMenuModel? value }): super(message: message, value: value);
+class BodyComponentsCurrentMemberLabelsFeedMenuFormError extends FeedMenuFormError { 
+  const BodyComponentsCurrentMemberLabelsFeedMenuFormError({ String? message, FeedMenuModel? value }): super(message: message, value: value);
 
   @override
   List<Object?> get props => [ message, value ];
 
   @override
   String toString() {
-    return '''MenuCurrentMemberFeedMenuFormError {
+    return '''BodyComponentsCurrentMemberLabelsFeedMenuFormError {
       value: $value,
       message: $message,
     }''';
@@ -127,15 +127,47 @@ class MenuCurrentMemberFeedMenuFormError extends FeedMenuFormError {
 }
 
 
-class MenuOtherMemberFeedMenuFormError extends FeedMenuFormError { 
-  const MenuOtherMemberFeedMenuFormError({ String? message, FeedMenuModel? value }): super(message: message, value: value);
+class BodyComponentsCurrentMemberFeedMenuFormError extends FeedMenuFormError { 
+  const BodyComponentsCurrentMemberFeedMenuFormError({ String? message, FeedMenuModel? value }): super(message: message, value: value);
 
   @override
   List<Object?> get props => [ message, value ];
 
   @override
   String toString() {
-    return '''MenuOtherMemberFeedMenuFormError {
+    return '''BodyComponentsCurrentMemberFeedMenuFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
+class BodyComponentsOtherMemberLabelsFeedMenuFormError extends FeedMenuFormError { 
+  const BodyComponentsOtherMemberLabelsFeedMenuFormError({ String? message, FeedMenuModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''BodyComponentsOtherMemberLabelsFeedMenuFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
+class BodyComponentsOtherMemberFeedMenuFormError extends FeedMenuFormError { 
+  const BodyComponentsOtherMemberFeedMenuFormError({ String? message, FeedMenuModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''BodyComponentsOtherMemberFeedMenuFormError {
       value: $value,
       message: $message,
     }''';
@@ -175,15 +207,15 @@ class SelectedItemColorFeedMenuFormError extends FeedMenuFormError {
 }
 
 
-class FeedFeedMenuFormError extends FeedMenuFormError { 
-  const FeedFeedMenuFormError({ String? message, FeedMenuModel? value }): super(message: message, value: value);
+class FeedFrontFeedMenuFormError extends FeedMenuFormError { 
+  const FeedFrontFeedMenuFormError({ String? message, FeedMenuModel? value }): super(message: message, value: value);
 
   @override
   List<Object?> get props => [ message, value ];
 
   @override
   String toString() {
-    return '''FeedFeedMenuFormError {
+    return '''FeedFrontFeedMenuFormError {
       value: $value,
       message: $message,
     }''';

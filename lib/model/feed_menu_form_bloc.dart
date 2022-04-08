@@ -56,6 +56,10 @@ class FeedMenuFormBloc extends Bloc<FeedMenuFormEvent, FeedMenuFormState> {
                                                documentID: "",
                                  appId: "",
                                  description: "",
+                                 bodyComponentsCurrentMemberLabels: [],
+                                 bodyComponentsCurrentMember: [],
+                                 bodyComponentsOtherMemberLabels: [],
+                                 bodyComponentsOtherMember: [],
                                  itemColor: RgbModel(r: 255, g: 255, b: 255, opacity: 1.00), 
                                  selectedItemColor: RgbModel(r: 255, g: 255, b: 255, opacity: 1.00), 
 
@@ -100,40 +104,14 @@ class FeedMenuFormBloc extends Bloc<FeedMenuFormEvent, FeedMenuFormState> {
 
         return;
       }
-      if (event is ChangedFeedMenuMenuCurrentMember) {
-        if (event.value != null)
-          newValue = currentState.value!.copyWith(menuCurrentMember: await menuDefRepository(appId: appId)!.get(event.value));
-        else
-          newValue = new FeedMenuModel(
-                                 documentID: currentState.value!.documentID,
-                                 appId: currentState.value!.appId,
-                                 description: currentState.value!.description,
-                                 menuCurrentMember: null,
-                                 menuOtherMember: currentState.value!.menuOtherMember,
-                                 itemColor: currentState.value!.itemColor,
-                                 selectedItemColor: currentState.value!.selectedItemColor,
-                                 feed: currentState.value!.feed,
-                                 conditions: currentState.value!.conditions,
-          );
+      if (event is ChangedFeedMenuBodyComponentsCurrentMember) {
+        newValue = currentState.value!.copyWith(bodyComponentsCurrentMember: event.value);
         yield SubmittableFeedMenuForm(value: newValue);
 
         return;
       }
-      if (event is ChangedFeedMenuMenuOtherMember) {
-        if (event.value != null)
-          newValue = currentState.value!.copyWith(menuOtherMember: await menuDefRepository(appId: appId)!.get(event.value));
-        else
-          newValue = new FeedMenuModel(
-                                 documentID: currentState.value!.documentID,
-                                 appId: currentState.value!.appId,
-                                 description: currentState.value!.description,
-                                 menuCurrentMember: currentState.value!.menuCurrentMember,
-                                 menuOtherMember: null,
-                                 itemColor: currentState.value!.itemColor,
-                                 selectedItemColor: currentState.value!.selectedItemColor,
-                                 feed: currentState.value!.feed,
-                                 conditions: currentState.value!.conditions,
-          );
+      if (event is ChangedFeedMenuBodyComponentsOtherMember) {
+        newValue = currentState.value!.copyWith(bodyComponentsOtherMember: event.value);
         yield SubmittableFeedMenuForm(value: newValue);
 
         return;
@@ -150,19 +128,21 @@ class FeedMenuFormBloc extends Bloc<FeedMenuFormEvent, FeedMenuFormState> {
 
         return;
       }
-      if (event is ChangedFeedMenuFeed) {
+      if (event is ChangedFeedMenuFeedFront) {
         if (event.value != null)
-          newValue = currentState.value!.copyWith(feed: await feedRepository(appId: appId)!.get(event.value));
+          newValue = currentState.value!.copyWith(feedFront: await feedFrontRepository(appId: appId)!.get(event.value));
         else
           newValue = new FeedMenuModel(
                                  documentID: currentState.value!.documentID,
                                  appId: currentState.value!.appId,
                                  description: currentState.value!.description,
-                                 menuCurrentMember: currentState.value!.menuCurrentMember,
-                                 menuOtherMember: currentState.value!.menuOtherMember,
+                                 bodyComponentsCurrentMemberLabels: currentState.value!.bodyComponentsCurrentMemberLabels,
+                                 bodyComponentsCurrentMember: currentState.value!.bodyComponentsCurrentMember,
+                                 bodyComponentsOtherMemberLabels: currentState.value!.bodyComponentsOtherMemberLabels,
+                                 bodyComponentsOtherMember: currentState.value!.bodyComponentsOtherMember,
                                  itemColor: currentState.value!.itemColor,
                                  selectedItemColor: currentState.value!.selectedItemColor,
-                                 feed: null,
+                                 feedFront: null,
                                  conditions: currentState.value!.conditions,
           );
         yield SubmittableFeedMenuForm(value: newValue);

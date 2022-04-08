@@ -5,32 +5,19 @@ import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/model/menu_item_model.dart';
 import 'package:eliud_core/model/public_medium_model.dart';
 import 'package:eliud_core/tools/action/action_model.dart';
-import 'builders/feed/feed_page_builder.dart';
-import 'builders/feed/follow_requests_dashboard_page_builder.dart';
-import 'builders/feed/followers_dashboard_page_builder.dart';
-import 'builders/feed/following_dashboard_page_builder.dart';
+import 'builders/feed/feed_menu_page_builder.dart';
 import 'builders/feed/helpers/menu_helpers.dart';
-import 'builders/feed/invite_dashboard_page_builder.dart';
-import 'builders/feed/membership_dashboard_page_builder.dart';
-import 'builders/feed/profile_page_builder.dart';
 
 class FeedWizard extends NewAppWizardInfoWithActionSpecification {
   static String feedPageId = 'feed';
-  static String feedMenuComponentIdentifier = 'feed_menu';
-  static String feedHeaderComponentIdentifier = 'feed_header';
-  static String feedProfileComponentIdentifier = 'feed_profile';
-  static String profilePageId = 'profile';
-  static String followRequestPageId = 'follow_request';
-  static String followersPageId = 'followers';
-  static String followingPageId = 'following';
-  static String findFriendPageId = 'fiend_friends';
-  static String appMembersPageId = 'app_members';
-  static String followRequestComponentId = 'follow_request';
-  static String followersComponentId = 'followers';
-  static String followingComponentId = 'following';
-  static String inviteComponentId = 'invite';
-  static String membershipComponentId = 'membership';
-  static String profileComponentId = 'profile';
+  static String feedIdentifier = "feed";
+  static String feedMenuComponentIdentifier = "feed_menu";
+  static String feedFrontComponentIdentifier = 'feed_front';
+  static String followRequestsDashboardComponentIdentifier = 'follow_requests';
+  static String feedProfileComponentIdentifier = 'profile';
+  static String followersDashboardComponentIdentifier = 'followers';
+  static String followingDashboardComponentIdentifier = 'following';
+  static String inviteDashboardComponentIdentifier = 'invite';
 
   FeedWizard() : super('feed', 'Feed', 'Generate a default Feed');
 
@@ -71,171 +58,33 @@ class FeedWizard extends NewAppWizardInfoWithActionSpecification {
         var feedModel;
         tasks.add(() async {
           print("feedModel");
-          feedModel = await FeedPageBuilder(
-                  uniqueId,
-                  feedPageId,
-                  app,
-                  memberId,
-                  homeMenuProvider(),
-                  appBarProvider(),
-                  leftDrawerProvider(),
-                  rightDrawerProvider(),
-                  pageProvider,
-                  )
-              .run(
-                  feedMenuComponentIdentifier:
-                      feedMenuComponentIdentifier,
-                  headerComponentIdentifier:
-                      feedHeaderComponentIdentifier,
-                  profileComponentIdentifier:
-                      feedProfileComponentIdentifier,
-                  feedPageId: feedPageId,
-                  profilePageId: profilePageId,
-                  followRequestPageId: followRequestPageId,
-                  followersPageId: followersPageId,
-                  followingPageId: followingPageId,
-                  fiendFriendsPageId: findFriendPageId,
-                  appMembersPageId: appMembersPageId);
+          await FeedMenuPageBuilder(
+            uniqueId,
+            feedPageId,
+            app,
+            memberId,
+            homeMenuProvider(),
+            appBarProvider(),
+            leftDrawerProvider(),
+            rightDrawerProvider(),
+            pageProvider,
+          ).run(
+            feed: null,
+            feedIdentifier: feedIdentifier,
+            feedMenuComponentIdentifier: feedMenuComponentIdentifier,
+            feedFrontComponentIdentifier: feedFrontComponentIdentifier,
+            followRequestsDashboardComponentIdentifier:
+                followRequestsDashboardComponentIdentifier,
+            profileComponentIdentifier: feedProfileComponentIdentifier,
+            followersDashboardComponentIdentifier:
+                followersDashboardComponentIdentifier,
+            followingDashboardComponentIdentifier:
+                followingDashboardComponentIdentifier,
+            inviteDashboardComponentIdentifier:
+                inviteDashboardComponentIdentifier,
+          );
         });
 
-        tasks.add(() async {
-          print("Follow Request");
-          await FollowRequestsDashboardPageBuilder(
-                  uniqueId,
-                  followRequestPageId,
-                  app,
-                  memberId,
-                  homeMenuProvider(),
-                  appBarProvider(),
-                  leftDrawerProvider(),
-                  rightDrawerProvider(),
-                  pageProvider,
-                  )
-              .run(
-            componentIdentifier: followRequestComponentId,
-            profilePageId: profilePageId,
-            feedPageId: feedPageId,
-            feedMenuComponentIdentifier:
-                feedMenuComponentIdentifier,
-            headerComponentIdentifier:
-                feedHeaderComponentIdentifier,
-          );
-        });
-        tasks.add(() async {
-          print("Followers Dashboard");
-          await FollowersDashboardPageBuilder(
-                  uniqueId,
-                  followersPageId,
-                  app,
-                  memberId,
-                  homeMenuProvider(),
-                  appBarProvider(),
-                  leftDrawerProvider(),
-                  rightDrawerProvider(),
-                  pageProvider,
-                  )
-              .run(
-            componentIdentifier: followersComponentId,
-            profilePageId: profilePageId,
-            feedPageId: feedPageId,
-            feedMenuComponentIdentifier:
-                feedMenuComponentIdentifier,
-            headerComponentIdentifier:
-                feedHeaderComponentIdentifier,
-          );
-        });
-        tasks.add(() async {
-          print("Following Dashboard");
-          await FollowingDashboardPageBuilder(
-                  uniqueId,
-                  followingPageId,
-                  app,
-                  memberId,
-                  homeMenuProvider(),
-                  appBarProvider(),
-                  leftDrawerProvider(),
-                  rightDrawerProvider(),
-                  pageProvider,
-                  )
-              .run(
-            componentIdentifier: followingComponentId,
-            profilePageId: profilePageId,
-            feedPageId: feedPageId,
-            feedMenuComponentIdentifier:
-                feedMenuComponentIdentifier,
-            headerComponentIdentifier:
-                feedHeaderComponentIdentifier,
-          );
-        });
-        tasks.add(() async {
-          print("Invite Dashboard");
-          await InviteDashboardPageBuilder(
-                  uniqueId,
-                  findFriendPageId,
-                  app,
-                  memberId,
-                  homeMenuProvider(),
-                  appBarProvider(),
-                  leftDrawerProvider(),
-                  rightDrawerProvider(),
-                  pageProvider,
-                  )
-              .run(
-            componentIdentifier: inviteComponentId,
-            profilePageId: profilePageId,
-            feedPageId: feedPageId,
-            feedMenuComponentIdentifier:
-                feedMenuComponentIdentifier,
-            headerComponentIdentifier:
-                feedHeaderComponentIdentifier,
-          );
-        });
-        tasks.add(() async {
-          print("Membership Dashboard");
-          await MembershipDashboardPageBuilder(
-                  uniqueId,
-                  appMembersPageId,
-                  app,
-                  memberId,
-                  homeMenuProvider(),
-                  appBarProvider(),
-                  leftDrawerProvider(),
-                  rightDrawerProvider(),
-                  pageProvider,
-                  )
-              .run(
-            componentIdentifier: membershipComponentId,
-            profilePageId: profilePageId,
-            feedPageId: feedPageId,
-            feedMenuComponentIdentifier:
-                feedMenuComponentIdentifier,
-            headerComponentIdentifier:
-                feedHeaderComponentIdentifier,
-          );
-        });
-        tasks.add(() async {
-          print("Profile Page");
-          await ProfilePageBuilder(
-                  uniqueId,
-                  profilePageId,
-                  app,
-                  memberId,
-                  homeMenuProvider(),
-                  appBarProvider(),
-                  leftDrawerProvider(),
-                  rightDrawerProvider(),
-                  pageProvider,
-                  )
-              .run(
-            feed: feedModel,
-            member: member,
-            feedMenuComponentIdentifier:
-                feedMenuComponentIdentifier,
-            headerComponentIdentifier:
-                feedHeaderComponentIdentifier,
-            profileComponentIdentifier: profileComponentId,
-          );
-        });
         return tasks;
       }
     } else {
@@ -255,9 +104,11 @@ class FeedWizard extends NewAppWizardInfoWithActionSpecification {
   @override
   String? getPageID(
       String uniqueId, NewAppWizardParameters parameters, String pageType) {
+/*
     if (pageType == 'profilePageId')
       return profilePageId;
     else if (pageType == 'pageIdProvider') return feedPageId;
+*/
     return null;
   }
 
@@ -271,5 +122,7 @@ class FeedWizard extends NewAppWizardInfoWithActionSpecification {
       null;
 
   @override
-  PublicMediumModel? getPublicMediumModel(String uniqueId, NewAppWizardParameters parameters, String pageType) => null;
+  PublicMediumModel? getPublicMediumModel(String uniqueId,
+          NewAppWizardParameters parameters, String pageType) =>
+      null;
 }
