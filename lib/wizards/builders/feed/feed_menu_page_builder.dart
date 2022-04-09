@@ -31,7 +31,6 @@ class FeedMenuPageBuilder extends SingleComponentPageBuilder {
     AppBarModel theAppBar,
     DrawerModel leftDrawer,
     DrawerModel rightDrawer,
-    PageProvider pageProvider,
   ) : super(
           uniqueId,
           pageId,
@@ -41,7 +40,6 @@ class FeedMenuPageBuilder extends SingleComponentPageBuilder {
           theAppBar,
           leftDrawer,
           rightDrawer,
-          pageProvider,
         );
 
   static Future<FeedModel> assertFeedModel(FeedModel? feed, String? feedIdentifier, String appId, String uniqueId) async {

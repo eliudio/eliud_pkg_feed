@@ -22,10 +22,9 @@ class FeedFrontPageBuilder extends SingleComponentPageBuilder {
       AppBarModel theAppBar,
       DrawerModel leftDrawer,
       DrawerModel rightDrawer,
-      PageProvider pageProvider,
       )
       : super(uniqueId, pageId, app, memberId, theHomeMenu, theAppBar,
-            leftDrawer, rightDrawer, pageProvider, );
+            leftDrawer, rightDrawer, );
 
   static FeedFrontModel _dashboardModel(AppModel app, FeedModel feed, String uniqueId, String componentIdentifier) {
     return FeedFrontModel(

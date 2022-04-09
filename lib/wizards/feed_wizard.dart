@@ -48,7 +48,6 @@ class FeedWizard extends NewAppWizardInfoWithActionSpecification {
     AppBarProvider appBarProvider,
     DrawerProvider leftDrawerProvider,
     DrawerProvider rightDrawerProvider,
-    PageProvider pageProvider,
   ) {
     if (parameters is ActionSpecificationParametersBase) {
       var feedSpecifications = parameters.actionSpecifications;
@@ -67,7 +66,6 @@ class FeedWizard extends NewAppWizardInfoWithActionSpecification {
             appBarProvider(),
             leftDrawerProvider(),
             rightDrawerProvider(),
-            pageProvider,
           ).run(
             feed: null,
             feedIdentifier: feedIdentifier,
