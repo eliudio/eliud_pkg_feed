@@ -9,6 +9,7 @@ import 'package:eliud_pkg_feed/extensions/feed_front/feed_front.dart';
 import 'package:eliud_pkg_feed/extensions/header/header.dart';
 import 'package:eliud_pkg_feed/extensions/profile/profile.dart';
 import 'package:eliud_pkg_feed/model/feed_front_model.dart';
+import 'package:eliud_pkg_feed/model/labelled_body_component_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 import 'package:eliud_core/core/tools/page_helper.dart';
@@ -33,10 +34,9 @@ class TabbedFeedMenuItems extends StatefulWidget {
   final AppModel app;
   final FeedFrontModel feedFrontModel;
   final Map<String, dynamic>? parameters;
-  List<BodyComponentModel> bodyComponents;
-  List<String> labels;
+  List<LabelledBodyComponentModel> bodyComponents;
 
-  TabbedFeedMenuItems(this.app, this.bodyComponents, this.labels, this.parameters, this.feedFrontModel);
+  TabbedFeedMenuItems(this.app, this.bodyComponents, this.parameters, this.feedFrontModel);
 
   _TabbedFeedMenuItemsState createState() => _TabbedFeedMenuItemsState();
 }
@@ -52,7 +52,8 @@ class _TabbedFeedMenuItemsState extends State<TabbedFeedMenuItems>
   void initState() {
     newLabels.add("Feed");
     newLabels.add("Profile");
-    newLabels.addAll(widget.labels);
+    var labels = widget.bodyComponents.map((e) => e.label!).toList();
+    newLabels.addAll(labels);
     var size = newLabels.length;
     _tabController = TabController(vsync: this, length: size);
     _tabController.addListener(_handleTabSelection);

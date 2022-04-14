@@ -58,10 +58,8 @@ class _FeedMenuState extends State<FeedMenu>
                 var labels;
                 if (otherMember) {
                   items = widget.feedMenuModel.bodyComponentsOtherMember;
-                  labels = widget.feedMenuModel.bodyComponentsOtherMemberLabels;
                 } else {
                   items = widget.feedMenuModel.bodyComponentsCurrentMember;
-                  labels = widget.feedMenuModel.bodyComponentsCurrentMemberLabels;
                 }
 
                 // add feed and profile
@@ -71,7 +69,7 @@ class _FeedMenuState extends State<FeedMenu>
                     physics: ScrollPhysics(),
                     children: [
                     Header(app: widget.app),
-              TabbedFeedMenuItems(widget.app, items, labels, parameters, widget.feedMenuModel.feedFront!),]);
+              TabbedFeedMenuItems(widget.app, items, parameters, widget.feedMenuModel.feedFront!),]);
 //                return FeedMenuItems(widget.app, items, labels, parameters);
               } else {
                 return progressIndicator(widget.app, context);

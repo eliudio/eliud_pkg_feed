@@ -95,20 +95,8 @@ class ChangedFeedMenuDescription extends FeedMenuFormEvent {
   String toString() => 'ChangedFeedMenuDescription{ value: $value }';
 }
 
-class ChangedFeedMenuBodyComponentsCurrentMemberLabels extends FeedMenuFormEvent {
-  final String? value;
-
-  ChangedFeedMenuBodyComponentsCurrentMemberLabels({this.value});
-
-  @override
-  List<Object?> get props => [ value ];
-
-  @override
-  String toString() => 'ChangedFeedMenuBodyComponentsCurrentMemberLabels{ value: $value }';
-}
-
 class ChangedFeedMenuBodyComponentsCurrentMember extends FeedMenuFormEvent {
-  final List<BodyComponentModel>? value;
+  final List<LabelledBodyComponentModel>? value;
 
   ChangedFeedMenuBodyComponentsCurrentMember({this.value});
 
@@ -119,20 +107,8 @@ class ChangedFeedMenuBodyComponentsCurrentMember extends FeedMenuFormEvent {
   String toString() => 'ChangedFeedMenuBodyComponentsCurrentMember{ value: $value }';
 }
 
-class ChangedFeedMenuBodyComponentsOtherMemberLabels extends FeedMenuFormEvent {
-  final String? value;
-
-  ChangedFeedMenuBodyComponentsOtherMemberLabels({this.value});
-
-  @override
-  List<Object?> get props => [ value ];
-
-  @override
-  String toString() => 'ChangedFeedMenuBodyComponentsOtherMemberLabels{ value: $value }';
-}
-
 class ChangedFeedMenuBodyComponentsOtherMember extends FeedMenuFormEvent {
-  final List<BodyComponentModel>? value;
+  final List<LabelledBodyComponentModel>? value;
 
   ChangedFeedMenuBodyComponentsOtherMember({this.value});
 

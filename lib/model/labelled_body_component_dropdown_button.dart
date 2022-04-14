@@ -7,7 +7,7 @@
   \___|_|_|\__,_|\__,_|
                        
  
- post_comment_list.dart
+ labelled_body_component_list.dart
                        
  This code is generated. This is read only. Don't touch!
 
@@ -26,35 +26,35 @@ import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
 
 
-import 'package:eliud_pkg_feed/model/post_comment_list_bloc.dart';
-import 'package:eliud_pkg_feed/model/post_comment_list_state.dart';
-import 'package:eliud_pkg_feed/model/post_comment_model.dart';
+import 'package:eliud_pkg_feed/model/labelled_body_component_list_bloc.dart';
+import 'package:eliud_pkg_feed/model/labelled_body_component_list_state.dart';
+import 'package:eliud_pkg_feed/model/labelled_body_component_model.dart';
 
 
-typedef PostCommentChanged(String? value);
+typedef LabelledBodyComponentChanged(String? value);
 
-class PostCommentDropdownButtonWidget extends StatefulWidget {
+class LabelledBodyComponentDropdownButtonWidget extends StatefulWidget {
   final AppModel app;
   final String? value;
-  final PostCommentChanged? trigger;
+  final LabelledBodyComponentChanged? trigger;
   final bool? optional;
 
-  PostCommentDropdownButtonWidget({ required this.app, this.value, this.trigger, this.optional, Key? key }): super(key: key);
+  LabelledBodyComponentDropdownButtonWidget({ required this.app, this.value, this.trigger, this.optional, Key? key }): super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return PostCommentDropdownButtonWidgetState();
+    return LabelledBodyComponentDropdownButtonWidgetState();
   }
 }
 
-class PostCommentDropdownButtonWidgetState extends State<PostCommentDropdownButtonWidget> {
-  PostCommentListBloc? bloc;
+class LabelledBodyComponentDropdownButtonWidgetState extends State<LabelledBodyComponentDropdownButtonWidget> {
+  LabelledBodyComponentListBloc? bloc;
 
-  PostCommentDropdownButtonWidgetState();
+  LabelledBodyComponentDropdownButtonWidgetState();
 
   @override
   void didChangeDependencies() {
-    bloc = BlocProvider.of<PostCommentListBloc>(context);
+    bloc = BlocProvider.of<LabelledBodyComponentListBloc>(context);
     super.didChangeDependencies();
   }
 
@@ -64,11 +64,11 @@ class PostCommentDropdownButtonWidgetState extends State<PostCommentDropdownButt
     super.dispose();
   }
 
-List<Widget> widgets(PostCommentModel value) {
+List<Widget> widgets(LabelledBodyComponentModel value) {
 var app = widget.app;
 var widgets = <Widget>[];
-widgets.add(value.timestamp != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.timestamp!.toString())) : Container());
-widgets.add(value.documentID != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.documentID!)) : Container());
+widgets.add(value.componentName != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.componentName!)) : Container());
+widgets.add(value.componentId != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.componentId!)) : Container());
 return widgets;
 }
 
@@ -76,10 +76,10 @@ return widgets;
   @override
   Widget build(BuildContext context) {
     var accessState = AccessBloc.getState(context);
-    return BlocBuilder<PostCommentListBloc, PostCommentListState>(builder: (context, state) {
-      if (state is PostCommentListLoading) {
+    return BlocBuilder<LabelledBodyComponentListBloc, LabelledBodyComponentListState>(builder: (context, state) {
+      if (state is LabelledBodyComponentListLoading) {
         return StyleRegistry.registry().styleWithApp(widget.app).adminListStyle().progressIndicator(widget.app, context);
-      } else if (state is PostCommentListLoaded) {
+      } else if (state is LabelledBodyComponentListLoaded) {
         String? valueChosen;
         if (state.values!.indexWhere((v) => (v!.documentID == widget.value)) >= 0)
           valueChosen = widget.value;
@@ -120,7 +120,7 @@ return widgets;
                       isExpanded: false,
                       items: items,
                       value: valueChosen,
-                      hint: text(widget.app, context, 'Select a postComment'),
+                      hint: text(widget.app, context, 'Select a labelledBodyComponent'),
                       onChanged: !accessState.memberIsOwner(widget.app.documentID!) ? null : _onChange,
                     );
         if (false) {

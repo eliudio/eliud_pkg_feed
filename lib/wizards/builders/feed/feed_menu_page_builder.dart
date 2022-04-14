@@ -8,6 +8,7 @@ import 'package:eliud_pkg_feed/model/feed_front_component.dart';
 import 'package:eliud_pkg_feed/model/feed_menu_component.dart';
 import 'package:eliud_pkg_feed/model/feed_menu_model.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
+import 'package:eliud_pkg_feed/model/labelled_body_component_model.dart';
 import 'package:eliud_pkg_feed/model/profile_component.dart';
 import 'package:eliud_pkg_follow/wizards/builders/follow/follow_requests_dashboard_page_builder.dart';
 import 'package:eliud_pkg_follow/wizards/builders/follow/followers_dashboard_page_builder.dart';
@@ -100,12 +101,6 @@ class FeedMenuPageBuilder extends SingleComponentPageBuilder {
       itemColor: null,
       selectedItemColor: null,
       feedFront: newFeedFront,
-      bodyComponentsCurrentMemberLabels: [
-        "Follow Requests",
-        "Followers",
-        "Following",
-        "Invite",
-      ],
       bodyComponentsCurrentMember: [
         followRequestsDashboardComponent(
             followRequestsDashboardComponentIdentifier),
@@ -114,7 +109,6 @@ class FeedMenuPageBuilder extends SingleComponentPageBuilder {
         inviteDashboardComponent(inviteDashboardComponentIdentifier),
       ],
       bodyComponentsOtherMember: [],
-      bodyComponentsOtherMemberLabels: [],
       conditions: StorageConditionsModel(
           privilegeLevelRequired:
               PrivilegeLevelRequiredSimple.NoPrivilegeRequiredSimple),
@@ -126,33 +120,28 @@ class FeedMenuPageBuilder extends SingleComponentPageBuilder {
         title: "Feed");
   }
 
-  BodyComponentModel feedFrontComponent(String componentId) =>
-      BodyComponentModel(
+  LabelledBodyComponentModel followRequestsDashboardComponent(String componentId) =>
+      LabelledBodyComponentModel(
           documentID: newRandomKey(),
-          componentName: AbstractFeedFrontComponent.componentName,
-          componentId: constructDocumentId(uniqueId: uniqueId, documentId: componentId));
-  BodyComponentModel followRequestsDashboardComponent(String componentId) =>
-      BodyComponentModel(
-          documentID: newRandomKey(),
+          label: 'Follow Requests',
           componentName: AbstractFollowRequestsDashboardComponent.componentName,
           componentId: constructDocumentId(uniqueId: uniqueId, documentId: componentId));
-  BodyComponentModel followersDashboardComponent(String componentId) =>
-      BodyComponentModel(
+  LabelledBodyComponentModel followersDashboardComponent(String componentId) =>
+      LabelledBodyComponentModel(
           documentID: newRandomKey(),
+          label: 'Followers',
           componentName: AbstractFollowingDashboardComponent.componentName,
           componentId: constructDocumentId(uniqueId: uniqueId, documentId: componentId));
-  BodyComponentModel followingDashboardComponent(String componentId) =>
-      BodyComponentModel(
+  LabelledBodyComponentModel followingDashboardComponent(String componentId) =>
+      LabelledBodyComponentModel(
           documentID: newRandomKey(),
+          label: 'Following',
           componentName: AbstractFollowingDashboardComponent.componentName,
           componentId: constructDocumentId(uniqueId: uniqueId, documentId: componentId));
-  BodyComponentModel inviteDashboardComponent(String componentId) =>
-      BodyComponentModel(
+  LabelledBodyComponentModel inviteDashboardComponent(String componentId) =>
+      LabelledBodyComponentModel(
           documentID: newRandomKey(),
+          label: 'Invite',
           componentName: AbstractInviteDashboardComponent.componentName,
           componentId: constructDocumentId(uniqueId: uniqueId, documentId: componentId));
-  BodyComponentModel profileComponent(String componentId) => BodyComponentModel(
-      documentID: newRandomKey(),
-      componentName: AbstractProfileComponent.componentName,
-      componentId: constructDocumentId(uniqueId: uniqueId, documentId: componentId));
 }

@@ -25,28 +25,24 @@ import 'package:eliud_core/tools/common_tools.dart';
 class FeedMenuEntity {
   final String? appId;
   final String? description;
-  final List<String>? bodyComponentsCurrentMemberLabels;
-  final List<BodyComponentEntity>? bodyComponentsCurrentMember;
-  final List<String>? bodyComponentsOtherMemberLabels;
-  final List<BodyComponentEntity>? bodyComponentsOtherMember;
+  final List<LabelledBodyComponentEntity>? bodyComponentsCurrentMember;
+  final List<LabelledBodyComponentEntity>? bodyComponentsOtherMember;
   final RgbEntity? itemColor;
   final RgbEntity? selectedItemColor;
   final String? feedFrontId;
   final StorageConditionsEntity? conditions;
 
-  FeedMenuEntity({this.appId, this.description, this.bodyComponentsCurrentMemberLabels, this.bodyComponentsCurrentMember, this.bodyComponentsOtherMemberLabels, this.bodyComponentsOtherMember, this.itemColor, this.selectedItemColor, this.feedFrontId, this.conditions, });
+  FeedMenuEntity({this.appId, this.description, this.bodyComponentsCurrentMember, this.bodyComponentsOtherMember, this.itemColor, this.selectedItemColor, this.feedFrontId, this.conditions, });
 
 
-  List<Object?> get props => [appId, description, bodyComponentsCurrentMemberLabels, bodyComponentsCurrentMember, bodyComponentsOtherMemberLabels, bodyComponentsOtherMember, itemColor, selectedItemColor, feedFrontId, conditions, ];
+  List<Object?> get props => [appId, description, bodyComponentsCurrentMember, bodyComponentsOtherMember, itemColor, selectedItemColor, feedFrontId, conditions, ];
 
   @override
   String toString() {
-    String bodyComponentsCurrentMemberLabelsCsv = (bodyComponentsCurrentMemberLabels == null) ? '' : bodyComponentsCurrentMemberLabels!.join(', ');
     String bodyComponentsCurrentMemberCsv = (bodyComponentsCurrentMember == null) ? '' : bodyComponentsCurrentMember!.join(', ');
-    String bodyComponentsOtherMemberLabelsCsv = (bodyComponentsOtherMemberLabels == null) ? '' : bodyComponentsOtherMemberLabels!.join(', ');
     String bodyComponentsOtherMemberCsv = (bodyComponentsOtherMember == null) ? '' : bodyComponentsOtherMember!.join(', ');
 
-    return 'FeedMenuEntity{appId: $appId, description: $description, bodyComponentsCurrentMemberLabels: String[] { $bodyComponentsCurrentMemberLabelsCsv }, bodyComponentsCurrentMember: BodyComponent[] { $bodyComponentsCurrentMemberCsv }, bodyComponentsOtherMemberLabels: String[] { $bodyComponentsOtherMemberLabelsCsv }, bodyComponentsOtherMember: BodyComponent[] { $bodyComponentsOtherMemberCsv }, itemColor: $itemColor, selectedItemColor: $selectedItemColor, feedFrontId: $feedFrontId, conditions: $conditions}';
+    return 'FeedMenuEntity{appId: $appId, description: $description, bodyComponentsCurrentMember: LabelledBodyComponent[] { $bodyComponentsCurrentMemberCsv }, bodyComponentsOtherMember: LabelledBodyComponent[] { $bodyComponentsOtherMemberCsv }, itemColor: $itemColor, selectedItemColor: $selectedItemColor, feedFrontId: $feedFrontId, conditions: $conditions}';
   }
 
   static FeedMenuEntity? fromMap(Object? o) {
@@ -59,7 +55,7 @@ class FeedMenuEntity {
     if (bodyComponentsCurrentMemberFromMap != null)
       bodyComponentsCurrentMemberList = (map['bodyComponentsCurrentMember'] as List<dynamic>)
         .map((dynamic item) =>
-        BodyComponentEntity.fromMap(item as Map)!)
+        LabelledBodyComponentEntity.fromMap(item as Map)!)
         .toList();
     var bodyComponentsOtherMemberFromMap;
     bodyComponentsOtherMemberFromMap = map['bodyComponentsOtherMember'];
@@ -67,7 +63,7 @@ class FeedMenuEntity {
     if (bodyComponentsOtherMemberFromMap != null)
       bodyComponentsOtherMemberList = (map['bodyComponentsOtherMember'] as List<dynamic>)
         .map((dynamic item) =>
-        BodyComponentEntity.fromMap(item as Map)!)
+        LabelledBodyComponentEntity.fromMap(item as Map)!)
         .toList();
     var itemColorFromMap;
     itemColorFromMap = map['itemColor'];
@@ -85,9 +81,7 @@ class FeedMenuEntity {
     return FeedMenuEntity(
       appId: map['appId'], 
       description: map['description'], 
-      bodyComponentsCurrentMemberLabels: map['bodyComponentsCurrentMemberLabels'] == null ? null : List.from(map['bodyComponentsCurrentMemberLabels']), 
       bodyComponentsCurrentMember: bodyComponentsCurrentMemberList, 
-      bodyComponentsOtherMemberLabels: map['bodyComponentsOtherMemberLabels'] == null ? null : List.from(map['bodyComponentsOtherMemberLabels']), 
       bodyComponentsOtherMember: bodyComponentsOtherMemberList, 
       itemColor: itemColorFromMap, 
       selectedItemColor: selectedItemColorFromMap, 
@@ -118,12 +112,8 @@ class FeedMenuEntity {
       else theDocument["appId"] = null;
     if (description != null) theDocument["description"] = description;
       else theDocument["description"] = null;
-    if (bodyComponentsCurrentMemberLabels != null) theDocument["bodyComponentsCurrentMemberLabels"] = bodyComponentsCurrentMemberLabels!.toList();
-      else theDocument["bodyComponentsCurrentMemberLabels"] = null;
     if (bodyComponentsCurrentMember != null) theDocument["bodyComponentsCurrentMember"] = bodyComponentsCurrentMemberListMap;
       else theDocument["bodyComponentsCurrentMember"] = null;
-    if (bodyComponentsOtherMemberLabels != null) theDocument["bodyComponentsOtherMemberLabels"] = bodyComponentsOtherMemberLabels!.toList();
-      else theDocument["bodyComponentsOtherMemberLabels"] = null;
     if (bodyComponentsOtherMember != null) theDocument["bodyComponentsOtherMember"] = bodyComponentsOtherMemberListMap;
       else theDocument["bodyComponentsOtherMember"] = null;
     if (itemColor != null) theDocument["itemColor"] = itemColorMap;

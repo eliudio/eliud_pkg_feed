@@ -142,17 +142,17 @@ class FeedMenuCache implements FeedMenuRepository {
       } catch (_) {}
     }
 
-    List<BodyComponentModel>? bodyComponentsCurrentMemberHolder;
+    List<LabelledBodyComponentModel>? bodyComponentsCurrentMemberHolder;
     if (model.bodyComponentsCurrentMember != null) {
-      bodyComponentsCurrentMemberHolder = List<BodyComponentModel>.from(await Future.wait(await model.bodyComponentsCurrentMember!.map((element) async {
-        return await BodyComponentCache.refreshRelations(element);
+      bodyComponentsCurrentMemberHolder = List<LabelledBodyComponentModel>.from(await Future.wait(await model.bodyComponentsCurrentMember!.map((element) async {
+        return await LabelledBodyComponentCache.refreshRelations(element);
       }))).toList();
     }
 
-    List<BodyComponentModel>? bodyComponentsOtherMemberHolder;
+    List<LabelledBodyComponentModel>? bodyComponentsOtherMemberHolder;
     if (model.bodyComponentsOtherMember != null) {
-      bodyComponentsOtherMemberHolder = List<BodyComponentModel>.from(await Future.wait(await model.bodyComponentsOtherMember!.map((element) async {
-        return await BodyComponentCache.refreshRelations(element);
+      bodyComponentsOtherMemberHolder = List<LabelledBodyComponentModel>.from(await Future.wait(await model.bodyComponentsOtherMember!.map((element) async {
+        return await LabelledBodyComponentCache.refreshRelations(element);
       }))).toList();
     }
 

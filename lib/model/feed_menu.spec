@@ -41,32 +41,16 @@
       "group": "general"
     },
     {
-      "fieldName": "bodyComponentsCurrentMemberLabels",
-      "displayName": "Components Current Member",
-      "fieldType": "String",
-      "arrayType": "Array",
-      "group": "components",
-      "hidden": true
-    },
-    {
       "fieldName": "bodyComponentsCurrentMember",
       "displayName": "Components Current Member",
-      "fieldType": "BodyComponent",
+      "fieldType": "LabelledBodyComponent",
       "arrayType": "Array",
       "group": "components"
     },
     {
-      "fieldName": "bodyComponentsOtherMemberLabels",
-      "displayName": "Components Other Member",
-      "fieldType": "String",
-      "arrayType": "Array",
-      "group": "components",
-      "hidden": true
-    },
-    {
       "fieldName": "bodyComponentsOtherMember",
       "displayName": "Components Other Member",
-      "fieldType": "BodyComponent",
+      "fieldType": "LabelledBodyComponent",
       "arrayType": "Array",
       "group": "components"
     },

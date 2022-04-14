@@ -179,7 +179,7 @@ class _MyFeedMenuFormState extends State<MyFeedMenuForm> {
 
                 new Container(
                     height: (fullScreenHeight(context) / 2.5), 
-                    child: bodyComponentsList(widget.app, context, state.value!.bodyComponentsCurrentMember, _onBodyComponentsCurrentMemberChanged)
+                    child: labelledBodyComponentsList(widget.app, context, state.value!.bodyComponentsCurrentMember, _onBodyComponentsCurrentMemberChanged)
                 )
           );
 
@@ -187,7 +187,7 @@ class _MyFeedMenuFormState extends State<MyFeedMenuForm> {
 
                 new Container(
                     height: (fullScreenHeight(context) / 2.5), 
-                    child: bodyComponentsList(widget.app, context, state.value!.bodyComponentsOtherMember, _onBodyComponentsOtherMemberChanged)
+                    child: labelledBodyComponentsList(widget.app, context, state.value!.bodyComponentsOtherMember, _onBodyComponentsOtherMemberChanged)
                 )
           );
 
@@ -283,9 +283,7 @@ class _MyFeedMenuFormState extends State<MyFeedMenuForm> {
                               documentID: state.value!.documentID, 
                               appId: state.value!.appId, 
                               description: state.value!.description, 
-                              bodyComponentsCurrentMemberLabels: state.value!.bodyComponentsCurrentMemberLabels, 
                               bodyComponentsCurrentMember: state.value!.bodyComponentsCurrentMember, 
-                              bodyComponentsOtherMemberLabels: state.value!.bodyComponentsOtherMemberLabels, 
                               bodyComponentsOtherMember: state.value!.bodyComponentsOtherMember, 
                               itemColor: state.value!.itemColor, 
                               selectedItemColor: state.value!.selectedItemColor, 
@@ -298,9 +296,7 @@ class _MyFeedMenuFormState extends State<MyFeedMenuForm> {
                               documentID: state.value!.documentID, 
                               appId: state.value!.appId, 
                               description: state.value!.description, 
-                              bodyComponentsCurrentMemberLabels: state.value!.bodyComponentsCurrentMemberLabels, 
                               bodyComponentsCurrentMember: state.value!.bodyComponentsCurrentMember, 
-                              bodyComponentsOtherMemberLabels: state.value!.bodyComponentsOtherMemberLabels, 
                               bodyComponentsOtherMember: state.value!.bodyComponentsOtherMember, 
                               itemColor: state.value!.itemColor, 
                               selectedItemColor: state.value!.selectedItemColor, 
@@ -347,20 +343,8 @@ class _MyFeedMenuFormState extends State<MyFeedMenuForm> {
   }
 
 
-  void _onBodyComponentsCurrentMemberLabelsChanged(value) {
-    _myFormBloc.add(ChangedFeedMenuBodyComponentsCurrentMemberLabels(value: value));
-    setState(() {});
-  }
-
-
   void _onBodyComponentsCurrentMemberChanged(value) {
     _myFormBloc.add(ChangedFeedMenuBodyComponentsCurrentMember(value: value));
-    setState(() {});
-  }
-
-
-  void _onBodyComponentsOtherMemberLabelsChanged(value) {
-    _myFormBloc.add(ChangedFeedMenuBodyComponentsOtherMemberLabels(value: value));
     setState(() {});
   }
 
