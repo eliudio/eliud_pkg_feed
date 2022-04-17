@@ -14,10 +14,12 @@ import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/tools/component/component_spec.dart';
 import 'package:eliud_core/tools/random.dart';
+import 'package:eliud_core/tools/rgb_formfield.dart';
 import 'package:eliud_core/tools/screen_size.dart';
 import 'package:eliud_core/tools/widgets/condition_simple_widget.dart';
 import 'package:eliud_core/tools/widgets/header_widget.dart';
 import 'package:eliud_pkg_feed/editors/widgets/labelled_body_component_model_widget.dart';
+import 'package:eliud_pkg_feed/editors/widgets/select_feed_front_widget.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/feed_menu_model.dart';
 import 'package:eliud_pkg_feed/model/labelled_body_component_model.dart';
@@ -25,6 +27,7 @@ import 'package:flutter/material.dart';
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'bloc/feed_menu_bloc.dart';
+import 'feed/select_feed_widget.dart';
 
 class FeedMenuComponentEditorConstructor
     extends ComponentEditorConstructor {
@@ -133,6 +136,17 @@ class _FeedMenuComponentEditorState
                       return true;
                     },
                   ),
+                  RgbField(widget.app, 'Item Colour', feedMenuState.model.itemColor,
+                          (value) => feedMenuState.model.itemColor = value),
+                  RgbField(widget.app, 'Selected Item Colour', feedMenuState.model.selectedItemColor,
+                          (value) => feedMenuState.model.selectedItemColor = value),
+                  selectFeedFrontWidget(
+                      context,
+                      widget.app,
+                      feedMenuState.model.feedFront,
+                          (shop) => setState(() {
+                            feedMenuState.model.feedFront = shop;
+                      })),
                   topicContainer(widget.app, context,
                       title: 'General',
                       collapsible: true,
@@ -161,6 +175,13 @@ class _FeedMenuComponentEditorState
                             )),
                       ]),
                   topicContainer(widget.app, context,
+                      title: 'Member actions',
+                      collapsible: true,
+                      collapsed: true,
+                      children: [
+                        _actions(feedMenuState),
+                      ]),
+                  topicContainer(widget.app, context,
                       title: 'Condition',
                       collapsible: true,
                       collapsed: true,
@@ -171,13 +192,6 @@ class _FeedMenuComponentEditorState
                               app: widget.app,
                               value: feedMenuState.model.conditions!,
                             )),
-                      ]),
-                  topicContainer(widget.app, context,
-                      title: 'Member actions',
-                      collapsible: true,
-                      collapsed: true,
-                      children: [
-                        _actions(feedMenuState),
                       ]),
                 ]);
           } else {

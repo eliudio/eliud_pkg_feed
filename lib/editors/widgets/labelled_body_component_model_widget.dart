@@ -79,6 +79,8 @@ class LabelledBodyComponentModelWidget extends StatefulWidget {
 
 class _LabelledBodyComponentModelWidgetState
     extends State<LabelledBodyComponentModelWidget> {
+  int? currentPrivilegeLevel;
+
   @override
   Widget build(BuildContext context) {
     return ListView(shrinkWrap: true, physics: ScrollPhysics(), children: [
@@ -140,9 +142,16 @@ class _LabelledBodyComponentModelWidgetState
                     componentName:
                         widget.labelledBodyComponentModel.componentName,
                     value: widget.labelledBodyComponentModel.componentId,
-                    trigger: (value) {
+                    currentPrivilegeLevel: currentPrivilegeLevel,
+                    trigger: (value, privilegeLevel) {
                   setState(() {
-                    widget.labelledBodyComponentModel.componentId = value;
+                    if (value != null) {
+                      widget.labelledBodyComponentModel.componentId = value;
+                    }
+                    if (privilegeLevel != null) {
+                      currentPrivilegeLevel = privilegeLevel;
+                      widget.labelledBodyComponentModel.componentId = null;
+                    }
                   });
                 })),
           ]),

@@ -212,7 +212,7 @@ class _MyMemberProfileFormState extends State<MyMemberProfileForm> {
 
         children.add(
 
-                DropdownButtonComponentFactory().createNew(app: widget.app, id: "memberMediums", value: _profileBackground, trigger: _onProfileBackgroundSelected, optional: true),
+                DropdownButtonComponentFactory().createNew(app: widget.app, id: "memberMediums", value: _profileBackground, trigger: (value, privilegeLevel) => _onProfileBackgroundSelected(value), optional: true),
           );
 
         children.add(

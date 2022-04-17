@@ -185,7 +185,7 @@ class _MyLabelledBodyComponentFormState extends State<MyLabelledBodyComponentFor
 
         children.add(
 
-                ComponentIdField(widget.app, componentName: state.value!.componentName, value: state.value!.componentId, trigger: _onComponentIdChanged)
+                ComponentIdField(widget.app, componentName: state.value!.componentName, value: state.value!.componentId, trigger: (value, _) => _onComponentIdChanged(value))
           );
 
 

@@ -192,7 +192,7 @@ class _MyFeedFrontFormState extends State<MyFeedFrontForm> {
 
         children.add(
 
-                DropdownButtonComponentFactory().createNew(app: widget.app, id: "feeds", value: _feed, trigger: _onFeedSelected, optional: false),
+                DropdownButtonComponentFactory().createNew(app: widget.app, id: "feeds", value: _feed, trigger: (value, privilegeLevel) => _onFeedSelected(value), optional: false),
           );
 
 
