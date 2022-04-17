@@ -136,17 +136,6 @@ class _FeedMenuComponentEditorState
                       return true;
                     },
                   ),
-                  RgbField(widget.app, 'Item Colour', feedMenuState.model.itemColor,
-                          (value) => feedMenuState.model.itemColor = value),
-                  RgbField(widget.app, 'Selected Item Colour', feedMenuState.model.selectedItemColor,
-                          (value) => feedMenuState.model.selectedItemColor = value),
-                  selectFeedFrontWidget(
-                      context,
-                      widget.app,
-                      feedMenuState.model.feedFront,
-                          (shop) => setState(() {
-                            feedMenuState.model.feedFront = shop;
-                      })),
                   topicContainer(widget.app, context,
                       title: 'General',
                       collapsible: true,
@@ -181,6 +170,17 @@ class _FeedMenuComponentEditorState
                       children: [
                         _actions(feedMenuState),
                       ]),
+                  RgbField(widget.app, 'Item Colour', feedMenuState.model.itemColor,
+                          (value) => feedMenuState.model.itemColor = value),
+                  RgbField(widget.app, 'Selected Item Colour', feedMenuState.model.selectedItemColor,
+                          (value) => feedMenuState.model.selectedItemColor = value),
+                  selectFeedFrontWidget(
+                      context,
+                      widget.app,
+                      feedMenuState.model.feedFront,
+                          (shop) => setState(() {
+                        feedMenuState.model.feedFront = shop;
+                      })),
                   topicContainer(widget.app, context,
                       title: 'Condition',
                       collapsible: true,
