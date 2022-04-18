@@ -177,6 +177,7 @@ class _FeedMenuComponentEditorState
                   selectFeedFrontWidget(
                       context,
                       widget.app,
+                      feedMenuState.model.conditions,
                       feedMenuState.model.feedFront,
                           (shop) => setState(() {
                         feedMenuState.model.feedFront = shop;

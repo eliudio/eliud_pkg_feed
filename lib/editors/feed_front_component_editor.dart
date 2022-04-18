@@ -182,6 +182,7 @@ class _FeedFrontComponentEditorState
                   selectFeedWidget(
                       context,
                       widget.app,
+                      feedFrontState.model.conditions,
                       feedFrontState.model.feed,
                           (feed) => setState(() {
                             feedFrontState.model.feed = feed;

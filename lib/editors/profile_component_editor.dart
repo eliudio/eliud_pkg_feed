@@ -182,6 +182,7 @@ class _ProfileComponentEditorState
                   selectFeedWidget(
                       context,
                       widget.app,
+                      profileState.model.conditions,
                       profileState.model.feed,
                           (feed) => setState(() {
                             profileState.model.feed = feed;

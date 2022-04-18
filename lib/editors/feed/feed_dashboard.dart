@@ -13,6 +13,7 @@ import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_core/tools/widgets/header_widget.dart';
+import 'package:eliud_pkg_feed/editors/widgets/thumb_style_widget.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
 import 'package:flutter/material.dart';
@@ -135,6 +136,63 @@ class _FeedDashboardWidgetState
                                 labelText: 'Description',
                               ),
                             )),
+                      ]),
+                  topicContainer(widget.app, context,
+                      title: 'Style thumb',
+                      collapsible: true,
+                      collapsed: true,
+                      children: [
+                        ThumbStyleWidget(app: widget.app, thumbStyle: feedState.model.thumbImage ?? ThumbStyle.Banana, thumbStyleCallback: (ThumbStyle thumbStyle) {
+                          setState(() {
+                            feedState.model.thumbImage = thumbStyle;
+                          });
+                        }, )
+                      ]),
+                  topicContainer(widget.app, context,
+                      title: 'Feed allowed',
+                      collapsible: true,
+                      collapsed: true,
+                      children: [
+                        checkboxListTile(widget.app, context, 'Post photo',
+                            feedState.model.photoPost, (value) {
+                              setState(() {
+                                feedState.model.photoPost = value ?? false;
+                              });
+                            }),
+                        checkboxListTile(widget.app, context, 'Post video',
+                            feedState.model.videoPost, (value) {
+                              setState(() {
+                                feedState.model.videoPost = value ?? false;
+                              });
+                            }),
+                        checkboxListTile(widget.app, context, 'Post message',
+                            feedState.model.messagePost, (value) {
+                              setState(() {
+                                feedState.model.messagePost = value ?? false;
+                              });
+                            }),
+/*
+                        not implemented yet
+                        checkboxListTile(widget.app, context, 'Audio message',
+                            feedState.model.audioPost, (value) {
+                              setState(() {
+                                feedState.model.audioPost = value ?? false;
+                              });
+                            }),
+*/
+                        checkboxListTile(widget.app, context, 'Post album',
+                            feedState.model.albumPost, (value) {
+                              setState(() {
+                                feedState.model.albumPost = value ?? false;
+                              });
+                            }),
+                        checkboxListTile(widget.app, context, 'Post article',
+                            feedState.model.articlePost, (value) {
+                              setState(() {
+                                feedState.model.articlePost = value ?? false;
+                              });
+                            }),
+
                       ]),
                 ]);
           } else {
