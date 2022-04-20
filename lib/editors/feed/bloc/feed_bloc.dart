@@ -41,7 +41,8 @@ class FeedDashboardBloc
         messagePost: true,
         audioPost: true,
         albumPost: true,
-        articlePost: true);
+        articlePost: true,
+        );
   }
 
   @override
@@ -56,7 +57,8 @@ class FeedDashboardBloc
         messagePost: t.messagePost ?? true,
         audioPost: t.audioPost ?? true,
         albumPost: t.albumPost ?? true,
-        articlePost: t.articlePost ?? true);
+        articlePost: t.articlePost ?? true,
+        );
   }
 }
 

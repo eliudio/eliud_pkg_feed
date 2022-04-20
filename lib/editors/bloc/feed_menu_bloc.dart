@@ -52,10 +52,7 @@ class FeedMenuBloc extends ExtEditorBaseBloc<FeedMenuModel, LabelledBodyComponen
   @override
   FeedMenuModel setDefaultValues(FeedMenuModel t, StorageConditionsModel conditions) {
     return t.copyWith(
-        conditions: t.conditions ??
-            StorageConditionsModel(
-                privilegeLevelRequired:
-                PrivilegeLevelRequiredSimple.NoPrivilegeRequiredSimple));
+        conditions: t.conditions ?? conditions);
   }
 
   @override

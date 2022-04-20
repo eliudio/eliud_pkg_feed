@@ -28,14 +28,7 @@ Widget selectFeedFrontWidget(
           app, context, item.documentID! + ' ' + (item.description ?? '?')),
       blocProviderProvider: () => BlocProvider<FeedFrontListBloc>(
             create: (context) => FeedFrontListBloc(
-              eliudQuery: getComponentSelectorQuery(
-                  containerStorageConditions == null ||
-                          containerStorageConditions.privilegeLevelRequired ==
-                              null
-                      ? 0
-                      : containerStorageConditions
-                          .privilegeLevelRequired!.index,
-                  app.documentID!),
+              eliudQuery: getComponentSelectorQuery(0, app.documentID!),
               feedFrontRepository: feedFrontRepository(appId: app.documentID!)!,
             )..add(LoadFeedFrontList()),
           ),
