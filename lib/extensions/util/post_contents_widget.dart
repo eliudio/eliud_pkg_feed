@@ -1,4 +1,5 @@
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
+import 'package:eliud_core/core/registry.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_medium_container_model.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
@@ -120,7 +121,7 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
     if (postMedium.memberMedium!.mediumType! == MediumType.Photo) {
       showPhotosFromPostMedia(context, memberMedia, index);
     } else {
-      AbstractMediumPlatform.platform!
+      Registry.registry()!.getMediumApi()
           .showVideo(context, widget.app, postMedium.memberMedium!);
     }
   }
@@ -129,7 +130,7 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
       BuildContext context, List<MemberMediumContainerModel> postMedia, int initialPage) {
     if (postMedia.length > 0) {
       var photos = postMedia.map((pm) => pm.memberMedium!).toList();
-      AbstractMediumPlatform.platform!.showPhotos(context, widget.app, photos, initialPage);
+      Registry.registry()!.getMediumApi().showPhotos(context, widget.app, photos, initialPage);
     }
   }
 }

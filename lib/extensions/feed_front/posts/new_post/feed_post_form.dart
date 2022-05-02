@@ -2,6 +2,7 @@ import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/core/blocs/access/state/access_state.dart';
 import 'package:eliud_core/core/blocs/access/state/logged_in.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliud_router;
+import 'package:eliud_core/core/registry.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_medium_container_model.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
@@ -200,9 +201,9 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
           var medium = media[index];
           if (medium.mediumType == MediumType.Photo) {
             var photos = media;
-            AbstractMediumPlatform.platform!.showPhotos(context, widget.app, photos, index);
+            Registry.registry()!.getMediumApi().showPhotos(context, widget.app, photos, index);
           } else {
-            AbstractMediumPlatform.platform!.showVideo(context, widget.app, medium);
+            Registry.registry()!.getMediumApi().showVideo(context, widget.app, medium);
           }
         });
   }
