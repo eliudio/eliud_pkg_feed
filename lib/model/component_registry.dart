@@ -44,7 +44,7 @@ class ComponentRegistry {
     Registry.registry()!.register(componentName: "feedMenus", componentConstructor: FeedMenuComponentConstructorDefault());
     Registry.registry()!.addDropDownSupporter("profiles", DropdownButtonComponentFactory());
     Registry.registry()!.register(componentName: "profiles", componentConstructor: ProfileComponentConstructorDefault());
-    Registry.registry()!.addComponentSpec('eliud_pkg_feed', [
+    Registry.registry()!.addComponentSpec('eliud_pkg_feed', 'feed', [
       ComponentSpec('feedFronts', FeedFrontComponentConstructorDefault(), FeedFrontComponentSelector(), FeedFrontComponentEditorConstructor(), ), 
       ComponentSpec('feedMenus', FeedMenuComponentConstructorDefault(), FeedMenuComponentSelector(), FeedMenuComponentEditorConstructor(), ), 
       ComponentSpec('profiles', ProfileComponentConstructorDefault(), ProfileComponentSelector(), ProfileComponentEditorConstructor(), ), 

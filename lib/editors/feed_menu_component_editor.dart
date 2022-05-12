@@ -47,6 +47,7 @@ class FeedMenuComponentEditorConstructor
         FeedMenuModel(
           appId: app.documentID,
           documentID: newRandomKey(),
+          description: 'New feed menu',
           conditions: StorageConditionsModel(
               privilegeLevelRequired:
                   PrivilegeLevelRequiredSimple.NoPrivilegeRequiredSimple),

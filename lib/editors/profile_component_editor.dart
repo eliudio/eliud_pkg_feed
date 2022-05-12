@@ -42,6 +42,7 @@ class ProfileComponentEditorConstructor
         ProfileModel(
           appId: app.documentID,
           documentID: newRandomKey(),
+          description: 'New profile',
           conditions: StorageConditionsModel(
               privilegeLevelRequired:
                   PrivilegeLevelRequiredSimple.NoPrivilegeRequiredSimple),

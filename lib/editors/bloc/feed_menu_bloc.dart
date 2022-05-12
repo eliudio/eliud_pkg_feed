@@ -44,6 +44,7 @@ class FeedMenuBloc extends ExtEditorBaseBloc<FeedMenuModel, LabelledBodyComponen
   FeedMenuModel newInstance(StorageConditionsModel conditions) {
     return FeedMenuModel(
       appId: appId,
+      description: 'New feed menu',
       documentID: newRandomKey(),
       conditions: conditions,
     );

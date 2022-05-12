@@ -1,13 +1,13 @@
-
 {
   "id": "PostLike",
   "packageName": "eliud_pkg_feed",
+  "packageFriendlyName": "feed",
   "isAppModel": true,
   "generate": {
     "generateComponent": true,
     "generateRepository": true,
     "generateCache": true,
-	"hasPersistentRepository": true,
+    "hasPersistentRepository": true,
     "generateFirestoreRepository": true,
     "generateRepositorySingleton": true,
     "generateModel": true,

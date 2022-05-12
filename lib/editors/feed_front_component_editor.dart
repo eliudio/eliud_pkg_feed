@@ -42,6 +42,7 @@ class FeedFrontComponentEditorConstructor
         FeedFrontModel(
           appId: app.documentID,
           documentID: newRandomKey(),
+          description: 'New feed front',
           conditions: StorageConditionsModel(
               privilegeLevelRequired:
                   PrivilegeLevelRequiredSimple.NoPrivilegeRequiredSimple),

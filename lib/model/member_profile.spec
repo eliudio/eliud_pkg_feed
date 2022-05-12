@@ -1,6 +1,7 @@
 {
   "id": "MemberProfile",
   "packageName": "eliud_pkg_feed",
+  "packageFriendlyName": "feed",
   "isAppModel": true,
   "generate": {
     "generateComponent": false,

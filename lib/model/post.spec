@@ -1,6 +1,7 @@
 {
   "id": "Post",
   "packageName": "eliud_pkg_feed",
+  "packageFriendlyName": "feed",
   "isAppModel": true,
   "generate": {
     "generateComponent": true,
