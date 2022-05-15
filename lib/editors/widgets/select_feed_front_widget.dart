@@ -48,7 +48,6 @@ Widget selectFeedFrontWidget(
       deleteCallback: null,
       updateCallback: (item) {
         updateComponent(context, app, 'feedFronts', item.documentID, (_) {
-          int breakp = 0;
         });
       },
       selectedCallback: selectedCallback,

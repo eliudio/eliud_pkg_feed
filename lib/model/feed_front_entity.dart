@@ -28,17 +28,16 @@ class FeedFrontEntity {
   final String? feedId;
   final BackgroundEntity? backgroundOverridePosts;
   final BackgroundEntity? backgroundOverrideProfile;
-  final BackgroundEntity? backgroundOverrideHeader;
   final StorageConditionsEntity? conditions;
 
-  FeedFrontEntity({this.appId, this.description, this.feedId, this.backgroundOverridePosts, this.backgroundOverrideProfile, this.backgroundOverrideHeader, this.conditions, });
+  FeedFrontEntity({this.appId, this.description, this.feedId, this.backgroundOverridePosts, this.backgroundOverrideProfile, this.conditions, });
 
 
-  List<Object?> get props => [appId, description, feedId, backgroundOverridePosts, backgroundOverrideProfile, backgroundOverrideHeader, conditions, ];
+  List<Object?> get props => [appId, description, feedId, backgroundOverridePosts, backgroundOverrideProfile, conditions, ];
 
   @override
   String toString() {
-    return 'FeedFrontEntity{appId: $appId, description: $description, feedId: $feedId, backgroundOverridePosts: $backgroundOverridePosts, backgroundOverrideProfile: $backgroundOverrideProfile, backgroundOverrideHeader: $backgroundOverrideHeader, conditions: $conditions}';
+    return 'FeedFrontEntity{appId: $appId, description: $description, feedId: $feedId, backgroundOverridePosts: $backgroundOverridePosts, backgroundOverrideProfile: $backgroundOverrideProfile, conditions: $conditions}';
   }
 
   static FeedFrontEntity? fromMap(Object? o) {
@@ -53,10 +52,6 @@ class FeedFrontEntity {
     backgroundOverrideProfileFromMap = map['backgroundOverrideProfile'];
     if (backgroundOverrideProfileFromMap != null)
       backgroundOverrideProfileFromMap = BackgroundEntity.fromMap(backgroundOverrideProfileFromMap);
-    var backgroundOverrideHeaderFromMap;
-    backgroundOverrideHeaderFromMap = map['backgroundOverrideHeader'];
-    if (backgroundOverrideHeaderFromMap != null)
-      backgroundOverrideHeaderFromMap = BackgroundEntity.fromMap(backgroundOverrideHeaderFromMap);
     var conditionsFromMap;
     conditionsFromMap = map['conditions'];
     if (conditionsFromMap != null)
@@ -68,7 +63,6 @@ class FeedFrontEntity {
       feedId: map['feedId'], 
       backgroundOverridePosts: backgroundOverridePostsFromMap, 
       backgroundOverrideProfile: backgroundOverrideProfileFromMap, 
-      backgroundOverrideHeader: backgroundOverrideHeaderFromMap, 
       conditions: conditionsFromMap, 
     );
   }
@@ -79,9 +73,6 @@ class FeedFrontEntity {
         : null;
     final Map<String, dynamic>? backgroundOverrideProfileMap = backgroundOverrideProfile != null 
         ? backgroundOverrideProfile!.toDocument()
-        : null;
-    final Map<String, dynamic>? backgroundOverrideHeaderMap = backgroundOverrideHeader != null 
-        ? backgroundOverrideHeader!.toDocument()
         : null;
     final Map<String, dynamic>? conditionsMap = conditions != null 
         ? conditions!.toDocument()
@@ -98,8 +89,6 @@ class FeedFrontEntity {
       else theDocument["backgroundOverridePosts"] = null;
     if (backgroundOverrideProfile != null) theDocument["backgroundOverrideProfile"] = backgroundOverrideProfileMap;
       else theDocument["backgroundOverrideProfile"] = null;
-    if (backgroundOverrideHeader != null) theDocument["backgroundOverrideHeader"] = backgroundOverrideHeaderMap;
-      else theDocument["backgroundOverrideHeader"] = null;
     if (conditions != null) theDocument["conditions"] = conditionsMap;
       else theDocument["conditions"] = null;
     return theDocument;

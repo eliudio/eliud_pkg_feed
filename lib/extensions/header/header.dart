@@ -150,6 +150,7 @@ class _HeaderState extends State<Header> {
               rows.add(container);
               var backgroundPhoto = topicContainer(widget.app, context,
                   children: rows,
+                  backgroundOverride: widget.backgroundOverride,
                   image: _background(context, state.watchingThisProfile()));
 
               // Add the background photo

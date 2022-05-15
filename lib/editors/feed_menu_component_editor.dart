@@ -31,8 +31,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'bloc/feed_menu_bloc.dart';
 import 'feed/select_feed_widget.dart';
 
-class FeedMenuComponentEditorConstructor
-    extends ComponentEditorConstructor {
+class FeedMenuComponentEditorConstructor extends ComponentEditorConstructor {
   @override
   void updateComponent(
       AppModel app, BuildContext context, model, EditorFeedback feedback) {
@@ -60,8 +59,7 @@ class FeedMenuComponentEditorConstructor
   @override
   void updateComponentWithID(AppModel app, BuildContext context, String id,
       EditorFeedback feedback) async {
-    var feedMenu =
-        await feedMenuRepository(appId: app.documentID!)!.get(id);
+    var feedMenu = await feedMenuRepository(appId: app.documentID!)!.get(id);
     if (feedMenu != null) {
       _openIt(app, context, false, feedMenu, feedback);
     } else {
@@ -105,12 +103,10 @@ class FeedMenuComponentEditor extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() =>
-      _FeedMenuComponentEditorState();
+  State<StatefulWidget> createState() => _FeedMenuComponentEditorState();
 }
 
-class _FeedMenuComponentEditorState
-    extends State<FeedMenuComponentEditor> {
+class _FeedMenuComponentEditorState extends State<FeedMenuComponentEditor> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AccessBloc, AccessState>(
@@ -119,8 +115,7 @@ class _FeedMenuComponentEditorState
         var member = accessState.getMember();
         if (member != null) {
           var memberId = member.documentID!;
-          return BlocBuilder<FeedMenuBloc,
-                  ExtEditorBaseState<FeedMenuModel>>(
+          return BlocBuilder<FeedMenuBloc, ExtEditorBaseState<FeedMenuModel>>(
               builder: (ppContext, feedMenuState) {
             if (feedMenuState
                 is ExtEditorBaseInitialised<FeedMenuModel, dynamic>) {
@@ -132,9 +127,8 @@ class _FeedMenuComponentEditorState
                       app: widget.app,
                       title: 'FeedMenu',
                       okAction: () async {
-                        await BlocProvider.of<FeedMenuBloc>(context)
-                            .save(ExtEditorBaseApplyChanges<
-                                    FeedMenuModel>(
+                        await BlocProvider.of<FeedMenuBloc>(context).save(
+                            ExtEditorBaseApplyChanges<FeedMenuModel>(
                                 model: feedMenuState.model));
                         return true;
                       },
@@ -156,11 +150,9 @@ class _FeedMenuComponentEditorState
                               title: dialogField(
                                 widget.app,
                                 context,
-                                initialValue:
-                                    feedMenuState.model.description,
+                                initialValue: feedMenuState.model.description,
                                 valueChanged: (value) {
-                                  feedMenuState.model.description =
-                                      value;
+                                  feedMenuState.model.description = value;
                                 },
                                 maxLines: 1,
                                 decoration: const InputDecoration(
@@ -181,42 +173,57 @@ class _FeedMenuComponentEditorState
                         collapsible: true,
                         collapsed: true,
                         children: [
-                          RgbField(widget.app, 'Item Colour', feedMenuState.model.itemColor,
-                                  (value) => feedMenuState.model.itemColor = value),
-                          RgbField(widget.app, 'Selected Item Colour', feedMenuState.model.selectedItemColor,
-                                  (value) => feedMenuState.model.selectedItemColor = value),
-                          checkboxListTile(
+                          RgbField(
                               widget.app,
-                              context,
-                              'Background override header?',
-                              feedMenuState.model.backgroundOverride != null,
-                                  (value) {
-                                setState(() {
-                                  if (value!) {
-                                    feedMenuState.model
-                                        .backgroundOverride =
-                                        BackgroundModel();
-                                  } else {
-                                    feedMenuState.model
-                                        .backgroundOverride =
-                                    null;
-                                  }
-                                });
-                              }),
-                          if (feedMenuState.model.backgroundOverride != null) BackgroundWidget(
-                              app: widget.app,
-                              memberId: memberId,
-                              value: feedMenuState.model.backgroundOverride!,
-                              label: 'Background Override'),
+                              'Item Colour',
+                              feedMenuState.model.itemColor,
+                              (value) => feedMenuState.model.itemColor = value),
+                          RgbField(
+                              widget.app,
+                              'Selected Item Colour',
+                              feedMenuState.model.selectedItemColor,
+                              (value) => feedMenuState.model.selectedItemColor =
+                                  value),
+                          topicContainer(widget.app, context,
+                              title: 'Background override header',
+                              collapsible: true,
+                              collapsed: true,
+                              children: [
+                                checkboxListTile(
+                                    widget.app,
+                                    context,
+                                    'Background override header?',
+                                    feedMenuState.model.backgroundOverride !=
+                                        null, (value) {
+                                  setState(() {
+                                    if (value!) {
+                                      feedMenuState.model.backgroundOverride =
+                                          BackgroundModel();
+                                    } else {
+                                      feedMenuState.model.backgroundOverride =
+                                          null;
+                                    }
+                                  });
+                                }),
+                                if (feedMenuState.model.backgroundOverride !=
+                                    null)
+                                  BackgroundWidget(
+                                    withTopicContainer: false,
+                                      app: widget.app,
+                                      memberId: memberId,
+                                      value: feedMenuState
+                                          .model.backgroundOverride!,
+                                      label: 'Background Override'),
+                              ]),
                         ]),
                     selectFeedFrontWidget(
                         context,
                         widget.app,
                         feedMenuState.model.conditions,
                         feedMenuState.model.feedFront,
-                            (shop) => setState(() {
-                          feedMenuState.model.feedFront = shop;
-                        })),
+                        (shop) => setState(() {
+                              feedMenuState.model.feedFront = shop;
+                            })),
                     topicContainer(widget.app, context,
                         title: 'Condition',
                         collapsible: true,
@@ -243,10 +250,11 @@ class _FeedMenuComponentEditorState
     });
   }
 
-  Widget _actions(
-      ExtEditorBaseInitialised<FeedMenuModel, dynamic> state) {
+  Widget _actions(ExtEditorBaseInitialised<FeedMenuModel, dynamic> state) {
     List<LabelledBodyComponentModel> items =
-        state.model.bodyComponentsCurrentMember != null ? state.model.bodyComponentsCurrentMember! : [];
+        state.model.bodyComponentsCurrentMember != null
+            ? state.model.bodyComponentsCurrentMember!
+            : [];
     return Container(
       height: 150,
       child: ListView(shrinkWrap: true, physics: ScrollPhysics(), children: [
@@ -262,8 +270,14 @@ class _FeedMenuComponentEditorState
                   return getListTile(
                     context,
                     widget.app,
-                    title: text(widget.app, context,
-                        (value.label ?? 'no label') + ' - ' + (value.componentName ?? ' no component name') + ' - ' + (value.componentId ?? ' no component id')),
+                    title: text(
+                        widget.app,
+                        context,
+                        (value.label ?? 'no label') +
+                            ' - ' +
+                            (value.componentName ?? ' no component name') +
+                            ' - ' +
+                            (value.componentId ?? ' no component id')),
                     trailing: PopupMenuButton<int>(
                         child: Icon(Icons.more_vert),
                         elevation: 10,
@@ -282,10 +296,8 @@ class _FeedMenuComponentEditorState
                             open(
                                 value,
                                 (newItem) =>
-                                    BlocProvider.of<FeedMenuBloc>(
-                                            context)
-                                        .add(UpdateItemEvent<
-                                                FeedMenuModel,
+                                    BlocProvider.of<FeedMenuBloc>(context).add(
+                                        UpdateItemEvent<FeedMenuModel,
                                                 LabelledBodyComponentModel>(
                                             oldItem: value, newItem: newItem)),
                                 ((state.model.conditions == null) ||
@@ -296,9 +308,10 @@ class _FeedMenuComponentEditorState
                                     : state.model.conditions!
                                         .privilegeLevelRequired!.index);
                           } else if (selectedValue == 2) {
-                            BlocProvider.of<FeedMenuBloc>(context)
-                                .add(DeleteItemEvent<FeedMenuModel,
-                                    LabelledBodyComponentModel>(itemModel: value));
+                            BlocProvider.of<FeedMenuBloc>(context).add(
+                                DeleteItemEvent<FeedMenuModel,
+                                        LabelledBodyComponentModel>(
+                                    itemModel: value));
                           }
                         }),
                   );

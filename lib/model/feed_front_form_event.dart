@@ -131,18 +131,6 @@ class ChangedFeedFrontBackgroundOverrideProfile extends FeedFrontFormEvent {
   String toString() => 'ChangedFeedFrontBackgroundOverrideProfile{ value: $value }';
 }
 
-class ChangedFeedFrontBackgroundOverrideHeader extends FeedFrontFormEvent {
-  final BackgroundModel? value;
-
-  ChangedFeedFrontBackgroundOverrideHeader({this.value});
-
-  @override
-  List<Object?> get props => [ value ];
-
-  @override
-  String toString() => 'ChangedFeedFrontBackgroundOverrideHeader{ value: $value }';
-}
-
 class ChangedFeedFrontConditions extends FeedFrontFormEvent {
   final StorageConditionsModel? value;
 

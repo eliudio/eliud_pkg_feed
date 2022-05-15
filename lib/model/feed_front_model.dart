@@ -44,19 +44,18 @@ class FeedFrontModel {
   FeedModel? feed;
   BackgroundModel? backgroundOverridePosts;
   BackgroundModel? backgroundOverrideProfile;
-  BackgroundModel? backgroundOverrideHeader;
   StorageConditionsModel? conditions;
 
-  FeedFrontModel({this.documentID, this.appId, this.description, this.feed, this.backgroundOverridePosts, this.backgroundOverrideProfile, this.backgroundOverrideHeader, this.conditions, })  {
+  FeedFrontModel({this.documentID, this.appId, this.description, this.feed, this.backgroundOverridePosts, this.backgroundOverrideProfile, this.conditions, })  {
     assert(documentID != null);
   }
 
-  FeedFrontModel copyWith({String? documentID, String? appId, String? description, FeedModel? feed, BackgroundModel? backgroundOverridePosts, BackgroundModel? backgroundOverrideProfile, BackgroundModel? backgroundOverrideHeader, StorageConditionsModel? conditions, }) {
-    return FeedFrontModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, feed: feed ?? this.feed, backgroundOverridePosts: backgroundOverridePosts ?? this.backgroundOverridePosts, backgroundOverrideProfile: backgroundOverrideProfile ?? this.backgroundOverrideProfile, backgroundOverrideHeader: backgroundOverrideHeader ?? this.backgroundOverrideHeader, conditions: conditions ?? this.conditions, );
+  FeedFrontModel copyWith({String? documentID, String? appId, String? description, FeedModel? feed, BackgroundModel? backgroundOverridePosts, BackgroundModel? backgroundOverrideProfile, StorageConditionsModel? conditions, }) {
+    return FeedFrontModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, feed: feed ?? this.feed, backgroundOverridePosts: backgroundOverridePosts ?? this.backgroundOverridePosts, backgroundOverrideProfile: backgroundOverrideProfile ?? this.backgroundOverrideProfile, conditions: conditions ?? this.conditions, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ appId.hashCode ^ description.hashCode ^ feed.hashCode ^ backgroundOverridePosts.hashCode ^ backgroundOverrideProfile.hashCode ^ backgroundOverrideHeader.hashCode ^ conditions.hashCode;
+  int get hashCode => documentID.hashCode ^ appId.hashCode ^ description.hashCode ^ feed.hashCode ^ backgroundOverridePosts.hashCode ^ backgroundOverrideProfile.hashCode ^ conditions.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -69,12 +68,11 @@ class FeedFrontModel {
           feed == other.feed &&
           backgroundOverridePosts == other.backgroundOverridePosts &&
           backgroundOverrideProfile == other.backgroundOverrideProfile &&
-          backgroundOverrideHeader == other.backgroundOverrideHeader &&
           conditions == other.conditions;
 
   @override
   String toString() {
-    return 'FeedFrontModel{documentID: $documentID, appId: $appId, description: $description, feed: $feed, backgroundOverridePosts: $backgroundOverridePosts, backgroundOverrideProfile: $backgroundOverrideProfile, backgroundOverrideHeader: $backgroundOverrideHeader, conditions: $conditions}';
+    return 'FeedFrontModel{documentID: $documentID, appId: $appId, description: $description, feed: $feed, backgroundOverridePosts: $backgroundOverridePosts, backgroundOverrideProfile: $backgroundOverrideProfile, conditions: $conditions}';
   }
 
   FeedFrontEntity toEntity({String? appId}) {
@@ -84,7 +82,6 @@ class FeedFrontModel {
           feedId: (feed != null) ? feed!.documentID : null, 
           backgroundOverridePosts: (backgroundOverridePosts != null) ? backgroundOverridePosts!.toEntity(appId: appId) : null, 
           backgroundOverrideProfile: (backgroundOverrideProfile != null) ? backgroundOverrideProfile!.toEntity(appId: appId) : null, 
-          backgroundOverrideHeader: (backgroundOverrideHeader != null) ? backgroundOverrideHeader!.toEntity(appId: appId) : null, 
           conditions: (conditions != null) ? conditions!.toEntity(appId: appId) : null, 
     );
   }
@@ -100,8 +97,6 @@ class FeedFrontModel {
             await BackgroundModel.fromEntity(entity.backgroundOverridePosts), 
           backgroundOverrideProfile: 
             await BackgroundModel.fromEntity(entity.backgroundOverrideProfile), 
-          backgroundOverrideHeader: 
-            await BackgroundModel.fromEntity(entity.backgroundOverrideHeader), 
           conditions: 
             await StorageConditionsModel.fromEntity(entity.conditions), 
     );
@@ -131,8 +126,6 @@ class FeedFrontModel {
             await BackgroundModel.fromEntityPlus(entity.backgroundOverridePosts, appId: appId), 
           backgroundOverrideProfile: 
             await BackgroundModel.fromEntityPlus(entity.backgroundOverrideProfile, appId: appId), 
-          backgroundOverrideHeader: 
-            await BackgroundModel.fromEntityPlus(entity.backgroundOverrideHeader, appId: appId), 
           conditions: 
             await StorageConditionsModel.fromEntityPlus(entity.conditions, appId: appId), 
     );

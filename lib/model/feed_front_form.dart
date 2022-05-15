@@ -178,7 +178,6 @@ class _MyFeedFrontFormState extends State<MyFeedFrontForm> {
 
 
 
-
         children.add(Container(height: 20.0));
         children.add(StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().divider(widget.app, context));
 
@@ -241,7 +240,6 @@ class _MyFeedFrontFormState extends State<MyFeedFrontForm> {
                               feed: state.value!.feed, 
                               backgroundOverridePosts: state.value!.backgroundOverridePosts, 
                               backgroundOverrideProfile: state.value!.backgroundOverrideProfile, 
-                              backgroundOverrideHeader: state.value!.backgroundOverrideHeader, 
                               conditions: state.value!.conditions, 
                         )));
                       } else {
@@ -253,7 +251,6 @@ class _MyFeedFrontFormState extends State<MyFeedFrontForm> {
                               feed: state.value!.feed, 
                               backgroundOverridePosts: state.value!.backgroundOverridePosts, 
                               backgroundOverrideProfile: state.value!.backgroundOverrideProfile, 
-                              backgroundOverrideHeader: state.value!.backgroundOverrideHeader, 
                               conditions: state.value!.conditions, 
                           )));
                       }

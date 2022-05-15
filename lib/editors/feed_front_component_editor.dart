@@ -26,8 +26,7 @@ import 'package:eliud_core/core/editor/editor_base_bloc/editor_base_state.dart';
 
 import 'feed/select_feed_widget.dart';
 
-class FeedFrontComponentEditorConstructor
-    extends ComponentEditorConstructor {
+class FeedFrontComponentEditorConstructor extends ComponentEditorConstructor {
   @override
   void updateComponent(
       AppModel app, BuildContext context, model, EditorFeedback feedback) {
@@ -55,8 +54,7 @@ class FeedFrontComponentEditorConstructor
   @override
   void updateComponentWithID(AppModel app, BuildContext context, String id,
       EditorFeedback feedback) async {
-    var feedFront =
-        await feedFrontRepository(appId: app.documentID!)!.get(id);
+    var feedFront = await feedFrontRepository(appId: app.documentID!)!.get(id);
     if (feedFront != null) {
       _openIt(app, context, false, feedFront, feedback);
     } else {
@@ -91,9 +89,7 @@ class FeedFrontComponentEditorConstructor
   }
 }
 
-class FeedFrontBloc
-    extends EditorBaseBloc<FeedFrontModel> {
-
+class FeedFrontBloc extends EditorBaseBloc<FeedFrontModel> {
   FeedFrontBloc(String appId, EditorFeedback feedback)
       : super(appId, feedFrontRepository(appId: appId)!, feedback);
 
@@ -109,8 +105,7 @@ class FeedFrontBloc
   @override
   FeedFrontModel setDefaultValues(
       FeedFrontModel t, StorageConditionsModel conditions) {
-    return t.copyWith(
-        conditions: t.conditions ?? conditions);
+    return t.copyWith(conditions: t.conditions ?? conditions);
   }
 }
 
@@ -123,12 +118,10 @@ class FeedFrontComponentEditor extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() =>
-      _FeedFrontComponentEditorState();
+  State<StatefulWidget> createState() => _FeedFrontComponentEditorState();
 }
 
-class _FeedFrontComponentEditorState
-    extends State<FeedFrontComponentEditor> {
+class _FeedFrontComponentEditorState extends State<FeedFrontComponentEditor> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AccessBloc, AccessState>(
@@ -148,8 +141,8 @@ class _FeedFrontComponentEditorState
                       app: widget.app,
                       title: 'FeedFront',
                       okAction: () async {
-                        await BlocProvider.of<FeedFrontBloc>(context)
-                            .save(EditorBaseApplyChanges<FeedFrontModel>(
+                        await BlocProvider.of<FeedFrontBloc>(context).save(
+                            EditorBaseApplyChanges<FeedFrontModel>(
                                 model: feedFrontState.model));
                         return true;
                       },
@@ -187,87 +180,81 @@ class _FeedFrontComponentEditorState
                         collapsible: true,
                         collapsed: true,
                         children: [
-                          checkboxListTile(
-                              widget.app,
-                              context,
-                              'Background override profile?',
-                              feedFrontState.model.backgroundOverrideProfile != null,
-                                  (value) {
-                                setState(() {
-                                  if (value!) {
-                                    feedFrontState.model
-                                        .backgroundOverrideProfile =
-                                        BackgroundModel();
-                                  } else {
-                                    feedFrontState.model
-                                        .backgroundOverrideProfile =
-                                        null;
-                                  }
-                                });
-                              }),
-                          if (feedFrontState.model
-                              .backgroundOverrideProfile != null) BackgroundWidget(
-                              app: widget.app,
-                              memberId: memberId,
-                              value: feedFrontState.model.backgroundOverrideProfile!,
-                              label: 'Background Override Profile'),
-                          checkboxListTile(
-                              widget.app,
-                              context,
-                              'Background override header?',
-                              feedFrontState.model.backgroundOverrideHeader != null,
-                                  (value) {
-                                setState(() {
-                                  if (value!) {
-                                    feedFrontState.model
-                                        .backgroundOverrideHeader =
-                                        BackgroundModel();
-                                  } else {
-                                    feedFrontState.model
-                                        .backgroundOverrideHeader =
-                                    null;
-                                  }
-                                });
-                              }),
-                          if (feedFrontState.model
-                              .backgroundOverrideProfile != null) BackgroundWidget(
-                              app: widget.app,
-                              memberId: memberId,
-                              value: feedFrontState.model.backgroundOverrideHeader!,
-                              label: 'Background Override Header'),
-                          checkboxListTile(
-                              widget.app,
-                              context,
-                              'Background override header?',
-                              feedFrontState.model.backgroundOverridePosts != null,
-                                  (value) {
-                                setState(() {
-                                  if (value!) {
-                                    feedFrontState.model
-                                        .backgroundOverridePosts =
-                                        BackgroundModel();
-                                  } else {
-                                    feedFrontState.model
-                                        .backgroundOverridePosts =
-                                    null;
-                                  }
-                                });
-                              }),
-                          if (feedFrontState.model
-                              .backgroundOverrideProfile != null) BackgroundWidget(
-                              app: widget.app,
-                              memberId: memberId,
-                              value: feedFrontState.model.backgroundOverridePosts!,
-                              label: 'Background Override Posts'),
+                          topicContainer(widget.app, context,
+                              title: 'Background override profile',
+                              collapsible: true,
+                              collapsed: true,
+                              children: [
+                                checkboxListTile(
+                                    widget.app,
+                                    context,
+                                    'Background override profile?',
+                                    feedFrontState
+                                            .model.backgroundOverrideProfile !=
+                                        null, (value) {
+                                  setState(() {
+                                    if (value!) {
+                                      feedFrontState
+                                              .model.backgroundOverrideProfile =
+                                          BackgroundModel();
+                                    } else {
+                                      feedFrontState.model
+                                          .backgroundOverrideProfile = null;
+                                    }
+                                  });
+                                }),
+                                if (feedFrontState
+                                        .model.backgroundOverrideProfile !=
+                                    null)
+                                  BackgroundWidget(
+                                      app: widget.app,
+                                      memberId: memberId,
+                                      value: feedFrontState
+                                          .model.backgroundOverrideProfile!,
+                                      label: 'Background Override Profile'),
+                              ]),
+                          topicContainer(widget.app, context,
+                              title: 'Background override posts',
+                              collapsible: true,
+                              collapsed: true,
+                              children: [
+                                checkboxListTile(
+                                    widget.app,
+                                    context,
+                                    'Background override posts?',
+                                    feedFrontState
+                                            .model.backgroundOverridePosts !=
+                                        null, (value) {
+                                  setState(() {
+                                    if (value!) {
+                                      feedFrontState
+                                              .model.backgroundOverridePosts =
+                                          BackgroundModel();
+                                    } else {
+                                      feedFrontState
+                                          .model.backgroundOverridePosts = null;
+                                    }
+                                  });
+                                }),
+                                if (feedFrontState.model.backgroundOverridePosts !=
+                                    null)
+                                  BackgroundWidget(
+                                      withTopicContainer: false,
+                                      app: widget.app,
+                                      memberId: memberId,
+                                      value: feedFrontState
+                                          .model.backgroundOverridePosts!,
+                                      label: 'Background Override Posts'),
+                              ]),
                         ]),
                     selectFeedWidget(
                         context,
                         widget.app,
                         feedFrontState.model.conditions,
                         feedFrontState.model.feed,
-                            (feed) => setState(() {
+                        (feed) => setState(() {
                               feedFrontState.model.feed = feed;
-                        })),
+                            })),
                     topicContainer(widget.app, context,
                         title: 'Condition',
                         collapsible: true,
@@ -293,5 +280,4 @@ class _FeedFrontComponentEditorState
       }
     });
   }
-
 }

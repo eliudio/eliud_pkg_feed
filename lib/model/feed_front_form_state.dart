@@ -159,22 +159,6 @@ class BackgroundOverrideProfileFeedFrontFormError extends FeedFrontFormError {
 }
 
 
-class BackgroundOverrideHeaderFeedFrontFormError extends FeedFrontFormError { 
-  const BackgroundOverrideHeaderFeedFrontFormError({ String? message, FeedFrontModel? value }): super(message: message, value: value);
-
-  @override
-  List<Object?> get props => [ message, value ];
-
-  @override
-  String toString() {
-    return '''BackgroundOverrideHeaderFeedFrontFormError {
-      value: $value,
-      message: $message,
-    }''';
-  }
-}
-
-
 class ConditionsFeedFrontFormError extends FeedFrontFormError { 
   const ConditionsFeedFrontFormError({ String? message, FeedFrontModel? value }): super(message: message, value: value);
 

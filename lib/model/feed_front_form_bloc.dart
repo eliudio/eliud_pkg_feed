@@ -109,7 +109,6 @@ class FeedFrontFormBloc extends Bloc<FeedFrontFormEvent, FeedFrontFormState> {
                                  feed: null,
                                  backgroundOverridePosts: currentState.value!.backgroundOverridePosts,
                                  backgroundOverrideProfile: currentState.value!.backgroundOverrideProfile,
-                                 backgroundOverrideHeader: currentState.value!.backgroundOverrideHeader,
                                  conditions: currentState.value!.conditions,
           );
         yield SubmittableFeedFrontForm(value: newValue);
@@ -124,12 +123,6 @@ class FeedFrontFormBloc extends Bloc<FeedFrontFormEvent, FeedFrontFormState> {
       }
       if (event is ChangedFeedFrontBackgroundOverrideProfile) {
         newValue = currentState.value!.copyWith(backgroundOverrideProfile: event.value);
-        yield SubmittableFeedFrontForm(value: newValue);
-
-        return;
-      }
-      if (event is ChangedFeedFrontBackgroundOverrideHeader) {
-        newValue = currentState.value!.copyWith(backgroundOverrideHeader: event.value);
         yield SubmittableFeedFrontForm(value: newValue);
 
         return;
