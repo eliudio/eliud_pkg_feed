@@ -49,6 +49,27 @@
       "group": "general"
     },
     {
+      "fieldName": "backgroundOverridePosts",
+      "displayName": "Background Override Posts",
+      "fieldType": "Background",
+      "optional": true,
+      "group": "background"
+    },
+    {
+      "fieldName": "backgroundOverrideProfile",
+      "displayName": "Background Override Profile",
+      "fieldType": "Background",
+      "optional": true,
+      "group": "background"
+    },
+    {
+      "fieldName": "backgroundOverrideHeader",
+      "displayName": "Background Override Header",
+      "fieldType": "Background",
+      "optional": true,
+      "group": "background"
+    },
+    {
       "fieldName": "conditions",
       "displayName": "Conditions",
       "fieldType": "StorageConditions",

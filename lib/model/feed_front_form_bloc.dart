@@ -107,8 +107,29 @@ class FeedFrontFormBloc extends Bloc<FeedFrontFormEvent, FeedFrontFormState> {
                                  appId: currentState.value!.appId,
                                  description: currentState.value!.description,
                                  feed: null,
+                                 backgroundOverridePosts: currentState.value!.backgroundOverridePosts,
+                                 backgroundOverrideProfile: currentState.value!.backgroundOverrideProfile,
+                                 backgroundOverrideHeader: currentState.value!.backgroundOverrideHeader,
                                  conditions: currentState.value!.conditions,
           );
+        yield SubmittableFeedFrontForm(value: newValue);
+
+        return;
+      }
+      if (event is ChangedFeedFrontBackgroundOverridePosts) {
+        newValue = currentState.value!.copyWith(backgroundOverridePosts: event.value);
+        yield SubmittableFeedFrontForm(value: newValue);
+
+        return;
+      }
+      if (event is ChangedFeedFrontBackgroundOverrideProfile) {
+        newValue = currentState.value!.copyWith(backgroundOverrideProfile: event.value);
+        yield SubmittableFeedFrontForm(value: newValue);
+
+        return;
+      }
+      if (event is ChangedFeedFrontBackgroundOverrideHeader) {
+        newValue = currentState.value!.copyWith(backgroundOverrideHeader: event.value);
         yield SubmittableFeedFrontForm(value: newValue);
 
         return;

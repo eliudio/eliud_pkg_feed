@@ -175,6 +175,22 @@ class SelectedItemColorFeedMenuFormError extends FeedMenuFormError {
 }
 
 
+class BackgroundOverrideFeedMenuFormError extends FeedMenuFormError { 
+  const BackgroundOverrideFeedMenuFormError({ String? message, FeedMenuModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''BackgroundOverrideFeedMenuFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
 class FeedFrontFeedMenuFormError extends FeedMenuFormError { 
   const FeedFrontFeedMenuFormError({ String? message, FeedMenuModel? value }): super(message: message, value: value);
 

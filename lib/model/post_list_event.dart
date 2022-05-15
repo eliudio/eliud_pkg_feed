@@ -77,7 +77,7 @@ class PostListUpdated extends PostListEvent {
 }
 
 class PostChangeQuery extends PostListEvent {
-  final EliudQuery newQuery;
+  final EliudQuery? newQuery;
 
   const PostChangeQuery({ required this.newQuery });
 

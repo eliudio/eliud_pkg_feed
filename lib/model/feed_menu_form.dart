@@ -192,6 +192,7 @@ class _MyFeedMenuFormState extends State<MyFeedMenuForm> {
           );
 
 
+
         children.add(Container(height: 20.0));
         children.add(StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().divider(widget.app, context));
 
@@ -287,6 +288,7 @@ class _MyFeedMenuFormState extends State<MyFeedMenuForm> {
                               bodyComponentsOtherMember: state.value!.bodyComponentsOtherMember, 
                               itemColor: state.value!.itemColor, 
                               selectedItemColor: state.value!.selectedItemColor, 
+                              backgroundOverride: state.value!.backgroundOverride, 
                               feedFront: state.value!.feedFront, 
                               conditions: state.value!.conditions, 
                         )));
@@ -300,6 +302,7 @@ class _MyFeedMenuFormState extends State<MyFeedMenuForm> {
                               bodyComponentsOtherMember: state.value!.bodyComponentsOtherMember, 
                               itemColor: state.value!.itemColor, 
                               selectedItemColor: state.value!.selectedItemColor, 
+                              backgroundOverride: state.value!.backgroundOverride, 
                               feedFront: state.value!.feedFront, 
                               conditions: state.value!.conditions, 
                           )));

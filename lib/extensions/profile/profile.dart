@@ -1,4 +1,5 @@
 import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core/model/background_model.dart';
 import 'package:eliud_core/model/member_medium_container_model.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/style/frontend/has_container.dart';
@@ -18,8 +19,9 @@ import 'package:flutter/cupertino.dart';
 
 class Profile extends StatefulWidget {
   final AppModel app;
+  final BackgroundModel? backgroundOverride;
 
-  Profile({Key? key, required this.app}) : super(key: key);
+  Profile({Key? key, required this.app, required this.backgroundOverride}) : super(key: key);
 
   @override
   _ProfileState createState() => _ProfileState();
@@ -35,12 +37,13 @@ class _ProfileState extends State<Profile> {
         var profile = state.watchingThisProfile();
         var html = state.profileHTML();
         var child = topicContainer(widget.app, context,
+            backgroundOverride: widget.backgroundOverride,
             children: ([
               html == null || html.length == 0
                   ? Container(
                   width: double.infinity,
                   height: 50,
-                  child: Text("No profile"))
+                  child: Text("No profile"), )
                   : AbstractTextPlatform.platform!.htmlWidget(html)
             ]));
         if (state  is LoggedInProfileInitialized) {

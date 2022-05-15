@@ -127,6 +127,54 @@ class FeedFeedFrontFormError extends FeedFrontFormError {
 }
 
 
+class BackgroundOverridePostsFeedFrontFormError extends FeedFrontFormError { 
+  const BackgroundOverridePostsFeedFrontFormError({ String? message, FeedFrontModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''BackgroundOverridePostsFeedFrontFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
+class BackgroundOverrideProfileFeedFrontFormError extends FeedFrontFormError { 
+  const BackgroundOverrideProfileFeedFrontFormError({ String? message, FeedFrontModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''BackgroundOverrideProfileFeedFrontFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
+class BackgroundOverrideHeaderFeedFrontFormError extends FeedFrontFormError { 
+  const BackgroundOverrideHeaderFeedFrontFormError({ String? message, FeedFrontModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''BackgroundOverrideHeaderFeedFrontFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
 class ConditionsFeedFrontFormError extends FeedFrontFormError { 
   const ConditionsFeedFrontFormError({ String? message, FeedFrontModel? value }): super(message: message, value: value);
 

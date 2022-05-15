@@ -42,18 +42,19 @@ class ProfileModel {
   String? appId;
   String? description;
   FeedModel? feed;
+  BackgroundModel? backgroundOverride;
   StorageConditionsModel? conditions;
 
-  ProfileModel({this.documentID, this.appId, this.description, this.feed, this.conditions, })  {
+  ProfileModel({this.documentID, this.appId, this.description, this.feed, this.backgroundOverride, this.conditions, })  {
     assert(documentID != null);
   }
 
-  ProfileModel copyWith({String? documentID, String? appId, String? description, FeedModel? feed, StorageConditionsModel? conditions, }) {
-    return ProfileModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, feed: feed ?? this.feed, conditions: conditions ?? this.conditions, );
+  ProfileModel copyWith({String? documentID, String? appId, String? description, FeedModel? feed, BackgroundModel? backgroundOverride, StorageConditionsModel? conditions, }) {
+    return ProfileModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, feed: feed ?? this.feed, backgroundOverride: backgroundOverride ?? this.backgroundOverride, conditions: conditions ?? this.conditions, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ appId.hashCode ^ description.hashCode ^ feed.hashCode ^ conditions.hashCode;
+  int get hashCode => documentID.hashCode ^ appId.hashCode ^ description.hashCode ^ feed.hashCode ^ backgroundOverride.hashCode ^ conditions.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -64,11 +65,12 @@ class ProfileModel {
           appId == other.appId &&
           description == other.description &&
           feed == other.feed &&
+          backgroundOverride == other.backgroundOverride &&
           conditions == other.conditions;
 
   @override
   String toString() {
-    return 'ProfileModel{documentID: $documentID, appId: $appId, description: $description, feed: $feed, conditions: $conditions}';
+    return 'ProfileModel{documentID: $documentID, appId: $appId, description: $description, feed: $feed, backgroundOverride: $backgroundOverride, conditions: $conditions}';
   }
 
   ProfileEntity toEntity({String? appId}) {
@@ -76,6 +78,7 @@ class ProfileModel {
           appId: (appId != null) ? appId : null, 
           description: (description != null) ? description : null, 
           feedId: (feed != null) ? feed!.documentID : null, 
+          backgroundOverride: (backgroundOverride != null) ? backgroundOverride!.toEntity(appId: appId) : null, 
           conditions: (conditions != null) ? conditions!.toEntity(appId: appId) : null, 
     );
   }
@@ -87,6 +90,8 @@ class ProfileModel {
           documentID: documentID, 
           appId: entity.appId, 
           description: entity.description, 
+          backgroundOverride: 
+            await BackgroundModel.fromEntity(entity.backgroundOverride), 
           conditions: 
             await StorageConditionsModel.fromEntity(entity.conditions), 
     );
@@ -112,6 +117,8 @@ class ProfileModel {
           appId: entity.appId, 
           description: entity.description, 
           feed: feedHolder, 
+          backgroundOverride: 
+            await BackgroundModel.fromEntityPlus(entity.backgroundOverride, appId: appId), 
           conditions: 
             await StorageConditionsModel.fromEntityPlus(entity.conditions, appId: appId), 
     );

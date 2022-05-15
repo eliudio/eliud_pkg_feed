@@ -26,22 +26,37 @@ class FeedFrontEntity {
   final String? appId;
   final String? description;
   final String? feedId;
+  final BackgroundEntity? backgroundOverridePosts;
+  final BackgroundEntity? backgroundOverrideProfile;
+  final BackgroundEntity? backgroundOverrideHeader;
   final StorageConditionsEntity? conditions;
 
-  FeedFrontEntity({this.appId, this.description, this.feedId, this.conditions, });
+  FeedFrontEntity({this.appId, this.description, this.feedId, this.backgroundOverridePosts, this.backgroundOverrideProfile, this.backgroundOverrideHeader, this.conditions, });
 
 
-  List<Object?> get props => [appId, description, feedId, conditions, ];
+  List<Object?> get props => [appId, description, feedId, backgroundOverridePosts, backgroundOverrideProfile, backgroundOverrideHeader, conditions, ];
 
   @override
   String toString() {
-    return 'FeedFrontEntity{appId: $appId, description: $description, feedId: $feedId, conditions: $conditions}';
+    return 'FeedFrontEntity{appId: $appId, description: $description, feedId: $feedId, backgroundOverridePosts: $backgroundOverridePosts, backgroundOverrideProfile: $backgroundOverrideProfile, backgroundOverrideHeader: $backgroundOverrideHeader, conditions: $conditions}';
   }
 
   static FeedFrontEntity? fromMap(Object? o) {
     if (o == null) return null;
     var map = o as Map<String, dynamic>;
 
+    var backgroundOverridePostsFromMap;
+    backgroundOverridePostsFromMap = map['backgroundOverridePosts'];
+    if (backgroundOverridePostsFromMap != null)
+      backgroundOverridePostsFromMap = BackgroundEntity.fromMap(backgroundOverridePostsFromMap);
+    var backgroundOverrideProfileFromMap;
+    backgroundOverrideProfileFromMap = map['backgroundOverrideProfile'];
+    if (backgroundOverrideProfileFromMap != null)
+      backgroundOverrideProfileFromMap = BackgroundEntity.fromMap(backgroundOverrideProfileFromMap);
+    var backgroundOverrideHeaderFromMap;
+    backgroundOverrideHeaderFromMap = map['backgroundOverrideHeader'];
+    if (backgroundOverrideHeaderFromMap != null)
+      backgroundOverrideHeaderFromMap = BackgroundEntity.fromMap(backgroundOverrideHeaderFromMap);
     var conditionsFromMap;
     conditionsFromMap = map['conditions'];
     if (conditionsFromMap != null)
@@ -51,11 +66,23 @@ class FeedFrontEntity {
       appId: map['appId'], 
       description: map['description'], 
       feedId: map['feedId'], 
+      backgroundOverridePosts: backgroundOverridePostsFromMap, 
+      backgroundOverrideProfile: backgroundOverrideProfileFromMap, 
+      backgroundOverrideHeader: backgroundOverrideHeaderFromMap, 
       conditions: conditionsFromMap, 
     );
   }
 
   Map<String, Object?> toDocument() {
+    final Map<String, dynamic>? backgroundOverridePostsMap = backgroundOverridePosts != null 
+        ? backgroundOverridePosts!.toDocument()
+        : null;
+    final Map<String, dynamic>? backgroundOverrideProfileMap = backgroundOverrideProfile != null 
+        ? backgroundOverrideProfile!.toDocument()
+        : null;
+    final Map<String, dynamic>? backgroundOverrideHeaderMap = backgroundOverrideHeader != null 
+        ? backgroundOverrideHeader!.toDocument()
+        : null;
     final Map<String, dynamic>? conditionsMap = conditions != null 
         ? conditions!.toDocument()
         : null;
@@ -67,6 +94,12 @@ class FeedFrontEntity {
       else theDocument["description"] = null;
     if (feedId != null) theDocument["feedId"] = feedId;
       else theDocument["feedId"] = null;
+    if (backgroundOverridePosts != null) theDocument["backgroundOverridePosts"] = backgroundOverridePostsMap;
+      else theDocument["backgroundOverridePosts"] = null;
+    if (backgroundOverrideProfile != null) theDocument["backgroundOverrideProfile"] = backgroundOverrideProfileMap;
+      else theDocument["backgroundOverrideProfile"] = null;
+    if (backgroundOverrideHeader != null) theDocument["backgroundOverrideHeader"] = backgroundOverrideHeaderMap;
+      else theDocument["backgroundOverrideHeader"] = null;
     if (conditions != null) theDocument["conditions"] = conditionsMap;
       else theDocument["conditions"] = null;
     return theDocument;

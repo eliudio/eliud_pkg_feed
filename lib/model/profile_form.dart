@@ -175,6 +175,18 @@ class _MyProfileFormState extends State<MyProfileForm> {
                   child: StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().groupTitle(widget.app, context, 'General')
                 ));
 
+
+
+        children.add(Container(height: 20.0));
+        children.add(StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().divider(widget.app, context));
+
+
+         children.add(Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                  child: StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().groupTitle(widget.app, context, 'General')
+                ));
+
         children.add(
 
                   StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().textFormField(widget.app, context, labelText: 'Document ID', icon: Icons.vpn_key, readOnly: (formAction == FormAction.UpdateAction), textEditingController: _documentIDController, keyboardType: TextInputType.text, validator: (_) => state is DocumentIDProfileFormError ? state.message : null, hintText: null)
@@ -225,6 +237,7 @@ class _MyProfileFormState extends State<MyProfileForm> {
                               appId: state.value!.appId, 
                               description: state.value!.description, 
                               feed: state.value!.feed, 
+                              backgroundOverride: state.value!.backgroundOverride, 
                               conditions: state.value!.conditions, 
                         )));
                       } else {
@@ -234,6 +247,7 @@ class _MyProfileFormState extends State<MyProfileForm> {
                               appId: state.value!.appId, 
                               description: state.value!.description, 
                               feed: state.value!.feed, 
+                              backgroundOverride: state.value!.backgroundOverride, 
                               conditions: state.value!.conditions, 
                           )));
                       }

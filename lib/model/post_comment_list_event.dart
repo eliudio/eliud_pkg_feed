@@ -77,7 +77,7 @@ class PostCommentListUpdated extends PostCommentListEvent {
 }
 
 class PostCommentChangeQuery extends PostCommentListEvent {
-  final EliudQuery newQuery;
+  final EliudQuery? newQuery;
 
   const PostCommentChangeQuery({ required this.newQuery });
 

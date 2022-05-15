@@ -107,6 +107,18 @@ class ChangedProfileFeed extends ProfileFormEvent {
   String toString() => 'ChangedProfileFeed{ value: $value }';
 }
 
+class ChangedProfileBackgroundOverride extends ProfileFormEvent {
+  final BackgroundModel? value;
+
+  ChangedProfileBackgroundOverride({this.value});
+
+  @override
+  List<Object?> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedProfileBackgroundOverride{ value: $value }';
+}
+
 class ChangedProfileConditions extends ProfileFormEvent {
   final StorageConditionsModel? value;
 

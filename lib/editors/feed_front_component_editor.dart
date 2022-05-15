@@ -1,6 +1,7 @@
 import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
 import 'package:eliud_core/core/blocs/access/state/access_state.dart';
 import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core/model/background_model.dart';
 import 'package:eliud_core/model/storage_conditions_model.dart';
 import 'package:eliud_core/style/frontend/has_container.dart';
 import 'package:eliud_core/style/frontend/has_dialog.dart';
@@ -10,6 +11,7 @@ import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/tools/component/component_spec.dart';
 import 'package:eliud_core/tools/random.dart';
+import 'package:eliud_core/tools/widgets/background_widget.dart';
 import 'package:eliud_core/tools/widgets/condition_simple_widget.dart';
 import 'package:eliud_core/tools/widgets/header_widget.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
@@ -132,76 +134,160 @@ class _FeedFrontComponentEditorState
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (aContext, accessState) {
       if (accessState is AccessDetermined) {
-        return BlocBuilder<FeedFrontBloc, EditorBaseState<FeedFrontModel>>(
-            builder: (ppContext, feedFrontState) {
-          if (feedFrontState is EditorBaseInitialised<FeedFrontModel>) {
-            return ListView(
-                shrinkWrap: true,
-                physics: ScrollPhysics(),
-                children: [
-                  HeaderWidget(
-                    app: widget.app,
-                    title: 'FeedFront',
-                    okAction: () async {
-                      await BlocProvider.of<FeedFrontBloc>(context)
-                          .save(EditorBaseApplyChanges<FeedFrontModel>(
-                              model: feedFrontState.model));
-                      return true;
-                    },
-                    cancelAction: () async {
-                      return true;
-                    },
-                  ),
-                  topicContainer(widget.app, context,
-                      title: 'General',
-                      collapsible: true,
-                      collapsed: true,
-                      children: [
-                        getListTile(context, widget.app,
-                            leading: Icon(Icons.vpn_key),
-                            title: text(widget.app, context,
-                                feedFrontState.model.documentID!)),
-                        getListTile(context, widget.app,
-                            leading: Icon(Icons.description),
-                            title: dialogField(
+        var member = accessState.getMember();
+        if (member != null) {
+          var memberId = member.documentID!;
+          return BlocBuilder<FeedFrontBloc, EditorBaseState<FeedFrontModel>>(
+              builder: (ppContext, feedFrontState) {
+            if (feedFrontState is EditorBaseInitialised<FeedFrontModel>) {
+              return ListView(
+                  shrinkWrap: true,
+                  physics: ScrollPhysics(),
+                  children: [
+                    HeaderWidget(
+                      app: widget.app,
+                      title: 'FeedFront',
+                      okAction: () async {
+                        await BlocProvider.of<FeedFrontBloc>(context)
+                            .save(EditorBaseApplyChanges<FeedFrontModel>(
+                                model: feedFrontState.model));
+                        return true;
+                      },
+                      cancelAction: () async {
+                        return true;
+                      },
+                    ),
+                    topicContainer(widget.app, context,
+                        title: 'General',
+                        collapsible: true,
+                        collapsed: true,
+                        children: [
+                          getListTile(context, widget.app,
+                              leading: Icon(Icons.vpn_key),
+                              title: text(widget.app, context,
+                                  feedFrontState.model.documentID!)),
+                          getListTile(context, widget.app,
+                              leading: Icon(Icons.description),
+                              title: dialogField(
+                                widget.app,
+                                context,
+                                initialValue: feedFrontState.model.description,
+                                valueChanged: (value) {
+                                  feedFrontState.model.description = value;
+                                },
+                                maxLines: 1,
+                                decoration: const InputDecoration(
+                                  hintText: 'Description',
+                                  labelText: 'Description',
+                                ),
+                              )),
+                        ]),
+                    topicContainer(widget.app, context,
+                        title: 'Backgrounds',
+                        collapsible: true,
+                        collapsed: true,
+                        children: [
+                          checkboxListTile(
                               widget.app,
                               context,
-                              initialValue: feedFrontState.model.description,
-                              valueChanged: (value) {
-                                feedFrontState.model.description = value;
-                              },
-                              maxLines: 1,
-                              decoration: const InputDecoration(
-                                hintText: 'Description',
-                                labelText: 'Description',
-                              ),
-                            )),
-                      ]),
-                  selectFeedWidget(
-                      context,
-                      widget.app,
-                      feedFrontState.model.conditions,
-                      feedFrontState.model.feed,
-                          (feed) => setState(() {
-                            feedFrontState.model.feed = feed;
-                      })),
-                  topicContainer(widget.app, context,
-                      title: 'Condition',
-                      collapsible: true,
-                      collapsed: true,
-                      children: [
-                        getListTile(context, widget.app,
-                            leading: Icon(Icons.security),
-                            title: ConditionsSimpleWidget(
+                              'Background override profile?',
+                              feedFrontState.model.backgroundOverrideProfile != null,
+                                  (value) {
+                                setState(() {
+                                  if (value!) {
+                                    feedFrontState.model
+                                        .backgroundOverrideProfile =
+                                        BackgroundModel();
+                                  } else {
+                                    feedFrontState.model
+                                        .backgroundOverrideProfile =
+                                        null;
+                                  }
+                                });
+                              }),
+                          if (feedFrontState.model
+                              .backgroundOverrideProfile != null) BackgroundWidget(
                               app: widget.app,
-                              value: feedFrontState.model.conditions!,
-                            )),
-                      ]),
-                ]);
-          } else {
-            return progressIndicator(widget.app, context);
-          }
-        });
+                              memberId: memberId,
+                              value: feedFrontState.model.backgroundOverrideProfile!,
+                              label: 'Background Override Profile'),
+                          checkboxListTile(
+                              widget.app,
+                              context,
+                              'Background override header?',
+                              feedFrontState.model.backgroundOverrideHeader != null,
+                                  (value) {
+                                setState(() {
+                                  if (value!) {
+                                    feedFrontState.model
+                                        .backgroundOverrideHeader =
+                                        BackgroundModel();
+                                  } else {
+                                    feedFrontState.model
+                                        .backgroundOverrideHeader =
+                                    null;
+                                  }
+                                });
+                              }),
+                          if (feedFrontState.model
+                              .backgroundOverrideProfile != null) BackgroundWidget(
+                              app: widget.app,
+                              memberId: memberId,
+                              value: feedFrontState.model.backgroundOverrideHeader!,
+                              label: 'Background Override Header'),
+                          checkboxListTile(
+                              widget.app,
+                              context,
+                              'Background override header?',
+                              feedFrontState.model.backgroundOverridePosts != null,
+                                  (value) {
+                                setState(() {
+                                  if (value!) {
+                                    feedFrontState.model
+                                        .backgroundOverridePosts =
+                                        BackgroundModel();
+                                  } else {
+                                    feedFrontState.model
+                                        .backgroundOverridePosts =
+                                    null;
+                                  }
+                                });
+                              }),
+                          if (feedFrontState.model
+                              .backgroundOverrideProfile != null) BackgroundWidget(
+                              app: widget.app,
+                              memberId: memberId,
+                              value: feedFrontState.model.backgroundOverridePosts!,
+                              label: 'Background Override Posts'),
+                        ]),
+                    selectFeedWidget(
+                        context,
+                        widget.app,
+                        feedFrontState.model.conditions,
+                        feedFrontState.model.feed,
+                            (feed) => setState(() {
+                              feedFrontState.model.feed = feed;
+                        })),
+                    topicContainer(widget.app, context,
+                        title: 'Condition',
+                        collapsible: true,
+                        collapsed: true,
+                        children: [
+                          getListTile(context, widget.app,
+                              leading: Icon(Icons.security),
+                              title: ConditionsSimpleWidget(
+                                app: widget.app,
+                                value: feedFrontState.model.conditions!,
+                              )),
+                        ]),
+                  ]);
+            } else {
+              return progressIndicator(widget.app, context);
+            }
+          });
+        } else {
+          return text(widget.app, context, 'Member not logged on');
+        }
       } else {
         return progressIndicator(widget.app, context);
       }

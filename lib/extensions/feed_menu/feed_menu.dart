@@ -68,7 +68,7 @@ class _FeedMenuState extends State<FeedMenu>
                     shrinkWrap: true,
                     physics: ScrollPhysics(),
                     children: [
-                    Header(app: widget.app),
+                    Header(app: widget.app, backgroundOverride: widget.feedMenuModel.backgroundOverride),
               TabbedFeedMenuItems(widget.app, items, parameters, widget.feedMenuModel.feedFront!),]);
 //                return FeedMenuItems(widget.app, items, labels, parameters);
               } else {

@@ -46,19 +46,20 @@ class FeedMenuModel {
   List<LabelledBodyComponentModel>? bodyComponentsOtherMember;
   RgbModel? itemColor;
   RgbModel? selectedItemColor;
+  BackgroundModel? backgroundOverride;
   FeedFrontModel? feedFront;
   StorageConditionsModel? conditions;
 
-  FeedMenuModel({this.documentID, this.appId, this.description, this.bodyComponentsCurrentMember, this.bodyComponentsOtherMember, this.itemColor, this.selectedItemColor, this.feedFront, this.conditions, })  {
+  FeedMenuModel({this.documentID, this.appId, this.description, this.bodyComponentsCurrentMember, this.bodyComponentsOtherMember, this.itemColor, this.selectedItemColor, this.backgroundOverride, this.feedFront, this.conditions, })  {
     assert(documentID != null);
   }
 
-  FeedMenuModel copyWith({String? documentID, String? appId, String? description, List<LabelledBodyComponentModel>? bodyComponentsCurrentMember, List<LabelledBodyComponentModel>? bodyComponentsOtherMember, RgbModel? itemColor, RgbModel? selectedItemColor, FeedFrontModel? feedFront, StorageConditionsModel? conditions, }) {
-    return FeedMenuModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, bodyComponentsCurrentMember: bodyComponentsCurrentMember ?? this.bodyComponentsCurrentMember, bodyComponentsOtherMember: bodyComponentsOtherMember ?? this.bodyComponentsOtherMember, itemColor: itemColor ?? this.itemColor, selectedItemColor: selectedItemColor ?? this.selectedItemColor, feedFront: feedFront ?? this.feedFront, conditions: conditions ?? this.conditions, );
+  FeedMenuModel copyWith({String? documentID, String? appId, String? description, List<LabelledBodyComponentModel>? bodyComponentsCurrentMember, List<LabelledBodyComponentModel>? bodyComponentsOtherMember, RgbModel? itemColor, RgbModel? selectedItemColor, BackgroundModel? backgroundOverride, FeedFrontModel? feedFront, StorageConditionsModel? conditions, }) {
+    return FeedMenuModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, bodyComponentsCurrentMember: bodyComponentsCurrentMember ?? this.bodyComponentsCurrentMember, bodyComponentsOtherMember: bodyComponentsOtherMember ?? this.bodyComponentsOtherMember, itemColor: itemColor ?? this.itemColor, selectedItemColor: selectedItemColor ?? this.selectedItemColor, backgroundOverride: backgroundOverride ?? this.backgroundOverride, feedFront: feedFront ?? this.feedFront, conditions: conditions ?? this.conditions, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ appId.hashCode ^ description.hashCode ^ bodyComponentsCurrentMember.hashCode ^ bodyComponentsOtherMember.hashCode ^ itemColor.hashCode ^ selectedItemColor.hashCode ^ feedFront.hashCode ^ conditions.hashCode;
+  int get hashCode => documentID.hashCode ^ appId.hashCode ^ description.hashCode ^ bodyComponentsCurrentMember.hashCode ^ bodyComponentsOtherMember.hashCode ^ itemColor.hashCode ^ selectedItemColor.hashCode ^ backgroundOverride.hashCode ^ feedFront.hashCode ^ conditions.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -72,6 +73,7 @@ class FeedMenuModel {
           ListEquality().equals(bodyComponentsOtherMember, other.bodyComponentsOtherMember) &&
           itemColor == other.itemColor &&
           selectedItemColor == other.selectedItemColor &&
+          backgroundOverride == other.backgroundOverride &&
           feedFront == other.feedFront &&
           conditions == other.conditions;
 
@@ -80,7 +82,7 @@ class FeedMenuModel {
     String bodyComponentsCurrentMemberCsv = (bodyComponentsCurrentMember == null) ? '' : bodyComponentsCurrentMember!.join(', ');
     String bodyComponentsOtherMemberCsv = (bodyComponentsOtherMember == null) ? '' : bodyComponentsOtherMember!.join(', ');
 
-    return 'FeedMenuModel{documentID: $documentID, appId: $appId, description: $description, bodyComponentsCurrentMember: LabelledBodyComponent[] { $bodyComponentsCurrentMemberCsv }, bodyComponentsOtherMember: LabelledBodyComponent[] { $bodyComponentsOtherMemberCsv }, itemColor: $itemColor, selectedItemColor: $selectedItemColor, feedFront: $feedFront, conditions: $conditions}';
+    return 'FeedMenuModel{documentID: $documentID, appId: $appId, description: $description, bodyComponentsCurrentMember: LabelledBodyComponent[] { $bodyComponentsCurrentMemberCsv }, bodyComponentsOtherMember: LabelledBodyComponent[] { $bodyComponentsOtherMemberCsv }, itemColor: $itemColor, selectedItemColor: $selectedItemColor, backgroundOverride: $backgroundOverride, feedFront: $feedFront, conditions: $conditions}';
   }
 
   FeedMenuEntity toEntity({String? appId}) {
@@ -95,6 +97,7 @@ class FeedMenuModel {
             .toList() : null, 
           itemColor: (itemColor != null) ? itemColor!.toEntity(appId: appId) : null, 
           selectedItemColor: (selectedItemColor != null) ? selectedItemColor!.toEntity(appId: appId) : null, 
+          backgroundOverride: (backgroundOverride != null) ? backgroundOverride!.toEntity(appId: appId) : null, 
           feedFrontId: (feedFront != null) ? feedFront!.documentID : null, 
           conditions: (conditions != null) ? conditions!.toEntity(appId: appId) : null, 
     );
@@ -125,6 +128,8 @@ class FeedMenuModel {
             await RgbModel.fromEntity(entity.itemColor), 
           selectedItemColor: 
             await RgbModel.fromEntity(entity.selectedItemColor), 
+          backgroundOverride: 
+            await BackgroundModel.fromEntity(entity.backgroundOverride), 
           conditions: 
             await StorageConditionsModel.fromEntity(entity.conditions), 
     );
@@ -165,6 +170,8 @@ class FeedMenuModel {
             await RgbModel.fromEntityPlus(entity.itemColor, appId: appId), 
           selectedItemColor: 
             await RgbModel.fromEntityPlus(entity.selectedItemColor, appId: appId), 
+          backgroundOverride: 
+            await BackgroundModel.fromEntityPlus(entity.backgroundOverride, appId: appId), 
           feedFront: feedFrontHolder, 
           conditions: 
             await StorageConditionsModel.fromEntityPlus(entity.conditions, appId: appId), 

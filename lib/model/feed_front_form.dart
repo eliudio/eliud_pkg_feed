@@ -175,6 +175,20 @@ class _MyFeedFrontFormState extends State<MyFeedFrontForm> {
                   child: StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().groupTitle(widget.app, context, 'General')
                 ));
 
+
+
+
+
+        children.add(Container(height: 20.0));
+        children.add(StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().divider(widget.app, context));
+
+
+         children.add(Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                  child: StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().groupTitle(widget.app, context, 'General')
+                ));
+
         children.add(
 
                   StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().textFormField(widget.app, context, labelText: 'Document ID', icon: Icons.vpn_key, readOnly: (formAction == FormAction.UpdateAction), textEditingController: _documentIDController, keyboardType: TextInputType.text, validator: (_) => state is DocumentIDFeedFrontFormError ? state.message : null, hintText: null)
@@ -225,6 +239,9 @@ class _MyFeedFrontFormState extends State<MyFeedFrontForm> {
                               appId: state.value!.appId, 
                               description: state.value!.description, 
                               feed: state.value!.feed, 
+                              backgroundOverridePosts: state.value!.backgroundOverridePosts, 
+                              backgroundOverrideProfile: state.value!.backgroundOverrideProfile, 
+                              backgroundOverrideHeader: state.value!.backgroundOverrideHeader, 
                               conditions: state.value!.conditions, 
                         )));
                       } else {
@@ -234,6 +251,9 @@ class _MyFeedFrontFormState extends State<MyFeedFrontForm> {
                               appId: state.value!.appId, 
                               description: state.value!.description, 
                               feed: state.value!.feed, 
+                              backgroundOverridePosts: state.value!.backgroundOverridePosts, 
+                              backgroundOverrideProfile: state.value!.backgroundOverrideProfile, 
+                              backgroundOverrideHeader: state.value!.backgroundOverrideHeader, 
                               conditions: state.value!.conditions, 
                           )));
                       }

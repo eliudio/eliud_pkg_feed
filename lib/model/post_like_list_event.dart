@@ -77,7 +77,7 @@ class PostLikeListUpdated extends PostLikeListEvent {
 }
 
 class PostLikeChangeQuery extends PostLikeListEvent {
-  final EliudQuery newQuery;
+  final EliudQuery? newQuery;
 
   const PostLikeChangeQuery({ required this.newQuery });
 

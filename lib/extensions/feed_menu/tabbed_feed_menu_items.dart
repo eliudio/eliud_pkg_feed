@@ -85,7 +85,7 @@ class _TabbedFeedMenuItemsState extends State<TabbedFeedMenuItems>
 
   Widget component() {
     if (_tabController.index == 0) return FeedFront(widget.app, widget.feedFrontModel);
-    if (_tabController.index == 1) return Profile(app: widget.app);
+    if (_tabController.index == 1) return Profile(app: widget.app, backgroundOverride: widget.feedFrontModel.backgroundOverrideProfile);
     var component = widget.bodyComponents[_tabController.index - 2];
     return Registry.registry()!.component(
         context,

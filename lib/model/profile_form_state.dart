@@ -127,6 +127,22 @@ class FeedProfileFormError extends ProfileFormError {
 }
 
 
+class BackgroundOverrideProfileFormError extends ProfileFormError { 
+  const BackgroundOverrideProfileFormError({ String? message, ProfileModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''BackgroundOverrideProfileFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
 class ConditionsProfileFormError extends ProfileFormError { 
   const ConditionsProfileFormError({ String? message, ProfileModel? value }): super(message: message, value: value);
 

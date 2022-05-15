@@ -1,3 +1,4 @@
+import 'package:eliud_core/model/background_model.dart';
 import 'package:eliud_pkg_feed/model/feed_front_model.dart';
 import 'package:tuple/tuple.dart';
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
@@ -34,11 +35,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class PagedPostsList extends StatefulWidget {
   final FeedFrontModel feedFrontModel;
   final AppModel app;
+  final BackgroundModel? backgroundOverride;
 
   const PagedPostsList(
     this.app,
     this.feedFrontModel, {
     Key? key,
+    required this.backgroundOverride,
   }) : super(key: key);
 
   @override
@@ -303,6 +306,7 @@ class PagedPostsListState extends State<PagedPostsList> {
                   }
                   for (int i = 0; i < state.values.length; i++) {
                     widgets.add(PostWidget(
+                      backgroundOverride: widget.backgroundOverride,
                       thumbStyle: widget.feedFrontModel.feed!.thumbImage,
                       app: widget.app,
                       feedId: widget.feedFrontModel.feed!.documentID!,

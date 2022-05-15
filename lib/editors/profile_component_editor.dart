@@ -1,6 +1,7 @@
 import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
 import 'package:eliud_core/core/blocs/access/state/access_state.dart';
 import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core/model/background_model.dart';
 import 'package:eliud_core/model/storage_conditions_model.dart';
 import 'package:eliud_core/style/frontend/has_container.dart';
 import 'package:eliud_core/style/frontend/has_dialog.dart';
@@ -10,6 +11,7 @@ import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/tools/component/component_spec.dart';
 import 'package:eliud_core/tools/random.dart';
+import 'package:eliud_core/tools/widgets/background_widget.dart';
 import 'package:eliud_core/tools/widgets/condition_simple_widget.dart';
 import 'package:eliud_core/tools/widgets/header_widget.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
@@ -132,78 +134,113 @@ class _ProfileComponentEditorState
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (aContext, accessState) {
       if (accessState is AccessDetermined) {
-        return BlocBuilder<ProfileBloc, EditorBaseState<ProfileModel>>(
-            builder: (ppContext, profileState) {
-          if (profileState is EditorBaseInitialised<ProfileModel>) {
-            return ListView(
-                shrinkWrap: true,
-                physics: ScrollPhysics(),
-                children: [
-                  HeaderWidget(
-                    app: widget.app,
-                    title: 'Profile',
-                    okAction: () async {
-                      await BlocProvider.of<ProfileBloc>(context)
-                          .save(EditorBaseApplyChanges<ProfileModel>(
-                              model: profileState.model));
-                      return true;
-                    },
-                    cancelAction: () async {
-                      return true;
-                    },
-                  ),
-                  topicContainer(widget.app, context,
-                      title: 'General',
-                      collapsible: true,
-                      collapsed: true,
-                      children: [
-                        getListTile(context, widget.app,
-                            leading: Icon(Icons.vpn_key),
-                            title: text(widget.app, context,
-                                profileState.model.documentID!)),
-                        getListTile(context, widget.app,
-                            leading: Icon(Icons.description),
-                            title: dialogField(
+        var member = accessState.getMember();
+        if (member != null) {
+          var memberId = member.documentID!;
+          return BlocBuilder<ProfileBloc, EditorBaseState<ProfileModel>>(
+              builder: (ppContext, profileState) {
+            if (profileState is EditorBaseInitialised<ProfileModel>) {
+              return ListView(
+                  shrinkWrap: true,
+                  physics: ScrollPhysics(),
+                  children: [
+                    HeaderWidget(
+                      app: widget.app,
+                      title: 'Profile',
+                      okAction: () async {
+                        await BlocProvider.of<ProfileBloc>(context)
+                            .save(EditorBaseApplyChanges<ProfileModel>(
+                                model: profileState.model));
+                        return true;
+                      },
+                      cancelAction: () async {
+                        return true;
+                      },
+                    ),
+                    topicContainer(widget.app, context,
+                        title: 'General',
+                        collapsible: true,
+                        collapsed: true,
+                        children: [
+                          getListTile(context, widget.app,
+                              leading: Icon(Icons.vpn_key),
+                              title: text(widget.app, context,
+                                  profileState.model.documentID!)),
+                          getListTile(context, widget.app,
+                              leading: Icon(Icons.description),
+                              title: dialogField(
+                                widget.app,
+                                context,
+                                initialValue: profileState.model.description,
+                                valueChanged: (value) {
+                                  profileState.model.description = value;
+                                },
+                                maxLines: 1,
+                                decoration: const InputDecoration(
+                                  hintText: 'Description',
+                                  labelText: 'Description',
+                                ),
+                              )),
+                        ]),
+                    selectFeedWidget(
+                        context,
+                        widget.app,
+                        profileState.model.conditions,
+                        profileState.model.feed,
+                            (feed) => setState(() {
+                              profileState.model.feed = feed;
+                        })),
+                    topicContainer(widget.app, context,
+                        title: 'Layout',
+                        collapsible: true,
+                        collapsed: true,
+                        children: [
+                          checkboxListTile(
                               widget.app,
                               context,
-                              initialValue: profileState.model.description,
-                              valueChanged: (value) {
-                                profileState.model.description = value;
-                              },
-                              maxLines: 1,
-                              decoration: const InputDecoration(
-                                hintText: 'Description',
-                                labelText: 'Description',
-                              ),
-                            )),
-                      ]),
-                  selectFeedWidget(
-                      context,
-                      widget.app,
-                      profileState.model.conditions,
-                      profileState.model.feed,
-                          (feed) => setState(() {
-                            profileState.model.feed = feed;
-                      })),
-                  topicContainer(widget.app, context,
-                      title: 'Condition',
-                      collapsible: true,
-                      collapsed: true,
-                      children: [
-                        getListTile(context, widget.app,
-                            leading: Icon(Icons.security),
-                            title: ConditionsSimpleWidget(
+                              'Background override header?',
+                              profileState.model.backgroundOverride != null,
+                                  (value) {
+                                setState(() {
+                                  if (value!) {
+                                    profileState.model
+                                        .backgroundOverride =
+                                        BackgroundModel();
+                                  } else {
+                                    profileState.model
+                                        .backgroundOverride =
+                                    null;
+                                  }
+                                });
+                              }),
+                          if (profileState.model.backgroundOverride != null) BackgroundWidget(
                               app: widget.app,
-                              value: profileState.model.conditions!,
-                            )),
-                      ]),
-                ]);
-          } else {
-            return progressIndicator(widget.app, context);
-          }
-        });
+                              memberId: memberId,
+                              value: profileState.model.backgroundOverride!,
+                              label: 'Background Override'),
+                        ]),
+                    topicContainer(widget.app, context,
+                        title: 'Condition',
+                        collapsible: true,
+                        collapsed: true,
+                        children: [
+                          getListTile(context, widget.app,
+                              leading: Icon(Icons.security),
+                              title: ConditionsSimpleWidget(
+                                app: widget.app,
+                                value: profileState.model.conditions!,
+                              )),
+                        ]),
+                  ]);
+            } else {
+              return progressIndicator(widget.app, context);
+            }
+          });
+        } else {
+          return progressIndicator(widget.app, context);
+        }
       } else {
-        return progressIndicator(widget.app, context);
+        return text(widget.app, context, 'No member');
       }
     });
   }

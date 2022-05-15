@@ -1,5 +1,6 @@
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core/model/background_model.dart';
 import 'package:eliud_core/model/member_medium_container_model.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/style/frontend/has_button.dart';
@@ -43,6 +44,7 @@ class PostWidget extends StatefulWidget {
   final ThumbStyle? thumbStyle;
   final PostDetails details;
   final bool isEditable;
+  final BackgroundModel? backgroundOverride;
 
   const PostWidget(
       {Key? key,
@@ -54,7 +56,8 @@ class PostWidget extends StatefulWidget {
       required this.feedId,
       required this.thumbStyle,
       required this.details,
-      required this.isEditable})
+      required this.isEditable,
+      required this.backgroundOverride})
       : super(key: key);
 
   @override
@@ -116,7 +119,7 @@ class _PostWidgetState extends State<PostWidget> {
     widgets.add(_aBitSpace());
     widgets.add(_postComments(context, widget.details, widget.memberId));
 
-    return topicContainer(widget.app, context, children: widgets);
+    return topicContainer(widget.app, context, children: widgets, backgroundOverride: widget.backgroundOverride);
   }
 
   static double _width(BuildContext context) =>

@@ -143,6 +143,18 @@ class ChangedFeedMenuSelectedItemColor extends FeedMenuFormEvent {
   String toString() => 'ChangedFeedMenuSelectedItemColor{ value: $value }';
 }
 
+class ChangedFeedMenuBackgroundOverride extends FeedMenuFormEvent {
+  final BackgroundModel? value;
+
+  ChangedFeedMenuBackgroundOverride({this.value});
+
+  @override
+  List<Object?> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedFeedMenuBackgroundOverride{ value: $value }';
+}
+
 class ChangedFeedMenuFeedFront extends FeedMenuFormEvent {
   final String? value;
 

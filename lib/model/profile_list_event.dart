@@ -77,7 +77,7 @@ class ProfileListUpdated extends ProfileListEvent {
 }
 
 class ProfileChangeQuery extends ProfileListEvent {
-  final EliudQuery newQuery;
+  final EliudQuery? newQuery;
 
   const ProfileChangeQuery({ required this.newQuery });
 

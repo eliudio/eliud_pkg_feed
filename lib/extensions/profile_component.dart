@@ -45,7 +45,7 @@ class ProfileComponent extends AbstractProfileComponent {
                 ProfileBloc()
                   ..add(InitialiseProfileEvent(app,
                       feedId, accessState, modalRoute)),
-                child: Profile(app: app)
+                child: Profile(app: app, backgroundOverride: profileModel.backgroundOverride,)
             );
           } else {
             return progressIndicator(app, context);

@@ -3,6 +3,7 @@ import 'package:eliud_core/core/blocs/access/state/access_state.dart';
 import 'package:eliud_core/core/editor/ext_editor_base_bloc/ext_editor_base_event.dart';
 import 'package:eliud_core/core/editor/ext_editor_base_bloc/ext_editor_base_state.dart';
 import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core/model/background_model.dart';
 import 'package:eliud_core/model/storage_conditions_model.dart';
 import 'package:eliud_core/style/frontend/has_button.dart';
 import 'package:eliud_core/style/frontend/has_container.dart';
@@ -16,6 +17,7 @@ import 'package:eliud_core/tools/component/component_spec.dart';
 import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_core/tools/rgb_formfield.dart';
 import 'package:eliud_core/tools/screen_size.dart';
+import 'package:eliud_core/tools/widgets/background_widget.dart';
 import 'package:eliud_core/tools/widgets/condition_simple_widget.dart';
 import 'package:eliud_core/tools/widgets/header_widget.dart';
 import 'package:eliud_pkg_feed/editors/widgets/labelled_body_component_model_widget.dart';
@@ -114,94 +116,129 @@ class _FeedMenuComponentEditorState
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (aContext, accessState) {
       if (accessState is AccessDetermined) {
-        return BlocBuilder<FeedMenuBloc,
-                ExtEditorBaseState<FeedMenuModel>>(
-            builder: (ppContext, feedMenuState) {
-          if (feedMenuState
-              is ExtEditorBaseInitialised<FeedMenuModel, dynamic>) {
-            return ListView(
-                shrinkWrap: true,
-                physics: ScrollPhysics(),
-                children: [
-                  HeaderWidget(
-                    app: widget.app,
-                    title: 'FeedMenu',
-                    okAction: () async {
-                      await BlocProvider.of<FeedMenuBloc>(context)
-                          .save(ExtEditorBaseApplyChanges<
-                                  FeedMenuModel>(
-                              model: feedMenuState.model));
-                      return true;
-                    },
-                    cancelAction: () async {
-                      return true;
-                    },
-                  ),
-                  topicContainer(widget.app, context,
-                      title: 'General',
-                      collapsible: true,
-                      collapsed: true,
-                      children: [
-                        getListTile(context, widget.app,
-                            leading: Icon(Icons.vpn_key),
-                            title: text(widget.app, context,
-                                feedMenuState.model.documentID!)),
-                        getListTile(context, widget.app,
-                            leading: Icon(Icons.description),
-                            title: dialogField(
+        var member = accessState.getMember();
+        if (member != null) {
+          var memberId = member.documentID!;
+          return BlocBuilder<FeedMenuBloc,
+                  ExtEditorBaseState<FeedMenuModel>>(
+              builder: (ppContext, feedMenuState) {
+            if (feedMenuState
+                is ExtEditorBaseInitialised<FeedMenuModel, dynamic>) {
+              return ListView(
+                  shrinkWrap: true,
+                  physics: ScrollPhysics(),
+                  children: [
+                    HeaderWidget(
+                      app: widget.app,
+                      title: 'FeedMenu',
+                      okAction: () async {
+                        await BlocProvider.of<FeedMenuBloc>(context)
+                            .save(ExtEditorBaseApplyChanges<
+                                    FeedMenuModel>(
+                                model: feedMenuState.model));
+                        return true;
+                      },
+                      cancelAction: () async {
+                        return true;
+                      },
+                    ),
+                    topicContainer(widget.app, context,
+                        title: 'General',
+                        collapsible: true,
+                        collapsed: true,
+                        children: [
+                          getListTile(context, widget.app,
+                              leading: Icon(Icons.vpn_key),
+                              title: text(widget.app, context,
+                                  feedMenuState.model.documentID!)),
+                          getListTile(context, widget.app,
+                              leading: Icon(Icons.description),
+                              title: dialogField(
+                                widget.app,
+                                context,
+                                initialValue:
+                                    feedMenuState.model.description,
+                                valueChanged: (value) {
+                                  feedMenuState.model.description =
+                                      value;
+                                },
+                                maxLines: 1,
+                                decoration: const InputDecoration(
+                                  hintText: 'Description',
+                                  labelText: 'Description',
+                                ),
+                              )),
+                        ]),
+                    topicContainer(widget.app, context,
+                        title: 'Member actions',
+                        collapsible: true,
+                        collapsed: true,
+                        children: [
+                          _actions(feedMenuState),
+                        ]),
+                    topicContainer(widget.app, context,
+                        title: 'Layout',
+                        collapsible: true,
+                        collapsed: true,
+                        children: [
+                          RgbField(widget.app, 'Item Colour', feedMenuState.model.itemColor,
+                                  (value) => feedMenuState.model.itemColor = value),
+                          RgbField(widget.app, 'Selected Item Colour', feedMenuState.model.selectedItemColor,
+                                  (value) => feedMenuState.model.selectedItemColor = value),
+                          checkboxListTile(
                               widget.app,
                               context,
-                              initialValue:
-                                  feedMenuState.model.description,
-                              valueChanged: (value) {
-                                feedMenuState.model.description =
-                                    value;
-                              },
-                              maxLines: 1,
-                              decoration: const InputDecoration(
-                                hintText: 'Description',
-                                labelText: 'Description',
-                              ),
-                            )),
-                      ]),
-                  topicContainer(widget.app, context,
-                      title: 'Member actions',
-                      collapsible: true,
-                      collapsed: true,
-                      children: [
-                        _actions(feedMenuState),
-                      ]),
-                  RgbField(widget.app, 'Item Colour', feedMenuState.model.itemColor,
-                          (value) => feedMenuState.model.itemColor = value),
-                  RgbField(widget.app, 'Selected Item Colour', feedMenuState.model.selectedItemColor,
-                          (value) => feedMenuState.model.selectedItemColor = value),
-                  selectFeedFrontWidget(
-                      context,
-                      widget.app,
-                      feedMenuState.model.conditions,
-                      feedMenuState.model.feedFront,
-                          (shop) => setState(() {
-                        feedMenuState.model.feedFront = shop;
-                      })),
-                  topicContainer(widget.app, context,
-                      title: 'Condition',
-                      collapsible: true,
-                      collapsed: true,
-                      children: [
-                        getListTile(context, widget.app,
-                            leading: Icon(Icons.security),
-                            title: ConditionsSimpleWidget(
+                              'Background override header?',
+                              feedMenuState.model.backgroundOverride != null,
+                                  (value) {
+                                setState(() {
+                                  if (value!) {
+                                    feedMenuState.model
+                                        .backgroundOverride =
+                                        BackgroundModel();
+                                  } else {
+                                    feedMenuState.model
+                                        .backgroundOverride =
+                                    null;
+                                  }
+                                });
+                              }),
+                          if (feedMenuState.model.backgroundOverride != null) BackgroundWidget(
                               app: widget.app,
-                              value: feedMenuState.model.conditions!,
-                            )),
-                      ]),
-                ]);
-          } else {
-            return progressIndicator(widget.app, context);
-          }
-        });
+                              memberId: memberId,
+                              value: feedMenuState.model.backgroundOverride!,
+                              label: 'Background Override'),
+                        ]),
+                    selectFeedFrontWidget(
+                        context,
+                        widget.app,
+                        feedMenuState.model.conditions,
+                        feedMenuState.model.feedFront,
+                            (shop) => setState(() {
+                          feedMenuState.model.feedFront = shop;
+                        })),
+                    topicContainer(widget.app, context,
+                        title: 'Condition',
+                        collapsible: true,
+                        collapsed: true,
+                        children: [
+                          getListTile(context, widget.app,
+                              leading: Icon(Icons.security),
+                              title: ConditionsSimpleWidget(
+                                app: widget.app,
+                                value: feedMenuState.model.conditions!,
+                              )),
+                        ]),
+                  ]);
+            } else {
+              return progressIndicator(widget.app, context);
+            }
+          });
+        } else {
+          return progressIndicator(widget.app, context);
+        }
       } else {
-        return progressIndicator(widget.app, context);
+        return text(widget.app, context, 'No member');
       }
     });
   }

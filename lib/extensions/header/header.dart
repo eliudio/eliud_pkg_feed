@@ -3,6 +3,7 @@ import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
 import 'package:eliud_core/core/blocs/access/state/access_state.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core/model/background_model.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/style/frontend/has_container.dart';
 import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
@@ -22,7 +23,8 @@ import 'package:tuple/tuple.dart';
 
 class Header extends StatefulWidget {
   final AppModel app;
-  Header({Key? key, required this.app}) : super(key: key);
+  final BackgroundModel? backgroundOverride;
+  Header({Key? key, required this.app, required this.backgroundOverride}) : super(key: key);
 
   @override
   _HeaderState createState() => _HeaderState();

@@ -49,6 +49,13 @@
       "group": "general"
     },
     {
+      "fieldName": "backgroundOverride",
+      "displayName": "Background Override",
+      "fieldType": "Background",
+      "optional": true,
+      "group": "background"
+    },
+    {
       "fieldName": "conditions",
       "displayName": "Conditions",
       "fieldType": "StorageConditions",

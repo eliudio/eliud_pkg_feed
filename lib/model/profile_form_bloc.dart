@@ -107,8 +107,15 @@ class ProfileFormBloc extends Bloc<ProfileFormEvent, ProfileFormState> {
                                  appId: currentState.value!.appId,
                                  description: currentState.value!.description,
                                  feed: null,
+                                 backgroundOverride: currentState.value!.backgroundOverride,
                                  conditions: currentState.value!.conditions,
           );
+        yield SubmittableProfileForm(value: newValue);
+
+        return;
+      }
+      if (event is ChangedProfileBackgroundOverride) {
+        newValue = currentState.value!.copyWith(backgroundOverride: event.value);
         yield SubmittableProfileForm(value: newValue);
 
         return;

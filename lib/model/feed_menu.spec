@@ -74,6 +74,13 @@
       "bespokeFormField": "RgbField(widget.app, \"Selected Item Color\", state.value!.selectedItemColor, _onSelectedItemColorChanged)"
     },
     {
+      "fieldName": "backgroundOverride",
+      "displayName": "Background Override",
+      "fieldType": "Background",
+      "optional": true,
+      "group": "background"
+    },
+    {
       "fieldName": "feedFront",
       "displayName": "Feed Front",
       "fieldType": "FeedFront",

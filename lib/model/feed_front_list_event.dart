@@ -77,7 +77,7 @@ class FeedFrontListUpdated extends FeedFrontListEvent {
 }
 
 class FeedFrontChangeQuery extends FeedFrontListEvent {
-  final EliudQuery newQuery;
+  final EliudQuery? newQuery;
 
   const FeedFrontChangeQuery({ required this.newQuery });
 

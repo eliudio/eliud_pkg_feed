@@ -77,7 +77,7 @@ class LabelledBodyComponentListUpdated extends LabelledBodyComponentListEvent {
 }
 
 class LabelledBodyComponentChangeQuery extends LabelledBodyComponentListEvent {
-  final EliudQuery newQuery;
+  final EliudQuery? newQuery;
 
   const LabelledBodyComponentChangeQuery({ required this.newQuery });
 

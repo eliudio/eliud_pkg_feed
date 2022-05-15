@@ -54,7 +54,7 @@ class _FeedFrontState extends State<FeedFront> {
       create: (_) => PostListPagedBloc(state.memberId() ?? 'PUBLIC', eliudQuery,
           postRepository: posts.postRepository(appId: feedFrontModel.appId)!)
         ..add(PostListPagedFetched()),
-      child: PagedPostsList(widget.app, feedFrontModel),
+      child: PagedPostsList(widget.app, feedFrontModel, backgroundOverride: widget.feedFrontModel.backgroundOverridePosts,),
     );
   }
 }

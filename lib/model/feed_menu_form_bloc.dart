@@ -126,6 +126,12 @@ class FeedMenuFormBloc extends Bloc<FeedMenuFormEvent, FeedMenuFormState> {
 
         return;
       }
+      if (event is ChangedFeedMenuBackgroundOverride) {
+        newValue = currentState.value!.copyWith(backgroundOverride: event.value);
+        yield SubmittableFeedMenuForm(value: newValue);
+
+        return;
+      }
       if (event is ChangedFeedMenuFeedFront) {
         if (event.value != null)
           newValue = currentState.value!.copyWith(feedFront: await feedFrontRepository(appId: appId)!.get(event.value));
@@ -138,6 +144,7 @@ class FeedMenuFormBloc extends Bloc<FeedMenuFormEvent, FeedMenuFormState> {
                                  bodyComponentsOtherMember: currentState.value!.bodyComponentsOtherMember,
                                  itemColor: currentState.value!.itemColor,
                                  selectedItemColor: currentState.value!.selectedItemColor,
+                                 backgroundOverride: currentState.value!.backgroundOverride,
                                  feedFront: null,
                                  conditions: currentState.value!.conditions,
           );
