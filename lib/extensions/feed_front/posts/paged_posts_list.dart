@@ -49,6 +49,7 @@ class PagedPostsList extends StatefulWidget {
 }
 
 class PagedPostsListState extends State<PagedPostsList> {
+  static double BUTTONSIZE = 40;
   late PostListPagedBloc _postBloc;
   double? photoUploadingProgress;
   double? videoUploadingProgress;
@@ -137,9 +138,9 @@ class PagedPostsListState extends State<PagedPostsList> {
       // Message
       if (widget.feedFrontModel.feed!.messagePost != null &&
           widget.feedFrontModel.feed!.messagePost!) {
-        var message = Image.asset(
+        var message = Container(width: BUTTONSIZE, height: BUTTONSIZE, child: Image.asset(
             "assets/images/segoshvishna.fiverr.com/message.png",
-            package: "eliud_pkg_feed");
+            package: "eliud_pkg_feed"));
         widgets.add(actionContainer(widget.app, context,
             child: iconButton(widget.app, context,
                 icon: message, tooltip: 'Message', onPressed: () {
@@ -160,9 +161,9 @@ class PagedPostsListState extends State<PagedPostsList> {
 
       // Audio
       if (widget.feedFrontModel.feed!.audioPost != null && widget.feedFrontModel.feed!.audioPost!) {
-        var audio = Image.asset(
+        var audio = Container(width: BUTTONSIZE, height: BUTTONSIZE, child: Image.asset(
             "assets/images/segoshvishna.fiverr.com/audio.png",
-            package: "eliud_pkg_feed");
+            package: "eliud_pkg_feed"));
         widgets.add(iconButton(widget.app, context,
             icon: audio, tooltip: 'Audio', onPressed: () {}));
         widgets.add(Spacer());
@@ -170,9 +171,9 @@ class PagedPostsListState extends State<PagedPostsList> {
 
       // Album
       if (widget.feedFrontModel.feed!.albumPost != null && widget.feedFrontModel.feed!.albumPost!) {
-        var album = Image.asset(
+        var album = Container(width: BUTTONSIZE, height: BUTTONSIZE, child: Image.asset(
             "assets/images/segoshvishna.fiverr.com/album.png",
-            package: "eliud_pkg_feed");
+            package: "eliud_pkg_feed"));
         widgets.add(actionContainer(widget.app, context,
             child: iconButton(widget.app, context,
                 icon: album,
@@ -193,9 +194,9 @@ class PagedPostsListState extends State<PagedPostsList> {
       // Article
       if (widget.feedFrontModel.feed!.articlePost != null &&
           widget.feedFrontModel.feed!.articlePost!) {
-        var articleIcon = Image.asset(
+        var articleIcon = Container(width: BUTTONSIZE, height: BUTTONSIZE, child: Image.asset(
             "assets/images/segoshvishna.fiverr.com/article.png",
-            package: "eliud_pkg_feed");
+            package: "eliud_pkg_feed"));
 
         widgets.add(actionContainer(widget.app, context,
             child: iconButton(widget.app, context,

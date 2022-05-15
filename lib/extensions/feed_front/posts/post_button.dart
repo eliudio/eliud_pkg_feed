@@ -158,13 +158,18 @@ class PostButtonState extends State<PostButton> {
   static Widget formatIcon(BuildContext context, AppModel app, Widget child,
       {double? width}) {
     return Container(
-        padding: const EdgeInsets.only(top: 22.5, bottom: 22.5),
+      height: 60,
+
+//        padding: const EdgeInsets.only(top: 22.5, bottom: 22.5),
         child: actionContainer(app, context,
-                child: Center(
+//                child: Center(
                     child: Container(
-                        padding: EdgeInsets.all(2.0),
-                        width: width == null ? 45 : width,
-                        height: 40,
-                        child: child))));
+                        padding:const EdgeInsets.all(8.0),
+//                        padding: EdgeInsets.all(2.0),
+                        width: 50,
+                        height: 50,
+//                        width: width == null ? 45 : width,
+//                        height: 40,
+                        child: child)));
   }
 }
