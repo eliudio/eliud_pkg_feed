@@ -268,16 +268,19 @@ class _PostWidgetState extends State<PostWidget> {
     PostType type = PostTypeHelper.determineType(postModel);
     if (PostTypeHelper.canUpdate(type)) {
       items.add(
-        PopupMenuItem<int>(
-            child: text(widget.app, context, 'Update post'), value: 1),
+        popupMenuItem<int>(
+          widget.app, context,
+            label: 'Update post', value: 1),
       );
     }
     items.add(
-      PopupMenuItem<int>(
-          child: text(widget.app, context, 'Delete post'), value: 0),
+      popupMenuItem<int>(
+          widget.app, context,
+          label: 'Delete post', value: 0),
     );
 
-    return PopupMenuButton(
+    return popupMenuButton(
+        widget.app, context,
         icon: Icon(Icons.more_vert),
         itemBuilder: (_) => items,
         onSelected: (choice) async {
@@ -572,13 +575,16 @@ class _PostWidgetState extends State<PostWidget> {
       PostDetails postDetail,
       String? memberId,
       PostCommentContainer postComment) {
-    return PopupMenuButton(
+    return popupMenuButton(
+        widget.app, context,
         icon: Icon(Icons.more_vert),
         itemBuilder: (_) => <PopupMenuItem<int>>[
-              new PopupMenuItem<int>(
-                  child: text(widget.app, context, 'Update comment'), value: 0),
-              new PopupMenuItem<int>(
-                  child: text(widget.app, context, 'Delete comment'), value: 1),
+              popupMenuItem<int>(
+                  widget.app, context,
+                  label: 'Update comment', value: 0),
+              popupMenuItem<int>(
+                  widget.app, context,
+                  label: 'Delete comment', value: 1),
             ],
         onSelected: (choice) {
           if (choice == 0)
