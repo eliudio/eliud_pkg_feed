@@ -70,18 +70,6 @@ class PagedPostsListState extends State<PagedPostsList> {
     }
   }
 
-  Widget _getIcon(Widget child) {
-    return Container(
-        padding: const EdgeInsets.only(top: 22.5, bottom: 22.5),
-        child: actionContainer(widget.app, context,
-            child: Center(
-                child: Container(
-                    padding: EdgeInsets.all(2.0),
-                    width: 45,
-                    height: 40,
-                    child: child))));
-  }
-
   void _addPost(
       {String? html,
       String? description,
@@ -123,25 +111,25 @@ class PagedPostsListState extends State<PagedPostsList> {
 
       // Photo
       if (widget.feedFrontModel.feed!.photoPost!) {
-        widgets.add(PostButton(widget.app, widget.feedFrontModel.feed!, PostType.PostPhoto,
-            _retrievePostAccessibile, author));
+        widgets.add(Container(width: 100, height: 70, child: PostButton(widget.app, widget.feedFrontModel.feed!, PostType.PostPhoto,
+            _retrievePostAccessibile, author)));
         widgets.add(Spacer());
       }
 
       // Video
       if (widget.feedFrontModel.feed!.videoPost != null && widget.feedFrontModel.feed!.videoPost!) {
-        widgets.add(PostButton(widget.app, widget.feedFrontModel.feed!, PostType.PostVideo,
-            _retrievePostAccessibile, author));
+        widgets.add(Container(width: 100, height: 70, child: PostButton(widget.app, widget.feedFrontModel.feed!, PostType.PostVideo,
+            _retrievePostAccessibile, author)));
         widgets.add(Spacer());
       }
 
       // Message
       if (widget.feedFrontModel.feed!.messagePost != null &&
           widget.feedFrontModel.feed!.messagePost!) {
-        var message = Container(width: BUTTONSIZE, height: BUTTONSIZE, child: Image.asset(
+        var message = Image.asset(
             "assets/images/segoshvishna.fiverr.com/message.png",
-            package: "eliud_pkg_feed"));
-        widgets.add(actionContainer(widget.app, context,
+            package: "eliud_pkg_feed");
+        widgets.add(Container(width: 100, height: 70, child: actionContainer(widget.app, context,
             child: iconButton(widget.app, context,
                 icon: message, tooltip: 'Message', onPressed: () {
               openEntryDialog(
@@ -155,26 +143,26 @@ class PagedPostsListState extends State<PagedPostsList> {
                       postAccessibleByMembers: currentPostAccessibleByMembers);
                 }
               });
-            })));
+            }))));
         widgets.add(Spacer());
       }
 
       // Audio
       if (widget.feedFrontModel.feed!.audioPost != null && widget.feedFrontModel.feed!.audioPost!) {
-        var audio = Container(width: BUTTONSIZE, height: BUTTONSIZE, child: Image.asset(
+        var audio = Image.asset(
             "assets/images/segoshvishna.fiverr.com/audio.png",
-            package: "eliud_pkg_feed"));
-        widgets.add(iconButton(widget.app, context,
-            icon: audio, tooltip: 'Audio', onPressed: () {}));
+            package: "eliud_pkg_feed");
+        widgets.add(Container(width: 100, height: 70, child: iconButton(widget.app, context,
+            icon: audio, tooltip: 'Audio', onPressed: () {})));
         widgets.add(Spacer());
       }
 
       // Album
       if (widget.feedFrontModel.feed!.albumPost != null && widget.feedFrontModel.feed!.albumPost!) {
-        var album = Container(width: BUTTONSIZE, height: BUTTONSIZE, child: Image.asset(
+        var album = Image.asset(
             "assets/images/segoshvishna.fiverr.com/album.png",
-            package: "eliud_pkg_feed"));
-        widgets.add(actionContainer(widget.app, context,
+            package: "eliud_pkg_feed");
+        widgets.add(Container(width: 100, height: 70, child: actionContainer(widget.app, context,
             child: iconButton(widget.app, context,
                 icon: album,
                 tooltip: 'Album',
@@ -187,18 +175,18 @@ class PagedPostsListState extends State<PagedPostsList> {
                     profileInitialized.profileUrl(),
                     pageContextInfo,
                     InitialiseNewFeedPostFormEvent(
-                        currentPostAccessibleByGroup, currentPostAccessibleByMembers)))));
+                        currentPostAccessibleByGroup, currentPostAccessibleByMembers))))));
         widgets.add(Spacer());
       }
 
       // Article
       if (widget.feedFrontModel.feed!.articlePost != null &&
           widget.feedFrontModel.feed!.articlePost!) {
-        var articleIcon = Container(width: BUTTONSIZE, height: BUTTONSIZE, child: Image.asset(
+        var articleIcon = Image.asset(
             "assets/images/segoshvishna.fiverr.com/article.png",
-            package: "eliud_pkg_feed"));
+            package: "eliud_pkg_feed");
 
-        widgets.add(actionContainer(widget.app, context,
+        widgets.add(Container(width: 100, height: 70, child: actionContainer(widget.app, context,
             child: iconButton(widget.app, context,
                 icon: articleIcon, tooltip: 'Article', onPressed: () {
               List<MemberMediumContainerModel> postMediumModels = [];
@@ -229,20 +217,14 @@ class PagedPostsListState extends State<PagedPostsList> {
                       AccessGroupHelper.nameForPostAccessibleByGroup(
                           currentPostAccessibleByGroup)),
                   accessibleByMembers: currentPostAccessibleByMembers);
-            })));
-
-/*
-        widgets.add(articleButton(widget.app, author.documentID!,
-            postAccessibleByGroup, postAccessibleByMembers));
-
-*/
+            }))));
         widgets.add(Spacer());
       }
 
       var accessIcon = Image.asset(
           "assets/images/icons8.com/icons8-eye-100.png",
           package: "eliud_pkg_feed");
-      widgets.add(actionContainer(widget.app, context,
+      widgets.add(Container(width: 100, height: 70, child: actionContainer(widget.app, context,
           child: iconButton(widget.app, context,
               icon: accessIcon, tooltip: 'Visibility', onPressed: () {
             PostPrivilegeDialog.openIt(
@@ -258,7 +240,7 @@ class PagedPostsListState extends State<PagedPostsList> {
               currentPostAccessibleByGroup = postAccessibleByGroup;
               currentPostAccessibleByMembers = postAccessibleByMembers;
             });
-          })));
+          }))));
 
       widgets.add(Spacer());
 
