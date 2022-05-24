@@ -16,7 +16,7 @@ class AvatarHelper {
 
     // first try to get the information from memberProfileRepository
     var memberProfileModel =
-        await memberProfileRepository(appId: app.documentID!)!.get(key, onError: (err) {});
+        await memberProfileRepository(appId: app.documentID)!.get(key, onError: (err) {});
     var name;
     var photoURL;
     if (memberProfileModel != null) {

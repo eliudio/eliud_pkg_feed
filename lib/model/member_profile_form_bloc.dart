@@ -51,7 +51,7 @@ class MemberProfileFormBloc extends Bloc<MemberProfileFormEvent, MemberProfileFo
   Stream<MemberProfileFormState> mapEventToState(MemberProfileFormEvent event) async* {
     final currentState = state;
     if (currentState is MemberProfileFormUninitialized) {
-      if (event is InitialiseNewMemberProfileFormEvent) {
+      on <InitialiseNewMemberProfileFormEvent> ((event, emit) {
         MemberProfileFormLoaded loaded = MemberProfileFormLoaded(value: MemberProfileModel(
                                                documentID: "",
                                  appId: "",
@@ -65,98 +65,70 @@ class MemberProfileFormBloc extends Bloc<MemberProfileFormEvent, MemberProfileFo
                                  memberMedia: [],
 
         ));
-        yield loaded;
-        return;
-
-      }
+        emit(loaded);
+      });
 
 
       if (event is InitialiseMemberProfileFormEvent) {
         // Need to re-retrieve the document from the repository so that I get all associated types
         MemberProfileFormLoaded loaded = MemberProfileFormLoaded(value: await memberProfileRepository(appId: appId)!.get(event.value!.documentID));
-        yield loaded;
-        return;
+        emit(loaded);
       } else if (event is InitialiseMemberProfileFormNoLoadEvent) {
         MemberProfileFormLoaded loaded = MemberProfileFormLoaded(value: event.value);
-        yield loaded;
-        return;
+        emit(loaded);
       }
     } else if (currentState is MemberProfileFormInitialized) {
       MemberProfileModel? newValue = null;
-      if (event is ChangedMemberProfileDocumentID) {
+      on <ChangedMemberProfileDocumentID> ((event, emit) async {
         newValue = currentState.value!.copyWith(documentID: event.value);
         if (formAction == FormAction.AddAction) {
-          yield* _isDocumentIDValid(event.value, newValue).asStream();
+          emit(await _isDocumentIDValid(event.value, newValue!));
         } else {
-          yield SubmittableMemberProfileForm(value: newValue);
+          emit(SubmittableMemberProfileForm(value: newValue));
         }
 
-        return;
-      }
-      if (event is ChangedMemberProfileFeedId) {
+      });
+      on <ChangedMemberProfileFeedId> ((event, emit) async {
         newValue = currentState.value!.copyWith(feedId: event.value);
-        yield SubmittableMemberProfileForm(value: newValue);
+        emit(SubmittableMemberProfileForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedMemberProfileAuthorId) {
+      });
+      on <ChangedMemberProfileAuthorId> ((event, emit) async {
         newValue = currentState.value!.copyWith(authorId: event.value);
-        yield SubmittableMemberProfileForm(value: newValue);
+        emit(SubmittableMemberProfileForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedMemberProfileProfile) {
+      });
+      on <ChangedMemberProfileProfile> ((event, emit) async {
         newValue = currentState.value!.copyWith(profile: event.value);
-        yield SubmittableMemberProfileForm(value: newValue);
+        emit(SubmittableMemberProfileForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedMemberProfileProfileBackground) {
+      });
+      on <ChangedMemberProfileProfileBackground> ((event, emit) async {
         if (event.value != null)
           newValue = currentState.value!.copyWith(profileBackground: await memberMediumRepository(appId: appId)!.get(event.value));
-        else
-          newValue = new MemberProfileModel(
-                                 documentID: currentState.value!.documentID,
-                                 appId: currentState.value!.appId,
-                                 feedId: currentState.value!.feedId,
-                                 authorId: currentState.value!.authorId,
-                                 profile: currentState.value!.profile,
-                                 profileBackground: null,
-                                 profileOverride: currentState.value!.profileOverride,
-                                 nameOverride: currentState.value!.nameOverride,
-                                 accessibleByGroup: currentState.value!.accessibleByGroup,
-                                 accessibleByMembers: currentState.value!.accessibleByMembers,
-                                 readAccess: currentState.value!.readAccess,
-                                 memberMedia: currentState.value!.memberMedia,
-          );
-        yield SubmittableMemberProfileForm(value: newValue);
+        emit(SubmittableMemberProfileForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedMemberProfileProfileOverride) {
+      });
+      on <ChangedMemberProfileProfileOverride> ((event, emit) async {
         newValue = currentState.value!.copyWith(profileOverride: event.value);
-        yield SubmittableMemberProfileForm(value: newValue);
+        emit(SubmittableMemberProfileForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedMemberProfileNameOverride) {
+      });
+      on <ChangedMemberProfileNameOverride> ((event, emit) async {
         newValue = currentState.value!.copyWith(nameOverride: event.value);
-        yield SubmittableMemberProfileForm(value: newValue);
+        emit(SubmittableMemberProfileForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedMemberProfileAccessibleByGroup) {
+      });
+      on <ChangedMemberProfileAccessibleByGroup> ((event, emit) async {
         newValue = currentState.value!.copyWith(accessibleByGroup: event.value);
-        yield SubmittableMemberProfileForm(value: newValue);
+        emit(SubmittableMemberProfileForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedMemberProfileMemberMedia) {
+      });
+      on <ChangedMemberProfileMemberMedia> ((event, emit) async {
         newValue = currentState.value!.copyWith(memberMedia: event.value);
-        yield SubmittableMemberProfileForm(value: newValue);
+        emit(SubmittableMemberProfileForm(value: newValue));
 
-        return;
-      }
+      });
     }
   }
 

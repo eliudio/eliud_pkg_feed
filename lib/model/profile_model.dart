@@ -15,6 +15,7 @@
 
 import 'package:eliud_core/tools/common_tools.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eliud_core/core/base/model_base.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
@@ -35,17 +36,17 @@ import 'package:eliud_core/tools/random.dart';
 
 
 
-class ProfileModel {
-  String? documentID;
+class ProfileModel implements ModelBase, WithAppId {
+  String documentID;
 
   // This is the identifier of the app to which this feed belongs
-  String? appId;
+  String appId;
   String? description;
   FeedModel? feed;
   BackgroundModel? backgroundOverride;
   StorageConditionsModel? conditions;
 
-  ProfileModel({this.documentID, this.appId, this.description, this.feed, this.backgroundOverride, this.conditions, })  {
+  ProfileModel({required this.documentID, required this.appId, this.description, this.feed, this.backgroundOverride, this.conditions, })  {
     assert(documentID != null);
   }
 
@@ -88,7 +89,7 @@ class ProfileModel {
     var counter = 0;
     return ProfileModel(
           documentID: documentID, 
-          appId: entity.appId, 
+          appId: entity.appId ?? '', 
           description: entity.description, 
           backgroundOverride: 
             await BackgroundModel.fromEntity(entity.backgroundOverride), 
@@ -114,7 +115,7 @@ class ProfileModel {
     var counter = 0;
     return ProfileModel(
           documentID: documentID, 
-          appId: entity.appId, 
+          appId: entity.appId ?? '', 
           description: entity.description, 
           feed: feedHolder, 
           backgroundOverride: 

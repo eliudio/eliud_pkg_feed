@@ -15,6 +15,7 @@
 
 import 'package:eliud_core/tools/common_tools.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eliud_core/core/base/model_base.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
@@ -51,18 +52,18 @@ LikeType toLikeType(int? index) {
 }
 
 
-class PostLikeModel {
-  String? documentID;
-  String? postId;
+class PostLikeModel implements ModelBase, WithAppId {
+  String documentID;
+  String postId;
   String? postCommentId;
-  String? memberId;
+  String memberId;
   DateTime? timestamp;
 
   // This is the identifier of the app to which this feed belongs
-  String? appId;
+  String appId;
   LikeType? likeType;
 
-  PostLikeModel({this.documentID, this.postId, this.postCommentId, this.memberId, this.timestamp, this.appId, this.likeType, })  {
+  PostLikeModel({required this.documentID, required this.postId, this.postCommentId, required this.memberId, this.timestamp, required this.appId, this.likeType, })  {
     assert(documentID != null);
   }
 
@@ -107,11 +108,11 @@ class PostLikeModel {
     var counter = 0;
     return PostLikeModel(
           documentID: documentID, 
-          postId: entity.postId, 
+          postId: entity.postId ?? '', 
           postCommentId: entity.postCommentId, 
-          memberId: entity.memberId, 
+          memberId: entity.memberId ?? '', 
           timestamp: entity.timestamp == null ? null : DateTime.fromMillisecondsSinceEpoch((entity.timestamp as int)), 
-          appId: entity.appId, 
+          appId: entity.appId ?? '', 
           likeType: toLikeType(entity.likeType), 
     );
   }
@@ -122,11 +123,11 @@ class PostLikeModel {
     var counter = 0;
     return PostLikeModel(
           documentID: documentID, 
-          postId: entity.postId, 
+          postId: entity.postId ?? '', 
           postCommentId: entity.postCommentId, 
-          memberId: entity.memberId, 
+          memberId: entity.memberId ?? '', 
           timestamp: entity.timestamp == null ? null : DateTime.fromMillisecondsSinceEpoch((entity.timestamp as int)), 
-          appId: entity.appId, 
+          appId: entity.appId ?? '', 
           likeType: toLikeType(entity.likeType), 
     );
   }

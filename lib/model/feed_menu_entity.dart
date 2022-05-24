@@ -33,7 +33,7 @@ class FeedMenuEntity {
   final String? feedFrontId;
   final StorageConditionsEntity? conditions;
 
-  FeedMenuEntity({this.appId, this.description, this.bodyComponentsCurrentMember, this.bodyComponentsOtherMember, this.itemColor, this.selectedItemColor, this.backgroundOverride, this.feedFrontId, this.conditions, });
+  FeedMenuEntity({required this.appId, this.description, this.bodyComponentsCurrentMember, this.bodyComponentsOtherMember, this.itemColor, this.selectedItemColor, this.backgroundOverride, this.feedFrontId, this.conditions, });
 
 
   List<Object?> get props => [appId, description, bodyComponentsCurrentMember, bodyComponentsOtherMember, itemColor, selectedItemColor, backgroundOverride, feedFrontId, conditions, ];

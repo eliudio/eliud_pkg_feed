@@ -54,11 +54,11 @@ class FeedFrontComponentEditorConstructor extends ComponentEditorConstructor {
   @override
   void updateComponentWithID(AppModel app, BuildContext context, String id,
       EditorFeedback feedback) async {
-    var feedFront = await feedFrontRepository(appId: app.documentID!)!.get(id);
+    var feedFront = await feedFrontRepository(appId: app.documentID)!.get(id);
     if (feedFront != null) {
       _openIt(app, context, false, feedFront, feedback);
     } else {
-      openErrorDialog(app, context, app.documentID! + '/_error',
+      openErrorDialog(app, context, app.documentID + '/_error',
           title: 'Error',
           errorMessage: 'Cannot find notification dashboard with id $id');
     }
@@ -69,7 +69,7 @@ class FeedFrontComponentEditorConstructor extends ComponentEditorConstructor {
     openComplexDialog(
       app,
       context,
-      app.documentID! + '/notificationdashboard',
+      app.documentID + '/notificationdashboard',
       title: create
           ? 'Create Notification Dashboard'
           : 'Update Notification Dashboard',
@@ -77,7 +77,7 @@ class FeedFrontComponentEditorConstructor extends ComponentEditorConstructor {
       widthFraction: .9,
       child: BlocProvider<FeedFrontBloc>(
           create: (context) => FeedFrontBloc(
-                app.documentID!,
+                app.documentID,
                 /*create,
             */
                 feedback,
@@ -129,7 +129,7 @@ class _FeedFrontComponentEditorState extends State<FeedFrontComponentEditor> {
       if (accessState is AccessDetermined) {
         var member = accessState.getMember();
         if (member != null) {
-          var memberId = member.documentID!;
+          var memberId = member.documentID;
           return BlocBuilder<FeedFrontBloc, EditorBaseState<FeedFrontModel>>(
               builder: (ppContext, feedFrontState) {
             if (feedFrontState is EditorBaseInitialised<FeedFrontModel>) {
@@ -158,7 +158,7 @@ class _FeedFrontComponentEditorState extends State<FeedFrontComponentEditor> {
                           getListTile(context, widget.app,
                               leading: Icon(Icons.vpn_key),
                               title: text(widget.app, context,
-                                  feedFrontState.model.documentID!)),
+                                  feedFrontState.model.documentID)),
                           getListTile(context, widget.app,
                               leading: Icon(Icons.description),
                               title: dialogField(

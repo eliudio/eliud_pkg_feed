@@ -27,7 +27,7 @@ class MemberService {
     var values2 = <SelectedMember>[];
     for (var id in ids) {
       var value =
-          await memberProfileRepository(appId: app.documentID!)!.get(id + '-' + feedId);
+          await memberProfileRepository(appId: app.documentID)!.get(id + '-' + feedId);
       var selectedMember = SelectedMember(
           memberId: value!.authorId != null ? value.authorId! : 'no author id',
           name: value.nameOverride != null ? value.nameOverride! : 'no name',
@@ -39,7 +39,7 @@ class MemberService {
   }
 
     Future<List<SelectedMember>> getMembers(String? query) async {
-    var membersValues = await memberProfileRepository(appId: app.documentID!)!.valuesList(
+    var membersValues = await memberProfileRepository(appId: app.documentID)!.valuesList(
         eliudQuery: EliudQuery()
             .withCondition(EliudQueryCondition('feedId', isEqualTo: feedId))
             .withCondition(EliudQueryCondition('readAccess',

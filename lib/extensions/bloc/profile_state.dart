@@ -89,7 +89,7 @@ abstract class LoggedInProfileInitialized extends ProfileInitialised {
       : super(feedId, app, uploadingBGProgress, uploadingProfilePhotoProgress);
 
   @override
-  String? memberId() => currentMember.documentID!;
+  String? memberId() => currentMember.documentID;
 }
 
 class LoggedInWatchingMyProfile extends LoggedInProfileInitialized {
@@ -207,7 +207,7 @@ class LoggedInWatchingMyProfile extends LoggedInProfileInitialized {
 
   @override
   String? watchingThisMember() {
-    return currentMember.documentID!;
+    return currentMember.documentID;
   }
 }
 
@@ -296,7 +296,7 @@ class LoggedInAndWatchingOtherProfile extends LoggedInProfileInitialized {
 
   @override
   String? watchingThisMember() {
-    return feedPublicInfoModel.documentID!;
+    return feedPublicInfoModel.documentID;
   }
 
   LoggedInAndWatchingOtherProfile progressWith(
@@ -384,7 +384,7 @@ class NotLoggedInWatchingSomeone extends ProfileInitialised {
 
   @override
   String? watchingThisMember() {
-    return feedPublicInfoModel.documentID!;
+    return feedPublicInfoModel.documentID;
   }
 
   @override

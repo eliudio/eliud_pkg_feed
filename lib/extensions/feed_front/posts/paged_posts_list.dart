@@ -81,8 +81,8 @@ class PagedPostsListState extends State<PagedPostsList> {
         value: PostModel(
       documentID: newRandomKey(),
       authorId: authorId,
-      appId: widget.feedFrontModel.appId!,
-      feedId: widget.feedFrontModel.feed!.documentID!,
+      appId: widget.feedFrontModel.appId,
+      feedId: widget.feedFrontModel.feed!.documentID,
       likes: 0,
       dislikes: 0,
       description: description,
@@ -133,12 +133,12 @@ class PagedPostsListState extends State<PagedPostsList> {
             child: iconButton(widget.app, context,
                 icon: message, tooltip: 'Message', onPressed: () {
               openEntryDialog(
-                  widget.app, context, widget.app.documentID! + '/_message',
+                  widget.app, context, widget.app.documentID + '/_message',
                   title: 'Say something', onPressed: (value) {
                 if (value != null) {
                   _addPost(
                       description: value,
-                      authorId: author.documentID!,
+                      authorId: author.documentID,
                       postAccessibleByGroup: currentPostAccessibleByGroup,
                       postAccessibleByMembers: currentPostAccessibleByMembers);
                 }
@@ -169,7 +169,7 @@ class PagedPostsListState extends State<PagedPostsList> {
                 onPressed: () => FeedPostDialog.open(
                     widget.app,
                     context,
-                    widget.feedFrontModel.feed!.documentID!,
+                    widget.feedFrontModel.feed!.documentID,
                     profileInitialized.watchingThisProfile()!.authorId!,
                     profileInitialized.memberId(),
                     profileInitialized.profileUrl(),
@@ -193,7 +193,7 @@ class PagedPostsListState extends State<PagedPostsList> {
               AbstractTextPlatform.platform!.updateHtmlWithMemberMediumCallback(
                   context,
                   widget.app,
-                  author.documentID!,
+                  author.documentID,
                   (value) {
                     postMediumModels.add(MemberMediumContainerModel(
                         documentID: newRandomKey(), memberMedium: value));
@@ -202,7 +202,7 @@ class PagedPostsListState extends State<PagedPostsList> {
                   (newArticle) {
                     _addPost(
                         html: newArticle,
-                        authorId: author.documentID!,
+                        authorId: author.documentID,
                         postAccessibleByGroup: currentPostAccessibleByGroup,
                         postAccessibleByMembers: currentPostAccessibleByMembers,
                         postMemberMedia: postMediumModels);
@@ -231,9 +231,9 @@ class PagedPostsListState extends State<PagedPostsList> {
                 widget.app,
                 context,
                 'Visibility',
-                widget.feedFrontModel.feed!.documentID!,
-                author.documentID!,
-                author.documentID!,
+                widget.feedFrontModel.feed!.documentID,
+                author.documentID,
+                author.documentID,
                 currentPostAccessibleByGroup,
                 currentPostAccessibleByMembers,
                 (postAccessibleByGroup, postAccessibleByMembers) {
@@ -257,7 +257,7 @@ class PagedPostsListState extends State<PagedPostsList> {
         openMessageDialog(
           app,
           context,
-          app.documentID! + '/_accessible',
+          app.documentID + '/_accessible',
           title: 'Accessible',
           message: 'Article accessible by: ' + accessible,
         );
@@ -292,10 +292,10 @@ class PagedPostsListState extends State<PagedPostsList> {
                       backgroundOverride: widget.backgroundOverride,
                       thumbStyle: widget.feedFrontModel.feed!.thumbImage,
                       app: widget.app,
-                      feedId: widget.feedFrontModel.feed!.documentID!,
+                      feedId: widget.feedFrontModel.feed!.documentID,
                       details: state.values[i],
                       pageId: pageId,
-                      memberId: state.values[i].postModel.authorId!,
+                      memberId: state.values[i].postModel.authorId,
                       currentMemberId: currentMemberId,
                       isEditable: profileState.canEditThisProfile(),
                       photoURL: photoURL,

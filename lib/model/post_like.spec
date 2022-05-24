@@ -24,6 +24,7 @@
   "fields": [
     {
       "fieldName": "documentID",
+      "required": true,
       "displayName": "Document ID",
       "fieldType": "String",
       "iconName": "vpn_key",
@@ -31,6 +32,7 @@
     },
     {
       "fieldName": "postId",
+      "required": true,
       "displayName": "Document ID of the post",
       "fieldType": "String",
       "iconName": "vpn_key",
@@ -45,6 +47,7 @@
     },
     {
       "fieldName": "memberId",
+      "required": true,
       "displayName": "Member",
       "fieldType": "String",
       "group": "member"
@@ -57,6 +60,7 @@
     },
     {
       "fieldName": "appId",
+      "required": true,
       "displayName": "App Identifier",
       "remark": "This is the identifier of the app to which this feed belongs",
       "fieldType": "String",
@@ -82,7 +86,7 @@
  ],
   "listFields": {
     "title": "value.timestamp != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.timestamp!.toString())) : Container()",
-    "subTitle": "value.documentID != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.documentID!)) : Container()"
+    "subTitle": "value.documentID != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.documentID)) : Container()"
   },
   "depends": ["eliud_core", "eliud_pkg_membership"]
 }

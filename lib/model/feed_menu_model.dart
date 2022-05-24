@@ -16,6 +16,7 @@
 import 'package:collection/collection.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eliud_core/core/base/model_base.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
@@ -36,11 +37,11 @@ import 'package:eliud_core/tools/random.dart';
 
 
 
-class FeedMenuModel {
-  String? documentID;
+class FeedMenuModel implements ModelBase, WithAppId {
+  String documentID;
 
   // This is the identifier of the app to which this feed belongs
-  String? appId;
+  String appId;
   String? description;
   List<LabelledBodyComponentModel>? bodyComponentsCurrentMember;
   List<LabelledBodyComponentModel>? bodyComponentsOtherMember;
@@ -50,7 +51,7 @@ class FeedMenuModel {
   FeedFrontModel? feedFront;
   StorageConditionsModel? conditions;
 
-  FeedMenuModel({this.documentID, this.appId, this.description, this.bodyComponentsCurrentMember, this.bodyComponentsOtherMember, this.itemColor, this.selectedItemColor, this.backgroundOverride, this.feedFront, this.conditions, })  {
+  FeedMenuModel({required this.documentID, required this.appId, this.description, this.bodyComponentsCurrentMember, this.bodyComponentsOtherMember, this.itemColor, this.selectedItemColor, this.backgroundOverride, this.feedFront, this.conditions, })  {
     assert(documentID != null);
   }
 
@@ -108,7 +109,7 @@ class FeedMenuModel {
     var counter = 0;
     return FeedMenuModel(
           documentID: documentID, 
-          appId: entity.appId, 
+          appId: entity.appId ?? '', 
           description: entity.description, 
           bodyComponentsCurrentMember: 
             entity.bodyComponentsCurrentMember == null ? null : List<LabelledBodyComponentModel>.from(await Future.wait(entity. bodyComponentsCurrentMember
@@ -152,7 +153,7 @@ class FeedMenuModel {
     var counter = 0;
     return FeedMenuModel(
           documentID: documentID, 
-          appId: entity.appId, 
+          appId: entity.appId ?? '', 
           description: entity.description, 
           bodyComponentsCurrentMember: 
             entity. bodyComponentsCurrentMember == null ? null : List<LabelledBodyComponentModel>.from(await Future.wait(entity. bodyComponentsCurrentMember

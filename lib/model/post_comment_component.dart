@@ -39,7 +39,7 @@ abstract class AbstractPostCommentComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<PostCommentComponentBloc> (
           create: (context) => PostCommentComponentBloc(
-            postCommentRepository: postCommentRepository(appId: app.documentID!)!)
+            postCommentRepository: postCommentRepository(appId: app.documentID)!)
         ..add(FetchPostCommentComponent(id: postCommentId)),
       child: _postCommentBlockBuilder(context),
     );

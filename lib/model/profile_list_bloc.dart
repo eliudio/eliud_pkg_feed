@@ -38,9 +38,47 @@ class ProfileListBloc extends Bloc<ProfileListEvent, ProfileListState> {
   ProfileListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required ProfileRepository profileRepository, this.profileLimit = 5})
       : assert(profileRepository != null),
         _profileRepository = profileRepository,
-        super(ProfileListLoading());
+        super(ProfileListLoading()) {
+    on <LoadProfileList> ((event, emit) {
+      if ((detailed == null) || (!detailed!)) {
+        _mapLoadProfileListToState();
+      } else {
+        _mapLoadProfileListWithDetailsToState();
+      }
+    });
+    
+    on <NewPage> ((event, emit) {
+      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
+      _mapLoadProfileListWithDetailsToState();
+    });
+    
+    on <ProfileChangeQuery> ((event, emit) {
+      eliudQuery = event.newQuery;
+      if ((detailed == null) || (!detailed!)) {
+        _mapLoadProfileListToState();
+      } else {
+        _mapLoadProfileListWithDetailsToState();
+      }
+    });
+      
+    on <AddProfileList> ((event, emit) async {
+      await _mapAddProfileListToState(event);
+    });
+    
+    on <UpdateProfileList> ((event, emit) async {
+      await _mapUpdateProfileListToState(event);
+    });
+    
+    on <DeleteProfileList> ((event, emit) async {
+      await _mapDeleteProfileListToState(event);
+    });
+    
+    on <ProfileListUpdated> ((event, emit) {
+      emit(_mapProfileListUpdatedToState(event));
+    });
+  }
 
-  Stream<ProfileListState> _mapLoadProfileListToState() async* {
+  Future<void> _mapLoadProfileListToState() async {
     int amountNow =  (state is ProfileListLoaded) ? (state as ProfileListLoaded).values!.length : 0;
     _profilesListSubscription?.cancel();
     _profilesListSubscription = _profileRepository.listen(
@@ -52,7 +90,7 @@ class ProfileListBloc extends Bloc<ProfileListEvent, ProfileListState> {
     );
   }
 
-  Stream<ProfileListState> _mapLoadProfileListWithDetailsToState() async* {
+  Future<void> _mapLoadProfileListWithDetailsToState() async {
     int amountNow =  (state is ProfileListLoaded) ? (state as ProfileListLoaded).values!.length : 0;
     _profilesListSubscription?.cancel();
     _profilesListSubscription = _profileRepository.listenWithDetails(
@@ -64,58 +102,29 @@ class ProfileListBloc extends Bloc<ProfileListEvent, ProfileListState> {
     );
   }
 
-  Stream<ProfileListState> _mapAddProfileListToState(AddProfileList event) async* {
+  Future<void> _mapAddProfileListToState(AddProfileList event) async {
     var value = event.value;
-    if (value != null) 
-      _profileRepository.add(value);
-  }
-
-  Stream<ProfileListState> _mapUpdateProfileListToState(UpdateProfileList event) async* {
-    var value = event.value;
-    if (value != null) 
-      _profileRepository.update(value);
-  }
-
-  Stream<ProfileListState> _mapDeleteProfileListToState(DeleteProfileList event) async* {
-    var value = event.value;
-    if (value != null) 
-      _profileRepository.delete(value);
-  }
-
-  Stream<ProfileListState> _mapProfileListUpdatedToState(
-      ProfileListUpdated event) async* {
-    yield ProfileListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
-  }
-
-  @override
-  Stream<ProfileListState> mapEventToState(ProfileListEvent event) async* {
-    if (event is LoadProfileList) {
-      if ((detailed == null) || (!detailed!)) {
-        yield* _mapLoadProfileListToState();
-      } else {
-        yield* _mapLoadProfileListWithDetailsToState();
-      }
-    }
-    if (event is NewPage) {
-      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
-      yield* _mapLoadProfileListWithDetailsToState();
-    } else if (event is ProfileChangeQuery) {
-      eliudQuery = event.newQuery;
-      if ((detailed == null) || (!detailed!)) {
-        yield* _mapLoadProfileListToState();
-      } else {
-        yield* _mapLoadProfileListWithDetailsToState();
-      }
-    } else if (event is AddProfileList) {
-      yield* _mapAddProfileListToState(event);
-    } else if (event is UpdateProfileList) {
-      yield* _mapUpdateProfileListToState(event);
-    } else if (event is DeleteProfileList) {
-      yield* _mapDeleteProfileListToState(event);
-    } else if (event is ProfileListUpdated) {
-      yield* _mapProfileListUpdatedToState(event);
+    if (value != null) {
+      await _profileRepository.add(value);
     }
   }
+
+  Future<void> _mapUpdateProfileListToState(UpdateProfileList event) async {
+    var value = event.value;
+    if (value != null) {
+      await _profileRepository.update(value);
+    }
+  }
+
+  Future<void> _mapDeleteProfileListToState(DeleteProfileList event) async {
+    var value = event.value;
+    if (value != null) {
+      await _profileRepository.delete(value);
+    }
+  }
+
+  ProfileListLoaded _mapProfileListUpdatedToState(
+      ProfileListUpdated event) => ProfileListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
 
   @override
   Future<void> close() {

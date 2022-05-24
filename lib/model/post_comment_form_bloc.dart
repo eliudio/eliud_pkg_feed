@@ -55,7 +55,7 @@ class PostCommentFormBloc extends Bloc<PostCommentFormEvent, PostCommentFormStat
   Stream<PostCommentFormState> mapEventToState(PostCommentFormEvent event) async* {
     final currentState = state;
     if (currentState is PostCommentFormUninitialized) {
-      if (event is InitialiseNewPostCommentFormEvent) {
+      on <InitialiseNewPostCommentFormEvent> ((event, emit) {
         PostCommentFormLoaded loaded = PostCommentFormLoaded(value: PostCommentModel(
                                                documentID: "",
                                  postId: "",
@@ -68,98 +68,84 @@ class PostCommentFormBloc extends Bloc<PostCommentFormEvent, PostCommentFormStat
                                  memberMedia: [],
 
         ));
-        yield loaded;
-        return;
-
-      }
+        emit(loaded);
+      });
 
 
       if (event is InitialisePostCommentFormEvent) {
         // Need to re-retrieve the document from the repository so that I get all associated types
         PostCommentFormLoaded loaded = PostCommentFormLoaded(value: await postCommentRepository(appId: appId)!.get(event.value!.documentID));
-        yield loaded;
-        return;
+        emit(loaded);
       } else if (event is InitialisePostCommentFormNoLoadEvent) {
         PostCommentFormLoaded loaded = PostCommentFormLoaded(value: event.value);
-        yield loaded;
-        return;
+        emit(loaded);
       }
     } else if (currentState is PostCommentFormInitialized) {
       PostCommentModel? newValue = null;
-      if (event is ChangedPostCommentDocumentID) {
+      on <ChangedPostCommentDocumentID> ((event, emit) async {
         newValue = currentState.value!.copyWith(documentID: event.value);
         if (formAction == FormAction.AddAction) {
-          yield* _isDocumentIDValid(event.value, newValue).asStream();
+          emit(await _isDocumentIDValid(event.value, newValue!));
         } else {
-          yield SubmittablePostCommentForm(value: newValue);
+          emit(SubmittablePostCommentForm(value: newValue));
         }
 
-        return;
-      }
-      if (event is ChangedPostCommentPostId) {
+      });
+      on <ChangedPostCommentPostId> ((event, emit) async {
         newValue = currentState.value!.copyWith(postId: event.value);
-        yield SubmittablePostCommentForm(value: newValue);
+        emit(SubmittablePostCommentForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedPostCommentPostCommentId) {
+      });
+      on <ChangedPostCommentPostCommentId> ((event, emit) async {
         newValue = currentState.value!.copyWith(postCommentId: event.value);
-        yield SubmittablePostCommentForm(value: newValue);
+        emit(SubmittablePostCommentForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedPostCommentMemberId) {
+      });
+      on <ChangedPostCommentMemberId> ((event, emit) async {
         newValue = currentState.value!.copyWith(memberId: event.value);
-        yield SubmittablePostCommentForm(value: newValue);
+        emit(SubmittablePostCommentForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedPostCommentTimestamp) {
+      });
+      on <ChangedPostCommentTimestamp> ((event, emit) async {
         newValue = currentState.value!.copyWith(timestamp: dateTimeFromTimestampString(event.value!));
-        yield SubmittablePostCommentForm(value: newValue);
+        emit(SubmittablePostCommentForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedPostCommentAppId) {
+      });
+      on <ChangedPostCommentAppId> ((event, emit) async {
         newValue = currentState.value!.copyWith(appId: event.value);
-        yield SubmittablePostCommentForm(value: newValue);
+        emit(SubmittablePostCommentForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedPostCommentComment) {
+      });
+      on <ChangedPostCommentComment> ((event, emit) async {
         newValue = currentState.value!.copyWith(comment: event.value);
-        yield SubmittablePostCommentForm(value: newValue);
+        emit(SubmittablePostCommentForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedPostCommentLikes) {
+      });
+      on <ChangedPostCommentLikes> ((event, emit) async {
         if (isInt(event.value)) {
           newValue = currentState.value!.copyWith(likes: int.parse(event.value!));
-          yield SubmittablePostCommentForm(value: newValue);
+          emit(SubmittablePostCommentForm(value: newValue));
 
         } else {
           newValue = currentState.value!.copyWith(likes: 0);
-          yield LikesPostCommentFormError(message: "Value should be a number", value: newValue);
+          emit(LikesPostCommentFormError(message: "Value should be a number", value: newValue));
         }
-        return;
-      }
-      if (event is ChangedPostCommentDislikes) {
+      });
+      on <ChangedPostCommentDislikes> ((event, emit) async {
         if (isInt(event.value)) {
           newValue = currentState.value!.copyWith(dislikes: int.parse(event.value!));
-          yield SubmittablePostCommentForm(value: newValue);
+          emit(SubmittablePostCommentForm(value: newValue));
 
         } else {
           newValue = currentState.value!.copyWith(dislikes: 0);
-          yield DislikesPostCommentFormError(message: "Value should be a number", value: newValue);
+          emit(DislikesPostCommentFormError(message: "Value should be a number", value: newValue));
         }
-        return;
-      }
-      if (event is ChangedPostCommentMemberMedia) {
+      });
+      on <ChangedPostCommentMemberMedia> ((event, emit) async {
         newValue = currentState.value!.copyWith(memberMedia: event.value);
-        yield SubmittablePostCommentForm(value: newValue);
+        emit(SubmittablePostCommentForm(value: newValue));
 
-        return;
-      }
+      });
     }
   }
 

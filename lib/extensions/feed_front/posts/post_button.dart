@@ -49,7 +49,7 @@ class PostButtonState extends State<PostButton> {
           package: "eliud_pkg_feed");
       if (uploadingProgress == null) {
         return MediaButtons.mediaButtons(context, widget.app,
-            widget.author.documentID!, () => Tuple2(toMemberMediumAccessibleByGroup(widget.postAccessibleProviderFunction().item1.index), widget.postAccessibleProviderFunction().item2),
+            widget.author.documentID, () => Tuple2(toMemberMediumAccessibleByGroup(widget.postAccessibleProviderFunction().item1.index), widget.postAccessibleProviderFunction().item2),
             allowCrop: false,
             tooltip: 'Add photo', photoFeedbackFunction: (photo) {
           if (photo != null) {
@@ -72,7 +72,7 @@ class PostButtonState extends State<PostButton> {
           package: "eliud_pkg_feed");
       if (uploadingProgress == null) {
         return MediaButtons.mediaButtons(context, widget.app,
-            widget.author.documentID!, () => Tuple2(toMemberMediumAccessibleByGroup(widget.postAccessibleProviderFunction().item1.index), widget.postAccessibleProviderFunction().item2),
+            widget.author.documentID, () => Tuple2(toMemberMediumAccessibleByGroup(widget.postAccessibleProviderFunction().item1.index), widget.postAccessibleProviderFunction().item2),
             allowCrop: false,
             tooltip: 'Add video', videoFeedbackFunction: (video) {
           if (video != null) {
@@ -100,8 +100,8 @@ class PostButtonState extends State<PostButton> {
         value: PostModel(
             documentID: newRandomKey(),
             authorId: widget.author.documentID,
-            appId: widget.feedModel.appId!,
-            feedId: widget.feedModel.documentID!,
+            appId: widget.feedModel.appId,
+            feedId: widget.feedModel.documentID,
             likes: 0,
             dislikes: 0,
             description: description,
@@ -110,7 +110,7 @@ class PostButtonState extends State<PostButton> {
             archived: PostArchiveStatus.Active,
             html: html,
             memberMedia: postMemberMedia,
-            readAccess: widget.author.documentID != null ? [widget.author.documentID!] : null,  // default readAccess to the owner. The function will expand this based on accessibleByGroup/Members
+            readAccess: widget.author.documentID != null ? [widget.author.documentID] : null,  // default readAccess to the owner. The function will expand this based on accessibleByGroup/Members
           )));
   }
 

@@ -46,7 +46,7 @@ class LabelledBodyComponentFormBloc extends Bloc<LabelledBodyComponentFormEvent,
   Stream<LabelledBodyComponentFormState> mapEventToState(LabelledBodyComponentFormEvent event) async* {
     final currentState = state;
     if (currentState is LabelledBodyComponentFormUninitialized) {
-      if (event is InitialiseNewLabelledBodyComponentFormEvent) {
+      on <InitialiseNewLabelledBodyComponentFormEvent> ((event, emit) {
         LabelledBodyComponentFormLoaded loaded = LabelledBodyComponentFormLoaded(value: LabelledBodyComponentModel(
                                                documentID: "IDENTIFIER", 
                                  label: "",
@@ -54,35 +54,29 @@ class LabelledBodyComponentFormBloc extends Bloc<LabelledBodyComponentFormEvent,
                                  componentId: "",
 
         ));
-        yield loaded;
-        return;
-
-      }
+        emit(loaded);
+      });
 
 
       if (event is InitialiseLabelledBodyComponentFormEvent) {
         LabelledBodyComponentFormLoaded loaded = LabelledBodyComponentFormLoaded(value: event.value);
-        yield loaded;
-        return;
+        emit(loaded);
       } else if (event is InitialiseLabelledBodyComponentFormNoLoadEvent) {
         LabelledBodyComponentFormLoaded loaded = LabelledBodyComponentFormLoaded(value: event.value);
-        yield loaded;
-        return;
+        emit(loaded);
       }
     } else if (currentState is LabelledBodyComponentFormInitialized) {
       LabelledBodyComponentModel? newValue = null;
-      if (event is ChangedLabelledBodyComponentComponentName) {
+      on <ChangedLabelledBodyComponentComponentName> ((event, emit) async {
         newValue = currentState.value!.copyWith(componentName: event.value);
-        yield SubmittableLabelledBodyComponentForm(value: newValue);
+        emit(SubmittableLabelledBodyComponentForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedLabelledBodyComponentComponentId) {
+      });
+      on <ChangedLabelledBodyComponentComponentId> ((event, emit) async {
         newValue = currentState.value!.copyWith(componentId: event.value);
-        yield SubmittableLabelledBodyComponentForm(value: newValue);
+        emit(SubmittableLabelledBodyComponentForm(value: newValue));
 
-        return;
-      }
+      });
     }
   }
 

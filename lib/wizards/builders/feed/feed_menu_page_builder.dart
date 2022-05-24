@@ -79,7 +79,7 @@ class FeedMenuPageBuilder extends SingleComponentPageBuilder {
     required String inviteDashboardComponentIdentifier,
     required String profileComponentIdentifier,
   }) async {
-    var appId = app.documentID!;
+    var appId = app.documentID;
     var newFeed = await assertFeedModel(feed, feedIdentifier, appId, uniqueId);
     var feedMenuPageId = constructDocumentId(uniqueId: uniqueId, documentId: pageId);
 

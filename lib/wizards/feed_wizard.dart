@@ -53,7 +53,7 @@ class FeedWizard extends NewAppWizardInfoWithActionSpecification {
       var feedSpecifications = parameters.actionSpecifications;
       if (feedSpecifications.shouldCreatePageDialogOrWorkflow()) {
         List<NewAppTask> tasks = [];
-        var memberId = member.documentID!;
+        var memberId = member.documentID;
         var feedModel;
         tasks.add(() async {
           print("feedModel");

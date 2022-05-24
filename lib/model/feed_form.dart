@@ -74,7 +74,7 @@ class FeedForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var accessState = AccessBloc.getState(context);
-    var appId = app.documentID!;
+    var appId = app.documentID;
     if (formAction == FormAction.ShowData) {
       return BlocProvider<FeedFormBloc >(
             create: (context) => FeedFormBloc(appId,
@@ -214,11 +214,11 @@ class _MyFeedFormState extends State<MyFeedForm> {
 
         children.add(
 
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _thumbImageSelectedRadioTile, 'Thumbs', 'Thumbs', !accessState.memberIsOwner(widget.app.documentID!) ? null : (dynamic val) => setSelectionThumbImage(val))
+                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _thumbImageSelectedRadioTile, 'Thumbs', 'Thumbs', !accessState.memberIsOwner(widget.app.documentID) ? null : (dynamic val) => setSelectionThumbImage(val))
           );
         children.add(
 
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _thumbImageSelectedRadioTile, 'Banana', 'Banana', !accessState.memberIsOwner(widget.app.documentID!) ? null : (dynamic val) => setSelectionThumbImage(val))
+                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _thumbImageSelectedRadioTile, 'Banana', 'Banana', !accessState.memberIsOwner(widget.app.documentID) ? null : (dynamic val) => setSelectionThumbImage(val))
           );
 
         children.add(
@@ -416,7 +416,7 @@ class _MyFeedFormState extends State<MyFeedForm> {
   }
 
   bool _readOnly(AccessState accessState, FeedFormInitialized state) {
-    return (formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData) || (!accessState.memberIsOwner(widget.app.documentID!));
+    return (formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData) || (!accessState.memberIsOwner(widget.app.documentID));
   }
   
 

@@ -79,7 +79,7 @@ class PostForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var accessState = AccessBloc.getState(context);
-    var appId = app.documentID!;
+    var appId = app.documentID;
     if (formAction == FormAction.ShowData) {
       return BlocProvider<PostFormBloc >(
             create: (context) => PostFormBloc(appId,
@@ -238,28 +238,28 @@ class _MyPostFormState extends State<MyPostForm> {
 
         children.add(
 
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _accessibleByGroupSelectedRadioTile, 'Public', 'Public', !accessState.memberIsOwner(widget.app.documentID!) ? null : (dynamic val) => setSelectionAccessibleByGroup(val))
+                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _accessibleByGroupSelectedRadioTile, 'Public', 'Public', !accessState.memberIsOwner(widget.app.documentID) ? null : (dynamic val) => setSelectionAccessibleByGroup(val))
           );
         children.add(
 
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _accessibleByGroupSelectedRadioTile, 'Followers', 'Followers', !accessState.memberIsOwner(widget.app.documentID!) ? null : (dynamic val) => setSelectionAccessibleByGroup(val))
+                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _accessibleByGroupSelectedRadioTile, 'Followers', 'Followers', !accessState.memberIsOwner(widget.app.documentID) ? null : (dynamic val) => setSelectionAccessibleByGroup(val))
           );
         children.add(
 
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _accessibleByGroupSelectedRadioTile, 'Me', 'Me', !accessState.memberIsOwner(widget.app.documentID!) ? null : (dynamic val) => setSelectionAccessibleByGroup(val))
+                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _accessibleByGroupSelectedRadioTile, 'Me', 'Me', !accessState.memberIsOwner(widget.app.documentID) ? null : (dynamic val) => setSelectionAccessibleByGroup(val))
           );
         children.add(
 
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _accessibleByGroupSelectedRadioTile, 'SpecificMembers', 'SpecificMembers', !accessState.memberIsOwner(widget.app.documentID!) ? null : (dynamic val) => setSelectionAccessibleByGroup(val))
+                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _accessibleByGroupSelectedRadioTile, 'SpecificMembers', 'SpecificMembers', !accessState.memberIsOwner(widget.app.documentID) ? null : (dynamic val) => setSelectionAccessibleByGroup(val))
           );
 
         children.add(
 
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _archivedSelectedRadioTile, 'Active', 'Active', !accessState.memberIsOwner(widget.app.documentID!) ? null : (dynamic val) => setSelectionArchived(val))
+                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _archivedSelectedRadioTile, 'Active', 'Active', !accessState.memberIsOwner(widget.app.documentID) ? null : (dynamic val) => setSelectionArchived(val))
           );
         children.add(
 
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _archivedSelectedRadioTile, 'Archived', 'Archived', !accessState.memberIsOwner(widget.app.documentID!) ? null : (dynamic val) => setSelectionArchived(val))
+                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _archivedSelectedRadioTile, 'Archived', 'Archived', !accessState.memberIsOwner(widget.app.documentID) ? null : (dynamic val) => setSelectionArchived(val))
           );
 
 
@@ -546,7 +546,7 @@ class _MyPostFormState extends State<MyPostForm> {
   }
 
   bool _readOnly(AccessState accessState, PostFormInitialized state) {
-    return (formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData) || (!accessState.memberIsOwner(widget.app.documentID!));
+    return (formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData) || (!accessState.memberIsOwner(widget.app.documentID));
   }
   
 

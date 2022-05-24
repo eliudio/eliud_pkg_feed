@@ -38,9 +38,47 @@ class FeedMenuListBloc extends Bloc<FeedMenuListEvent, FeedMenuListState> {
   FeedMenuListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required FeedMenuRepository feedMenuRepository, this.feedMenuLimit = 5})
       : assert(feedMenuRepository != null),
         _feedMenuRepository = feedMenuRepository,
-        super(FeedMenuListLoading());
+        super(FeedMenuListLoading()) {
+    on <LoadFeedMenuList> ((event, emit) {
+      if ((detailed == null) || (!detailed!)) {
+        _mapLoadFeedMenuListToState();
+      } else {
+        _mapLoadFeedMenuListWithDetailsToState();
+      }
+    });
+    
+    on <NewPage> ((event, emit) {
+      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
+      _mapLoadFeedMenuListWithDetailsToState();
+    });
+    
+    on <FeedMenuChangeQuery> ((event, emit) {
+      eliudQuery = event.newQuery;
+      if ((detailed == null) || (!detailed!)) {
+        _mapLoadFeedMenuListToState();
+      } else {
+        _mapLoadFeedMenuListWithDetailsToState();
+      }
+    });
+      
+    on <AddFeedMenuList> ((event, emit) async {
+      await _mapAddFeedMenuListToState(event);
+    });
+    
+    on <UpdateFeedMenuList> ((event, emit) async {
+      await _mapUpdateFeedMenuListToState(event);
+    });
+    
+    on <DeleteFeedMenuList> ((event, emit) async {
+      await _mapDeleteFeedMenuListToState(event);
+    });
+    
+    on <FeedMenuListUpdated> ((event, emit) {
+      emit(_mapFeedMenuListUpdatedToState(event));
+    });
+  }
 
-  Stream<FeedMenuListState> _mapLoadFeedMenuListToState() async* {
+  Future<void> _mapLoadFeedMenuListToState() async {
     int amountNow =  (state is FeedMenuListLoaded) ? (state as FeedMenuListLoaded).values!.length : 0;
     _feedMenusListSubscription?.cancel();
     _feedMenusListSubscription = _feedMenuRepository.listen(
@@ -52,7 +90,7 @@ class FeedMenuListBloc extends Bloc<FeedMenuListEvent, FeedMenuListState> {
     );
   }
 
-  Stream<FeedMenuListState> _mapLoadFeedMenuListWithDetailsToState() async* {
+  Future<void> _mapLoadFeedMenuListWithDetailsToState() async {
     int amountNow =  (state is FeedMenuListLoaded) ? (state as FeedMenuListLoaded).values!.length : 0;
     _feedMenusListSubscription?.cancel();
     _feedMenusListSubscription = _feedMenuRepository.listenWithDetails(
@@ -64,58 +102,29 @@ class FeedMenuListBloc extends Bloc<FeedMenuListEvent, FeedMenuListState> {
     );
   }
 
-  Stream<FeedMenuListState> _mapAddFeedMenuListToState(AddFeedMenuList event) async* {
+  Future<void> _mapAddFeedMenuListToState(AddFeedMenuList event) async {
     var value = event.value;
-    if (value != null) 
-      _feedMenuRepository.add(value);
-  }
-
-  Stream<FeedMenuListState> _mapUpdateFeedMenuListToState(UpdateFeedMenuList event) async* {
-    var value = event.value;
-    if (value != null) 
-      _feedMenuRepository.update(value);
-  }
-
-  Stream<FeedMenuListState> _mapDeleteFeedMenuListToState(DeleteFeedMenuList event) async* {
-    var value = event.value;
-    if (value != null) 
-      _feedMenuRepository.delete(value);
-  }
-
-  Stream<FeedMenuListState> _mapFeedMenuListUpdatedToState(
-      FeedMenuListUpdated event) async* {
-    yield FeedMenuListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
-  }
-
-  @override
-  Stream<FeedMenuListState> mapEventToState(FeedMenuListEvent event) async* {
-    if (event is LoadFeedMenuList) {
-      if ((detailed == null) || (!detailed!)) {
-        yield* _mapLoadFeedMenuListToState();
-      } else {
-        yield* _mapLoadFeedMenuListWithDetailsToState();
-      }
-    }
-    if (event is NewPage) {
-      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
-      yield* _mapLoadFeedMenuListWithDetailsToState();
-    } else if (event is FeedMenuChangeQuery) {
-      eliudQuery = event.newQuery;
-      if ((detailed == null) || (!detailed!)) {
-        yield* _mapLoadFeedMenuListToState();
-      } else {
-        yield* _mapLoadFeedMenuListWithDetailsToState();
-      }
-    } else if (event is AddFeedMenuList) {
-      yield* _mapAddFeedMenuListToState(event);
-    } else if (event is UpdateFeedMenuList) {
-      yield* _mapUpdateFeedMenuListToState(event);
-    } else if (event is DeleteFeedMenuList) {
-      yield* _mapDeleteFeedMenuListToState(event);
-    } else if (event is FeedMenuListUpdated) {
-      yield* _mapFeedMenuListUpdatedToState(event);
+    if (value != null) {
+      await _feedMenuRepository.add(value);
     }
   }
+
+  Future<void> _mapUpdateFeedMenuListToState(UpdateFeedMenuList event) async {
+    var value = event.value;
+    if (value != null) {
+      await _feedMenuRepository.update(value);
+    }
+  }
+
+  Future<void> _mapDeleteFeedMenuListToState(DeleteFeedMenuList event) async {
+    var value = event.value;
+    if (value != null) {
+      await _feedMenuRepository.delete(value);
+    }
+  }
+
+  FeedMenuListLoaded _mapFeedMenuListUpdatedToState(
+      FeedMenuListUpdated event) => FeedMenuListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
 
   @override
   Future<void> close() {

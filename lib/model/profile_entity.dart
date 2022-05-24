@@ -29,7 +29,7 @@ class ProfileEntity {
   final BackgroundEntity? backgroundOverride;
   final StorageConditionsEntity? conditions;
 
-  ProfileEntity({this.appId, this.description, this.feedId, this.backgroundOverride, this.conditions, });
+  ProfileEntity({required this.appId, this.description, this.feedId, this.backgroundOverride, this.conditions, });
 
 
   List<Object?> get props => [appId, description, feedId, backgroundOverride, conditions, ];

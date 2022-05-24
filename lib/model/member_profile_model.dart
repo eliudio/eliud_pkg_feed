@@ -16,6 +16,7 @@
 import 'package:collection/collection.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eliud_core/core/base/model_base.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
@@ -50,9 +51,9 @@ MemberProfileAccessibleByGroup toMemberProfileAccessibleByGroup(int? index) {
 }
 
 
-class MemberProfileModel {
-  String? documentID;
-  String? appId;
+class MemberProfileModel implements ModelBase, WithAppId {
+  String documentID;
+  String appId;
 
   // This is the identifier of the feed
   String? feedId;
@@ -68,7 +69,7 @@ class MemberProfileModel {
   List<String>? readAccess;
   List<MemberMediumContainerModel>? memberMedia;
 
-  MemberProfileModel({this.documentID, this.appId, this.feedId, this.authorId, this.profile, this.profileBackground, this.profileOverride, this.nameOverride, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, this.memberMedia, })  {
+  MemberProfileModel({required this.documentID, required this.appId, this.feedId, this.authorId, this.profile, this.profileBackground, this.profileOverride, this.nameOverride, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, this.memberMedia, })  {
     assert(documentID != null);
   }
 
@@ -129,7 +130,7 @@ class MemberProfileModel {
     var counter = 0;
     return MemberProfileModel(
           documentID: documentID, 
-          appId: entity.appId, 
+          appId: entity.appId ?? '', 
           feedId: entity.feedId, 
           authorId: entity.authorId, 
           profile: entity.profile, 
@@ -165,7 +166,7 @@ class MemberProfileModel {
     var counter = 0;
     return MemberProfileModel(
           documentID: documentID, 
-          appId: entity.appId, 
+          appId: entity.appId ?? '', 
           feedId: entity.feedId, 
           authorId: entity.authorId, 
           profile: entity.profile, 

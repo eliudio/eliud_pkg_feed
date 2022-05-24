@@ -31,7 +31,7 @@ class PostLikeEntity {
   final String? appId;
   final int? likeType;
 
-  PostLikeEntity({this.postId, this.postCommentId, this.memberId, this.timestamp, this.appId, this.likeType, });
+  PostLikeEntity({required this.postId, this.postCommentId, required this.memberId, this.timestamp, required this.appId, this.likeType, });
 
   PostLikeEntity copyWith({Object? timestamp, }) {
     return PostLikeEntity(postId: postId, postCommentId: postCommentId, memberId: memberId, timestamp : timestamp, appId: appId, likeType: likeType, );

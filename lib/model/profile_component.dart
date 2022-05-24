@@ -39,7 +39,7 @@ abstract class AbstractProfileComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<ProfileComponentBloc> (
           create: (context) => ProfileComponentBloc(
-            profileRepository: profileRepository(appId: app.documentID!)!)
+            profileRepository: profileRepository(appId: app.documentID)!)
         ..add(FetchProfileComponent(id: profileId)),
       child: _profileBlockBuilder(context),
     );

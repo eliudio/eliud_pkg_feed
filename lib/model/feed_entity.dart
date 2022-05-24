@@ -33,7 +33,7 @@ class FeedEntity {
   final bool? albumPost;
   final bool? articlePost;
 
-  FeedEntity({this.appId, this.description, this.thumbImage, this.photoPost, this.videoPost, this.messagePost, this.audioPost, this.albumPost, this.articlePost, });
+  FeedEntity({required this.appId, this.description, this.thumbImage, this.photoPost, this.videoPost, this.messagePost, this.audioPost, this.albumPost, this.articlePost, });
 
 
   List<Object?> get props => [appId, description, thumbImage, photoPost, videoPost, messagePost, audioPost, albumPost, articlePost, ];

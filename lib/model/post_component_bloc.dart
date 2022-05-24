@@ -26,23 +26,22 @@ class PostComponentBloc extends Bloc<PostComponentEvent, PostComponentState> {
   final PostRepository? postRepository;
   StreamSubscription? _postSubscription;
 
-  Stream<PostComponentState> _mapLoadPostComponentUpdateToState(String documentId) async* {
+  void _mapLoadPostComponentUpdateToState(String documentId) {
     _postSubscription?.cancel();
     _postSubscription = postRepository!.listenTo(documentId, (value) {
-      if (value != null) add(PostComponentUpdated(value: value));
+      if (value != null) {
+        add(PostComponentUpdated(value: value));
+      }
     });
   }
 
-  PostComponentBloc({ this.postRepository }): super(PostComponentUninitialized());
-
-  @override
-  Stream<PostComponentState> mapEventToState(PostComponentEvent event) async* {
-    final currentState = state;
-    if (event is FetchPostComponent) {
-      yield* _mapLoadPostComponentUpdateToState(event.id!);
-    } else if (event is PostComponentUpdated) {
-      yield PostComponentLoaded(value: event.value);
-    }
+  PostComponentBloc({ this.postRepository }): super(PostComponentUninitialized()) {
+    on <FetchPostComponent> ((event, emit) {
+      _mapLoadPostComponentUpdateToState(event.id!);
+    });
+    on <PostComponentUpdated> ((event, emit) {
+      emit(PostComponentLoaded(value: event.value));
+    });
   }
 
   @override

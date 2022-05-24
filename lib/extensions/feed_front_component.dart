@@ -29,7 +29,7 @@ class FeedFrontComponentConstructorDefault implements ComponentConstructor {
 
   @override
   Future<dynamic> getModel({required AppModel app, required String id}) async =>
-      await feedFrontRepository(appId: app.documentID!)!.get(id);
+      await feedFrontRepository(appId: app.documentID)!.get(id);
 }
 
 class FeedFrontComponent extends AbstractFeedFrontComponent {
@@ -40,7 +40,7 @@ class FeedFrontComponent extends AbstractFeedFrontComponent {
   Widget yourWidget(BuildContext context, FeedFrontModel? value) {
     var _accessState = AccessBloc.getState(context);
     var modalRoute = ModalRoute.of(context) as ModalRoute;
-    var feedId = value!.feed!.documentID!;
+    var feedId = value!.feed!.documentID;
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (context, accessState) {
       if (accessState is AccessDetermined) {

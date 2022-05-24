@@ -59,11 +59,11 @@ class FeedMenuComponentEditorConstructor extends ComponentEditorConstructor {
   @override
   void updateComponentWithID(AppModel app, BuildContext context, String id,
       EditorFeedback feedback) async {
-    var feedMenu = await feedMenuRepository(appId: app.documentID!)!.get(id);
+    var feedMenu = await feedMenuRepository(appId: app.documentID)!.get(id);
     if (feedMenu != null) {
       _openIt(app, context, false, feedMenu, feedback);
     } else {
-      openErrorDialog(app, context, app.documentID! + '/_error',
+      openErrorDialog(app, context, app.documentID + '/_error',
           title: 'Error',
           errorMessage: 'Cannot find membership dashboard with id $id');
     }
@@ -74,7 +74,7 @@ class FeedMenuComponentEditorConstructor extends ComponentEditorConstructor {
     openComplexDialog(
       app,
       context,
-      app.documentID! + '/membershipdashboard',
+      app.documentID + '/membershipdashboard',
       title: create
           ? 'Create Membership Dashboard'
           : 'Update Membership Dashboard',
@@ -82,7 +82,7 @@ class FeedMenuComponentEditorConstructor extends ComponentEditorConstructor {
       widthFraction: .9,
       child: BlocProvider<FeedMenuBloc>(
           create: (context) => FeedMenuBloc(
-                app.documentID!,
+                app.documentID,
                 /*create,
             */
                 feedback,
@@ -114,7 +114,7 @@ class _FeedMenuComponentEditorState extends State<FeedMenuComponentEditor> {
       if (accessState is AccessDetermined) {
         var member = accessState.getMember();
         if (member != null) {
-          var memberId = member.documentID!;
+          var memberId = member.documentID;
           return BlocBuilder<FeedMenuBloc, ExtEditorBaseState<FeedMenuModel>>(
               builder: (ppContext, feedMenuState) {
             if (feedMenuState
@@ -144,7 +144,7 @@ class _FeedMenuComponentEditorState extends State<FeedMenuComponentEditor> {
                           getListTile(context, widget.app,
                               leading: Icon(Icons.vpn_key),
                               title: text(widget.app, context,
-                                  feedMenuState.model.documentID!)),
+                                  feedMenuState.model.documentID)),
                           getListTile(context, widget.app,
                               leading: Icon(Icons.description),
                               title: dialogField(
@@ -359,7 +359,7 @@ class _FeedMenuComponentEditorState extends State<FeedMenuComponentEditor> {
     openFlexibleDialog(
       widget.app,
       context,
-      widget.app.documentID! + '/_memberaction',
+      widget.app.documentID + '/_memberaction',
       includeHeading: false,
       widthFraction: .8,
       child: LabelledBodyComponentModelWidget.getIt(

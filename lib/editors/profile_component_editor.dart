@@ -56,11 +56,11 @@ class ProfileComponentEditorConstructor
   void updateComponentWithID(AppModel app, BuildContext context, String id,
       EditorFeedback feedback) async {
     var profile =
-        await profileRepository(appId: app.documentID!)!.get(id);
+        await profileRepository(appId: app.documentID)!.get(id);
     if (profile != null) {
       _openIt(app, context, false, profile, feedback);
     } else {
-      openErrorDialog(app, context, app.documentID! + '/_error',
+      openErrorDialog(app, context, app.documentID + '/_error',
           title: 'Error',
           errorMessage: 'Cannot find notification dashboard with id $id');
     }
@@ -71,7 +71,7 @@ class ProfileComponentEditorConstructor
     openComplexDialog(
       app,
       context,
-      app.documentID! + '/notificationdashboard',
+      app.documentID + '/notificationdashboard',
       title: create
           ? 'Create Notification Dashboard'
           : 'Update Notification Dashboard',
@@ -79,7 +79,7 @@ class ProfileComponentEditorConstructor
       widthFraction: .9,
       child: BlocProvider<ProfileBloc>(
           create: (context) => ProfileBloc(
-                app.documentID!,
+                app.documentID,
                 /*create,
             */
                 feedback,
@@ -136,7 +136,7 @@ class _ProfileComponentEditorState
       if (accessState is AccessDetermined) {
         var member = accessState.getMember();
         if (member != null) {
-          var memberId = member.documentID!;
+          var memberId = member.documentID;
           return BlocBuilder<ProfileBloc, EditorBaseState<ProfileModel>>(
               builder: (ppContext, profileState) {
             if (profileState is EditorBaseInitialised<ProfileModel>) {
@@ -165,7 +165,7 @@ class _ProfileComponentEditorState
                           getListTile(context, widget.app,
                               leading: Icon(Icons.vpn_key),
                               title: text(widget.app, context,
-                                  profileState.model.documentID!)),
+                                  profileState.model.documentID)),
                           getListTile(context, widget.app,
                               leading: Icon(Icons.description),
                               title: dialogField(

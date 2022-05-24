@@ -16,84 +16,108 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
   final String memberId;
   final String feedId;
   final LoggedIn accessState;
-  late PostModel? post; // if this is an update then this is the post being updated
+  late PostModel?
+      post; // if this is an update then this is the post being updated
 
-  FeedPostFormBloc(this.app, this.postListPagedBloc,
-      this.memberId, this.feedId, this.accessState)
-      : super(FeedPostFormUninitialized());
+  FeedPostFormBloc(this.app, this.postListPagedBloc, this.memberId, this.feedId,
+      this.accessState)
+      : super(FeedPostFormUninitialized()) {
+    if (state is FeedPostFormUninitialized) {
+      final currentState = state as FeedPostFormUninitialized;
+    }
+    on<InitialiseNewFeedPostFormEvent>((event, emit) async {
+      post = null;
+      emit(await _initialiseNew(
+          event.postAccessibleByGroup, event.postAccessibleByMembers));
+    });
+    on<InitialiseUpdateFeedPostFormEvent>((event, emit) async {
+      post = event.originalPost;
+      emit(await _initialiseUpdate(event));
+    });
 
-  @override
-  Stream<FeedPostFormState> mapEventToState(FeedPostFormEvent event) async* {
-    final currentState = state;
-    if (currentState is FeedPostFormUninitialized) {
-      if (event is InitialiseNewFeedPostFormEvent) {
-        post = null;
-        yield await _initialiseNew(event.postAccessibleByGroup, event.postAccessibleByMembers);
-      } else if (event is InitialiseUpdateFeedPostFormEvent) {
-        post = event.originalPost;
-        yield await _initialiseUpdate(event);
+    on<SubmitPost>((event, emit) async {
+      if (state is FeedPostFormInitialized) {
+        final currentState = state as FeedPostFormInitialized;
+        emit(await _submit(currentState.postModelDetails));
       }
-
-    } else if (currentState is FeedPostFormInitialized) {
-      if (event is SubmitPost) {
-        yield await _submit(currentState.postModelDetails);
+    });
+    on<ChangedFeedPostPrivilege>((event, emit) async {
+      if (state is FeedPostFormInitialized) {
+        final currentState = state as FeedPostFormInitialized;
+        var newValue = currentState.postModelDetails.copyWith(
+            postAccessibleByGroup: event.postAccessibleByGroup,
+            postAccessibleByMembers: event.postAccessibleByMembers);
+        emit(SubmittableFeedPostForm(postModelDetails: newValue));
       }
-      if (event is ChangedFeedPostPrivilege) {
-        var newValue =
-            currentState.postModelDetails.copyWith(postAccessibleByGroup: event.postAccessibleByGroup, postAccessibleByMembers: event.postAccessibleByMembers);
-        yield SubmittableFeedPostForm(postModelDetails: newValue);
+    });
+    on<UploadingMedium>((event, emit) async {
+      if (state is FeedPostFormInitialized) {
+        final currentState = state as FeedPostFormInitialized;
+        emit(SubmittableFeedPostFormWithMediumUploading(
+            postModelDetails: currentState.postModelDetails,
+            progress: event.progress));
       }
-      if (event is UploadingMedium) {
-        yield SubmittableFeedPostFormWithMediumUploading(postModelDetails: currentState.postModelDetails, progress: event.progress);
-      }
-      if (event is ChangedFeedPostDescription) {
+    });
+    on<ChangedFeedPostDescription>((event, emit) async {
+      if (state is FeedPostFormInitialized) {
+        final currentState = state as FeedPostFormInitialized;
         var newValue =
             currentState.postModelDetails.copyWith(description: event.value);
-        yield SubmittableFeedPostForm(postModelDetails: newValue);
-      } else if (event is ChangedMedia) {
+        emit(SubmittableFeedPostForm(postModelDetails: newValue));
+      }
+    });
+
+    on<ChangedMedia>((event, emit) {
+      if (state is FeedPostFormInitialized) {
+        final currentState = state as FeedPostFormInitialized;
         var newValue = currentState.postModelDetails
             .copyWith(memberMedia: event.memberMedia);
-        yield SubmittableFeedPostForm(postModelDetails: newValue);
+        emit(SubmittableFeedPostForm(postModelDetails: newValue));
       }
-    }
+    });
   }
 
-  Future<FeedPostFormLoaded> _initialiseNew(PostAccessibleByGroup postAccessibleByGroup, List<String>? postAccessibleByMembers) async {
+  Future<FeedPostFormLoaded> _initialiseNew(
+      PostAccessibleByGroup postAccessibleByGroup,
+      List<String>? postAccessibleByMembers) async {
     return FeedPostFormLoaded(
         postModelDetails: FeedPostModelDetails(
-          description: "",
-          memberMedia: [],
-          postAccessibleByGroup: postAccessibleByGroup,
-          postAccessibleByMembers: postAccessibleByMembers,
-        ));
+      description: "",
+      memberMedia: [],
+      postAccessibleByGroup: postAccessibleByGroup,
+      postAccessibleByMembers: postAccessibleByMembers,
+    ));
   }
 
-  Future<FeedPostFormLoaded> _initialiseUpdate(InitialiseUpdateFeedPostFormEvent event) async {
+  Future<FeedPostFormLoaded> _initialiseUpdate(
+      InitialiseUpdateFeedPostFormEvent event) async {
     return FeedPostFormLoaded(
         postModelDetails: FeedPostModelDetails(
-          description: event.description,
-          memberMedia: event.memberMedia,
-          postAccessibleByGroup: event.postAccessibleByGroup,
-          postAccessibleByMembers: event.postAccessibleByMembers,
-        ));
+      description: event.description,
+      memberMedia: event.memberMedia,
+      postAccessibleByGroup: event.postAccessibleByGroup,
+      postAccessibleByMembers: event.postAccessibleByMembers,
+    ));
   }
 
   Future<FeedPostFormState> _submit(
       FeedPostModelDetails feedPostModelDetails) async {
     PostModel postModel = PostModel(
-        documentID: post != null ? post!.documentID : newRandomKey(),
-        authorId: memberId,
-        appId: app.documentID,
-        feedId: feedId,
-        description: feedPostModelDetails.description,
-        likes: 0,
-        dislikes: 0,
-        accessibleByGroup: feedPostModelDetails.postAccessibleByGroup,
-        accessibleByMembers: feedPostModelDetails.postAccessibleByMembers,
-        archived: PostArchiveStatus.Active,
-        memberMedia: feedPostModelDetails.memberMedia,
-        readAccess: [memberId],  // default readAccess to the owner. The function will expand this based on accessibleByGroup/Members
-        );
+      documentID: post != null ? post!.documentID : newRandomKey(),
+      authorId: memberId,
+      appId: app.documentID,
+      feedId: feedId,
+      description: feedPostModelDetails.description,
+      likes: 0,
+      dislikes: 0,
+      accessibleByGroup: feedPostModelDetails.postAccessibleByGroup,
+      accessibleByMembers: feedPostModelDetails.postAccessibleByMembers,
+      archived: PostArchiveStatus.Active,
+      memberMedia: feedPostModelDetails.memberMedia,
+      readAccess: [
+        memberId
+      ], // default readAccess to the owner. The function will expand this based on accessibleByGroup/Members
+    );
 
     // Now tell the list bloc to add the post
     if (post == null) {
@@ -102,6 +126,7 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
       postListPagedBloc.add(UpdatePostPaged(value: postModel));
     }
     // reset the form
-    return _initialiseNew(feedPostModelDetails.postAccessibleByGroup, feedPostModelDetails.postAccessibleByMembers);
+    return _initialiseNew(feedPostModelDetails.postAccessibleByGroup,
+        feedPostModelDetails.postAccessibleByMembers);
   }
 }

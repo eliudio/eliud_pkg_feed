@@ -217,7 +217,7 @@ class _PostWidgetState extends State<PostWidget> {
               context,
               25,
               widget.pageId,
-              postModel.authorId!,
+              postModel.authorId,
               widget.currentMemberId,
               widget.app,
               widget.feedId)),
@@ -229,7 +229,7 @@ class _PostWidgetState extends State<PostWidget> {
           height: 4,
         ),
         AvatarHelper.nameH5(
-            context, postModel.authorId!, widget.app, widget.feedId),
+            context, postModel.authorId, widget.app, widget.feedId),
         h5(widget.app, context, verboseDateTimeRepresentation(timeStamp),
             textAlign: TextAlign.left),
       ]),
@@ -286,7 +286,7 @@ class _PostWidgetState extends State<PostWidget> {
         onSelected: (choice) async {
           if (choice == 0) {
             openAckNackDialog(
-                widget.app, context, widget.app.documentID! + '/_deletepost',
+                widget.app, context, widget.app.documentID + '/_deletepost',
                 title: 'Delete post?',
                 message: 'You are sure you want to delete this post?',
                 onSelection: (value) async {
@@ -308,7 +308,7 @@ class _PostWidgetState extends State<PostWidget> {
                     widget.app,
                     context,
                     widget.feedId,
-                    postModel.authorId!,
+                    postModel.authorId,
                     widget.currentMemberId,
                     widget.photoURL!,
                     pageContextInfo,
@@ -334,7 +334,7 @@ class _PostWidgetState extends State<PostWidget> {
                     .updateHtmlWithMemberMediumCallback(
                         context,
                         widget.app,
-                        postModel.authorId!,
+                        postModel.authorId,
                         (value) {
                           postMediumModels.add(MemberMediumContainerModel(
                               documentID: newRandomKey(), memberMedium: value));
@@ -367,7 +367,7 @@ class _PostWidgetState extends State<PostWidget> {
     openEntryDialog(
       widget.app,
       context,
-      widget.app.documentID! + '/_reply',
+      widget.app.documentID + '/_reply',
       title: 'Reply to comment',
       ackButtonLabel: 'Reply',
       nackButtonLabel: 'Discard',
@@ -382,7 +382,7 @@ class _PostWidgetState extends State<PostWidget> {
 
   void allowToAddCommentComment(BuildContext context, PostDetails postDetail,
       PostCommentContainer postCommentContainer, String memberId) {
-    openEntryDialog(widget.app, context, widget.app.documentID! + '/_reply',
+    openEntryDialog(widget.app, context, widget.app.documentID + '/_reply',
         title: 'Reply to comment',
         hintText: 'Reply',
         ackButtonLabel: 'Reply',
@@ -397,7 +397,7 @@ class _PostWidgetState extends State<PostWidget> {
   void allowToUpdateComment(BuildContext context, PostDetails postDetail,
       String? memberId, PostCommentContainer postCommentContainer) {
     openEntryDialog(
-        widget.app, context, widget.app.documentID! + '/_updatecomment',
+        widget.app, context, widget.app.documentID + '/_updatecomment',
         title: 'Update comment',
         hintText: 'Comment',
         initialValue: postCommentContainer.comment!,
@@ -413,7 +413,7 @@ class _PostWidgetState extends State<PostWidget> {
   void allowToDeleteComment(BuildContext context, PostDetails postDetail,
       String? memberId, PostCommentContainer? postCommentContainer) {
     openAckNackDialog(
-        widget.app, context, widget.app.documentID! + '/_deletecomment',
+        widget.app, context, widget.app.documentID + '/_deletecomment',
         message: "Do you want to delete this comment",
         onSelection: (value) async {
       if (value == 0) {
@@ -454,7 +454,7 @@ class _PostWidgetState extends State<PostWidget> {
     }
 
     List<Widget> rowChildren = [
-      AvatarHelper.avatar(context, 20, widget.pageId, data.member!.documentID!,
+      AvatarHelper.avatar(context, 20, widget.pageId, data.member!.documentID,
           widget.currentMemberId, widget.app, widget.feedId),
       Container(width: 8),
       Expanded(
@@ -541,7 +541,7 @@ class _PostWidgetState extends State<PostWidget> {
                       label: 'Reply',
                       onPressed: () => widget.isEditable
                           ? allowToAddCommentComment(context, postDetail, data,
-                              data.member!.documentID!)
+                              data.member!.documentID)
                           : null)),
             ]),
           ],
@@ -724,7 +724,7 @@ class _PostWidgetState extends State<PostWidget> {
   Future<void> _photoAvailable(PhotoWithThumbnail photoWithThumbnail) async {
     throw Exception("Needs proper implementation.");
 /*
-    var memberImageModel = await UploadFile.uploadMediumAndItsThumbnailData(widget.postModel.appId!, mediumAndItsThumbnailData, widget.member!.documentID!, widget.postModel.readAccess!);
+    var memberImageModel = await UploadFile.uploadMediumAndItsThumbnailData(widget.postModel.appId!, mediumAndItsThumbnailData, widget.member!.documentID, widget.postModel.readAccess!);
     postModel.memberMedia!.add(
         PostMediumModel(documentID: newRandomKey(), memberMedium: memberImageModel)
     );

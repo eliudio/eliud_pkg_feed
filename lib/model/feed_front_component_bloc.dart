@@ -27,23 +27,22 @@ class FeedFrontComponentBloc extends Bloc<FeedFrontComponentEvent, FeedFrontComp
   final FeedFrontRepository? feedFrontRepository;
   StreamSubscription? _feedFrontSubscription;
 
-  Stream<FeedFrontComponentState> _mapLoadFeedFrontComponentUpdateToState(String documentId) async* {
+  void _mapLoadFeedFrontComponentUpdateToState(String documentId) {
     _feedFrontSubscription?.cancel();
     _feedFrontSubscription = feedFrontRepository!.listenTo(documentId, (value) {
-      if (value != null) add(FeedFrontComponentUpdated(value: value));
+      if (value != null) {
+        add(FeedFrontComponentUpdated(value: value));
+      }
     });
   }
 
-  FeedFrontComponentBloc({ this.feedFrontRepository }): super(FeedFrontComponentUninitialized());
-
-  @override
-  Stream<FeedFrontComponentState> mapEventToState(FeedFrontComponentEvent event) async* {
-    final currentState = state;
-    if (event is FetchFeedFrontComponent) {
-      yield* _mapLoadFeedFrontComponentUpdateToState(event.id!);
-    } else if (event is FeedFrontComponentUpdated) {
-      yield FeedFrontComponentLoaded(value: event.value);
-    }
+  FeedFrontComponentBloc({ this.feedFrontRepository }): super(FeedFrontComponentUninitialized()) {
+    on <FetchFeedFrontComponent> ((event, emit) {
+      _mapLoadFeedFrontComponentUpdateToState(event.id!);
+    });
+    on <FeedFrontComponentUpdated> ((event, emit) {
+      emit(FeedFrontComponentLoaded(value: event.value));
+    });
   }
 
   @override

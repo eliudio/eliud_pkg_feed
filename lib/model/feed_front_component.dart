@@ -39,7 +39,7 @@ abstract class AbstractFeedFrontComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<FeedFrontComponentBloc> (
           create: (context) => FeedFrontComponentBloc(
-            feedFrontRepository: feedFrontRepository(appId: app.documentID!)!)
+            feedFrontRepository: feedFrontRepository(appId: app.documentID)!)
         ..add(FetchFeedFrontComponent(id: feedFrontId)),
       child: _feedFrontBlockBuilder(context),
     );

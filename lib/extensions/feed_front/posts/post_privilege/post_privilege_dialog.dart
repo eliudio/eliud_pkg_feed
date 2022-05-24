@@ -29,7 +29,7 @@ class PostPrivilegeDialog {
     List<String>? currentPostAccessibleByMembers =
         initialPostAccessibleByMembers;
 
-    openFlexibleDialog(app, context, app.documentID! + '/chat',
+    openFlexibleDialog(app, context, app.documentID + '/chat',
         title: 'Select visibility of your next post',
         child: BlocProvider<PostPrivilegeBloc>(
             create: (context) => PostPrivilegeBloc(app, feedId, memberId,

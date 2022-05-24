@@ -27,23 +27,22 @@ class ProfileComponentBloc extends Bloc<ProfileComponentEvent, ProfileComponentS
   final ProfileRepository? profileRepository;
   StreamSubscription? _profileSubscription;
 
-  Stream<ProfileComponentState> _mapLoadProfileComponentUpdateToState(String documentId) async* {
+  void _mapLoadProfileComponentUpdateToState(String documentId) {
     _profileSubscription?.cancel();
     _profileSubscription = profileRepository!.listenTo(documentId, (value) {
-      if (value != null) add(ProfileComponentUpdated(value: value));
+      if (value != null) {
+        add(ProfileComponentUpdated(value: value));
+      }
     });
   }
 
-  ProfileComponentBloc({ this.profileRepository }): super(ProfileComponentUninitialized());
-
-  @override
-  Stream<ProfileComponentState> mapEventToState(ProfileComponentEvent event) async* {
-    final currentState = state;
-    if (event is FetchProfileComponent) {
-      yield* _mapLoadProfileComponentUpdateToState(event.id!);
-    } else if (event is ProfileComponentUpdated) {
-      yield ProfileComponentLoaded(value: event.value);
-    }
+  ProfileComponentBloc({ this.profileRepository }): super(ProfileComponentUninitialized()) {
+    on <FetchProfileComponent> ((event, emit) {
+      _mapLoadProfileComponentUpdateToState(event.id!);
+    });
+    on <ProfileComponentUpdated> ((event, emit) {
+      emit(ProfileComponentLoaded(value: event.value));
+    });
   }
 
   @override

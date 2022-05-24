@@ -55,7 +55,7 @@ class PostLikeFormBloc extends Bloc<PostLikeFormEvent, PostLikeFormState> {
   Stream<PostLikeFormState> mapEventToState(PostLikeFormEvent event) async* {
     final currentState = state;
     if (currentState is PostLikeFormUninitialized) {
-      if (event is InitialiseNewPostLikeFormEvent) {
+      on <InitialiseNewPostLikeFormEvent> ((event, emit) {
         PostLikeFormLoaded loaded = PostLikeFormLoaded(value: PostLikeModel(
                                                documentID: "",
                                  postId: "",
@@ -64,70 +64,59 @@ class PostLikeFormBloc extends Bloc<PostLikeFormEvent, PostLikeFormState> {
                                  appId: "",
 
         ));
-        yield loaded;
-        return;
-
-      }
+        emit(loaded);
+      });
 
 
       if (event is InitialisePostLikeFormEvent) {
         // Need to re-retrieve the document from the repository so that I get all associated types
         PostLikeFormLoaded loaded = PostLikeFormLoaded(value: await postLikeRepository(appId: appId)!.get(event.value!.documentID));
-        yield loaded;
-        return;
+        emit(loaded);
       } else if (event is InitialisePostLikeFormNoLoadEvent) {
         PostLikeFormLoaded loaded = PostLikeFormLoaded(value: event.value);
-        yield loaded;
-        return;
+        emit(loaded);
       }
     } else if (currentState is PostLikeFormInitialized) {
       PostLikeModel? newValue = null;
-      if (event is ChangedPostLikeDocumentID) {
+      on <ChangedPostLikeDocumentID> ((event, emit) async {
         newValue = currentState.value!.copyWith(documentID: event.value);
         if (formAction == FormAction.AddAction) {
-          yield* _isDocumentIDValid(event.value, newValue).asStream();
+          emit(await _isDocumentIDValid(event.value, newValue!));
         } else {
-          yield SubmittablePostLikeForm(value: newValue);
+          emit(SubmittablePostLikeForm(value: newValue));
         }
 
-        return;
-      }
-      if (event is ChangedPostLikePostId) {
+      });
+      on <ChangedPostLikePostId> ((event, emit) async {
         newValue = currentState.value!.copyWith(postId: event.value);
-        yield SubmittablePostLikeForm(value: newValue);
+        emit(SubmittablePostLikeForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedPostLikePostCommentId) {
+      });
+      on <ChangedPostLikePostCommentId> ((event, emit) async {
         newValue = currentState.value!.copyWith(postCommentId: event.value);
-        yield SubmittablePostLikeForm(value: newValue);
+        emit(SubmittablePostLikeForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedPostLikeMemberId) {
+      });
+      on <ChangedPostLikeMemberId> ((event, emit) async {
         newValue = currentState.value!.copyWith(memberId: event.value);
-        yield SubmittablePostLikeForm(value: newValue);
+        emit(SubmittablePostLikeForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedPostLikeTimestamp) {
+      });
+      on <ChangedPostLikeTimestamp> ((event, emit) async {
         newValue = currentState.value!.copyWith(timestamp: dateTimeFromTimestampString(event.value!));
-        yield SubmittablePostLikeForm(value: newValue);
+        emit(SubmittablePostLikeForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedPostLikeAppId) {
+      });
+      on <ChangedPostLikeAppId> ((event, emit) async {
         newValue = currentState.value!.copyWith(appId: event.value);
-        yield SubmittablePostLikeForm(value: newValue);
+        emit(SubmittablePostLikeForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedPostLikeLikeType) {
+      });
+      on <ChangedPostLikeLikeType> ((event, emit) async {
         newValue = currentState.value!.copyWith(likeType: event.value);
-        yield SubmittablePostLikeForm(value: newValue);
+        emit(SubmittablePostLikeForm(value: newValue));
 
-        return;
-      }
+      });
     }
   }
 

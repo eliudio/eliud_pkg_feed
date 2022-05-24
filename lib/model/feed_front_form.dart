@@ -74,7 +74,7 @@ class FeedFrontForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var accessState = AccessBloc.getState(context);
-    var appId = app.documentID!;
+    var appId = app.documentID;
     if (formAction == FormAction.ShowData) {
       return BlocProvider<FeedFrontFormBloc >(
             create: (context) => FeedFrontFormBloc(appId,
@@ -311,7 +311,7 @@ class _MyFeedFrontFormState extends State<MyFeedFrontForm> {
   }
 
   bool _readOnly(AccessState accessState, FeedFrontFormInitialized state) {
-    return (formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData) || (!accessState.memberIsOwner(widget.app.documentID!));
+    return (formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData) || (!accessState.memberIsOwner(widget.app.documentID));
   }
   
 

@@ -13,7 +13,7 @@ class FeedBuilder {
 
   FeedModel feedModel() => FeedModel(
         documentID: constructDocumentId(uniqueId: uniqueId, documentId: componentIdentifier),
-        appId: app.documentID!,
+        appId: app.documentID,
         description: "My Feed",
         thumbImage: ThumbStyle.Thumbs,
         photoPost: true,
@@ -26,7 +26,7 @@ class FeedBuilder {
 
   Future<FeedModel> _setupFeed() async {
     return await AbstractRepositorySingleton.singleton
-        .feedRepository(app.documentID!)!
+        .feedRepository(app.documentID)!
         .add(feedModel());
   }
 

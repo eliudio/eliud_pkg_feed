@@ -51,7 +51,7 @@ class FeedMenuFormBloc extends Bloc<FeedMenuFormEvent, FeedMenuFormState> {
   Stream<FeedMenuFormState> mapEventToState(FeedMenuFormEvent event) async* {
     final currentState = state;
     if (currentState is FeedMenuFormUninitialized) {
-      if (event is InitialiseNewFeedMenuFormEvent) {
+      on <InitialiseNewFeedMenuFormEvent> ((event, emit) {
         FeedMenuFormLoaded loaded = FeedMenuFormLoaded(value: FeedMenuModel(
                                                documentID: "",
                                  appId: "",
@@ -62,102 +62,75 @@ class FeedMenuFormBloc extends Bloc<FeedMenuFormEvent, FeedMenuFormState> {
                                  selectedItemColor: RgbModel(r: 255, g: 255, b: 255, opacity: 1.00), 
 
         ));
-        yield loaded;
-        return;
-
-      }
+        emit(loaded);
+      });
 
 
       if (event is InitialiseFeedMenuFormEvent) {
         // Need to re-retrieve the document from the repository so that I get all associated types
         FeedMenuFormLoaded loaded = FeedMenuFormLoaded(value: await feedMenuRepository(appId: appId)!.get(event.value!.documentID));
-        yield loaded;
-        return;
+        emit(loaded);
       } else if (event is InitialiseFeedMenuFormNoLoadEvent) {
         FeedMenuFormLoaded loaded = FeedMenuFormLoaded(value: event.value);
-        yield loaded;
-        return;
+        emit(loaded);
       }
     } else if (currentState is FeedMenuFormInitialized) {
       FeedMenuModel? newValue = null;
-      if (event is ChangedFeedMenuDocumentID) {
+      on <ChangedFeedMenuDocumentID> ((event, emit) async {
         newValue = currentState.value!.copyWith(documentID: event.value);
         if (formAction == FormAction.AddAction) {
-          yield* _isDocumentIDValid(event.value, newValue).asStream();
+          emit(await _isDocumentIDValid(event.value, newValue!));
         } else {
-          yield SubmittableFeedMenuForm(value: newValue);
+          emit(SubmittableFeedMenuForm(value: newValue));
         }
 
-        return;
-      }
-      if (event is ChangedFeedMenuAppId) {
+      });
+      on <ChangedFeedMenuAppId> ((event, emit) async {
         newValue = currentState.value!.copyWith(appId: event.value);
-        yield SubmittableFeedMenuForm(value: newValue);
+        emit(SubmittableFeedMenuForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedFeedMenuDescription) {
+      });
+      on <ChangedFeedMenuDescription> ((event, emit) async {
         newValue = currentState.value!.copyWith(description: event.value);
-        yield SubmittableFeedMenuForm(value: newValue);
+        emit(SubmittableFeedMenuForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedFeedMenuBodyComponentsCurrentMember) {
+      });
+      on <ChangedFeedMenuBodyComponentsCurrentMember> ((event, emit) async {
         newValue = currentState.value!.copyWith(bodyComponentsCurrentMember: event.value);
-        yield SubmittableFeedMenuForm(value: newValue);
+        emit(SubmittableFeedMenuForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedFeedMenuBodyComponentsOtherMember) {
+      });
+      on <ChangedFeedMenuBodyComponentsOtherMember> ((event, emit) async {
         newValue = currentState.value!.copyWith(bodyComponentsOtherMember: event.value);
-        yield SubmittableFeedMenuForm(value: newValue);
+        emit(SubmittableFeedMenuForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedFeedMenuItemColor) {
+      });
+      on <ChangedFeedMenuItemColor> ((event, emit) async {
         newValue = currentState.value!.copyWith(itemColor: event.value);
-        yield SubmittableFeedMenuForm(value: newValue);
+        emit(SubmittableFeedMenuForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedFeedMenuSelectedItemColor) {
+      });
+      on <ChangedFeedMenuSelectedItemColor> ((event, emit) async {
         newValue = currentState.value!.copyWith(selectedItemColor: event.value);
-        yield SubmittableFeedMenuForm(value: newValue);
+        emit(SubmittableFeedMenuForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedFeedMenuBackgroundOverride) {
+      });
+      on <ChangedFeedMenuBackgroundOverride> ((event, emit) async {
         newValue = currentState.value!.copyWith(backgroundOverride: event.value);
-        yield SubmittableFeedMenuForm(value: newValue);
+        emit(SubmittableFeedMenuForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedFeedMenuFeedFront) {
+      });
+      on <ChangedFeedMenuFeedFront> ((event, emit) async {
         if (event.value != null)
           newValue = currentState.value!.copyWith(feedFront: await feedFrontRepository(appId: appId)!.get(event.value));
-        else
-          newValue = new FeedMenuModel(
-                                 documentID: currentState.value!.documentID,
-                                 appId: currentState.value!.appId,
-                                 description: currentState.value!.description,
-                                 bodyComponentsCurrentMember: currentState.value!.bodyComponentsCurrentMember,
-                                 bodyComponentsOtherMember: currentState.value!.bodyComponentsOtherMember,
-                                 itemColor: currentState.value!.itemColor,
-                                 selectedItemColor: currentState.value!.selectedItemColor,
-                                 backgroundOverride: currentState.value!.backgroundOverride,
-                                 feedFront: null,
-                                 conditions: currentState.value!.conditions,
-          );
-        yield SubmittableFeedMenuForm(value: newValue);
+        emit(SubmittableFeedMenuForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedFeedMenuConditions) {
+      });
+      on <ChangedFeedMenuConditions> ((event, emit) async {
         newValue = currentState.value!.copyWith(conditions: event.value);
-        yield SubmittableFeedMenuForm(value: newValue);
+        emit(SubmittableFeedMenuForm(value: newValue));
 
-        return;
-      }
+      });
     }
   }
 

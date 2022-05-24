@@ -25,11 +25,11 @@ Widget selectFeedFrontWidget(
       title: 'Feed Front',
       selectTitle: 'Select feed front',
       displayItemFunction: (item) => text(
-          app, context, item.documentID! + ' ' + (item.description ?? '?')),
+          app, context, item.documentID + ' ' + (item.description ?? '?')),
       blocProviderProvider: () => BlocProvider<FeedFrontListBloc>(
             create: (context) => FeedFrontListBloc(
-              eliudQuery: getComponentSelectorQuery(0, app.documentID!),
-              feedFrontRepository: feedFrontRepository(appId: app.documentID!)!,
+              eliudQuery: getComponentSelectorQuery(0, app.documentID),
+              feedFrontRepository: feedFrontRepository(appId: app.documentID)!,
             )..add(LoadFeedFrontList()),
           ),
       blocBuilder: (contentsLoaded, contentsNotLoaded) {
@@ -54,7 +54,7 @@ Widget selectFeedFrontWidget(
       changePrivilegeEventCallback: (BuildContext newContext, int privilegeLevel) {
         BlocProvider.of<FeedFrontListBloc>(newContext).add(FeedFrontChangeQuery(
             newQuery:
-                getComponentSelectorQuery(privilegeLevel, app.documentID!)));
+                getComponentSelectorQuery(privilegeLevel, app.documentID)));
       },
       containerPrivilege: containerStorageConditions == null ||
               containerStorageConditions.privilegeLevelRequired == null

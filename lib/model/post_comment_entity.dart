@@ -34,7 +34,7 @@ class PostCommentEntity {
   final int? dislikes;
   final List<MemberMediumEntity>? memberMedia;
 
-  PostCommentEntity({this.postId, this.postCommentId, this.memberId, this.timestamp, this.appId, this.comment, this.likes, this.dislikes, this.memberMedia, });
+  PostCommentEntity({this.postId, this.postCommentId, this.memberId, this.timestamp, required this.appId, this.comment, this.likes, this.dislikes, this.memberMedia, });
 
   PostCommentEntity copyWith({Object? timestamp, }) {
     return PostCommentEntity(postId: postId, postCommentId: postCommentId, memberId: memberId, timestamp : timestamp, appId: appId, comment: comment, likes: likes, dislikes: dislikes, memberMedia: memberMedia, );

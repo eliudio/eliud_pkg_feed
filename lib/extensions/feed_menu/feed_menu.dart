@@ -48,7 +48,7 @@ class _FeedMenuState extends State<FeedMenu>
             bool otherMember = false;
             if (parameters != null) {
               var openingForMemberId = parameters[SwitchMember.switchMemberFeedPageParameter];
-              if (openingForMemberId != accessState.getMember()!.documentID!) {
+              if (openingForMemberId != accessState.getMember()!.documentID) {
                 otherMember = true;
               }
             }

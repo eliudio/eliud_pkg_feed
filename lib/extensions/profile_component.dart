@@ -26,7 +26,7 @@ class ProfileComponentConstructorDefault implements ComponentConstructor {
   }
 
   @override
-  Future<dynamic> getModel({required AppModel app, required String id}) async => await profileRepository(appId: app.documentID!)!.get(id);
+  Future<dynamic> getModel({required AppModel app, required String id}) async => await profileRepository(appId: app.documentID)!.get(id);
 }
 
 class ProfileComponent extends AbstractProfileComponent {
@@ -35,7 +35,7 @@ class ProfileComponent extends AbstractProfileComponent {
   @override
   Widget yourWidget(BuildContext context, ProfileModel? profileModel) {
     var modalRoute = ModalRoute.of(context) as ModalRoute;
-    var feedId = profileModel!.feed!.documentID!;
+    var feedId = profileModel!.feed!.documentID;
 
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (context, accessState) {

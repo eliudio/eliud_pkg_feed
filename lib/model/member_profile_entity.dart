@@ -35,7 +35,7 @@ class MemberProfileEntity {
   final List<String>? readAccess;
   final List<MemberMediumContainerEntity>? memberMedia;
 
-  MemberProfileEntity({this.appId, this.feedId, this.authorId, this.profile, this.profileBackgroundId, this.profileOverride, this.nameOverride, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, this.memberMedia, });
+  MemberProfileEntity({required this.appId, this.feedId, this.authorId, this.profile, this.profileBackgroundId, this.profileOverride, this.nameOverride, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, this.memberMedia, });
 
 
   List<Object?> get props => [appId, feedId, authorId, profile, profileBackgroundId, profileOverride, nameOverride, accessibleByGroup, accessibleByMembers, readAccess, memberMedia, ];

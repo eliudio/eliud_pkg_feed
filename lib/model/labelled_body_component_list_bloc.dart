@@ -38,9 +38,47 @@ class LabelledBodyComponentListBloc extends Bloc<LabelledBodyComponentListEvent,
   LabelledBodyComponentListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required LabelledBodyComponentRepository labelledBodyComponentRepository, this.labelledBodyComponentLimit = 5})
       : assert(labelledBodyComponentRepository != null),
         _labelledBodyComponentRepository = labelledBodyComponentRepository,
-        super(LabelledBodyComponentListLoading());
+        super(LabelledBodyComponentListLoading()) {
+    on <LoadLabelledBodyComponentList> ((event, emit) {
+      if ((detailed == null) || (!detailed!)) {
+        _mapLoadLabelledBodyComponentListToState();
+      } else {
+        _mapLoadLabelledBodyComponentListWithDetailsToState();
+      }
+    });
+    
+    on <NewPage> ((event, emit) {
+      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
+      _mapLoadLabelledBodyComponentListWithDetailsToState();
+    });
+    
+    on <LabelledBodyComponentChangeQuery> ((event, emit) {
+      eliudQuery = event.newQuery;
+      if ((detailed == null) || (!detailed!)) {
+        _mapLoadLabelledBodyComponentListToState();
+      } else {
+        _mapLoadLabelledBodyComponentListWithDetailsToState();
+      }
+    });
+      
+    on <AddLabelledBodyComponentList> ((event, emit) async {
+      await _mapAddLabelledBodyComponentListToState(event);
+    });
+    
+    on <UpdateLabelledBodyComponentList> ((event, emit) async {
+      await _mapUpdateLabelledBodyComponentListToState(event);
+    });
+    
+    on <DeleteLabelledBodyComponentList> ((event, emit) async {
+      await _mapDeleteLabelledBodyComponentListToState(event);
+    });
+    
+    on <LabelledBodyComponentListUpdated> ((event, emit) {
+      emit(_mapLabelledBodyComponentListUpdatedToState(event));
+    });
+  }
 
-  Stream<LabelledBodyComponentListState> _mapLoadLabelledBodyComponentListToState() async* {
+  Future<void> _mapLoadLabelledBodyComponentListToState() async {
     int amountNow =  (state is LabelledBodyComponentListLoaded) ? (state as LabelledBodyComponentListLoaded).values!.length : 0;
     _labelledBodyComponentsListSubscription?.cancel();
     _labelledBodyComponentsListSubscription = _labelledBodyComponentRepository.listen(
@@ -52,7 +90,7 @@ class LabelledBodyComponentListBloc extends Bloc<LabelledBodyComponentListEvent,
     );
   }
 
-  Stream<LabelledBodyComponentListState> _mapLoadLabelledBodyComponentListWithDetailsToState() async* {
+  Future<void> _mapLoadLabelledBodyComponentListWithDetailsToState() async {
     int amountNow =  (state is LabelledBodyComponentListLoaded) ? (state as LabelledBodyComponentListLoaded).values!.length : 0;
     _labelledBodyComponentsListSubscription?.cancel();
     _labelledBodyComponentsListSubscription = _labelledBodyComponentRepository.listenWithDetails(
@@ -64,58 +102,29 @@ class LabelledBodyComponentListBloc extends Bloc<LabelledBodyComponentListEvent,
     );
   }
 
-  Stream<LabelledBodyComponentListState> _mapAddLabelledBodyComponentListToState(AddLabelledBodyComponentList event) async* {
+  Future<void> _mapAddLabelledBodyComponentListToState(AddLabelledBodyComponentList event) async {
     var value = event.value;
-    if (value != null) 
-      _labelledBodyComponentRepository.add(value);
-  }
-
-  Stream<LabelledBodyComponentListState> _mapUpdateLabelledBodyComponentListToState(UpdateLabelledBodyComponentList event) async* {
-    var value = event.value;
-    if (value != null) 
-      _labelledBodyComponentRepository.update(value);
-  }
-
-  Stream<LabelledBodyComponentListState> _mapDeleteLabelledBodyComponentListToState(DeleteLabelledBodyComponentList event) async* {
-    var value = event.value;
-    if (value != null) 
-      _labelledBodyComponentRepository.delete(value);
-  }
-
-  Stream<LabelledBodyComponentListState> _mapLabelledBodyComponentListUpdatedToState(
-      LabelledBodyComponentListUpdated event) async* {
-    yield LabelledBodyComponentListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
-  }
-
-  @override
-  Stream<LabelledBodyComponentListState> mapEventToState(LabelledBodyComponentListEvent event) async* {
-    if (event is LoadLabelledBodyComponentList) {
-      if ((detailed == null) || (!detailed!)) {
-        yield* _mapLoadLabelledBodyComponentListToState();
-      } else {
-        yield* _mapLoadLabelledBodyComponentListWithDetailsToState();
-      }
-    }
-    if (event is NewPage) {
-      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
-      yield* _mapLoadLabelledBodyComponentListWithDetailsToState();
-    } else if (event is LabelledBodyComponentChangeQuery) {
-      eliudQuery = event.newQuery;
-      if ((detailed == null) || (!detailed!)) {
-        yield* _mapLoadLabelledBodyComponentListToState();
-      } else {
-        yield* _mapLoadLabelledBodyComponentListWithDetailsToState();
-      }
-    } else if (event is AddLabelledBodyComponentList) {
-      yield* _mapAddLabelledBodyComponentListToState(event);
-    } else if (event is UpdateLabelledBodyComponentList) {
-      yield* _mapUpdateLabelledBodyComponentListToState(event);
-    } else if (event is DeleteLabelledBodyComponentList) {
-      yield* _mapDeleteLabelledBodyComponentListToState(event);
-    } else if (event is LabelledBodyComponentListUpdated) {
-      yield* _mapLabelledBodyComponentListUpdatedToState(event);
+    if (value != null) {
+      await _labelledBodyComponentRepository.add(value);
     }
   }
+
+  Future<void> _mapUpdateLabelledBodyComponentListToState(UpdateLabelledBodyComponentList event) async {
+    var value = event.value;
+    if (value != null) {
+      await _labelledBodyComponentRepository.update(value);
+    }
+  }
+
+  Future<void> _mapDeleteLabelledBodyComponentListToState(DeleteLabelledBodyComponentList event) async {
+    var value = event.value;
+    if (value != null) {
+      await _labelledBodyComponentRepository.delete(value);
+    }
+  }
+
+  LabelledBodyComponentListLoaded _mapLabelledBodyComponentListUpdatedToState(
+      LabelledBodyComponentListUpdated event) => LabelledBodyComponentListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
 
   @override
   Future<void> close() {

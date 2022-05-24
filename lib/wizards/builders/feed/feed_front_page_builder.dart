@@ -29,7 +29,7 @@ class FeedFrontPageBuilder extends SingleComponentPageBuilder {
   static FeedFrontModel _dashboardModel(AppModel app, FeedModel feed, String uniqueId, String componentIdentifier) {
     return FeedFrontModel(
       documentID: constructDocumentId(uniqueId: uniqueId, documentId: componentIdentifier),
-      appId: app.documentID!,
+      appId: app.documentID,
       feed: feed,
       description: "Feed",
       conditions: StorageConditionsModel(
@@ -39,7 +39,7 @@ class FeedFrontPageBuilder extends SingleComponentPageBuilder {
   }
 
   static Future<FeedFrontModel> setupDashboard(AppModel app, FeedModel feed, String uniqueId, String componentIdentifier) async {
-    return await feedFrontRepository(appId: app.documentID!)!
+    return await feedFrontRepository(appId: app.documentID)!
         .add(_dashboardModel(app, feed, uniqueId, componentIdentifier));
   }
 
@@ -49,7 +49,7 @@ class FeedFrontPageBuilder extends SingleComponentPageBuilder {
     if (feedIdentifier == null) {
       throw Exception('If feed is null, feedIdentifier needs to be supplied');
     }
-    var newFeed = await FeedMenuPageBuilder.assertFeedModel(feed, feedIdentifier, app.documentID!, uniqueId);
+    var newFeed = await FeedMenuPageBuilder.assertFeedModel(feed, feedIdentifier, app.documentID, uniqueId);
     await setupDashboard(app, newFeed, uniqueId, componentIdentifier);
     return await doIt(
         componentName: AbstractFeedFrontComponent.componentName,

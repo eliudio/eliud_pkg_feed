@@ -26,23 +26,22 @@ class PostLikeComponentBloc extends Bloc<PostLikeComponentEvent, PostLikeCompone
   final PostLikeRepository? postLikeRepository;
   StreamSubscription? _postLikeSubscription;
 
-  Stream<PostLikeComponentState> _mapLoadPostLikeComponentUpdateToState(String documentId) async* {
+  void _mapLoadPostLikeComponentUpdateToState(String documentId) {
     _postLikeSubscription?.cancel();
     _postLikeSubscription = postLikeRepository!.listenTo(documentId, (value) {
-      if (value != null) add(PostLikeComponentUpdated(value: value));
+      if (value != null) {
+        add(PostLikeComponentUpdated(value: value));
+      }
     });
   }
 
-  PostLikeComponentBloc({ this.postLikeRepository }): super(PostLikeComponentUninitialized());
-
-  @override
-  Stream<PostLikeComponentState> mapEventToState(PostLikeComponentEvent event) async* {
-    final currentState = state;
-    if (event is FetchPostLikeComponent) {
-      yield* _mapLoadPostLikeComponentUpdateToState(event.id!);
-    } else if (event is PostLikeComponentUpdated) {
-      yield PostLikeComponentLoaded(value: event.value);
-    }
+  PostLikeComponentBloc({ this.postLikeRepository }): super(PostLikeComponentUninitialized()) {
+    on <FetchPostLikeComponent> ((event, emit) {
+      _mapLoadPostLikeComponentUpdateToState(event.id!);
+    });
+    on <PostLikeComponentUpdated> ((event, emit) {
+      emit(PostLikeComponentLoaded(value: event.value));
+    });
   }
 
   @override

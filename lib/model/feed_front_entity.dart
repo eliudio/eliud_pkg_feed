@@ -30,7 +30,7 @@ class FeedFrontEntity {
   final BackgroundEntity? backgroundOverrideProfile;
   final StorageConditionsEntity? conditions;
 
-  FeedFrontEntity({this.appId, this.description, this.feedId, this.backgroundOverridePosts, this.backgroundOverrideProfile, this.conditions, });
+  FeedFrontEntity({required this.appId, this.description, this.feedId, this.backgroundOverridePosts, this.backgroundOverrideProfile, this.conditions, });
 
 
   List<Object?> get props => [appId, description, feedId, backgroundOverridePosts, backgroundOverrideProfile, conditions, ];

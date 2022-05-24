@@ -38,9 +38,47 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
   PostListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required PostRepository postRepository, this.postLimit = 5})
       : assert(postRepository != null),
         _postRepository = postRepository,
-        super(PostListLoading());
+        super(PostListLoading()) {
+    on <LoadPostList> ((event, emit) {
+      if ((detailed == null) || (!detailed!)) {
+        _mapLoadPostListToState();
+      } else {
+        _mapLoadPostListWithDetailsToState();
+      }
+    });
+    
+    on <NewPage> ((event, emit) {
+      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
+      _mapLoadPostListWithDetailsToState();
+    });
+    
+    on <PostChangeQuery> ((event, emit) {
+      eliudQuery = event.newQuery;
+      if ((detailed == null) || (!detailed!)) {
+        _mapLoadPostListToState();
+      } else {
+        _mapLoadPostListWithDetailsToState();
+      }
+    });
+      
+    on <AddPostList> ((event, emit) async {
+      await _mapAddPostListToState(event);
+    });
+    
+    on <UpdatePostList> ((event, emit) async {
+      await _mapUpdatePostListToState(event);
+    });
+    
+    on <DeletePostList> ((event, emit) async {
+      await _mapDeletePostListToState(event);
+    });
+    
+    on <PostListUpdated> ((event, emit) {
+      emit(_mapPostListUpdatedToState(event));
+    });
+  }
 
-  Stream<PostListState> _mapLoadPostListToState() async* {
+  Future<void> _mapLoadPostListToState() async {
     int amountNow =  (state is PostListLoaded) ? (state as PostListLoaded).values!.length : 0;
     _postsListSubscription?.cancel();
     _postsListSubscription = _postRepository.listen(
@@ -52,7 +90,7 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
     );
   }
 
-  Stream<PostListState> _mapLoadPostListWithDetailsToState() async* {
+  Future<void> _mapLoadPostListWithDetailsToState() async {
     int amountNow =  (state is PostListLoaded) ? (state as PostListLoaded).values!.length : 0;
     _postsListSubscription?.cancel();
     _postsListSubscription = _postRepository.listenWithDetails(
@@ -64,58 +102,29 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
     );
   }
 
-  Stream<PostListState> _mapAddPostListToState(AddPostList event) async* {
+  Future<void> _mapAddPostListToState(AddPostList event) async {
     var value = event.value;
-    if (value != null) 
-      _postRepository.add(value);
-  }
-
-  Stream<PostListState> _mapUpdatePostListToState(UpdatePostList event) async* {
-    var value = event.value;
-    if (value != null) 
-      _postRepository.update(value);
-  }
-
-  Stream<PostListState> _mapDeletePostListToState(DeletePostList event) async* {
-    var value = event.value;
-    if (value != null) 
-      _postRepository.delete(value);
-  }
-
-  Stream<PostListState> _mapPostListUpdatedToState(
-      PostListUpdated event) async* {
-    yield PostListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
-  }
-
-  @override
-  Stream<PostListState> mapEventToState(PostListEvent event) async* {
-    if (event is LoadPostList) {
-      if ((detailed == null) || (!detailed!)) {
-        yield* _mapLoadPostListToState();
-      } else {
-        yield* _mapLoadPostListWithDetailsToState();
-      }
-    }
-    if (event is NewPage) {
-      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
-      yield* _mapLoadPostListWithDetailsToState();
-    } else if (event is PostChangeQuery) {
-      eliudQuery = event.newQuery;
-      if ((detailed == null) || (!detailed!)) {
-        yield* _mapLoadPostListToState();
-      } else {
-        yield* _mapLoadPostListWithDetailsToState();
-      }
-    } else if (event is AddPostList) {
-      yield* _mapAddPostListToState(event);
-    } else if (event is UpdatePostList) {
-      yield* _mapUpdatePostListToState(event);
-    } else if (event is DeletePostList) {
-      yield* _mapDeletePostListToState(event);
-    } else if (event is PostListUpdated) {
-      yield* _mapPostListUpdatedToState(event);
+    if (value != null) {
+      await _postRepository.add(value);
     }
   }
+
+  Future<void> _mapUpdatePostListToState(UpdatePostList event) async {
+    var value = event.value;
+    if (value != null) {
+      await _postRepository.update(value);
+    }
+  }
+
+  Future<void> _mapDeletePostListToState(DeletePostList event) async {
+    var value = event.value;
+    if (value != null) {
+      await _postRepository.delete(value);
+    }
+  }
+
+  PostListLoaded _mapPostListUpdatedToState(
+      PostListUpdated event) => PostListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
 
   @override
   Future<void> close() {

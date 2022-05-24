@@ -51,88 +51,67 @@ class FeedFrontFormBloc extends Bloc<FeedFrontFormEvent, FeedFrontFormState> {
   Stream<FeedFrontFormState> mapEventToState(FeedFrontFormEvent event) async* {
     final currentState = state;
     if (currentState is FeedFrontFormUninitialized) {
-      if (event is InitialiseNewFeedFrontFormEvent) {
+      on <InitialiseNewFeedFrontFormEvent> ((event, emit) {
         FeedFrontFormLoaded loaded = FeedFrontFormLoaded(value: FeedFrontModel(
                                                documentID: "",
                                  appId: "",
                                  description: "",
 
         ));
-        yield loaded;
-        return;
-
-      }
+        emit(loaded);
+      });
 
 
       if (event is InitialiseFeedFrontFormEvent) {
         // Need to re-retrieve the document from the repository so that I get all associated types
         FeedFrontFormLoaded loaded = FeedFrontFormLoaded(value: await feedFrontRepository(appId: appId)!.get(event.value!.documentID));
-        yield loaded;
-        return;
+        emit(loaded);
       } else if (event is InitialiseFeedFrontFormNoLoadEvent) {
         FeedFrontFormLoaded loaded = FeedFrontFormLoaded(value: event.value);
-        yield loaded;
-        return;
+        emit(loaded);
       }
     } else if (currentState is FeedFrontFormInitialized) {
       FeedFrontModel? newValue = null;
-      if (event is ChangedFeedFrontDocumentID) {
+      on <ChangedFeedFrontDocumentID> ((event, emit) async {
         newValue = currentState.value!.copyWith(documentID: event.value);
         if (formAction == FormAction.AddAction) {
-          yield* _isDocumentIDValid(event.value, newValue).asStream();
+          emit(await _isDocumentIDValid(event.value, newValue!));
         } else {
-          yield SubmittableFeedFrontForm(value: newValue);
+          emit(SubmittableFeedFrontForm(value: newValue));
         }
 
-        return;
-      }
-      if (event is ChangedFeedFrontAppId) {
+      });
+      on <ChangedFeedFrontAppId> ((event, emit) async {
         newValue = currentState.value!.copyWith(appId: event.value);
-        yield SubmittableFeedFrontForm(value: newValue);
+        emit(SubmittableFeedFrontForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedFeedFrontDescription) {
+      });
+      on <ChangedFeedFrontDescription> ((event, emit) async {
         newValue = currentState.value!.copyWith(description: event.value);
-        yield SubmittableFeedFrontForm(value: newValue);
+        emit(SubmittableFeedFrontForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedFeedFrontFeed) {
+      });
+      on <ChangedFeedFrontFeed> ((event, emit) async {
         if (event.value != null)
           newValue = currentState.value!.copyWith(feed: await feedRepository(appId: appId)!.get(event.value));
-        else
-          newValue = new FeedFrontModel(
-                                 documentID: currentState.value!.documentID,
-                                 appId: currentState.value!.appId,
-                                 description: currentState.value!.description,
-                                 feed: null,
-                                 backgroundOverridePosts: currentState.value!.backgroundOverridePosts,
-                                 backgroundOverrideProfile: currentState.value!.backgroundOverrideProfile,
-                                 conditions: currentState.value!.conditions,
-          );
-        yield SubmittableFeedFrontForm(value: newValue);
+        emit(SubmittableFeedFrontForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedFeedFrontBackgroundOverridePosts) {
+      });
+      on <ChangedFeedFrontBackgroundOverridePosts> ((event, emit) async {
         newValue = currentState.value!.copyWith(backgroundOverridePosts: event.value);
-        yield SubmittableFeedFrontForm(value: newValue);
+        emit(SubmittableFeedFrontForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedFeedFrontBackgroundOverrideProfile) {
+      });
+      on <ChangedFeedFrontBackgroundOverrideProfile> ((event, emit) async {
         newValue = currentState.value!.copyWith(backgroundOverrideProfile: event.value);
-        yield SubmittableFeedFrontForm(value: newValue);
+        emit(SubmittableFeedFrontForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedFeedFrontConditions) {
+      });
+      on <ChangedFeedFrontConditions> ((event, emit) async {
         newValue = currentState.value!.copyWith(conditions: event.value);
-        yield SubmittableFeedFrontForm(value: newValue);
+        emit(SubmittableFeedFrontForm(value: newValue));
 
-        return;
-      }
+      });
     }
   }
 

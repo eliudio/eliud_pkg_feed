@@ -19,19 +19,18 @@ class PostPrivilegeBloc extends Bloc<PostPrivilegeEvent, PostPrivilegeState> {
 
   PostPrivilegeBloc(this.app, this.feedId, this.memberId, this.postPrivilegeFeedback) : super(PostPrivilegeUninitialized()) {
     memberService = MemberService(app, feedId, memberId);
-  }
 
-  @override
-  Stream<PostPrivilegeState> mapEventToState(PostPrivilegeEvent event) async* {
-    if (event is InitialisePostPrivilegeEvent) {
+    on <InitialisePostPrivilegeEvent> ((event, emit) async {
       var selectedMembers = await memberService.getFromPostPrivilege(event.postAccessibleByGroup, event.postAccessibleByMembers);
       postPrivilegeFeedback(event.postAccessibleByGroup, selectedMembers);
-      yield PostPrivilegeInitialized(postAccessibleByGroup: event.postAccessibleByGroup, specificSelectedMembers: selectedMembers);
-    } else if (event is ChangedPostPrivilege) {
+      emit (PostPrivilegeInitialized(postAccessibleByGroup: event.postAccessibleByGroup, specificSelectedMembers: selectedMembers));
+    });
+
+    on  <ChangedPostPrivilege> ((event, emit) async {
       var selectedMembers = await memberService.getFromPostPrivilege(event.postAccessibleByGroup, event.postAccessibleByMembers);
       postPrivilegeFeedback(event.postAccessibleByGroup, selectedMembers);
       var newState = PostPrivilegeInitialized(postAccessibleByGroup: event.postAccessibleByGroup, specificSelectedMembers: selectedMembers);
-      yield newState;
-    }
+      emit (newState);
+    });
   }
 }

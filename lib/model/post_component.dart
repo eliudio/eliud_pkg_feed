@@ -39,7 +39,7 @@ abstract class AbstractPostComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<PostComponentBloc> (
           create: (context) => PostComponentBloc(
-            postRepository: postRepository(appId: app.documentID!)!)
+            postRepository: postRepository(appId: app.documentID)!)
         ..add(FetchPostComponent(id: postId)),
       child: _postBlockBuilder(context),
     );

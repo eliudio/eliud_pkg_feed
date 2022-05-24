@@ -16,6 +16,7 @@
 import 'package:collection/collection.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eliud_core/core/base/model_base.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
@@ -66,13 +67,13 @@ PostArchiveStatus toPostArchiveStatus(int? index) {
 }
 
 
-class PostModel {
-  String? documentID;
-  String? authorId;
+class PostModel implements ModelBase, WithAppId {
+  String documentID;
+  String authorId;
   DateTime? timestamp;
 
   // This is the identifier of the app to which this feed belongs
-  String? appId;
+  String appId;
 
   // This is the identifier of the feed (optional as a post can also be used in an album)
   String? feedId;
@@ -96,7 +97,7 @@ class PostModel {
   String? externalLink;
   List<MemberMediumContainerModel>? memberMedia;
 
-  PostModel({this.documentID, this.authorId, this.timestamp, this.appId, this.feedId, this.postAppId, this.postPageId, this.pageParameters, this.html, this.description, this.likes, this.dislikes, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, this.archived, this.externalLink, this.memberMedia, })  {
+  PostModel({required this.documentID, required this.authorId, this.timestamp, required this.appId, this.feedId, this.postAppId, this.postPageId, this.pageParameters, this.html, this.description, this.likes, this.dislikes, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, this.archived, this.externalLink, this.memberMedia, })  {
     assert(documentID != null);
   }
 
@@ -169,9 +170,9 @@ class PostModel {
     var counter = 0;
     return PostModel(
           documentID: documentID, 
-          authorId: entity.authorId, 
+          authorId: entity.authorId ?? '', 
           timestamp: entity.timestamp == null ? null : DateTime.fromMillisecondsSinceEpoch((entity.timestamp as int)), 
-          appId: entity.appId, 
+          appId: entity.appId ?? '', 
           feedId: entity.feedId, 
           postAppId: entity.postAppId, 
           postPageId: entity.postPageId, 
@@ -201,9 +202,9 @@ class PostModel {
     var counter = 0;
     return PostModel(
           documentID: documentID, 
-          authorId: entity.authorId, 
+          authorId: entity.authorId ?? '', 
           timestamp: entity.timestamp == null ? null : DateTime.fromMillisecondsSinceEpoch((entity.timestamp as int)), 
-          appId: entity.appId, 
+          appId: entity.appId ?? '', 
           feedId: entity.feedId, 
           postAppId: entity.postAppId, 
           postPageId: entity.postPageId, 

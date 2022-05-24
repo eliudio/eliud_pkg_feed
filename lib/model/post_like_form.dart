@@ -79,7 +79,7 @@ class PostLikeForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var accessState = AccessBloc.getState(context);
-    var appId = app.documentID!;
+    var appId = app.documentID;
     if (formAction == FormAction.ShowData) {
       return BlocProvider<PostLikeFormBloc >(
             create: (context) => PostLikeFormBloc(appId,
@@ -195,11 +195,11 @@ class _MyPostLikeFormState extends State<MyPostLikeForm> {
 
         children.add(
 
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _likeTypeSelectedRadioTile, 'Like', 'Like', !accessState.memberIsOwner(widget.app.documentID!) ? null : (dynamic val) => setSelectionLikeType(val))
+                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _likeTypeSelectedRadioTile, 'Like', 'Like', !accessState.memberIsOwner(widget.app.documentID) ? null : (dynamic val) => setSelectionLikeType(val))
           );
         children.add(
 
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _likeTypeSelectedRadioTile, 'Dislike', 'Dislike', !accessState.memberIsOwner(widget.app.documentID!) ? null : (dynamic val) => setSelectionLikeType(val))
+                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _likeTypeSelectedRadioTile, 'Dislike', 'Dislike', !accessState.memberIsOwner(widget.app.documentID) ? null : (dynamic val) => setSelectionLikeType(val))
           );
 
 
@@ -353,7 +353,7 @@ class _MyPostLikeFormState extends State<MyPostLikeForm> {
   }
 
   bool _readOnly(AccessState accessState, PostLikeFormInitialized state) {
-    return (formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData) || (!accessState.memberIsOwner(widget.app.documentID!));
+    return (formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData) || (!accessState.memberIsOwner(widget.app.documentID));
   }
   
 

@@ -50,7 +50,7 @@ class FeedDashboardBloc
       FeedModel t, StorageConditionsModel conditions) {
     return t.copyWith(
         description: t.description ?? '?',
-        appId: t.appId ?? appId,
+        appId: t.appId,
         thumbImage: t.thumbImage ?? ThumbStyle.Thumbs,
         photoPost: t.photoPost ?? true,
         videoPost: t.videoPost ?? true,

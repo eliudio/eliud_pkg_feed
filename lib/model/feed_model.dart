@@ -15,6 +15,7 @@
 
 import 'package:eliud_core/tools/common_tools.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eliud_core/core/base/model_base.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
@@ -47,11 +48,11 @@ ThumbStyle toThumbStyle(int? index) {
 }
 
 
-class FeedModel {
-  String? documentID;
+class FeedModel implements ModelBase, WithAppId {
+  String documentID;
 
   // This is the identifier of the app to which this feed belongs
-  String? appId;
+  String appId;
   String? description;
   ThumbStyle? thumbImage;
 
@@ -73,7 +74,7 @@ class FeedModel {
   // Allow article posts
   bool? articlePost;
 
-  FeedModel({this.documentID, this.appId, this.description, this.thumbImage, this.photoPost, this.videoPost, this.messagePost, this.audioPost, this.albumPost, this.articlePost, })  {
+  FeedModel({required this.documentID, required this.appId, this.description, this.thumbImage, this.photoPost, this.videoPost, this.messagePost, this.audioPost, this.albumPost, this.articlePost, })  {
     assert(documentID != null);
   }
 
@@ -124,7 +125,7 @@ class FeedModel {
     var counter = 0;
     return FeedModel(
           documentID: documentID, 
-          appId: entity.appId, 
+          appId: entity.appId ?? '', 
           description: entity.description, 
           thumbImage: toThumbStyle(entity.thumbImage), 
           photoPost: entity.photoPost, 
@@ -142,7 +143,7 @@ class FeedModel {
     var counter = 0;
     return FeedModel(
           documentID: documentID, 
-          appId: entity.appId, 
+          appId: entity.appId ?? '', 
           description: entity.description, 
           thumbImage: toThumbStyle(entity.thumbImage), 
           photoPost: entity.photoPost, 

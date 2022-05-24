@@ -27,7 +27,7 @@ class ProfilePageBuilder extends PageBuilder {
     required String profileComponentIdentifier,
   }) async {
     return await corerepo.AbstractRepositorySingleton.singleton
-        .pageRepository(app.documentID!)!
+        .pageRepository(app.documentID)!
         .add(_page(
           profileComponentIdentifier: profileComponentIdentifier,
         ));
@@ -43,7 +43,7 @@ class ProfilePageBuilder extends PageBuilder {
 
     return PageModel(
         documentID: constructDocumentId(uniqueId: uniqueId, documentId: pageId),
-        appId: app.documentID!,
+        appId: app.documentID,
         title: "Profile",
         drawer: leftDrawer,
         endDrawer: rightDrawer,
@@ -61,7 +61,7 @@ class ProfilePageBuilder extends PageBuilder {
     return ProfileModel(
       documentID: constructDocumentId(uniqueId: uniqueId, documentId: componentIdentifier),
       feed: feed,
-      appId: app.documentID!,
+      appId: app.documentID,
       description: "My Profile",
       conditions: StorageConditionsModel(
           privilegeLevelRequired:
@@ -71,7 +71,7 @@ class ProfilePageBuilder extends PageBuilder {
 
   static Future<ProfileModel> setupDashboard(AppModel app, String uniqueId, String componentIdentifier, FeedModel feed,) async {
     return await AbstractRepositorySingleton.singleton
-        .profileRepository(app.documentID!)!
+        .profileRepository(app.documentID)!
         .add(profileModel(app, uniqueId, componentIdentifier, feed,));
   }
 

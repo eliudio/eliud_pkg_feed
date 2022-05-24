@@ -50,7 +50,7 @@ class FeedDashboard {
     openComplexDialog(
       app,
       context,
-      app.documentID! + '/feed',
+      app.documentID + '/feed',
       title: create
           ? 'Create Feed'
           : 'Update Feed',
@@ -58,7 +58,7 @@ class FeedDashboard {
       widthFraction: .9,
       child: BlocProvider<FeedDashboardBloc>(
           create: (context) => FeedDashboardBloc(
-                app.documentID!,
+                app.documentID,
                 (_) {},
               )..add(EditorBaseInitialise<FeedModel>(model)),
           child: FeedDashboardWidget(
@@ -118,7 +118,7 @@ class _FeedDashboardWidgetState
                         getListTile(context, widget.app,
                             leading: Icon(Icons.vpn_key),
                             title: text(widget.app, context,
-                                feedState.model.documentID!)),
+                                feedState.model.documentID)),
                         getListTile(context, widget.app,
                             leading: Icon(Icons.description),
                             title: dialogField(

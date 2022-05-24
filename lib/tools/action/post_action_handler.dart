@@ -20,9 +20,9 @@ class PostActionHandler extends PackageActionHandler {
     if (action is PostActionModel) {
       var accessState = AccessBloc.getState(context);
       if (accessState is LoggedIn) {
-        String name = action.app.documentID!;
+        String name = action.app.documentID;
 
-        openSelectionDialog(action.app, context, action.app.documentID! + "/_addpagetofeed",
+        openSelectionDialog(action.app, context, action.app.documentID + "/_addpagetofeed",
             title: 'Add page to feed ' + name,
             options: ['Only Me', 'My followers', 'Public'],
             onSelection: (int choice) {
@@ -44,7 +44,7 @@ class PostActionHandler extends PackageActionHandler {
     // What is the current page?
     // Can we actually add the current page? (page should have an indicator if it's allowed to be added)
 
-    postRepository(appId: action.app.documentID!)!.add(PostModel(
+    postRepository(appId: action.app.documentID)!.add(PostModel(
       documentID: newRandomKey(),
       authorId: accessState.member.documentID,
       appId: action.app.documentID,
@@ -55,7 +55,7 @@ class PostActionHandler extends PackageActionHandler {
       pageParameters: parameters,
       description: "Post added by Add To Post button",
       accessibleByGroup: postAccessibleByGroup,
-      readAccess: accessState.member.documentID != null ? [accessState.member.documentID!] : null,  // default readAccess to the owner. The function will expand this based on accessibleByGroup/Members
+      readAccess: accessState.member.documentID != null ? [accessState.member.documentID] : null,  // default readAccess to the owner. The function will expand this based on accessibleByGroup/Members
     ));
   }
 }

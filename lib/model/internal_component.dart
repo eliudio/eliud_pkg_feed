@@ -264,9 +264,9 @@ class ListComponent extends StatelessWidget with HasFab {
           create: (context) => FeedListBloc(
             eliudQuery: EliudQuery(theConditions: [
               EliudQueryCondition('conditions.privilegeLevelRequired', isEqualTo: privilegeLevel ?? 0),
-              EliudQueryCondition('appId', isEqualTo: app.documentID!),]
+              EliudQueryCondition('appId', isEqualTo: app.documentID),]
             ),
-            feedRepository: feedRepository(appId: app.documentID!)!,
+            feedRepository: feedRepository(appId: app.documentID)!,
           )..add(LoadFeedList()),
         )
       ],
@@ -281,9 +281,9 @@ class ListComponent extends StatelessWidget with HasFab {
           create: (context) => FeedFrontListBloc(
             eliudQuery: EliudQuery(theConditions: [
               EliudQueryCondition('conditions.privilegeLevelRequired', isEqualTo: privilegeLevel ?? 0),
-              EliudQueryCondition('appId', isEqualTo: app.documentID!),]
+              EliudQueryCondition('appId', isEqualTo: app.documentID),]
             ),
-            feedFrontRepository: feedFrontRepository(appId: app.documentID!)!,
+            feedFrontRepository: feedFrontRepository(appId: app.documentID)!,
           )..add(LoadFeedFrontList()),
         )
       ],
@@ -298,9 +298,9 @@ class ListComponent extends StatelessWidget with HasFab {
           create: (context) => FeedMenuListBloc(
             eliudQuery: EliudQuery(theConditions: [
               EliudQueryCondition('conditions.privilegeLevelRequired', isEqualTo: privilegeLevel ?? 0),
-              EliudQueryCondition('appId', isEqualTo: app.documentID!),]
+              EliudQueryCondition('appId', isEqualTo: app.documentID),]
             ),
-            feedMenuRepository: feedMenuRepository(appId: app.documentID!)!,
+            feedMenuRepository: feedMenuRepository(appId: app.documentID)!,
           )..add(LoadFeedMenuList()),
         )
       ],
@@ -315,9 +315,9 @@ class ListComponent extends StatelessWidget with HasFab {
           create: (context) => PostListBloc(
             eliudQuery: EliudQuery(theConditions: [
               EliudQueryCondition('conditions.privilegeLevelRequired', isEqualTo: privilegeLevel ?? 0),
-              EliudQueryCondition('appId', isEqualTo: app.documentID!),]
+              EliudQueryCondition('appId', isEqualTo: app.documentID),]
             ),
-            postRepository: postRepository(appId: app.documentID!)!,
+            postRepository: postRepository(appId: app.documentID)!,
           )..add(LoadPostList()),
         )
       ],
@@ -332,9 +332,9 @@ class ListComponent extends StatelessWidget with HasFab {
           create: (context) => PostCommentListBloc(
             eliudQuery: EliudQuery(theConditions: [
               EliudQueryCondition('conditions.privilegeLevelRequired', isEqualTo: privilegeLevel ?? 0),
-              EliudQueryCondition('appId', isEqualTo: app.documentID!),]
+              EliudQueryCondition('appId', isEqualTo: app.documentID),]
             ),
-            postCommentRepository: postCommentRepository(appId: app.documentID!)!,
+            postCommentRepository: postCommentRepository(appId: app.documentID)!,
           )..add(LoadPostCommentList()),
         )
       ],
@@ -349,9 +349,9 @@ class ListComponent extends StatelessWidget with HasFab {
           create: (context) => PostLikeListBloc(
             eliudQuery: EliudQuery(theConditions: [
               EliudQueryCondition('conditions.privilegeLevelRequired', isEqualTo: privilegeLevel ?? 0),
-              EliudQueryCondition('appId', isEqualTo: app.documentID!),]
+              EliudQueryCondition('appId', isEqualTo: app.documentID),]
             ),
-            postLikeRepository: postLikeRepository(appId: app.documentID!)!,
+            postLikeRepository: postLikeRepository(appId: app.documentID)!,
           )..add(LoadPostLikeList()),
         )
       ],
@@ -366,9 +366,9 @@ class ListComponent extends StatelessWidget with HasFab {
           create: (context) => ProfileListBloc(
             eliudQuery: EliudQuery(theConditions: [
               EliudQueryCondition('conditions.privilegeLevelRequired', isEqualTo: privilegeLevel ?? 0),
-              EliudQueryCondition('appId', isEqualTo: app.documentID!),]
+              EliudQueryCondition('appId', isEqualTo: app.documentID),]
             ),
-            profileRepository: profileRepository(appId: app.documentID!)!,
+            profileRepository: profileRepository(appId: app.documentID)!,
           )..add(LoadProfileList()),
         )
       ],
@@ -412,9 +412,9 @@ class DropdownButtonComponent extends StatelessWidget {
           create: (context) => FeedListBloc(
             eliudQuery: EliudQuery(theConditions: [
               EliudQueryCondition('conditions.privilegeLevelRequired', isEqualTo: privilegeLevel ?? 0),
-              EliudQueryCondition('appId', isEqualTo: app.documentID!),]
+              EliudQueryCondition('appId', isEqualTo: app.documentID),]
             ),
-            feedRepository: feedRepository(appId: app.documentID!)!,
+            feedRepository: feedRepository(appId: app.documentID)!,
           )..add(LoadFeedList()),
         )
       ],
@@ -429,9 +429,9 @@ class DropdownButtonComponent extends StatelessWidget {
           create: (context) => FeedFrontListBloc(
             eliudQuery: EliudQuery(theConditions: [
               EliudQueryCondition('conditions.privilegeLevelRequired', isEqualTo: privilegeLevel ?? 0),
-              EliudQueryCondition('appId', isEqualTo: app.documentID!),]
+              EliudQueryCondition('appId', isEqualTo: app.documentID),]
             ),
-            feedFrontRepository: feedFrontRepository(appId: app.documentID!)!,
+            feedFrontRepository: feedFrontRepository(appId: app.documentID)!,
           )..add(LoadFeedFrontList()),
         )
       ],
@@ -446,9 +446,9 @@ class DropdownButtonComponent extends StatelessWidget {
           create: (context) => FeedMenuListBloc(
             eliudQuery: EliudQuery(theConditions: [
               EliudQueryCondition('conditions.privilegeLevelRequired', isEqualTo: privilegeLevel ?? 0),
-              EliudQueryCondition('appId', isEqualTo: app.documentID!),]
+              EliudQueryCondition('appId', isEqualTo: app.documentID),]
             ),
-            feedMenuRepository: feedMenuRepository(appId: app.documentID!)!,
+            feedMenuRepository: feedMenuRepository(appId: app.documentID)!,
           )..add(LoadFeedMenuList()),
         )
       ],
@@ -463,9 +463,9 @@ class DropdownButtonComponent extends StatelessWidget {
           create: (context) => PostListBloc(
             eliudQuery: EliudQuery(theConditions: [
               EliudQueryCondition('conditions.privilegeLevelRequired', isEqualTo: privilegeLevel ?? 0),
-              EliudQueryCondition('appId', isEqualTo: app.documentID!),]
+              EliudQueryCondition('appId', isEqualTo: app.documentID),]
             ),
-            postRepository: postRepository(appId: app.documentID!)!,
+            postRepository: postRepository(appId: app.documentID)!,
           )..add(LoadPostList()),
         )
       ],
@@ -480,9 +480,9 @@ class DropdownButtonComponent extends StatelessWidget {
           create: (context) => PostCommentListBloc(
             eliudQuery: EliudQuery(theConditions: [
               EliudQueryCondition('conditions.privilegeLevelRequired', isEqualTo: privilegeLevel ?? 0),
-              EliudQueryCondition('appId', isEqualTo: app.documentID!),]
+              EliudQueryCondition('appId', isEqualTo: app.documentID),]
             ),
-            postCommentRepository: postCommentRepository(appId: app.documentID!)!,
+            postCommentRepository: postCommentRepository(appId: app.documentID)!,
           )..add(LoadPostCommentList()),
         )
       ],
@@ -497,9 +497,9 @@ class DropdownButtonComponent extends StatelessWidget {
           create: (context) => PostLikeListBloc(
             eliudQuery: EliudQuery(theConditions: [
               EliudQueryCondition('conditions.privilegeLevelRequired', isEqualTo: privilegeLevel ?? 0),
-              EliudQueryCondition('appId', isEqualTo: app.documentID!),]
+              EliudQueryCondition('appId', isEqualTo: app.documentID),]
             ),
-            postLikeRepository: postLikeRepository(appId: app.documentID!)!,
+            postLikeRepository: postLikeRepository(appId: app.documentID)!,
           )..add(LoadPostLikeList()),
         )
       ],
@@ -514,9 +514,9 @@ class DropdownButtonComponent extends StatelessWidget {
           create: (context) => ProfileListBloc(
             eliudQuery: EliudQuery(theConditions: [
               EliudQueryCondition('conditions.privilegeLevelRequired', isEqualTo: privilegeLevel ?? 0),
-              EliudQueryCondition('appId', isEqualTo: app.documentID!),]
+              EliudQueryCondition('appId', isEqualTo: app.documentID),]
             ),
-            profileRepository: profileRepository(appId: app.documentID!)!,
+            profileRepository: profileRepository(appId: app.documentID)!,
           )..add(LoadProfileList()),
         )
       ],

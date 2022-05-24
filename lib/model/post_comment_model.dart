@@ -16,6 +16,7 @@
 import 'package:collection/collection.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eliud_core/core/base/model_base.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
@@ -40,21 +41,21 @@ import 'package:eliud_core/tools/random.dart';
 
 
 
-class PostCommentModel {
-  String? documentID;
+class PostCommentModel implements ModelBase, WithAppId {
+  String documentID;
   String? postId;
   String? postCommentId;
   String? memberId;
   DateTime? timestamp;
 
   // This is the identifier of the app to which this feed belongs
-  String? appId;
+  String appId;
   String? comment;
   int? likes;
   int? dislikes;
   List<MemberMediumModel>? memberMedia;
 
-  PostCommentModel({this.documentID, this.postId, this.postCommentId, this.memberId, this.timestamp, this.appId, this.comment, this.likes, this.dislikes, this.memberMedia, })  {
+  PostCommentModel({required this.documentID, this.postId, this.postCommentId, this.memberId, this.timestamp, required this.appId, this.comment, this.likes, this.dislikes, this.memberMedia, })  {
     assert(documentID != null);
   }
 
@@ -113,7 +114,7 @@ class PostCommentModel {
           postCommentId: entity.postCommentId, 
           memberId: entity.memberId, 
           timestamp: entity.timestamp == null ? null : DateTime.fromMillisecondsSinceEpoch((entity.timestamp as int)), 
-          appId: entity.appId, 
+          appId: entity.appId ?? '', 
           comment: entity.comment, 
           likes: entity.likes, 
           dislikes: entity.dislikes, 
@@ -137,7 +138,7 @@ class PostCommentModel {
           postCommentId: entity.postCommentId, 
           memberId: entity.memberId, 
           timestamp: entity.timestamp == null ? null : DateTime.fromMillisecondsSinceEpoch((entity.timestamp as int)), 
-          appId: entity.appId, 
+          appId: entity.appId ?? '', 
           comment: entity.comment, 
           likes: entity.likes, 
           dislikes: entity.dislikes, 

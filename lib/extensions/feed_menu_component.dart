@@ -28,7 +28,7 @@ class FeedMenuComponentConstructorDefault implements ComponentConstructor {
   }
 
   @override
-  Future<dynamic> getModel({required AppModel app, required String id}) async => await feedMenuRepository(appId: app.documentID!)!.get(id);
+  Future<dynamic> getModel({required AppModel app, required String id}) async => await feedMenuRepository(appId: app.documentID)!.get(id);
 }
 
 class FeedMenuComponent extends AbstractFeedMenuComponent {
@@ -41,7 +41,7 @@ class FeedMenuComponent extends AbstractFeedMenuComponent {
     if (feedMenuModel.feedFront == null) return text(app, context, "feedMenuModel.feedFront is null");
     if (feedMenuModel.feedFront!.feed == null) return text(app, context, "feedMenuModel.feedFront!.feed is null");
     var modalRoute = ModalRoute.of(context) as ModalRoute;
-    var feedId = feedMenuModel.feedFront!.feed!.documentID!;
+    var feedId = feedMenuModel.feedFront!.feed!.documentID;
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (context, accessState) {
           if (accessState is AccessDetermined) {

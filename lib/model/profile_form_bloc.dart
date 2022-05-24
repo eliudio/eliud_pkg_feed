@@ -51,81 +51,62 @@ class ProfileFormBloc extends Bloc<ProfileFormEvent, ProfileFormState> {
   Stream<ProfileFormState> mapEventToState(ProfileFormEvent event) async* {
     final currentState = state;
     if (currentState is ProfileFormUninitialized) {
-      if (event is InitialiseNewProfileFormEvent) {
+      on <InitialiseNewProfileFormEvent> ((event, emit) {
         ProfileFormLoaded loaded = ProfileFormLoaded(value: ProfileModel(
                                                documentID: "",
                                  appId: "",
                                  description: "",
 
         ));
-        yield loaded;
-        return;
-
-      }
+        emit(loaded);
+      });
 
 
       if (event is InitialiseProfileFormEvent) {
         // Need to re-retrieve the document from the repository so that I get all associated types
         ProfileFormLoaded loaded = ProfileFormLoaded(value: await profileRepository(appId: appId)!.get(event.value!.documentID));
-        yield loaded;
-        return;
+        emit(loaded);
       } else if (event is InitialiseProfileFormNoLoadEvent) {
         ProfileFormLoaded loaded = ProfileFormLoaded(value: event.value);
-        yield loaded;
-        return;
+        emit(loaded);
       }
     } else if (currentState is ProfileFormInitialized) {
       ProfileModel? newValue = null;
-      if (event is ChangedProfileDocumentID) {
+      on <ChangedProfileDocumentID> ((event, emit) async {
         newValue = currentState.value!.copyWith(documentID: event.value);
         if (formAction == FormAction.AddAction) {
-          yield* _isDocumentIDValid(event.value, newValue).asStream();
+          emit(await _isDocumentIDValid(event.value, newValue!));
         } else {
-          yield SubmittableProfileForm(value: newValue);
+          emit(SubmittableProfileForm(value: newValue));
         }
 
-        return;
-      }
-      if (event is ChangedProfileAppId) {
+      });
+      on <ChangedProfileAppId> ((event, emit) async {
         newValue = currentState.value!.copyWith(appId: event.value);
-        yield SubmittableProfileForm(value: newValue);
+        emit(SubmittableProfileForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedProfileDescription) {
+      });
+      on <ChangedProfileDescription> ((event, emit) async {
         newValue = currentState.value!.copyWith(description: event.value);
-        yield SubmittableProfileForm(value: newValue);
+        emit(SubmittableProfileForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedProfileFeed) {
+      });
+      on <ChangedProfileFeed> ((event, emit) async {
         if (event.value != null)
           newValue = currentState.value!.copyWith(feed: await feedRepository(appId: appId)!.get(event.value));
-        else
-          newValue = new ProfileModel(
-                                 documentID: currentState.value!.documentID,
-                                 appId: currentState.value!.appId,
-                                 description: currentState.value!.description,
-                                 feed: null,
-                                 backgroundOverride: currentState.value!.backgroundOverride,
-                                 conditions: currentState.value!.conditions,
-          );
-        yield SubmittableProfileForm(value: newValue);
+        emit(SubmittableProfileForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedProfileBackgroundOverride) {
+      });
+      on <ChangedProfileBackgroundOverride> ((event, emit) async {
         newValue = currentState.value!.copyWith(backgroundOverride: event.value);
-        yield SubmittableProfileForm(value: newValue);
+        emit(SubmittableProfileForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedProfileConditions) {
+      });
+      on <ChangedProfileConditions> ((event, emit) async {
         newValue = currentState.value!.copyWith(conditions: event.value);
-        yield SubmittableProfileForm(value: newValue);
+        emit(SubmittableProfileForm(value: newValue));
 
-        return;
-      }
+      });
     }
   }
 

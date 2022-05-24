@@ -89,7 +89,7 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
               });
         } else {
           print('postmodel with id ' +
-              postModel.documentID! +
+              postModel.documentID +
               ' has memberMedia with no details');
         }
         break;

@@ -26,23 +26,22 @@ class PostCommentComponentBloc extends Bloc<PostCommentComponentEvent, PostComme
   final PostCommentRepository? postCommentRepository;
   StreamSubscription? _postCommentSubscription;
 
-  Stream<PostCommentComponentState> _mapLoadPostCommentComponentUpdateToState(String documentId) async* {
+  void _mapLoadPostCommentComponentUpdateToState(String documentId) {
     _postCommentSubscription?.cancel();
     _postCommentSubscription = postCommentRepository!.listenTo(documentId, (value) {
-      if (value != null) add(PostCommentComponentUpdated(value: value));
+      if (value != null) {
+        add(PostCommentComponentUpdated(value: value));
+      }
     });
   }
 
-  PostCommentComponentBloc({ this.postCommentRepository }): super(PostCommentComponentUninitialized());
-
-  @override
-  Stream<PostCommentComponentState> mapEventToState(PostCommentComponentEvent event) async* {
-    final currentState = state;
-    if (event is FetchPostCommentComponent) {
-      yield* _mapLoadPostCommentComponentUpdateToState(event.id!);
-    } else if (event is PostCommentComponentUpdated) {
-      yield PostCommentComponentLoaded(value: event.value);
-    }
+  PostCommentComponentBloc({ this.postCommentRepository }): super(PostCommentComponentUninitialized()) {
+    on <FetchPostCommentComponent> ((event, emit) {
+      _mapLoadPostCommentComponentUpdateToState(event.id!);
+    });
+    on <PostCommentComponentUpdated> ((event, emit) {
+      emit(PostCommentComponentLoaded(value: event.value));
+    });
   }
 
   @override

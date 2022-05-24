@@ -55,7 +55,7 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
   Stream<PostFormState> mapEventToState(PostFormEvent event) async* {
     final currentState = state;
     if (currentState is PostFormUninitialized) {
-      if (event is InitialiseNewPostFormEvent) {
+      on <InitialiseNewPostFormEvent> ((event, emit) {
         PostFormLoaded loaded = PostFormLoaded(value: PostModel(
                                                documentID: "",
                                  authorId: "",
@@ -74,134 +74,114 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
                                  memberMedia: [],
 
         ));
-        yield loaded;
-        return;
-
-      }
+        emit(loaded);
+      });
 
 
       if (event is InitialisePostFormEvent) {
         // Need to re-retrieve the document from the repository so that I get all associated types
         PostFormLoaded loaded = PostFormLoaded(value: await postRepository(appId: appId)!.get(event.value!.documentID));
-        yield loaded;
-        return;
+        emit(loaded);
       } else if (event is InitialisePostFormNoLoadEvent) {
         PostFormLoaded loaded = PostFormLoaded(value: event.value);
-        yield loaded;
-        return;
+        emit(loaded);
       }
     } else if (currentState is PostFormInitialized) {
       PostModel? newValue = null;
-      if (event is ChangedPostDocumentID) {
+      on <ChangedPostDocumentID> ((event, emit) async {
         newValue = currentState.value!.copyWith(documentID: event.value);
         if (formAction == FormAction.AddAction) {
-          yield* _isDocumentIDValid(event.value, newValue).asStream();
+          emit(await _isDocumentIDValid(event.value, newValue!));
         } else {
-          yield SubmittablePostForm(value: newValue);
+          emit(SubmittablePostForm(value: newValue));
         }
 
-        return;
-      }
-      if (event is ChangedPostAuthorId) {
+      });
+      on <ChangedPostAuthorId> ((event, emit) async {
         newValue = currentState.value!.copyWith(authorId: event.value);
-        yield SubmittablePostForm(value: newValue);
+        emit(SubmittablePostForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedPostTimestamp) {
+      });
+      on <ChangedPostTimestamp> ((event, emit) async {
         newValue = currentState.value!.copyWith(timestamp: dateTimeFromTimestampString(event.value!));
-        yield SubmittablePostForm(value: newValue);
+        emit(SubmittablePostForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedPostAppId) {
+      });
+      on <ChangedPostAppId> ((event, emit) async {
         newValue = currentState.value!.copyWith(appId: event.value);
-        yield SubmittablePostForm(value: newValue);
+        emit(SubmittablePostForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedPostFeedId) {
+      });
+      on <ChangedPostFeedId> ((event, emit) async {
         newValue = currentState.value!.copyWith(feedId: event.value);
-        yield SubmittablePostForm(value: newValue);
+        emit(SubmittablePostForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedPostPostAppId) {
+      });
+      on <ChangedPostPostAppId> ((event, emit) async {
         newValue = currentState.value!.copyWith(postAppId: event.value);
-        yield SubmittablePostForm(value: newValue);
+        emit(SubmittablePostForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedPostPostPageId) {
+      });
+      on <ChangedPostPostPageId> ((event, emit) async {
         newValue = currentState.value!.copyWith(postPageId: event.value);
-        yield SubmittablePostForm(value: newValue);
+        emit(SubmittablePostForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedPostPageParameters) {
+      });
+      on <ChangedPostPageParameters> ((event, emit) async {
         newValue = currentState.value!.copyWith(pageParameters: event.value);
-        yield SubmittablePostForm(value: newValue);
+        emit(SubmittablePostForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedPostHtml) {
+      });
+      on <ChangedPostHtml> ((event, emit) async {
         newValue = currentState.value!.copyWith(html: event.value);
-        yield SubmittablePostForm(value: newValue);
+        emit(SubmittablePostForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedPostDescription) {
+      });
+      on <ChangedPostDescription> ((event, emit) async {
         newValue = currentState.value!.copyWith(description: event.value);
-        yield SubmittablePostForm(value: newValue);
+        emit(SubmittablePostForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedPostLikes) {
+      });
+      on <ChangedPostLikes> ((event, emit) async {
         if (isInt(event.value)) {
           newValue = currentState.value!.copyWith(likes: int.parse(event.value!));
-          yield SubmittablePostForm(value: newValue);
+          emit(SubmittablePostForm(value: newValue));
 
         } else {
           newValue = currentState.value!.copyWith(likes: 0);
-          yield LikesPostFormError(message: "Value should be a number", value: newValue);
+          emit(LikesPostFormError(message: "Value should be a number", value: newValue));
         }
-        return;
-      }
-      if (event is ChangedPostDislikes) {
+      });
+      on <ChangedPostDislikes> ((event, emit) async {
         if (isInt(event.value)) {
           newValue = currentState.value!.copyWith(dislikes: int.parse(event.value!));
-          yield SubmittablePostForm(value: newValue);
+          emit(SubmittablePostForm(value: newValue));
 
         } else {
           newValue = currentState.value!.copyWith(dislikes: 0);
-          yield DislikesPostFormError(message: "Value should be a number", value: newValue);
+          emit(DislikesPostFormError(message: "Value should be a number", value: newValue));
         }
-        return;
-      }
-      if (event is ChangedPostAccessibleByGroup) {
+      });
+      on <ChangedPostAccessibleByGroup> ((event, emit) async {
         newValue = currentState.value!.copyWith(accessibleByGroup: event.value);
-        yield SubmittablePostForm(value: newValue);
+        emit(SubmittablePostForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedPostArchived) {
+      });
+      on <ChangedPostArchived> ((event, emit) async {
         newValue = currentState.value!.copyWith(archived: event.value);
-        yield SubmittablePostForm(value: newValue);
+        emit(SubmittablePostForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedPostExternalLink) {
+      });
+      on <ChangedPostExternalLink> ((event, emit) async {
         newValue = currentState.value!.copyWith(externalLink: event.value);
-        yield SubmittablePostForm(value: newValue);
+        emit(SubmittablePostForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedPostMemberMedia) {
+      });
+      on <ChangedPostMemberMedia> ((event, emit) async {
         newValue = currentState.value!.copyWith(memberMedia: event.value);
-        yield SubmittablePostForm(value: newValue);
+        emit(SubmittablePostForm(value: newValue));
 
-        return;
-      }
+      });
     }
   }
 

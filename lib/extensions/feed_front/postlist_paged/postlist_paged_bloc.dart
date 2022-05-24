@@ -24,26 +24,13 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
   PostListPagedBloc(this.memberId, this.eliudQuery,
       {required PostRepository postRepository})
       : _postRepository = postRepository,
-        super(const PostListPagedState());
-
-  @override
-  Stream<Transition<PostPagedEvent, PostListPagedState>> transformEvents(
-    Stream<PostPagedEvent> events,
-    TransitionFunction<PostPagedEvent, PostListPagedState> transitionFn,
-  ) {
-    return super.transformEvents(
-      events,
-      transitionFn,
-    );
-  }
-
-
-  @override
-  Stream<PostListPagedState> mapEventToState(PostPagedEvent event) async* {
-    if (event is PostListPagedFetched) {
+        super(const PostListPagedState()) {
+    on<PostListPagedFetched>((event, emit) async {
       var value = await _mapPostFetchedToState(state);
-      if (value != null) yield value;
-    } else if (event is UpdatePostPaged) {
+      if (value != null) emit(value);
+    });
+
+    on<UpdatePostPaged>((event, emit) async {
       await _mapUpdatePost(event);
 
       // We update the entry in the current state avoiding interaction with repository
@@ -56,15 +43,19 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
         }
       });
 
-      yield state.copyWith(values: newListOfValues);
-    } else if (event is AddPostPaged) {
+      emit(state.copyWith(values: newListOfValues));
+    });
+
+    on<AddPostPaged>((event, emit) async {
       var details = PostDetails(postModel: event.value);
       await _mapAddPost(event);
       List<PostDetails> newListOfValues = [];
       newListOfValues.add(details);
       newListOfValues.addAll(state.values);
-      yield state.copyWith(values: newListOfValues);
-    } else if (event is DeletePostPaged) {
+      emit(state.copyWith(values: newListOfValues));
+    });
+
+    on<DeletePostPaged>((event, emit) async {
       await _mapDeletePost(event);
 
       // We delete the entry and add it whilst limiting interaction with repository
@@ -76,40 +67,53 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
       });
 
       final extraValues =
-      await _fetchPosts(lastRowFetched: state.lastRowFetched, limit: 1);
+          await _fetchPosts(lastRowFetched: state.lastRowFetched, limit: 1);
       var newState = extraValues.isEmpty
-          ? state.copyWith(hasReachedMax: true,
-            status: PostListPagedStatus.success,
-            values: List.of(newListOfValues),
-          )
+          ? state.copyWith(
+              hasReachedMax: true,
+              status: PostListPagedStatus.success,
+              values: List.of(newListOfValues),
+            )
           : state.copyWith(
-        status: PostListPagedStatus.success,
-        values: List.of(newListOfValues)..addAll(extraValues),
-        lastRowFetched: lastRowFetched,
-        hasReachedMax:
-        _hasReachedMax(newListOfValues.length + extraValues.length),
-      );
-      yield newState;
-    } else if (event is LikePostEvent) {
-      yield await _updateEmotion(state, null, event.likeType, event.postDetail);
-    } else if (event is LikeCommentPostEvent) {
-      yield await _updateEmotion(
-          state, event.postCommentContainer, event.likeType, event.postDetail);
-    } else if (event is AddCommentEvent) {
-      yield await _comment(state, event.comment, event.postDetail);
-    } else if (event is AddCommentCommentEvent) {
-      yield await _commentComment(
-          state, event.postDetail, event.postCommentContainer, event.comment);
-    } else if (event is DeleteCommentEvent) {
-      yield await _deleteComment(state, event.deleteThis, event.postDetail);
-    } else if (event is UpdateCommentEvent) {
-      yield await _updateComment(
+              status: PostListPagedStatus.success,
+              values: List.of(newListOfValues)..addAll(extraValues),
+              lastRowFetched: lastRowFetched,
+              hasReachedMax:
+                  _hasReachedMax(newListOfValues.length + extraValues.length),
+            );
+      emit(newState);
+    });
+
+    on<LikePostEvent>((event, emit) async {
+      emit(await _updateEmotion(state, null, event.likeType, event.postDetail));
+    });
+
+    on<LikeCommentPostEvent>((event, emit) async {
+      emit(await _updateEmotion(
+          state, event.postCommentContainer, event.likeType, event.postDetail));
+    });
+
+    on<AddCommentEvent>((event, emit) async {
+      emit(await _comment(state, event.comment, event.postDetail));
+    });
+
+    on<AddCommentCommentEvent>((event, emit) async {
+      emit(await _commentComment(
+          state, event.postDetail, event.postCommentContainer, event.comment));
+    });
+
+    on<DeleteCommentEvent>((event, emit) async {
+      emit(await _deleteComment(state, event.deleteThis, event.postDetail));
+    });
+
+    on<UpdateCommentEvent>((event, emit) async {
+      emit(await _updateComment(
         state,
         event.updateThis,
         event.postDetail,
         event.newValue,
-      );
-    }
+      ));
+    });
   }
 
   Future<void> _mapDeletePost(DeletePostPaged event) async {
@@ -166,7 +170,7 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
 
     for (int i = 0; i < values.length; i++) {
       var postModel = values[i];
-      var detail = await _loadComments(postModel!, postModel.appId!);
+      var detail = await _loadComments(postModel!, postModel.appId);
       details.add(detail);
     }
 
@@ -237,7 +241,7 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
   }
 
   Future<PostDetails> _loadComments(PostModel postModel, String appId) async {
-    var likeKey = PostHelper.getLikeKey(postModel.documentID!, null, memberId);
+    var likeKey = PostHelper.getLikeKey(postModel.documentID, null, memberId);
     var like = await postLikeRepository(appId: appId)!.get(likeKey);
 
     List<PostCommentModel?>? sourceComments =
@@ -246,13 +250,13 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
             descending: true,
             eliudQuery: EliudQuery()
                 .withCondition(EliudQueryCondition('postId',
-                    isEqualTo: postModel.documentID!))
+                    isEqualTo: postModel.documentID))
                 .withCondition(EliudQueryCondition(
                   'postCommentId',
                   isNull: true,
                 )));
     List<PostCommentContainer>? comments = await mapComments(
-      postModel.documentID!,
+      postModel.documentID,
       sourceComments,
       appId,
     );
@@ -272,8 +276,8 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
   Future<PostListPagedState> _comment(PostListPagedState theState,
       String comment, PostDetails postDetail) async {
     // First add the comment in the repository
-    String postId = postDetail.postModel.documentID!;
-    String appId = postDetail.postModel.appId!;
+    String postId = postDetail.postModel.documentID;
+    String appId = postDetail.postModel.appId;
     var toAdd = PostCommentModel(
       documentID: newRandomKey(),
       postId: postId,
@@ -304,8 +308,8 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
       PostDetails detail,
       PostCommentContainer postCommentContainer,
       String comment) async {
-    var postId = detail.postModel.documentID!;
-    var appId = detail.postModel.appId!;
+    var postId = detail.postModel.documentID;
+    var appId = detail.postModel.appId;
     var addThis = PostCommentModel(
       documentID: newRandomKey(),
       postId: postId,
@@ -342,7 +346,7 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
       if (toCopy[i]!.postComment!.documentID == toAdd.postCommentId) {
         // is this the comment the parent of the item to be added then add it at the front
         PostCommentContainer container =
-            await construct(toAdd.appId!, toAdd, null, false);
+            await construct(toAdd.appId, toAdd, null, false);
         if (theCopy != null) {
           theCopy.insert(0, container);
         } else {
@@ -452,7 +456,7 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
       LikeType? likePressed,
       PostDetails postDetail) async {
     PostModel postModel = postDetail.postModel;
-    String appId = postDetail.postModel.appId!;
+    String appId = postDetail.postModel.appId;
     // We have firebase functions to update the post collection. One reason is performance, we shouldn't do this work on the client.
     // Second reason is security: the client, except the owner, can update the post.
     // We allow the firebase function to do it's thing in the background, async. In the meantime we determine the value here

@@ -105,14 +105,14 @@ class LabelledBodyComponentInMemoryRepository implements LabelledBodyComponentRe
     }
 
     Future<void> delete(LabelledBodyComponentModel value) {
-      int index = _index(value.documentID!);
+      int index = _index(value.documentID);
       if (index >= 0) items.removeAt(index);
       trigger(items);
       return Future.value(value);
     }
 
     Future<LabelledBodyComponentModel> update(LabelledBodyComponentModel value) {
-      int index = _index(value.documentID!);
+      int index = _index(value.documentID);
       if (index >= 0) {
         items.replaceRange(index, index+1, [value]);
         trigger(items);
@@ -208,14 +208,14 @@ class MemberProfileInMemoryRepository implements MemberProfileRepository {
     }
 
     Future<void> delete(MemberProfileModel value) {
-      int index = _index(value.documentID!);
+      int index = _index(value.documentID);
       if (index >= 0) items.removeAt(index);
       trigger(items);
       return Future.value(value);
     }
 
     Future<MemberProfileModel> update(MemberProfileModel value) {
-      int index = _index(value.documentID!);
+      int index = _index(value.documentID);
       if (index >= 0) {
         items.replaceRange(index, index+1, [value]);
         trigger(items);

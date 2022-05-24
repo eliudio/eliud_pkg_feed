@@ -39,7 +39,7 @@ abstract class AbstractPostLikeComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<PostLikeComponentBloc> (
           create: (context) => PostLikeComponentBloc(
-            postLikeRepository: postLikeRepository(appId: app.documentID!)!)
+            postLikeRepository: postLikeRepository(appId: app.documentID)!)
         ..add(FetchPostLikeComponent(id: postLikeId)),
       child: _postLikeBlockBuilder(context),
     );

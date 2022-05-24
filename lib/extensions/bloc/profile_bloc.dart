@@ -26,51 +26,60 @@ import 'profile_state.dart';
  * added, when available.
  */
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
-  ProfileBloc() : super(ProfileStateUninitialized());
+  ProfileBloc() : super(ProfileStateUninitialized()) {
+    on<InitialiseProfileEvent>((event, emit) async {
+      emit(await determineProfileState(event));
+    });
 
-  @override
-  Stream<ProfileState> mapEventToState(ProfileEvent event) async* {
-    if (event is InitialiseProfileEvent) {
-      yield await determineProfileState(event);
-    } else if (event is UploadingProfilePhotoEvent) {
+    on<UploadingProfilePhotoEvent>((event, emit) {
       if (state is ProfileInitialised) {
         var theState = state as ProfileInitialised;
-        yield theState.progressWith(
-            uploadingProfilePhotoProgress: event.progress);
+        emit(theState.progressWith(
+            uploadingProfilePhotoProgress: event.progress));
       }
-    } else if (event is UploadingBGPhotoEvent) {
+    });
+
+    on<UploadingBGPhotoEvent>((event, emit) {
       if (state is ProfileInitialised) {
         var theState = state as ProfileInitialised;
-        yield theState.progressWith(uploadingBGProgress: event.progress);
+        emit(theState.progressWith(uploadingBGProgress: event.progress));
       }
-    } else if (event is ProfileChangedProfileEvent) {
+    });
+
+    on<ProfileChangedProfileEvent>((event, emit) async {
       if (state is LoggedInWatchingMyProfile) {
         var myState = state as LoggedInWatchingMyProfile;
-        yield await _updated(myState,
-            myState.currentMemberProfileModel.copyWith(profile: event.html, memberMedia: event.memberMedia));
+        emit(await _updated(
+            myState,
+            myState.currentMemberProfileModel.copyWith(
+                profile: event.html, memberMedia: event.memberMedia)));
       }
-    } else if (event is ProfilePhotoChangedProfileEvent) {
+    });
+
+    on<ProfilePhotoChangedProfileEvent>((event, emit) async {
       if (state is LoggedInWatchingMyProfile) {
         var myState = state as LoggedInWatchingMyProfile;
-        yield await _updated(
+        emit(await _updated(
             myState,
             myState.currentMemberProfileModel
-                .copyWith(profileOverride: event.value.url));
+                .copyWith(profileOverride: event.value.url)));
       }
-    } else if (event is ProfileBGPhotoChangedProfileEvent) {
+    });
+
+    on<ProfileBGPhotoChangedProfileEvent>((event, emit) async {
       if (state is LoggedInWatchingMyProfile) {
         var myState = state as LoggedInWatchingMyProfile;
-        yield await _updated(
+        emit(await _updated(
             myState,
             myState.currentMemberProfileModel
-                .copyWith(profileBackground: event.value));
+                .copyWith(profileBackground: event.value)));
       }
-    }
+    });
   }
 
   Future<ProfileInitialised> _updated(LoggedInWatchingMyProfile myState,
       MemberProfileModel newMemberProfileModel) async {
-    await memberProfileRepository(appId: myState.app.documentID!)!
+    await memberProfileRepository(appId: myState.app.documentID)!
         .update(newMemberProfileModel);
     return myState.copyWith(
         newMemberProfileModel: newMemberProfileModel,
@@ -156,7 +165,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                 defaultMemberProfileGroup,
                 defaultMembers);
         var following =
-            await FollowerHelper.following(currentMemberModel.documentID!, app);
+            await FollowerHelper.following(currentMemberModel.documentID, app);
         var feedPublicInfoModel = await getMemberPublicInfo(param);
         var feedProfileModel = await getMemberProfileModelWithPublicInfo(
             false,
@@ -174,7 +183,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             feedProfileModel: feedProfileModel,
             feedPublicInfoModel: feedPublicInfoModel,
             iFollowThisPerson: following.contains(
-              currentMemberModel.documentID!,
+              currentMemberModel.documentID,
             ),
             uploadingProfilePhotoProgress: null,
             uploadingBGProgress: null);
@@ -198,8 +207,18 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       MemberModel member,
       MemberProfileAccessibleByGroup accessibleByGroup,
       List<String>? accessibleByMembers) async {
-    return getMemberProfileModel(create, app, feedId, member.documentID!,
-        member.photoURL ?? (app.anonymousProfilePhoto != null ? app.anonymousProfilePhoto!.url : null), member.name!, accessibleByGroup, accessibleByMembers);
+    return getMemberProfileModel(
+        create,
+        app,
+        feedId,
+        member.documentID,
+        member.photoURL ??
+            (app.anonymousProfilePhoto != null
+                ? app.anonymousProfilePhoto!.url
+                : null),
+        member.name!,
+        accessibleByGroup,
+        accessibleByMembers);
   }
 
   static Future<MemberProfileModel> getMemberProfileModelWithPublicInfo(
@@ -209,7 +228,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       MemberPublicInfoModel member,
       MemberProfileAccessibleByGroup accessibleByGroup,
       List<String>? accessibleByMembers) async {
-    return getMemberProfileModel(create, app, feedId, member.documentID!,
+    return getMemberProfileModel(create, app, feedId, member.documentID,
         member.photoURL!, member.name!, accessibleByGroup, accessibleByMembers);
   }
 
@@ -224,23 +243,25 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       List<String>? accessibleByMembers) async {
     var key = memberId + "-" + feedId;
     var memberProfileModel =
-        await memberProfileRepository(appId: app.documentID!)!
+        await memberProfileRepository(appId: app.documentID)!
             .get(key, onError: (exception) {});
     if (memberProfileModel == null) {
       // create default profile
       memberProfileModel = MemberProfileModel(
-          documentID: key,
-          appId: app.documentID,
-          feedId: feedId,
-          authorId: memberId,
-          accessibleByGroup: accessibleByGroup,
-          accessibleByMembers: accessibleByMembers,
-          profileOverride: photoURL,
-          nameOverride: name,
-          readAccess: [memberId],  // default readAccess to the owner. The function will expand this based on accessibleByGroup/Members
-          );
+        documentID: key,
+        appId: app.documentID,
+        feedId: feedId,
+        authorId: memberId,
+        accessibleByGroup: accessibleByGroup,
+        accessibleByMembers: accessibleByMembers,
+        profileOverride: photoURL,
+        nameOverride: name,
+        readAccess: [
+          memberId
+        ], // default readAccess to the owner. The function will expand this based on accessibleByGroup/Members
+      );
       if (create) {
-        await memberProfileRepository(appId: app.documentID!)!
+        await memberProfileRepository(appId: app.documentID)!
             .add(memberProfileModel);
       }
     }
@@ -269,14 +290,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             .withCondition(
                 EliudQueryCondition('feedId', isEqualTo: state.feedId))
             .withCondition(EliudQueryCondition('readAccess',
-                arrayContainsAny: [state.currentMember.documentID!, 'PUBLIC']));
+                arrayContainsAny: [state.currentMember.documentID, 'PUBLIC']));
       } else {
         // query where I'm the author. We could include that we're part of the readAccess but that's obsolete
         return EliudQuery()
             .withCondition(EliudQueryCondition('archived',
                 isEqualTo: PostArchiveStatus.Active.index))
             .withCondition(EliudQueryCondition('authorId',
-                isEqualTo: state.currentMember.documentID!))
+                isEqualTo: state.currentMember.documentID))
             .withCondition(
                 EliudQueryCondition('feedId', isEqualTo: state.feedId));
       }
@@ -287,19 +308,19 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             .withCondition(EliudQueryCondition('archived',
                 isEqualTo: PostArchiveStatus.Active.index))
             .withCondition(EliudQueryCondition('authorId',
-                isEqualTo: state.feedPublicInfoModel.documentID!))
+                isEqualTo: state.feedPublicInfoModel.documentID))
             .withCondition(
                 EliudQueryCondition('feedId', isEqualTo: state.feedId))
             .withCondition(EliudQueryCondition('readAccess',
-                arrayContainsAny: [state.currentMember.documentID!]));
+                arrayContainsAny: [state.currentMember.documentID]));
       } else {
         // query where that person is the author and PUBLIC in the readAccess
         return publicQueryForAuthor(
-            state.feedPublicInfoModel.documentID!, state.feedId);
+            state.feedPublicInfoModel.documentID, state.feedId);
       }
     } else if (state is NotLoggedInWatchingSomeone) {
       return publicQueryForAuthor(
-          state.feedPublicInfoModel.documentID!, state.feedId);
+          state.feedPublicInfoModel.documentID, state.feedId);
     } else if (state is WatchingPublicProfile) {
       return publicQuery(state.feedId);
     } else {

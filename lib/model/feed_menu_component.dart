@@ -39,7 +39,7 @@ abstract class AbstractFeedMenuComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<FeedMenuComponentBloc> (
           create: (context) => FeedMenuComponentBloc(
-            feedMenuRepository: feedMenuRepository(appId: app.documentID!)!)
+            feedMenuRepository: feedMenuRepository(appId: app.documentID)!)
         ..add(FetchFeedMenuComponent(id: feedMenuId)),
       child: _feedMenuBlockBuilder(context),
     );

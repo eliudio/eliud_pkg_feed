@@ -38,9 +38,47 @@ class MemberProfileListBloc extends Bloc<MemberProfileListEvent, MemberProfileLi
   MemberProfileListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required MemberProfileRepository memberProfileRepository, this.memberProfileLimit = 5})
       : assert(memberProfileRepository != null),
         _memberProfileRepository = memberProfileRepository,
-        super(MemberProfileListLoading());
+        super(MemberProfileListLoading()) {
+    on <LoadMemberProfileList> ((event, emit) {
+      if ((detailed == null) || (!detailed!)) {
+        _mapLoadMemberProfileListToState();
+      } else {
+        _mapLoadMemberProfileListWithDetailsToState();
+      }
+    });
+    
+    on <NewPage> ((event, emit) {
+      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
+      _mapLoadMemberProfileListWithDetailsToState();
+    });
+    
+    on <MemberProfileChangeQuery> ((event, emit) {
+      eliudQuery = event.newQuery;
+      if ((detailed == null) || (!detailed!)) {
+        _mapLoadMemberProfileListToState();
+      } else {
+        _mapLoadMemberProfileListWithDetailsToState();
+      }
+    });
+      
+    on <AddMemberProfileList> ((event, emit) async {
+      await _mapAddMemberProfileListToState(event);
+    });
+    
+    on <UpdateMemberProfileList> ((event, emit) async {
+      await _mapUpdateMemberProfileListToState(event);
+    });
+    
+    on <DeleteMemberProfileList> ((event, emit) async {
+      await _mapDeleteMemberProfileListToState(event);
+    });
+    
+    on <MemberProfileListUpdated> ((event, emit) {
+      emit(_mapMemberProfileListUpdatedToState(event));
+    });
+  }
 
-  Stream<MemberProfileListState> _mapLoadMemberProfileListToState() async* {
+  Future<void> _mapLoadMemberProfileListToState() async {
     int amountNow =  (state is MemberProfileListLoaded) ? (state as MemberProfileListLoaded).values!.length : 0;
     _memberProfilesListSubscription?.cancel();
     _memberProfilesListSubscription = _memberProfileRepository.listen(
@@ -52,7 +90,7 @@ class MemberProfileListBloc extends Bloc<MemberProfileListEvent, MemberProfileLi
     );
   }
 
-  Stream<MemberProfileListState> _mapLoadMemberProfileListWithDetailsToState() async* {
+  Future<void> _mapLoadMemberProfileListWithDetailsToState() async {
     int amountNow =  (state is MemberProfileListLoaded) ? (state as MemberProfileListLoaded).values!.length : 0;
     _memberProfilesListSubscription?.cancel();
     _memberProfilesListSubscription = _memberProfileRepository.listenWithDetails(
@@ -64,58 +102,29 @@ class MemberProfileListBloc extends Bloc<MemberProfileListEvent, MemberProfileLi
     );
   }
 
-  Stream<MemberProfileListState> _mapAddMemberProfileListToState(AddMemberProfileList event) async* {
+  Future<void> _mapAddMemberProfileListToState(AddMemberProfileList event) async {
     var value = event.value;
-    if (value != null) 
-      _memberProfileRepository.add(value);
-  }
-
-  Stream<MemberProfileListState> _mapUpdateMemberProfileListToState(UpdateMemberProfileList event) async* {
-    var value = event.value;
-    if (value != null) 
-      _memberProfileRepository.update(value);
-  }
-
-  Stream<MemberProfileListState> _mapDeleteMemberProfileListToState(DeleteMemberProfileList event) async* {
-    var value = event.value;
-    if (value != null) 
-      _memberProfileRepository.delete(value);
-  }
-
-  Stream<MemberProfileListState> _mapMemberProfileListUpdatedToState(
-      MemberProfileListUpdated event) async* {
-    yield MemberProfileListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
-  }
-
-  @override
-  Stream<MemberProfileListState> mapEventToState(MemberProfileListEvent event) async* {
-    if (event is LoadMemberProfileList) {
-      if ((detailed == null) || (!detailed!)) {
-        yield* _mapLoadMemberProfileListToState();
-      } else {
-        yield* _mapLoadMemberProfileListWithDetailsToState();
-      }
-    }
-    if (event is NewPage) {
-      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
-      yield* _mapLoadMemberProfileListWithDetailsToState();
-    } else if (event is MemberProfileChangeQuery) {
-      eliudQuery = event.newQuery;
-      if ((detailed == null) || (!detailed!)) {
-        yield* _mapLoadMemberProfileListToState();
-      } else {
-        yield* _mapLoadMemberProfileListWithDetailsToState();
-      }
-    } else if (event is AddMemberProfileList) {
-      yield* _mapAddMemberProfileListToState(event);
-    } else if (event is UpdateMemberProfileList) {
-      yield* _mapUpdateMemberProfileListToState(event);
-    } else if (event is DeleteMemberProfileList) {
-      yield* _mapDeleteMemberProfileListToState(event);
-    } else if (event is MemberProfileListUpdated) {
-      yield* _mapMemberProfileListUpdatedToState(event);
+    if (value != null) {
+      await _memberProfileRepository.add(value);
     }
   }
+
+  Future<void> _mapUpdateMemberProfileListToState(UpdateMemberProfileList event) async {
+    var value = event.value;
+    if (value != null) {
+      await _memberProfileRepository.update(value);
+    }
+  }
+
+  Future<void> _mapDeleteMemberProfileListToState(DeleteMemberProfileList event) async {
+    var value = event.value;
+    if (value != null) {
+      await _memberProfileRepository.delete(value);
+    }
+  }
+
+  MemberProfileListLoaded _mapMemberProfileListUpdatedToState(
+      MemberProfileListUpdated event) => MemberProfileListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
 
   @override
   Future<void> close() {

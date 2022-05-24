@@ -27,23 +27,22 @@ class FeedMenuComponentBloc extends Bloc<FeedMenuComponentEvent, FeedMenuCompone
   final FeedMenuRepository? feedMenuRepository;
   StreamSubscription? _feedMenuSubscription;
 
-  Stream<FeedMenuComponentState> _mapLoadFeedMenuComponentUpdateToState(String documentId) async* {
+  void _mapLoadFeedMenuComponentUpdateToState(String documentId) {
     _feedMenuSubscription?.cancel();
     _feedMenuSubscription = feedMenuRepository!.listenTo(documentId, (value) {
-      if (value != null) add(FeedMenuComponentUpdated(value: value));
+      if (value != null) {
+        add(FeedMenuComponentUpdated(value: value));
+      }
     });
   }
 
-  FeedMenuComponentBloc({ this.feedMenuRepository }): super(FeedMenuComponentUninitialized());
-
-  @override
-  Stream<FeedMenuComponentState> mapEventToState(FeedMenuComponentEvent event) async* {
-    final currentState = state;
-    if (event is FetchFeedMenuComponent) {
-      yield* _mapLoadFeedMenuComponentUpdateToState(event.id!);
-    } else if (event is FeedMenuComponentUpdated) {
-      yield FeedMenuComponentLoaded(value: event.value);
-    }
+  FeedMenuComponentBloc({ this.feedMenuRepository }): super(FeedMenuComponentUninitialized()) {
+    on <FetchFeedMenuComponent> ((event, emit) {
+      _mapLoadFeedMenuComponentUpdateToState(event.id!);
+    });
+    on <FeedMenuComponentUpdated> ((event, emit) {
+      emit(FeedMenuComponentLoaded(value: event.value));
+    });
   }
 
   @override

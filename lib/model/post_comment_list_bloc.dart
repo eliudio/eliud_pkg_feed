@@ -38,9 +38,47 @@ class PostCommentListBloc extends Bloc<PostCommentListEvent, PostCommentListStat
   PostCommentListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required PostCommentRepository postCommentRepository, this.postCommentLimit = 5})
       : assert(postCommentRepository != null),
         _postCommentRepository = postCommentRepository,
-        super(PostCommentListLoading());
+        super(PostCommentListLoading()) {
+    on <LoadPostCommentList> ((event, emit) {
+      if ((detailed == null) || (!detailed!)) {
+        _mapLoadPostCommentListToState();
+      } else {
+        _mapLoadPostCommentListWithDetailsToState();
+      }
+    });
+    
+    on <NewPage> ((event, emit) {
+      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
+      _mapLoadPostCommentListWithDetailsToState();
+    });
+    
+    on <PostCommentChangeQuery> ((event, emit) {
+      eliudQuery = event.newQuery;
+      if ((detailed == null) || (!detailed!)) {
+        _mapLoadPostCommentListToState();
+      } else {
+        _mapLoadPostCommentListWithDetailsToState();
+      }
+    });
+      
+    on <AddPostCommentList> ((event, emit) async {
+      await _mapAddPostCommentListToState(event);
+    });
+    
+    on <UpdatePostCommentList> ((event, emit) async {
+      await _mapUpdatePostCommentListToState(event);
+    });
+    
+    on <DeletePostCommentList> ((event, emit) async {
+      await _mapDeletePostCommentListToState(event);
+    });
+    
+    on <PostCommentListUpdated> ((event, emit) {
+      emit(_mapPostCommentListUpdatedToState(event));
+    });
+  }
 
-  Stream<PostCommentListState> _mapLoadPostCommentListToState() async* {
+  Future<void> _mapLoadPostCommentListToState() async {
     int amountNow =  (state is PostCommentListLoaded) ? (state as PostCommentListLoaded).values!.length : 0;
     _postCommentsListSubscription?.cancel();
     _postCommentsListSubscription = _postCommentRepository.listen(
@@ -52,7 +90,7 @@ class PostCommentListBloc extends Bloc<PostCommentListEvent, PostCommentListStat
     );
   }
 
-  Stream<PostCommentListState> _mapLoadPostCommentListWithDetailsToState() async* {
+  Future<void> _mapLoadPostCommentListWithDetailsToState() async {
     int amountNow =  (state is PostCommentListLoaded) ? (state as PostCommentListLoaded).values!.length : 0;
     _postCommentsListSubscription?.cancel();
     _postCommentsListSubscription = _postCommentRepository.listenWithDetails(
@@ -64,58 +102,29 @@ class PostCommentListBloc extends Bloc<PostCommentListEvent, PostCommentListStat
     );
   }
 
-  Stream<PostCommentListState> _mapAddPostCommentListToState(AddPostCommentList event) async* {
+  Future<void> _mapAddPostCommentListToState(AddPostCommentList event) async {
     var value = event.value;
-    if (value != null) 
-      _postCommentRepository.add(value);
-  }
-
-  Stream<PostCommentListState> _mapUpdatePostCommentListToState(UpdatePostCommentList event) async* {
-    var value = event.value;
-    if (value != null) 
-      _postCommentRepository.update(value);
-  }
-
-  Stream<PostCommentListState> _mapDeletePostCommentListToState(DeletePostCommentList event) async* {
-    var value = event.value;
-    if (value != null) 
-      _postCommentRepository.delete(value);
-  }
-
-  Stream<PostCommentListState> _mapPostCommentListUpdatedToState(
-      PostCommentListUpdated event) async* {
-    yield PostCommentListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
-  }
-
-  @override
-  Stream<PostCommentListState> mapEventToState(PostCommentListEvent event) async* {
-    if (event is LoadPostCommentList) {
-      if ((detailed == null) || (!detailed!)) {
-        yield* _mapLoadPostCommentListToState();
-      } else {
-        yield* _mapLoadPostCommentListWithDetailsToState();
-      }
-    }
-    if (event is NewPage) {
-      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
-      yield* _mapLoadPostCommentListWithDetailsToState();
-    } else if (event is PostCommentChangeQuery) {
-      eliudQuery = event.newQuery;
-      if ((detailed == null) || (!detailed!)) {
-        yield* _mapLoadPostCommentListToState();
-      } else {
-        yield* _mapLoadPostCommentListWithDetailsToState();
-      }
-    } else if (event is AddPostCommentList) {
-      yield* _mapAddPostCommentListToState(event);
-    } else if (event is UpdatePostCommentList) {
-      yield* _mapUpdatePostCommentListToState(event);
-    } else if (event is DeletePostCommentList) {
-      yield* _mapDeletePostCommentListToState(event);
-    } else if (event is PostCommentListUpdated) {
-      yield* _mapPostCommentListUpdatedToState(event);
+    if (value != null) {
+      await _postCommentRepository.add(value);
     }
   }
+
+  Future<void> _mapUpdatePostCommentListToState(UpdatePostCommentList event) async {
+    var value = event.value;
+    if (value != null) {
+      await _postCommentRepository.update(value);
+    }
+  }
+
+  Future<void> _mapDeletePostCommentListToState(DeletePostCommentList event) async {
+    var value = event.value;
+    if (value != null) {
+      await _postCommentRepository.delete(value);
+    }
+  }
+
+  PostCommentListLoaded _mapPostCommentListUpdatedToState(
+      PostCommentListUpdated event) => PostCommentListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
 
   @override
   Future<void> close() {

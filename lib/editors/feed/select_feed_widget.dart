@@ -26,10 +26,10 @@ Widget selectFeedWidget(
       title: 'Feed',
       selectTitle: 'Select feed',
       displayItemFunction: (item) => text(
-          app, context, item.documentID! + ' ' + (item.description ?? '?')),
+          app, context, item.documentID + ' ' + (item.description ?? '?')),
       blocProviderProvider: () => BlocProvider<FeedListBloc>(
             create: (context) => FeedListBloc(
-              feedRepository: feedRepository(appId: app.documentID!)!,
+              feedRepository: feedRepository(appId: app.documentID)!,
             )..add(LoadFeedList()),
           ),
       blocBuilder: (contentsLoaded, contentsNotLoaded) {
