@@ -54,6 +54,7 @@ class FeedFrontPageBuilder extends SingleComponentPageBuilder {
     return await doIt(
         componentName: AbstractFeedFrontComponent.componentName,
         componentIdentifier: componentIdentifier,
-        title: "Find Friends");
+        title: "Find Friends",
+        description: "Find Friends");
   }
 }

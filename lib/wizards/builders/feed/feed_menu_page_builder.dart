@@ -117,7 +117,8 @@ class FeedMenuPageBuilder extends SingleComponentPageBuilder {
     return await doIt(
         componentName: AbstractFeedMenuComponent.componentName,
         componentIdentifier: feedMenuComponentIdentifier,
-        title: "Feed");
+        title: "Feed",
+        description: "Feed");
   }
 
   LabelledBodyComponentModel followRequestsDashboardComponent(String componentId) =>

@@ -45,6 +45,7 @@ class ProfilePageBuilder extends PageBuilder {
         documentID: constructDocumentId(uniqueId: uniqueId, documentId: pageId),
         appId: app.documentID,
         title: "Profile",
+        description: "Profile",
         drawer: leftDrawer,
         endDrawer: rightDrawer,
         appBar: theAppBar,
