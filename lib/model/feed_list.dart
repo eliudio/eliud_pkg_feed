@@ -156,7 +156,7 @@ class FeedListWidgetState extends State<FeedListWidget> {
             onDismissed: (direction) {
               BlocProvider.of<FeedListBloc>(context)
                   .add(DeleteFeedList(value: value));
-              Scaffold.of(context).showSnackBar(DeleteSnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(DeleteSnackBar(
                 message: "Feed " + value.documentID,
                 onUndo: () => BlocProvider.of<FeedListBloc>(context)
                     .add(AddFeedList(value: value)),
@@ -168,7 +168,7 @@ class FeedListWidgetState extends State<FeedListWidget> {
                               value: BlocProvider.of<FeedListBloc>(context),
                               child: getForm(value, FormAction.UpdateAction))));
                       if (removedItem != null) {
-                        Scaffold.of(context).showSnackBar(
+                        ScaffoldMessenger.of(context).showSnackBar(
                           DeleteSnackBar(
                         message: "Feed " + value.documentID,
                             onUndo: () => BlocProvider.of<FeedListBloc>(context)

@@ -156,7 +156,7 @@ class LabelledBodyComponentListWidgetState extends State<LabelledBodyComponentLi
             onDismissed: (direction) {
               BlocProvider.of<LabelledBodyComponentListBloc>(context)
                   .add(DeleteLabelledBodyComponentList(value: value));
-              Scaffold.of(context).showSnackBar(DeleteSnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(DeleteSnackBar(
                 message: "LabelledBodyComponent " + value.documentID,
                 onUndo: () => BlocProvider.of<LabelledBodyComponentListBloc>(context)
                     .add(AddLabelledBodyComponentList(value: value)),
@@ -168,7 +168,7 @@ class LabelledBodyComponentListWidgetState extends State<LabelledBodyComponentLi
                               value: BlocProvider.of<LabelledBodyComponentListBloc>(context),
                               child: getForm(value, FormAction.UpdateAction))));
                       if (removedItem != null) {
-                        Scaffold.of(context).showSnackBar(
+                        ScaffoldMessenger.of(context).showSnackBar(
                           DeleteSnackBar(
                         message: "LabelledBodyComponent " + value.documentID,
                             onUndo: () => BlocProvider.of<LabelledBodyComponentListBloc>(context)

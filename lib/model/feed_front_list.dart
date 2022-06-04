@@ -156,7 +156,7 @@ class FeedFrontListWidgetState extends State<FeedFrontListWidget> {
             onDismissed: (direction) {
               BlocProvider.of<FeedFrontListBloc>(context)
                   .add(DeleteFeedFrontList(value: value));
-              Scaffold.of(context).showSnackBar(DeleteSnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(DeleteSnackBar(
                 message: "FeedFront " + value.documentID,
                 onUndo: () => BlocProvider.of<FeedFrontListBloc>(context)
                     .add(AddFeedFrontList(value: value)),
@@ -168,7 +168,7 @@ class FeedFrontListWidgetState extends State<FeedFrontListWidget> {
                               value: BlocProvider.of<FeedFrontListBloc>(context),
                               child: getForm(value, FormAction.UpdateAction))));
                       if (removedItem != null) {
-                        Scaffold.of(context).showSnackBar(
+                        ScaffoldMessenger.of(context).showSnackBar(
                           DeleteSnackBar(
                         message: "FeedFront " + value.documentID,
                             onUndo: () => BlocProvider.of<FeedFrontListBloc>(context)

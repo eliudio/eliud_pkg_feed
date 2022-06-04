@@ -156,7 +156,7 @@ class FeedMenuListWidgetState extends State<FeedMenuListWidget> {
             onDismissed: (direction) {
               BlocProvider.of<FeedMenuListBloc>(context)
                   .add(DeleteFeedMenuList(value: value));
-              Scaffold.of(context).showSnackBar(DeleteSnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(DeleteSnackBar(
                 message: "FeedMenu " + value.documentID,
                 onUndo: () => BlocProvider.of<FeedMenuListBloc>(context)
                     .add(AddFeedMenuList(value: value)),
@@ -168,7 +168,7 @@ class FeedMenuListWidgetState extends State<FeedMenuListWidget> {
                               value: BlocProvider.of<FeedMenuListBloc>(context),
                               child: getForm(value, FormAction.UpdateAction))));
                       if (removedItem != null) {
-                        Scaffold.of(context).showSnackBar(
+                        ScaffoldMessenger.of(context).showSnackBar(
                           DeleteSnackBar(
                         message: "FeedMenu " + value.documentID,
                             onUndo: () => BlocProvider.of<FeedMenuListBloc>(context)
