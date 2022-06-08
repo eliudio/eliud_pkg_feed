@@ -132,6 +132,10 @@ class PostModel implements ModelBase, WithAppId {
           externalLink == other.externalLink &&
           ListEquality().equals(memberMedia, other.memberMedia);
 
+  String toJsonString({String? appId}) {
+    return toEntity(appId: appId).toJsonString();
+  }
+
   @override
   String toString() {
     String accessibleByMembersCsv = (accessibleByMembers == null) ? '' : accessibleByMembers!.join(', ');

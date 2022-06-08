@@ -98,6 +98,10 @@ class MemberProfileModel implements ModelBase, WithAppId {
           ListEquality().equals(readAccess, other.readAccess) &&
           ListEquality().equals(memberMedia, other.memberMedia);
 
+  String toJsonString({String? appId}) {
+    return toEntity(appId: appId).toJsonString();
+  }
+
   @override
   String toString() {
     String accessibleByMembersCsv = (accessibleByMembers == null) ? '' : accessibleByMembers!.join(', ');

@@ -82,6 +82,10 @@ class PostCommentModel implements ModelBase, WithAppId {
           dislikes == other.dislikes &&
           ListEquality().equals(memberMedia, other.memberMedia);
 
+  String toJsonString({String? appId}) {
+    return toEntity(appId: appId).toJsonString();
+  }
+
   @override
   String toString() {
     String memberMediaCsv = (memberMedia == null) ? '' : memberMedia!.join(', ');

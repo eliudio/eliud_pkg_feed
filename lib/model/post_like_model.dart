@@ -87,6 +87,10 @@ class PostLikeModel implements ModelBase, WithAppId {
           appId == other.appId &&
           likeType == other.likeType;
 
+  String toJsonString({String? appId}) {
+    return toEntity(appId: appId).toJsonString();
+  }
+
   @override
   String toString() {
     return 'PostLikeModel{documentID: $documentID, postId: $postId, postCommentId: $postCommentId, memberId: $memberId, timestamp: $timestamp, appId: $appId, likeType: $likeType}';

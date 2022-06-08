@@ -65,6 +65,10 @@ class LabelledBodyComponentModel implements ModelBase {
           componentName == other.componentName &&
           componentId == other.componentId;
 
+  String toJsonString({String? appId}) {
+    return toEntity(appId: appId).toJsonString();
+  }
+
   @override
   String toString() {
     return 'LabelledBodyComponentModel{documentID: $documentID, label: $label, componentName: $componentName, componentId: $componentId}';
