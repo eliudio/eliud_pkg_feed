@@ -17,6 +17,7 @@
 import '../model/internal_component.dart';
 import 'package:eliud_core/core/registry.dart';
 import 'package:eliud_core/tools/component/component_spec.dart';
+import 'abstract_repository_singleton.dart';
 
 import '../extensions/feed_front_component.dart';
 import '../editors/feed_front_component_editor.dart';
@@ -45,9 +46,9 @@ class ComponentRegistry {
     Registry.registry()!.addDropDownSupporter("profiles", DropdownButtonComponentFactory());
     Registry.registry()!.register(componentName: "profiles", componentConstructor: ProfileComponentConstructorDefault());
     Registry.registry()!.addComponentSpec('eliud_pkg_feed', 'feed', [
-      ComponentSpec('feedFronts', FeedFrontComponentConstructorDefault(), FeedFrontComponentSelector(), FeedFrontComponentEditorConstructor(), ), 
-      ComponentSpec('feedMenus', FeedMenuComponentConstructorDefault(), FeedMenuComponentSelector(), FeedMenuComponentEditorConstructor(), ), 
-      ComponentSpec('profiles', ProfileComponentConstructorDefault(), ProfileComponentSelector(), ProfileComponentEditorConstructor(), ), 
+      ComponentSpec('feedFronts', FeedFrontComponentConstructorDefault(), FeedFrontComponentSelector(), FeedFrontComponentEditorConstructor(), ({String? appId}) => feedFrontRepository(appId: appId)! ), 
+      ComponentSpec('feedMenus', FeedMenuComponentConstructorDefault(), FeedMenuComponentSelector(), FeedMenuComponentEditorConstructor(), ({String? appId}) => feedMenuRepository(appId: appId)! ), 
+      ComponentSpec('profiles', ProfileComponentConstructorDefault(), ProfileComponentSelector(), ProfileComponentEditorConstructor(), ({String? appId}) => profileRepository(appId: appId)! ), 
     ]);
 
   }

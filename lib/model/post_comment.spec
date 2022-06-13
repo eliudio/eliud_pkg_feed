@@ -85,6 +85,7 @@
     {
       "fieldName": "memberMedia",
       "fieldType": "MemberMedium",
+      "extractImage": "url",
       "displayName": "Media",
       "group": "media",
       "arrayType": "Array"
