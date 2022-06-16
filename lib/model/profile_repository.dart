@@ -38,6 +38,8 @@ typedef ProfileModelTrigger(List<ProfileModel?> list);
 typedef ProfileChanged(ProfileModel? value);
 
 abstract class ProfileRepository extends RepositoryBase<ProfileModel> {
+  Future<ProfileEntity> addEntity(String documentID, ProfileEntity value);
+  Future<ProfileEntity> updateEntity(String documentID, ProfileEntity value);
   Future<ProfileModel> add(ProfileModel value);
   Future<void> delete(ProfileModel value);
   Future<ProfileModel?> get(String? id, { Function(Exception)? onError });

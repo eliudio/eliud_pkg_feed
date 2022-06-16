@@ -40,6 +40,30 @@ import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
 class PostFirestore implements PostRepository {
+  Future<PostEntity> addEntity(String documentID, PostEntity value) {
+    return PostCollection.doc(documentID).set(value.toDocument()).then((_) => value).then((v) async {
+      var newValue = await getEntity(documentID);
+      if (newValue == null) {
+        return value;
+      } else {
+        return newValue;
+      }
+    })
+;
+  }
+
+  Future<PostEntity> updateEntity(String documentID, PostEntity value) {
+    return PostCollection.doc(documentID).update(value.toDocument()).then((_) => value).then((v) async {
+      var newValue = await getEntity(documentID);
+      if (newValue == null) {
+        return value;
+      } else {
+        return newValue;
+      }
+    })
+;
+  }
+
   Future<PostModel> add(PostModel value) {
     return PostCollection.doc(value.documentID).set(value.toEntity(appId: appId).copyWith(timestamp : FieldValue.serverTimestamp(), ).toDocument()).then((_) => value).then((v) async {
       var newValue = await get(value.documentID);
@@ -74,6 +98,21 @@ class PostFirestore implements PostRepository {
 
   Future<PostModel?> _populateDocPlus(DocumentSnapshot value) async {
     return PostModel.fromEntityPlus(value.id, PostEntity.fromMap(value.data()), appId: appId);  }
+
+  Future<PostEntity?> getEntity(String? id, {Function(Exception)? onError}) async {
+    try {
+      var collection = PostCollection.doc(id);
+      var doc = await collection.get();
+      return PostEntity.fromMap(doc.data());
+    } on Exception catch(e) {
+      if (onError != null) {
+        onError(e);
+      } else {
+        print("Error whilst retrieving Post with id $id");
+        print("Exceptoin: $e");
+      }
+    };
+  }
 
   Future<PostModel?> get(String? id, {Function(Exception)? onError}) async {
     try {

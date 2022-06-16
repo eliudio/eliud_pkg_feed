@@ -52,6 +52,14 @@ class PostLikeCache implements PostLikeRepository {
     });
   }
 
+  Future<PostLikeEntity> addEntity(String documentID, PostLikeEntity value) {
+    return reference.addEntity(documentID, value);
+  }
+
+  Future<PostLikeEntity> updateEntity(String documentID, PostLikeEntity value) {
+    return reference.updateEntity(documentID, value);
+  }
+
   Future<void> delete(PostLikeModel value){
     fullCache.remove(value.documentID);
     reference.delete(value);

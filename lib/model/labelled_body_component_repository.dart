@@ -34,6 +34,8 @@ typedef LabelledBodyComponentModelTrigger(List<LabelledBodyComponentModel?> list
 typedef LabelledBodyComponentChanged(LabelledBodyComponentModel? value);
 
 abstract class LabelledBodyComponentRepository extends RepositoryBase<LabelledBodyComponentModel> {
+  Future<LabelledBodyComponentEntity> addEntity(String documentID, LabelledBodyComponentEntity value);
+  Future<LabelledBodyComponentEntity> updateEntity(String documentID, LabelledBodyComponentEntity value);
   Future<LabelledBodyComponentModel> add(LabelledBodyComponentModel value);
   Future<void> delete(LabelledBodyComponentModel value);
   Future<LabelledBodyComponentModel?> get(String? id, { Function(Exception)? onError });

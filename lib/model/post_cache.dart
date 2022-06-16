@@ -52,6 +52,14 @@ class PostCache implements PostRepository {
     });
   }
 
+  Future<PostEntity> addEntity(String documentID, PostEntity value) {
+    return reference.addEntity(documentID, value);
+  }
+
+  Future<PostEntity> updateEntity(String documentID, PostEntity value) {
+    return reference.updateEntity(documentID, value);
+  }
+
   Future<void> delete(PostModel value){
     fullCache.remove(value.documentID);
     reference.delete(value);

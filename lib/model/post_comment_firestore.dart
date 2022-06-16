@@ -40,6 +40,30 @@ import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
 class PostCommentFirestore implements PostCommentRepository {
+  Future<PostCommentEntity> addEntity(String documentID, PostCommentEntity value) {
+    return PostCommentCollection.doc(documentID).set(value.toDocument()).then((_) => value).then((v) async {
+      var newValue = await getEntity(documentID);
+      if (newValue == null) {
+        return value;
+      } else {
+        return newValue;
+      }
+    })
+;
+  }
+
+  Future<PostCommentEntity> updateEntity(String documentID, PostCommentEntity value) {
+    return PostCommentCollection.doc(documentID).update(value.toDocument()).then((_) => value).then((v) async {
+      var newValue = await getEntity(documentID);
+      if (newValue == null) {
+        return value;
+      } else {
+        return newValue;
+      }
+    })
+;
+  }
+
   Future<PostCommentModel> add(PostCommentModel value) {
     return PostCommentCollection.doc(value.documentID).set(value.toEntity(appId: appId).copyWith(timestamp : FieldValue.serverTimestamp(), ).toDocument()).then((_) => value).then((v) async {
       var newValue = await get(value.documentID);
@@ -74,6 +98,21 @@ class PostCommentFirestore implements PostCommentRepository {
 
   Future<PostCommentModel?> _populateDocPlus(DocumentSnapshot value) async {
     return PostCommentModel.fromEntityPlus(value.id, PostCommentEntity.fromMap(value.data()), appId: appId);  }
+
+  Future<PostCommentEntity?> getEntity(String? id, {Function(Exception)? onError}) async {
+    try {
+      var collection = PostCommentCollection.doc(id);
+      var doc = await collection.get();
+      return PostCommentEntity.fromMap(doc.data());
+    } on Exception catch(e) {
+      if (onError != null) {
+        onError(e);
+      } else {
+        print("Error whilst retrieving PostComment with id $id");
+        print("Exceptoin: $e");
+      }
+    };
+  }
 
   Future<PostCommentModel?> get(String? id, {Function(Exception)? onError}) async {
     try {

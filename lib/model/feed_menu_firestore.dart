@@ -36,6 +36,14 @@ import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
 class FeedMenuFirestore implements FeedMenuRepository {
+  Future<FeedMenuEntity> addEntity(String documentID, FeedMenuEntity value) {
+    return FeedMenuCollection.doc(documentID).set(value.toDocument()).then((_) => value);
+  }
+
+  Future<FeedMenuEntity> updateEntity(String documentID, FeedMenuEntity value) {
+    return FeedMenuCollection.doc(documentID).update(value.toDocument()).then((_) => value);
+  }
+
   Future<FeedMenuModel> add(FeedMenuModel value) {
     return FeedMenuCollection.doc(value.documentID).set(value.toEntity(appId: appId).toDocument()).then((_) => value);
   }
@@ -54,6 +62,21 @@ class FeedMenuFirestore implements FeedMenuRepository {
 
   Future<FeedMenuModel?> _populateDocPlus(DocumentSnapshot value) async {
     return FeedMenuModel.fromEntityPlus(value.id, FeedMenuEntity.fromMap(value.data()), appId: appId);  }
+
+  Future<FeedMenuEntity?> getEntity(String? id, {Function(Exception)? onError}) async {
+    try {
+      var collection = FeedMenuCollection.doc(id);
+      var doc = await collection.get();
+      return FeedMenuEntity.fromMap(doc.data());
+    } on Exception catch(e) {
+      if (onError != null) {
+        onError(e);
+      } else {
+        print("Error whilst retrieving FeedMenu with id $id");
+        print("Exceptoin: $e");
+      }
+    };
+  }
 
   Future<FeedMenuModel?> get(String? id, {Function(Exception)? onError}) async {
     try {

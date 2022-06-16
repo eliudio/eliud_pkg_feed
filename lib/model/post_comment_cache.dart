@@ -52,6 +52,14 @@ class PostCommentCache implements PostCommentRepository {
     });
   }
 
+  Future<PostCommentEntity> addEntity(String documentID, PostCommentEntity value) {
+    return reference.addEntity(documentID, value);
+  }
+
+  Future<PostCommentEntity> updateEntity(String documentID, PostCommentEntity value) {
+    return reference.updateEntity(documentID, value);
+  }
+
   Future<void> delete(PostCommentModel value){
     fullCache.remove(value.documentID);
     reference.delete(value);

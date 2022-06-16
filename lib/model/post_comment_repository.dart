@@ -42,6 +42,8 @@ typedef PostCommentModelTrigger(List<PostCommentModel?> list);
 typedef PostCommentChanged(PostCommentModel? value);
 
 abstract class PostCommentRepository extends RepositoryBase<PostCommentModel> {
+  Future<PostCommentEntity> addEntity(String documentID, PostCommentEntity value);
+  Future<PostCommentEntity> updateEntity(String documentID, PostCommentEntity value);
   Future<PostCommentModel> add(PostCommentModel value);
   Future<void> delete(PostCommentModel value);
   Future<PostCommentModel?> get(String? id, { Function(Exception)? onError });

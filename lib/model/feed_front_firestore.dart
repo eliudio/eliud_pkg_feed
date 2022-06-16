@@ -36,6 +36,14 @@ import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
 class FeedFrontFirestore implements FeedFrontRepository {
+  Future<FeedFrontEntity> addEntity(String documentID, FeedFrontEntity value) {
+    return FeedFrontCollection.doc(documentID).set(value.toDocument()).then((_) => value);
+  }
+
+  Future<FeedFrontEntity> updateEntity(String documentID, FeedFrontEntity value) {
+    return FeedFrontCollection.doc(documentID).update(value.toDocument()).then((_) => value);
+  }
+
   Future<FeedFrontModel> add(FeedFrontModel value) {
     return FeedFrontCollection.doc(value.documentID).set(value.toEntity(appId: appId).toDocument()).then((_) => value);
   }
@@ -54,6 +62,21 @@ class FeedFrontFirestore implements FeedFrontRepository {
 
   Future<FeedFrontModel?> _populateDocPlus(DocumentSnapshot value) async {
     return FeedFrontModel.fromEntityPlus(value.id, FeedFrontEntity.fromMap(value.data()), appId: appId);  }
+
+  Future<FeedFrontEntity?> getEntity(String? id, {Function(Exception)? onError}) async {
+    try {
+      var collection = FeedFrontCollection.doc(id);
+      var doc = await collection.get();
+      return FeedFrontEntity.fromMap(doc.data());
+    } on Exception catch(e) {
+      if (onError != null) {
+        onError(e);
+      } else {
+        print("Error whilst retrieving FeedFront with id $id");
+        print("Exceptoin: $e");
+      }
+    };
+  }
 
   Future<FeedFrontModel?> get(String? id, {Function(Exception)? onError}) async {
     try {

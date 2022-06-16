@@ -47,6 +47,14 @@ class FeedMenuCache implements FeedMenuRepository {
     });
   }
 
+  Future<FeedMenuEntity> addEntity(String documentID, FeedMenuEntity value) {
+    return reference.addEntity(documentID, value);
+  }
+
+  Future<FeedMenuEntity> updateEntity(String documentID, FeedMenuEntity value) {
+    return reference.updateEntity(documentID, value);
+  }
+
   Future<void> delete(FeedMenuModel value){
     fullCache.remove(value.documentID);
     reference.delete(value);

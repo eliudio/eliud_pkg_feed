@@ -42,6 +42,8 @@ typedef PostLikeModelTrigger(List<PostLikeModel?> list);
 typedef PostLikeChanged(PostLikeModel? value);
 
 abstract class PostLikeRepository extends RepositoryBase<PostLikeModel> {
+  Future<PostLikeEntity> addEntity(String documentID, PostLikeEntity value);
+  Future<PostLikeEntity> updateEntity(String documentID, PostLikeEntity value);
   Future<PostLikeModel> add(PostLikeModel value);
   Future<void> delete(PostLikeModel value);
   Future<PostLikeModel?> get(String? id, { Function(Exception)? onError });

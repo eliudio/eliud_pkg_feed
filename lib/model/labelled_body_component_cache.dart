@@ -42,6 +42,14 @@ class LabelledBodyComponentCache implements LabelledBodyComponentRepository {
     });
   }
 
+  Future<LabelledBodyComponentEntity> addEntity(String documentID, LabelledBodyComponentEntity value) {
+    return reference.addEntity(documentID, value);
+  }
+
+  Future<LabelledBodyComponentEntity> updateEntity(String documentID, LabelledBodyComponentEntity value) {
+    return reference.updateEntity(documentID, value);
+  }
+
   Future<void> delete(LabelledBodyComponentModel value){
     fullCache.remove(value.documentID);
     reference.delete(value);

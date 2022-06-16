@@ -36,6 +36,14 @@ import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
 class ProfileFirestore implements ProfileRepository {
+  Future<ProfileEntity> addEntity(String documentID, ProfileEntity value) {
+    return ProfileCollection.doc(documentID).set(value.toDocument()).then((_) => value);
+  }
+
+  Future<ProfileEntity> updateEntity(String documentID, ProfileEntity value) {
+    return ProfileCollection.doc(documentID).update(value.toDocument()).then((_) => value);
+  }
+
   Future<ProfileModel> add(ProfileModel value) {
     return ProfileCollection.doc(value.documentID).set(value.toEntity(appId: appId).toDocument()).then((_) => value);
   }
@@ -54,6 +62,21 @@ class ProfileFirestore implements ProfileRepository {
 
   Future<ProfileModel?> _populateDocPlus(DocumentSnapshot value) async {
     return ProfileModel.fromEntityPlus(value.id, ProfileEntity.fromMap(value.data()), appId: appId);  }
+
+  Future<ProfileEntity?> getEntity(String? id, {Function(Exception)? onError}) async {
+    try {
+      var collection = ProfileCollection.doc(id);
+      var doc = await collection.get();
+      return ProfileEntity.fromMap(doc.data());
+    } on Exception catch(e) {
+      if (onError != null) {
+        onError(e);
+      } else {
+        print("Error whilst retrieving Profile with id $id");
+        print("Exceptoin: $e");
+      }
+    };
+  }
 
   Future<ProfileModel?> get(String? id, {Function(Exception)? onError}) async {
     try {

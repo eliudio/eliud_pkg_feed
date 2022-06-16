@@ -42,6 +42,8 @@ typedef PostModelTrigger(List<PostModel?> list);
 typedef PostChanged(PostModel? value);
 
 abstract class PostRepository extends RepositoryBase<PostModel> {
+  Future<PostEntity> addEntity(String documentID, PostEntity value);
+  Future<PostEntity> updateEntity(String documentID, PostEntity value);
   Future<PostModel> add(PostModel value);
   Future<void> delete(PostModel value);
   Future<PostModel?> get(String? id, { Function(Exception)? onError });

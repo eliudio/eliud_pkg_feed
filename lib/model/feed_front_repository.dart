@@ -38,6 +38,8 @@ typedef FeedFrontModelTrigger(List<FeedFrontModel?> list);
 typedef FeedFrontChanged(FeedFrontModel? value);
 
 abstract class FeedFrontRepository extends RepositoryBase<FeedFrontModel> {
+  Future<FeedFrontEntity> addEntity(String documentID, FeedFrontEntity value);
+  Future<FeedFrontEntity> updateEntity(String documentID, FeedFrontEntity value);
   Future<FeedFrontModel> add(FeedFrontModel value);
   Future<void> delete(FeedFrontModel value);
   Future<FeedFrontModel?> get(String? id, { Function(Exception)? onError });

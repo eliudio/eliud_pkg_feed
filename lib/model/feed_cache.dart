@@ -47,6 +47,14 @@ class FeedCache implements FeedRepository {
     });
   }
 
+  Future<FeedEntity> addEntity(String documentID, FeedEntity value) {
+    return reference.addEntity(documentID, value);
+  }
+
+  Future<FeedEntity> updateEntity(String documentID, FeedEntity value) {
+    return reference.updateEntity(documentID, value);
+  }
+
   Future<void> delete(FeedModel value){
     fullCache.remove(value.documentID);
     reference.delete(value);

@@ -38,6 +38,8 @@ typedef FeedModelTrigger(List<FeedModel?> list);
 typedef FeedChanged(FeedModel? value);
 
 abstract class FeedRepository extends RepositoryBase<FeedModel> {
+  Future<FeedEntity> addEntity(String documentID, FeedEntity value);
+  Future<FeedEntity> updateEntity(String documentID, FeedEntity value);
   Future<FeedModel> add(FeedModel value);
   Future<void> delete(FeedModel value);
   Future<FeedModel?> get(String? id, { Function(Exception)? onError });

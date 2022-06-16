@@ -40,6 +40,30 @@ import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
 class PostLikeFirestore implements PostLikeRepository {
+  Future<PostLikeEntity> addEntity(String documentID, PostLikeEntity value) {
+    return PostLikeCollection.doc(documentID).set(value.toDocument()).then((_) => value).then((v) async {
+      var newValue = await getEntity(documentID);
+      if (newValue == null) {
+        return value;
+      } else {
+        return newValue;
+      }
+    })
+;
+  }
+
+  Future<PostLikeEntity> updateEntity(String documentID, PostLikeEntity value) {
+    return PostLikeCollection.doc(documentID).update(value.toDocument()).then((_) => value).then((v) async {
+      var newValue = await getEntity(documentID);
+      if (newValue == null) {
+        return value;
+      } else {
+        return newValue;
+      }
+    })
+;
+  }
+
   Future<PostLikeModel> add(PostLikeModel value) {
     return PostLikeCollection.doc(value.documentID).set(value.toEntity(appId: appId).copyWith(timestamp : FieldValue.serverTimestamp(), ).toDocument()).then((_) => value).then((v) async {
       var newValue = await get(value.documentID);
@@ -74,6 +98,21 @@ class PostLikeFirestore implements PostLikeRepository {
 
   Future<PostLikeModel?> _populateDocPlus(DocumentSnapshot value) async {
     return PostLikeModel.fromEntityPlus(value.id, PostLikeEntity.fromMap(value.data()), appId: appId);  }
+
+  Future<PostLikeEntity?> getEntity(String? id, {Function(Exception)? onError}) async {
+    try {
+      var collection = PostLikeCollection.doc(id);
+      var doc = await collection.get();
+      return PostLikeEntity.fromMap(doc.data());
+    } on Exception catch(e) {
+      if (onError != null) {
+        onError(e);
+      } else {
+        print("Error whilst retrieving PostLike with id $id");
+        print("Exceptoin: $e");
+      }
+    };
+  }
 
   Future<PostLikeModel?> get(String? id, {Function(Exception)? onError}) async {
     try {

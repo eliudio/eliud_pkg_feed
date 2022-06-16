@@ -47,6 +47,14 @@ class FeedFrontCache implements FeedFrontRepository {
     });
   }
 
+  Future<FeedFrontEntity> addEntity(String documentID, FeedFrontEntity value) {
+    return reference.addEntity(documentID, value);
+  }
+
+  Future<FeedFrontEntity> updateEntity(String documentID, FeedFrontEntity value) {
+    return reference.updateEntity(documentID, value);
+  }
+
   Future<void> delete(FeedFrontModel value){
     fullCache.remove(value.documentID);
     reference.delete(value);

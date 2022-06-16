@@ -47,6 +47,14 @@ class ProfileCache implements ProfileRepository {
     });
   }
 
+  Future<ProfileEntity> addEntity(String documentID, ProfileEntity value) {
+    return reference.addEntity(documentID, value);
+  }
+
+  Future<ProfileEntity> updateEntity(String documentID, ProfileEntity value) {
+    return reference.updateEntity(documentID, value);
+  }
+
   Future<void> delete(ProfileModel value){
     fullCache.remove(value.documentID);
     reference.delete(value);

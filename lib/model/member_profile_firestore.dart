@@ -36,6 +36,14 @@ import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
 class MemberProfileFirestore implements MemberProfileRepository {
+  Future<MemberProfileEntity> addEntity(String documentID, MemberProfileEntity value) {
+    return MemberProfileCollection.doc(documentID).set(value.toDocument()).then((_) => value);
+  }
+
+  Future<MemberProfileEntity> updateEntity(String documentID, MemberProfileEntity value) {
+    return MemberProfileCollection.doc(documentID).update(value.toDocument()).then((_) => value);
+  }
+
   Future<MemberProfileModel> add(MemberProfileModel value) {
     return MemberProfileCollection.doc(value.documentID).set(value.toEntity(appId: appId).toDocument()).then((_) => value);
   }
@@ -54,6 +62,21 @@ class MemberProfileFirestore implements MemberProfileRepository {
 
   Future<MemberProfileModel?> _populateDocPlus(DocumentSnapshot value) async {
     return MemberProfileModel.fromEntityPlus(value.id, MemberProfileEntity.fromMap(value.data()), appId: appId);  }
+
+  Future<MemberProfileEntity?> getEntity(String? id, {Function(Exception)? onError}) async {
+    try {
+      var collection = MemberProfileCollection.doc(id);
+      var doc = await collection.get();
+      return MemberProfileEntity.fromMap(doc.data());
+    } on Exception catch(e) {
+      if (onError != null) {
+        onError(e);
+      } else {
+        print("Error whilst retrieving MemberProfile with id $id");
+        print("Exceptoin: $e");
+      }
+    };
+  }
 
   Future<MemberProfileModel?> get(String? id, {Function(Exception)? onError}) async {
     try {

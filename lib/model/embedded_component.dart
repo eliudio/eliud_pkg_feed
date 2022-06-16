@@ -29,12 +29,14 @@ import '../model/labelled_body_component_list_bloc.dart';
 import '../model/labelled_body_component_list.dart';
 import '../model/labelled_body_component_list_event.dart';
 import '../model/labelled_body_component_model.dart';
+import '../model/labelled_body_component_entity.dart';
 import '../model/labelled_body_component_repository.dart';
 
 import '../model/member_profile_list_bloc.dart';
 import '../model/member_profile_list.dart';
 import '../model/member_profile_list_event.dart';
 import '../model/member_profile_model.dart';
+import '../model/member_profile_entity.dart';
 import '../model/member_profile_repository.dart';
 
 typedef LabelledBodyComponentListChanged(List<LabelledBodyComponentModel> values);
@@ -96,6 +98,14 @@ class LabelledBodyComponentInMemoryRepository implements LabelledBodyComponentRe
         i++;
       }
       return -1;
+    }
+
+    Future<LabelledBodyComponentEntity> addEntity(String documentID, LabelledBodyComponentEntity value) {
+      throw Exception('Not implemented'); 
+    }
+
+    Future<LabelledBodyComponentEntity> updateEntity(String documentID, LabelledBodyComponentEntity value) {
+      throw Exception('Not implemented'); 
     }
 
     Future<LabelledBodyComponentModel> add(LabelledBodyComponentModel value) {
@@ -199,6 +209,14 @@ class MemberProfileInMemoryRepository implements MemberProfileRepository {
         i++;
       }
       return -1;
+    }
+
+    Future<MemberProfileEntity> addEntity(String documentID, MemberProfileEntity value) {
+      throw Exception('Not implemented'); 
+    }
+
+    Future<MemberProfileEntity> updateEntity(String documentID, MemberProfileEntity value) {
+      throw Exception('Not implemented'); 
     }
 
     Future<MemberProfileModel> add(MemberProfileModel value) {
