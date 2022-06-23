@@ -185,6 +185,15 @@ class LabelledBodyComponentInMemoryRepository implements LabelledBodyComponentRe
     throw UnimplementedError();
   }
   
+  @override
+  Future<LabelledBodyComponentEntity?> getEntity(String? id, {Function(Exception p1)? onError}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  LabelledBodyComponentEntity? fromMap(Object? o) {
+    throw UnimplementedError();
+  }
 
     Future<void> deleteAll() async {}
 }
@@ -296,6 +305,15 @@ class MemberProfileInMemoryRepository implements MemberProfileRepository {
     throw UnimplementedError();
   }
   
+  @override
+  Future<MemberProfileEntity?> getEntity(String? id, {Function(Exception p1)? onError}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  MemberProfileEntity? fromMap(Object? o) {
+    throw UnimplementedError();
+  }
 
     Future<void> deleteAll() async {}
 }

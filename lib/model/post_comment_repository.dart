@@ -41,7 +41,7 @@ import 'package:eliud_core/core/base/repository_base.dart';
 typedef PostCommentModelTrigger(List<PostCommentModel?> list);
 typedef PostCommentChanged(PostCommentModel? value);
 
-abstract class PostCommentRepository extends RepositoryBase<PostCommentModel> {
+abstract class PostCommentRepository extends RepositoryBase<PostCommentModel, PostCommentEntity> {
   Future<PostCommentEntity> addEntity(String documentID, PostCommentEntity value);
   Future<PostCommentEntity> updateEntity(String documentID, PostCommentEntity value);
   Future<PostCommentModel> add(PostCommentModel value);

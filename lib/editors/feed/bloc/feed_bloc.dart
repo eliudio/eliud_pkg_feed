@@ -24,8 +24,10 @@ import 'package:eliud_core/core/editor/editor_base_bloc/editor_base_bloc.dart';
 import 'package:eliud_core/core/editor/editor_base_bloc/editor_base_event.dart';
 import 'package:eliud_core/core/editor/editor_base_bloc/editor_base_state.dart';
 
+import '../../../model/feed_entity.dart';
+
 class FeedDashboardBloc
-    extends EditorBaseBloc<FeedModel> {
+    extends EditorBaseBloc<FeedModel, FeedEntity> {
 
   FeedDashboardBloc(String appId, EditorFeedback feedback)
       : super(appId, feedRepository(appId: appId)!, feedback);

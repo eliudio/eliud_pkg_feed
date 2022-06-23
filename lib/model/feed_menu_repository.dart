@@ -37,7 +37,7 @@ import 'package:eliud_core/core/base/repository_base.dart';
 typedef FeedMenuModelTrigger(List<FeedMenuModel?> list);
 typedef FeedMenuChanged(FeedMenuModel? value);
 
-abstract class FeedMenuRepository extends RepositoryBase<FeedMenuModel> {
+abstract class FeedMenuRepository extends RepositoryBase<FeedMenuModel, FeedMenuEntity> {
   Future<FeedMenuEntity> addEntity(String documentID, FeedMenuEntity value);
   Future<FeedMenuEntity> updateEntity(String documentID, FeedMenuEntity value);
   Future<FeedMenuModel> add(FeedMenuModel value);

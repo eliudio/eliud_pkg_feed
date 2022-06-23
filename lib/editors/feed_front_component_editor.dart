@@ -24,6 +24,7 @@ import 'package:eliud_core/core/editor/editor_base_bloc/editor_base_bloc.dart';
 import 'package:eliud_core/core/editor/editor_base_bloc/editor_base_event.dart';
 import 'package:eliud_core/core/editor/editor_base_bloc/editor_base_state.dart';
 
+import '../model/feed_front_entity.dart';
 import 'feed/select_feed_widget.dart';
 
 class FeedFrontComponentEditorConstructor extends ComponentEditorConstructor {
@@ -89,7 +90,7 @@ class FeedFrontComponentEditorConstructor extends ComponentEditorConstructor {
   }
 }
 
-class FeedFrontBloc extends EditorBaseBloc<FeedFrontModel> {
+class FeedFrontBloc extends EditorBaseBloc<FeedFrontModel, FeedFrontEntity> {
   FeedFrontBloc(String appId, EditorFeedback feedback)
       : super(appId, feedFrontRepository(appId: appId)!, feedback);
 

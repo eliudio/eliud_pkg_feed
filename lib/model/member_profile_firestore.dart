@@ -36,6 +36,11 @@ import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
 class MemberProfileFirestore implements MemberProfileRepository {
+  @override
+  MemberProfileEntity? fromMap(Object? o) {
+    return MemberProfileEntity.fromMap(o);
+  }
+
   Future<MemberProfileEntity> addEntity(String documentID, MemberProfileEntity value) {
     return MemberProfileCollection.doc(documentID).set(value.toDocument()).then((_) => value);
   }

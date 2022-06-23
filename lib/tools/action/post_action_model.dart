@@ -1,3 +1,4 @@
+import 'package:eliud_core/core/base/model_base.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/display_conditions_model.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
@@ -16,7 +17,7 @@ class PostActionModel extends ActionModel {
   PostActionModel(AppModel app, { this.feed, DisplayConditionsModel? conditions} ) : super(app, actionType: PostActionEntity.label, conditions: conditions);
 
   @override
-  ActionEntity toEntity({String? appId}) {
+  ActionEntity toEntity({String? appId, List<ModelBase>? referencesCollector}) {
     return PostActionEntity(
         feedId: (feed != null) ? feed!.documentID : null,
         conditions: (conditions != null) ? conditions!.toEntity(): null,

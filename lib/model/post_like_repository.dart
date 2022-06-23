@@ -41,7 +41,7 @@ import 'package:eliud_core/core/base/repository_base.dart';
 typedef PostLikeModelTrigger(List<PostLikeModel?> list);
 typedef PostLikeChanged(PostLikeModel? value);
 
-abstract class PostLikeRepository extends RepositoryBase<PostLikeModel> {
+abstract class PostLikeRepository extends RepositoryBase<PostLikeModel, PostLikeEntity> {
   Future<PostLikeEntity> addEntity(String documentID, PostLikeEntity value);
   Future<PostLikeEntity> updateEntity(String documentID, PostLikeEntity value);
   Future<PostLikeModel> add(PostLikeModel value);

@@ -110,6 +110,16 @@ class LabelledBodyComponentCache implements LabelledBodyComponentRepository {
     });
   }
 
+  @override
+  Future<LabelledBodyComponentEntity?> getEntity(String? id, {Function(Exception p1)? onError}) {
+    return reference.getEntity(id, onError: onError);
+  }
+
+  @override
+  LabelledBodyComponentEntity? fromMap(Object? o) {
+    return reference.fromMap(o);
+  }
+
   Future<void> deleteAll() {
     return reference.deleteAll();
   }

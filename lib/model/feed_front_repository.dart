@@ -37,7 +37,7 @@ import 'package:eliud_core/core/base/repository_base.dart';
 typedef FeedFrontModelTrigger(List<FeedFrontModel?> list);
 typedef FeedFrontChanged(FeedFrontModel? value);
 
-abstract class FeedFrontRepository extends RepositoryBase<FeedFrontModel> {
+abstract class FeedFrontRepository extends RepositoryBase<FeedFrontModel, FeedFrontEntity> {
   Future<FeedFrontEntity> addEntity(String documentID, FeedFrontEntity value);
   Future<FeedFrontEntity> updateEntity(String documentID, FeedFrontEntity value);
   Future<FeedFrontModel> add(FeedFrontModel value);

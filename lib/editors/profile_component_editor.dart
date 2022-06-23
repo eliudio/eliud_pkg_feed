@@ -24,6 +24,7 @@ import 'package:eliud_core/core/editor/editor_base_bloc/editor_base_bloc.dart';
 import 'package:eliud_core/core/editor/editor_base_bloc/editor_base_event.dart';
 import 'package:eliud_core/core/editor/editor_base_bloc/editor_base_state.dart';
 
+import '../model/profile_entity.dart';
 import 'feed/select_feed_widget.dart';
 
 class ProfileComponentEditorConstructor
@@ -92,7 +93,7 @@ class ProfileComponentEditorConstructor
 }
 
 class ProfileBloc
-    extends EditorBaseBloc<ProfileModel> {
+    extends EditorBaseBloc<ProfileModel, ProfileEntity> {
 
   ProfileBloc(String appId, EditorFeedback feedback)
       : super(appId, profileRepository(appId: appId)!, feedback);

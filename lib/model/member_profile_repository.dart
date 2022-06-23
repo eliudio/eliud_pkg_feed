@@ -37,7 +37,7 @@ import 'package:eliud_core/core/base/repository_base.dart';
 typedef MemberProfileModelTrigger(List<MemberProfileModel?> list);
 typedef MemberProfileChanged(MemberProfileModel? value);
 
-abstract class MemberProfileRepository extends RepositoryBase<MemberProfileModel> {
+abstract class MemberProfileRepository extends RepositoryBase<MemberProfileModel, MemberProfileEntity> {
   Future<MemberProfileEntity> addEntity(String documentID, MemberProfileEntity value);
   Future<MemberProfileEntity> updateEntity(String documentID, MemberProfileEntity value);
   Future<MemberProfileModel> add(MemberProfileModel value);

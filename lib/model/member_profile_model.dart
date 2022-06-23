@@ -19,6 +19,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/model_base.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:eliud_core/model/app_model.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
@@ -101,21 +102,6 @@ class MemberProfileModel implements ModelBase, WithAppId {
           ListEquality().equals(memberMedia, other.memberMedia);
 
   @override
-  Future<String> toRichJsonString({String? appId}) async {
-    var document = toEntity(appId: appId).toDocument();
-    document['documentID'] = documentID;
-    if ((profileBackground != null) && (profileBackground!.url != null)) {
-      var url = profileBackground!.url!;
-      var uriurl = Uri.parse(url);
-      final response = await http.get(uriurl);
-      var bytes = response.bodyBytes.toList();
-      document['profileBackground-extract'] = bytes.toList();
-    }
-
-    return jsonEncode(document);
-  }
-
-  @override
   String toString() {
     String accessibleByMembersCsv = (accessibleByMembers == null) ? '' : accessibleByMembers!.join(', ');
     String readAccessCsv = (readAccess == null) ? '' : readAccess!.join(', ');
@@ -124,7 +110,10 @@ class MemberProfileModel implements ModelBase, WithAppId {
     return 'MemberProfileModel{documentID: $documentID, appId: $appId, feedId: $feedId, authorId: $authorId, profile: $profile, profileBackground: $profileBackground, profileOverride: $profileOverride, nameOverride: $nameOverride, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }, memberMedia: MemberMediumContainer[] { $memberMediaCsv }}';
   }
 
-  MemberProfileEntity toEntity({String? appId}) {
+  MemberProfileEntity toEntity({String? appId, List<ModelBase>? referencesCollector}) {
+    if (referencesCollector != null) {
+      if (profileBackground != null) referencesCollector.add(profileBackground!);
+    }
     return MemberProfileEntity(
           appId: (appId != null) ? appId : null, 
           feedId: (feedId != null) ? feedId : null, 
@@ -137,7 +126,7 @@ class MemberProfileModel implements ModelBase, WithAppId {
           accessibleByMembers: (accessibleByMembers != null) ? accessibleByMembers : null, 
           readAccess: (readAccess != null) ? readAccess : null, 
           memberMedia: (memberMedia != null) ? memberMedia
-            !.map((item) => item.toEntity(appId: appId))
+            !.map((item) => item.toEntity(appId: appId, referencesCollector: referencesCollector))
             .toList() : null, 
     );
   }

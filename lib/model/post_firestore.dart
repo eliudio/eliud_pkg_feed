@@ -40,6 +40,11 @@ import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
 class PostFirestore implements PostRepository {
+  @override
+  PostEntity? fromMap(Object? o) {
+    return PostEntity.fromMap(o);
+  }
+
   Future<PostEntity> addEntity(String documentID, PostEntity value) {
     return PostCollection.doc(documentID).set(value.toDocument()).then((_) => value).then((v) async {
       var newValue = await getEntity(documentID);

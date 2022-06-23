@@ -41,7 +41,7 @@ import 'package:eliud_core/core/base/repository_base.dart';
 typedef PostModelTrigger(List<PostModel?> list);
 typedef PostChanged(PostModel? value);
 
-abstract class PostRepository extends RepositoryBase<PostModel> {
+abstract class PostRepository extends RepositoryBase<PostModel, PostEntity> {
   Future<PostEntity> addEntity(String documentID, PostEntity value);
   Future<PostEntity> updateEntity(String documentID, PostEntity value);
   Future<PostModel> add(PostModel value);

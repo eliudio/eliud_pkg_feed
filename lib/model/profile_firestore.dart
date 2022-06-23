@@ -36,6 +36,11 @@ import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
 class ProfileFirestore implements ProfileRepository {
+  @override
+  ProfileEntity? fromMap(Object? o) {
+    return ProfileEntity.fromMap(o);
+  }
+
   Future<ProfileEntity> addEntity(String documentID, ProfileEntity value) {
     return ProfileCollection.doc(documentID).set(value.toDocument()).then((_) => value);
   }

@@ -13,7 +13,9 @@ import 'package:eliud_pkg_feed/model/labelled_body_component_model.dart';
 import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_membership/model/membership_dashboard_model.dart';
 
-class FeedMenuBloc extends ExtEditorBaseBloc<FeedMenuModel, LabelledBodyComponentModel> {
+import '../../model/feed_menu_entity.dart';
+
+class FeedMenuBloc extends ExtEditorBaseBloc<FeedMenuModel, LabelledBodyComponentModel, FeedMenuEntity> {
 
   FeedMenuBloc(String appId, EditorFeedback feedback)
       : super(appId, feedMenuRepository(appId: appId)!, feedback);

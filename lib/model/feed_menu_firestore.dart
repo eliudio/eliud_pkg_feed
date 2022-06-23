@@ -36,6 +36,11 @@ import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
 class FeedMenuFirestore implements FeedMenuRepository {
+  @override
+  FeedMenuEntity? fromMap(Object? o) {
+    return FeedMenuEntity.fromMap(o);
+  }
+
   Future<FeedMenuEntity> addEntity(String documentID, FeedMenuEntity value) {
     return FeedMenuCollection.doc(documentID).set(value.toDocument()).then((_) => value);
   }

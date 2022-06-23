@@ -40,6 +40,11 @@ import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
 class PostLikeFirestore implements PostLikeRepository {
+  @override
+  PostLikeEntity? fromMap(Object? o) {
+    return PostLikeEntity.fromMap(o);
+  }
+
   Future<PostLikeEntity> addEntity(String documentID, PostLikeEntity value) {
     return PostLikeCollection.doc(documentID).set(value.toDocument()).then((_) => value).then((v) async {
       var newValue = await getEntity(documentID);

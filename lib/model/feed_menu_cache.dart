@@ -115,6 +115,16 @@ class FeedMenuCache implements FeedMenuRepository {
     });
   }
 
+  @override
+  Future<FeedMenuEntity?> getEntity(String? id, {Function(Exception p1)? onError}) {
+    return reference.getEntity(id, onError: onError);
+  }
+
+  @override
+  FeedMenuEntity? fromMap(Object? o) {
+    return reference.fromMap(o);
+  }
+
   Future<void> deleteAll() {
     return reference.deleteAll();
   }

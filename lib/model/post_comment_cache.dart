@@ -120,6 +120,16 @@ class PostCommentCache implements PostCommentRepository {
     });
   }
 
+  @override
+  Future<PostCommentEntity?> getEntity(String? id, {Function(Exception p1)? onError}) {
+    return reference.getEntity(id, onError: onError);
+  }
+
+  @override
+  PostCommentEntity? fromMap(Object? o) {
+    return reference.fromMap(o);
+  }
+
   Future<void> deleteAll() {
     return reference.deleteAll();
   }

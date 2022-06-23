@@ -18,6 +18,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/model_base.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:eliud_core/model/app_model.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
@@ -74,25 +75,21 @@ class FeedFrontModel implements ModelBase, WithAppId {
           conditions == other.conditions;
 
   @override
-  Future<String> toRichJsonString({String? appId}) async {
-    var document = toEntity(appId: appId).toDocument();
-    document['documentID'] = documentID;
-    return jsonEncode(document);
-  }
-
-  @override
   String toString() {
     return 'FeedFrontModel{documentID: $documentID, appId: $appId, description: $description, feed: $feed, backgroundOverridePosts: $backgroundOverridePosts, backgroundOverrideProfile: $backgroundOverrideProfile, conditions: $conditions}';
   }
 
-  FeedFrontEntity toEntity({String? appId}) {
+  FeedFrontEntity toEntity({String? appId, List<ModelBase>? referencesCollector}) {
+    if (referencesCollector != null) {
+      if (feed != null) referencesCollector.add(feed!);
+    }
     return FeedFrontEntity(
           appId: (appId != null) ? appId : null, 
           description: (description != null) ? description : null, 
           feedId: (feed != null) ? feed!.documentID : null, 
-          backgroundOverridePosts: (backgroundOverridePosts != null) ? backgroundOverridePosts!.toEntity(appId: appId) : null, 
-          backgroundOverrideProfile: (backgroundOverrideProfile != null) ? backgroundOverrideProfile!.toEntity(appId: appId) : null, 
-          conditions: (conditions != null) ? conditions!.toEntity(appId: appId) : null, 
+          backgroundOverridePosts: (backgroundOverridePosts != null) ? backgroundOverridePosts!.toEntity(appId: appId, referencesCollector: referencesCollector) : null, 
+          backgroundOverrideProfile: (backgroundOverrideProfile != null) ? backgroundOverrideProfile!.toEntity(appId: appId, referencesCollector: referencesCollector) : null, 
+          conditions: (conditions != null) ? conditions!.toEntity(appId: appId, referencesCollector: referencesCollector) : null, 
     );
   }
 

@@ -33,7 +33,7 @@ import 'package:eliud_core/core/base/repository_base.dart';
 typedef LabelledBodyComponentModelTrigger(List<LabelledBodyComponentModel?> list);
 typedef LabelledBodyComponentChanged(LabelledBodyComponentModel? value);
 
-abstract class LabelledBodyComponentRepository extends RepositoryBase<LabelledBodyComponentModel> {
+abstract class LabelledBodyComponentRepository extends RepositoryBase<LabelledBodyComponentModel, LabelledBodyComponentEntity> {
   Future<LabelledBodyComponentEntity> addEntity(String documentID, LabelledBodyComponentEntity value);
   Future<LabelledBodyComponentEntity> updateEntity(String documentID, LabelledBodyComponentEntity value);
   Future<LabelledBodyComponentModel> add(LabelledBodyComponentModel value);
