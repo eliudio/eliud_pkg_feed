@@ -40,6 +40,9 @@ import 'package:eliud_core/tools/random.dart';
 
 
 class ProfileModel implements ModelBase, WithAppId {
+  static const String packageName = 'eliud_pkg_feed';
+  static const String id = 'Profile';
+
   String documentID;
 
   // This is the identifier of the app to which this feed belongs
@@ -77,9 +80,9 @@ class ProfileModel implements ModelBase, WithAppId {
     return 'ProfileModel{documentID: $documentID, appId: $appId, description: $description, feed: $feed, backgroundOverride: $backgroundOverride, conditions: $conditions}';
   }
 
-  ProfileEntity toEntity({String? appId, List<ModelBase>? referencesCollector}) {
+  ProfileEntity toEntity({String? appId, Set<ModelReference>? referencesCollector}) {
     if (referencesCollector != null) {
-      if (feed != null) referencesCollector.add(feed!);
+      if (feed != null) referencesCollector.add(ModelReference(FeedModel.packageName, FeedModel.id, feed!));
     }
     return ProfileEntity(
           appId: (appId != null) ? appId : null, 

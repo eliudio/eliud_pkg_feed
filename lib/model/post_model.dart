@@ -71,6 +71,9 @@ PostArchiveStatus toPostArchiveStatus(int? index) {
 
 
 class PostModel implements ModelBase, WithAppId {
+  static const String packageName = 'eliud_pkg_feed';
+  static const String id = 'Post';
+
   String documentID;
   String authorId;
   DateTime? timestamp;
@@ -144,7 +147,7 @@ class PostModel implements ModelBase, WithAppId {
     return 'PostModel{documentID: $documentID, authorId: $authorId, timestamp: $timestamp, appId: $appId, feedId: $feedId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, html: $html, description: $description, likes: $likes, dislikes: $dislikes, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }, archived: $archived, externalLink: $externalLink, memberMedia: MemberMediumContainer[] { $memberMediaCsv }}';
   }
 
-  PostEntity toEntity({String? appId, List<ModelBase>? referencesCollector}) {
+  PostEntity toEntity({String? appId, Set<ModelReference>? referencesCollector}) {
     if (referencesCollector != null) {
     }
     return PostEntity(

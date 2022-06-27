@@ -40,6 +40,9 @@ import 'package:eliud_core/tools/random.dart';
 
 
 class FeedFrontModel implements ModelBase, WithAppId {
+  static const String packageName = 'eliud_pkg_feed';
+  static const String id = 'FeedFront';
+
   String documentID;
 
   // This is the identifier of the app to which this feed belongs
@@ -79,9 +82,9 @@ class FeedFrontModel implements ModelBase, WithAppId {
     return 'FeedFrontModel{documentID: $documentID, appId: $appId, description: $description, feed: $feed, backgroundOverridePosts: $backgroundOverridePosts, backgroundOverrideProfile: $backgroundOverrideProfile, conditions: $conditions}';
   }
 
-  FeedFrontEntity toEntity({String? appId, List<ModelBase>? referencesCollector}) {
+  FeedFrontEntity toEntity({String? appId, Set<ModelReference>? referencesCollector}) {
     if (referencesCollector != null) {
-      if (feed != null) referencesCollector.add(feed!);
+      if (feed != null) referencesCollector.add(ModelReference(FeedModel.packageName, FeedModel.id, feed!));
     }
     return FeedFrontEntity(
           appId: (appId != null) ? appId : null, 

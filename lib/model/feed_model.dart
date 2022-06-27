@@ -52,6 +52,9 @@ ThumbStyle toThumbStyle(int? index) {
 
 
 class FeedModel implements ModelBase, WithAppId {
+  static const String packageName = 'eliud_pkg_feed';
+  static const String id = 'Feed';
+
   String documentID;
 
   // This is the identifier of the app to which this feed belongs
@@ -109,7 +112,7 @@ class FeedModel implements ModelBase, WithAppId {
     return 'FeedModel{documentID: $documentID, appId: $appId, description: $description, thumbImage: $thumbImage, photoPost: $photoPost, videoPost: $videoPost, messagePost: $messagePost, audioPost: $audioPost, albumPost: $albumPost, articlePost: $articlePost}';
   }
 
-  FeedEntity toEntity({String? appId, List<ModelBase>? referencesCollector}) {
+  FeedEntity toEntity({String? appId, Set<ModelReference>? referencesCollector}) {
     if (referencesCollector != null) {
     }
     return FeedEntity(

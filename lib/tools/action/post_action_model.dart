@@ -17,7 +17,7 @@ class PostActionModel extends ActionModel {
   PostActionModel(AppModel app, { this.feed, DisplayConditionsModel? conditions} ) : super(app, actionType: PostActionEntity.label, conditions: conditions);
 
   @override
-  ActionEntity toEntity({String? appId, List<ModelBase>? referencesCollector}) {
+  ActionEntity toEntity({String? appId, Set<ModelReference>? referencesCollector}) {
     return PostActionEntity(
         feedId: (feed != null) ? feed!.documentID : null,
         conditions: (conditions != null) ? conditions!.toEntity(): null,

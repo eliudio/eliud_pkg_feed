@@ -45,6 +45,9 @@ import 'package:eliud_core/tools/random.dart';
 
 
 class PostCommentModel implements ModelBase, WithAppId {
+  static const String packageName = 'eliud_pkg_feed';
+  static const String id = 'PostComment';
+
   String documentID;
   String? postId;
   String? postCommentId;
@@ -92,7 +95,7 @@ class PostCommentModel implements ModelBase, WithAppId {
     return 'PostCommentModel{documentID: $documentID, postId: $postId, postCommentId: $postCommentId, memberId: $memberId, timestamp: $timestamp, appId: $appId, comment: $comment, likes: $likes, dislikes: $dislikes, memberMedia: MemberMedium[] { $memberMediaCsv }}';
   }
 
-  PostCommentEntity toEntity({String? appId, List<ModelBase>? referencesCollector}) {
+  PostCommentEntity toEntity({String? appId, Set<ModelReference>? referencesCollector}) {
     if (referencesCollector != null) {
     }
     return PostCommentEntity(

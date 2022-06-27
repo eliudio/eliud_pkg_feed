@@ -41,6 +41,9 @@ import 'package:eliud_core/tools/random.dart';
 
 
 class FeedMenuModel implements ModelBase, WithAppId {
+  static const String packageName = 'eliud_pkg_feed';
+  static const String id = 'FeedMenu';
+
   String documentID;
 
   // This is the identifier of the app to which this feed belongs
@@ -89,9 +92,9 @@ class FeedMenuModel implements ModelBase, WithAppId {
     return 'FeedMenuModel{documentID: $documentID, appId: $appId, description: $description, bodyComponentsCurrentMember: LabelledBodyComponent[] { $bodyComponentsCurrentMemberCsv }, bodyComponentsOtherMember: LabelledBodyComponent[] { $bodyComponentsOtherMemberCsv }, itemColor: $itemColor, selectedItemColor: $selectedItemColor, backgroundOverride: $backgroundOverride, feedFront: $feedFront, conditions: $conditions}';
   }
 
-  FeedMenuEntity toEntity({String? appId, List<ModelBase>? referencesCollector}) {
+  FeedMenuEntity toEntity({String? appId, Set<ModelReference>? referencesCollector}) {
     if (referencesCollector != null) {
-      if (feedFront != null) referencesCollector.add(feedFront!);
+      if (feedFront != null) referencesCollector.add(ModelReference(FeedFrontModel.packageName, FeedFrontModel.id, feedFront!));
     }
     return FeedMenuEntity(
           appId: (appId != null) ? appId : null, 

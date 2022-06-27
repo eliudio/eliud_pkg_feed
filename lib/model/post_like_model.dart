@@ -56,6 +56,9 @@ LikeType toLikeType(int? index) {
 
 
 class PostLikeModel implements ModelBase, WithAppId {
+  static const String packageName = 'eliud_pkg_feed';
+  static const String id = 'PostLike';
+
   String documentID;
   String postId;
   String? postCommentId;
@@ -95,7 +98,7 @@ class PostLikeModel implements ModelBase, WithAppId {
     return 'PostLikeModel{documentID: $documentID, postId: $postId, postCommentId: $postCommentId, memberId: $memberId, timestamp: $timestamp, appId: $appId, likeType: $likeType}';
   }
 
-  PostLikeEntity toEntity({String? appId, List<ModelBase>? referencesCollector}) {
+  PostLikeEntity toEntity({String? appId, Set<ModelReference>? referencesCollector}) {
     if (referencesCollector != null) {
     }
     return PostLikeEntity(

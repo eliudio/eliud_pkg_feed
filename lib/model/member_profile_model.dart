@@ -55,6 +55,9 @@ MemberProfileAccessibleByGroup toMemberProfileAccessibleByGroup(int? index) {
 
 
 class MemberProfileModel implements ModelBase, WithAppId {
+  static const String packageName = 'eliud_pkg_feed';
+  static const String id = 'MemberProfile';
+
   String documentID;
   String appId;
 
@@ -110,9 +113,9 @@ class MemberProfileModel implements ModelBase, WithAppId {
     return 'MemberProfileModel{documentID: $documentID, appId: $appId, feedId: $feedId, authorId: $authorId, profile: $profile, profileBackground: $profileBackground, profileOverride: $profileOverride, nameOverride: $nameOverride, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }, memberMedia: MemberMediumContainer[] { $memberMediaCsv }}';
   }
 
-  MemberProfileEntity toEntity({String? appId, List<ModelBase>? referencesCollector}) {
+  MemberProfileEntity toEntity({String? appId, Set<ModelReference>? referencesCollector}) {
     if (referencesCollector != null) {
-      if (profileBackground != null) referencesCollector.add(profileBackground!);
+      if (profileBackground != null) referencesCollector.add(ModelReference(MemberMediumModel.packageName, MemberMediumModel.id, profileBackground!));
     }
     return MemberProfileEntity(
           appId: (appId != null) ? appId : null, 

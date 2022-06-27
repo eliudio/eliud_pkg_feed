@@ -36,6 +36,9 @@ import 'package:eliud_core/tools/random.dart';
 
 
 class LabelledBodyComponentModel implements ModelBase {
+  static const String packageName = 'eliud_pkg_feed';
+  static const String id = 'LabelledBodyComponent';
+
   String documentID;
 
   // The label of the component
@@ -73,7 +76,7 @@ class LabelledBodyComponentModel implements ModelBase {
     return 'LabelledBodyComponentModel{documentID: $documentID, label: $label, componentName: $componentName, componentId: $componentId}';
   }
 
-  LabelledBodyComponentEntity toEntity({String? appId, List<ModelBase>? referencesCollector}) {
+  LabelledBodyComponentEntity toEntity({String? appId, Set<ModelReference>? referencesCollector}) {
     if (referencesCollector != null) {
     }
     return LabelledBodyComponentEntity(
