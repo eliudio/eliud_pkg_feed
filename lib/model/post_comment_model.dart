@@ -95,7 +95,7 @@ class PostCommentModel implements ModelBase, WithAppId {
     return 'PostCommentModel{documentID: $documentID, postId: $postId, postCommentId: $postCommentId, memberId: $memberId, timestamp: $timestamp, appId: $appId, comment: $comment, likes: $likes, dislikes: $dislikes, memberMedia: MemberMedium[] { $memberMediaCsv }}';
   }
 
-  PostCommentEntity toEntity({String? appId, Set<ModelReference>? referencesCollector}) {
+  PostCommentEntity toEntity({String? appId, List<ModelReference>? referencesCollector}) {
     if (referencesCollector != null) {
     }
     return PostCommentEntity(

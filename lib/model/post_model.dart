@@ -147,7 +147,7 @@ class PostModel implements ModelBase, WithAppId {
     return 'PostModel{documentID: $documentID, authorId: $authorId, timestamp: $timestamp, appId: $appId, feedId: $feedId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, html: $html, description: $description, likes: $likes, dislikes: $dislikes, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }, archived: $archived, externalLink: $externalLink, memberMedia: MemberMediumContainer[] { $memberMediaCsv }}';
   }
 
-  PostEntity toEntity({String? appId, Set<ModelReference>? referencesCollector}) {
+  PostEntity toEntity({String? appId, List<ModelReference>? referencesCollector}) {
     if (referencesCollector != null) {
     }
     return PostEntity(

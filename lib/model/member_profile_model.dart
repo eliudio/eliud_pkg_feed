@@ -113,7 +113,7 @@ class MemberProfileModel implements ModelBase, WithAppId {
     return 'MemberProfileModel{documentID: $documentID, appId: $appId, feedId: $feedId, authorId: $authorId, profile: $profile, profileBackground: $profileBackground, profileOverride: $profileOverride, nameOverride: $nameOverride, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }, memberMedia: MemberMediumContainer[] { $memberMediaCsv }}';
   }
 
-  MemberProfileEntity toEntity({String? appId, Set<ModelReference>? referencesCollector}) {
+  MemberProfileEntity toEntity({String? appId, List<ModelReference>? referencesCollector}) {
     if (referencesCollector != null) {
       if (profileBackground != null) referencesCollector.add(ModelReference(MemberMediumModel.packageName, MemberMediumModel.id, profileBackground!));
     }

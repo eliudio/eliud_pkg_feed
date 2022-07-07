@@ -82,7 +82,7 @@ class FeedFrontModel implements ModelBase, WithAppId {
     return 'FeedFrontModel{documentID: $documentID, appId: $appId, description: $description, feed: $feed, backgroundOverridePosts: $backgroundOverridePosts, backgroundOverrideProfile: $backgroundOverrideProfile, conditions: $conditions}';
   }
 
-  FeedFrontEntity toEntity({String? appId, Set<ModelReference>? referencesCollector}) {
+  FeedFrontEntity toEntity({String? appId, List<ModelReference>? referencesCollector}) {
     if (referencesCollector != null) {
       if (feed != null) referencesCollector.add(ModelReference(FeedModel.packageName, FeedModel.id, feed!));
     }

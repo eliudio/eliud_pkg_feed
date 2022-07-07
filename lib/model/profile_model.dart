@@ -80,7 +80,7 @@ class ProfileModel implements ModelBase, WithAppId {
     return 'ProfileModel{documentID: $documentID, appId: $appId, description: $description, feed: $feed, backgroundOverride: $backgroundOverride, conditions: $conditions}';
   }
 
-  ProfileEntity toEntity({String? appId, Set<ModelReference>? referencesCollector}) {
+  ProfileEntity toEntity({String? appId, List<ModelReference>? referencesCollector}) {
     if (referencesCollector != null) {
       if (feed != null) referencesCollector.add(ModelReference(FeedModel.packageName, FeedModel.id, feed!));
     }

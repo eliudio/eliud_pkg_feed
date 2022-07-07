@@ -112,7 +112,7 @@ class FeedModel implements ModelBase, WithAppId {
     return 'FeedModel{documentID: $documentID, appId: $appId, description: $description, thumbImage: $thumbImage, photoPost: $photoPost, videoPost: $videoPost, messagePost: $messagePost, audioPost: $audioPost, albumPost: $albumPost, articlePost: $articlePost}';
   }
 
-  FeedEntity toEntity({String? appId, Set<ModelReference>? referencesCollector}) {
+  FeedEntity toEntity({String? appId, List<ModelReference>? referencesCollector}) {
     if (referencesCollector != null) {
     }
     return FeedEntity(

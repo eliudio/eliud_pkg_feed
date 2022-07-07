@@ -92,7 +92,7 @@ class FeedMenuModel implements ModelBase, WithAppId {
     return 'FeedMenuModel{documentID: $documentID, appId: $appId, description: $description, bodyComponentsCurrentMember: LabelledBodyComponent[] { $bodyComponentsCurrentMemberCsv }, bodyComponentsOtherMember: LabelledBodyComponent[] { $bodyComponentsOtherMemberCsv }, itemColor: $itemColor, selectedItemColor: $selectedItemColor, backgroundOverride: $backgroundOverride, feedFront: $feedFront, conditions: $conditions}';
   }
 
-  FeedMenuEntity toEntity({String? appId, Set<ModelReference>? referencesCollector}) {
+  FeedMenuEntity toEntity({String? appId, List<ModelReference>? referencesCollector}) {
     if (referencesCollector != null) {
       if (feedFront != null) referencesCollector.add(ModelReference(FeedFrontModel.packageName, FeedFrontModel.id, feedFront!));
     }
