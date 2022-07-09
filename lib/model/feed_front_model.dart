@@ -41,7 +41,7 @@ import 'package:eliud_core/tools/random.dart';
 
 class FeedFrontModel implements ModelBase, WithAppId {
   static const String packageName = 'eliud_pkg_feed';
-  static const String id = 'FeedFront';
+  static const String id = 'feedFronts';
 
   String documentID;
 

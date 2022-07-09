@@ -37,7 +37,7 @@ import 'package:eliud_core/tools/random.dart';
 
 class LabelledBodyComponentModel implements ModelBase {
   static const String packageName = 'eliud_pkg_feed';
-  static const String id = 'LabelledBodyComponent';
+  static const String id = 'labelledBodyComponents';
 
   String documentID;
 

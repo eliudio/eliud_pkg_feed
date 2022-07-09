@@ -50,6 +50,14 @@ class ComponentRegistry {
       ComponentSpec('feedMenus', FeedMenuComponentConstructorDefault(), FeedMenuComponentSelector(), FeedMenuComponentEditorConstructor(), ({String? appId}) => feedMenuRepository(appId: appId)! ), 
       ComponentSpec('profiles', ProfileComponentConstructorDefault(), ProfileComponentSelector(), ProfileComponentEditorConstructor(), ({String? appId}) => profileRepository(appId: appId)! ), 
     ]);
+      Registry.registry()!.registerRetrieveRepository('eliud_pkg_feed', 'feeds', ({String? appId}) => feedRepository(appId: appId)!);
+      Registry.registry()!.registerRetrieveRepository('eliud_pkg_feed', 'feedFronts', ({String? appId}) => feedFrontRepository(appId: appId)!);
+      Registry.registry()!.registerRetrieveRepository('eliud_pkg_feed', 'feedMenus', ({String? appId}) => feedMenuRepository(appId: appId)!);
+      Registry.registry()!.registerRetrieveRepository('eliud_pkg_feed', 'memberProfiles', ({String? appId}) => memberProfileRepository(appId: appId)!);
+      Registry.registry()!.registerRetrieveRepository('eliud_pkg_feed', 'posts', ({String? appId}) => postRepository(appId: appId)!);
+      Registry.registry()!.registerRetrieveRepository('eliud_pkg_feed', 'postComments', ({String? appId}) => postCommentRepository(appId: appId)!);
+      Registry.registry()!.registerRetrieveRepository('eliud_pkg_feed', 'postLikes', ({String? appId}) => postLikeRepository(appId: appId)!);
+      Registry.registry()!.registerRetrieveRepository('eliud_pkg_feed', 'profiles', ({String? appId}) => profileRepository(appId: appId)!);
 
   }
 }

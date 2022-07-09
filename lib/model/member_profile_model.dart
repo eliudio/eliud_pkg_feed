@@ -56,7 +56,7 @@ MemberProfileAccessibleByGroup toMemberProfileAccessibleByGroup(int? index) {
 
 class MemberProfileModel implements ModelBase, WithAppId {
   static const String packageName = 'eliud_pkg_feed';
-  static const String id = 'MemberProfile';
+  static const String id = 'memberProfiles';
 
   String documentID;
   String appId;

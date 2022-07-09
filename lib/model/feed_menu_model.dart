@@ -42,7 +42,7 @@ import 'package:eliud_core/tools/random.dart';
 
 class FeedMenuModel implements ModelBase, WithAppId {
   static const String packageName = 'eliud_pkg_feed';
-  static const String id = 'FeedMenu';
+  static const String id = 'feedMenus';
 
   String documentID;
 

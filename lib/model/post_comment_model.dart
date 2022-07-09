@@ -46,7 +46,7 @@ import 'package:eliud_core/tools/random.dart';
 
 class PostCommentModel implements ModelBase, WithAppId {
   static const String packageName = 'eliud_pkg_feed';
-  static const String id = 'PostComment';
+  static const String id = 'postComments';
 
   String documentID;
   String? postId;

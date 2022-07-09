@@ -72,7 +72,7 @@ PostArchiveStatus toPostArchiveStatus(int? index) {
 
 class PostModel implements ModelBase, WithAppId {
   static const String packageName = 'eliud_pkg_feed';
-  static const String id = 'Post';
+  static const String id = 'posts';
 
   String documentID;
   String authorId;

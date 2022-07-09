@@ -53,7 +53,7 @@ ThumbStyle toThumbStyle(int? index) {
 
 class FeedModel implements ModelBase, WithAppId {
   static const String packageName = 'eliud_pkg_feed';
-  static const String id = 'Feed';
+  static const String id = 'feeds';
 
   String documentID;
 

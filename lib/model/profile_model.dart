@@ -41,7 +41,7 @@ import 'package:eliud_core/tools/random.dart';
 
 class ProfileModel implements ModelBase, WithAppId {
   static const String packageName = 'eliud_pkg_feed';
-  static const String id = 'Profile';
+  static const String id = 'profiles';
 
   String documentID;
 

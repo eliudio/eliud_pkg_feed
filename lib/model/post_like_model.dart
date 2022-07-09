@@ -57,7 +57,7 @@ LikeType toLikeType(int? index) {
 
 class PostLikeModel implements ModelBase, WithAppId {
   static const String packageName = 'eliud_pkg_feed';
-  static const String id = 'PostLike';
+  static const String id = 'postLikes';
 
   String documentID;
   String postId;
