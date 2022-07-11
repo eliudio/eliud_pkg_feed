@@ -80,16 +80,24 @@ class ProfileModel implements ModelBase, WithAppId {
     return 'ProfileModel{documentID: $documentID, appId: $appId, description: $description, feed: $feed, backgroundOverride: $backgroundOverride, conditions: $conditions}';
   }
 
-  ProfileEntity toEntity({String? appId, List<ModelReference>? referencesCollector}) {
-    if (referencesCollector != null) {
-      if (feed != null) referencesCollector.add(ModelReference(FeedModel.packageName, FeedModel.id, feed!));
+  Future<List<ModelReference>> collectReferences({String? appId}) async {
+    List<ModelReference> referencesCollector = [];
+    if (feed != null) {
+      referencesCollector.add(ModelReference(FeedModel.packageName, FeedModel.id, feed!));
     }
+    if (feed != null) referencesCollector.addAll(await feed!.collectReferences(appId: appId));
+    if (backgroundOverride != null) referencesCollector.addAll(await backgroundOverride!.collectReferences(appId: appId));
+    if (conditions != null) referencesCollector.addAll(await conditions!.collectReferences(appId: appId));
+    return referencesCollector;
+  }
+
+  ProfileEntity toEntity({String? appId}) {
     return ProfileEntity(
           appId: (appId != null) ? appId : null, 
           description: (description != null) ? description : null, 
           feedId: (feed != null) ? feed!.documentID : null, 
-          backgroundOverride: (backgroundOverride != null) ? backgroundOverride!.toEntity(appId: appId, referencesCollector: referencesCollector) : null, 
-          conditions: (conditions != null) ? conditions!.toEntity(appId: appId, referencesCollector: referencesCollector) : null, 
+          backgroundOverride: (backgroundOverride != null) ? backgroundOverride!.toEntity(appId: appId) : null, 
+          conditions: (conditions != null) ? conditions!.toEntity(appId: appId) : null, 
     );
   }
 

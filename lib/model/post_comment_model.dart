@@ -95,9 +95,17 @@ class PostCommentModel implements ModelBase, WithAppId {
     return 'PostCommentModel{documentID: $documentID, postId: $postId, postCommentId: $postCommentId, memberId: $memberId, timestamp: $timestamp, appId: $appId, comment: $comment, likes: $likes, dislikes: $dislikes, memberMedia: MemberMedium[] { $memberMediaCsv }}';
   }
 
-  PostCommentEntity toEntity({String? appId, List<ModelReference>? referencesCollector}) {
-    if (referencesCollector != null) {
+  Future<List<ModelReference>> collectReferences({String? appId}) async {
+    List<ModelReference> referencesCollector = [];
+    if (memberMedia != null) {
+      for (var item in memberMedia!) {
+        referencesCollector.addAll(await item.collectReferences(appId: appId));
+      }
     }
+    return referencesCollector;
+  }
+
+  PostCommentEntity toEntity({String? appId}) {
     return PostCommentEntity(
           postId: (postId != null) ? postId : null, 
           postCommentId: (postCommentId != null) ? postCommentId : null, 
@@ -108,7 +116,7 @@ class PostCommentModel implements ModelBase, WithAppId {
           likes: (likes != null) ? likes : null, 
           dislikes: (dislikes != null) ? dislikes : null, 
           memberMedia: (memberMedia != null) ? memberMedia
-            !.map((item) => item.toEntity(appId: appId, referencesCollector: referencesCollector))
+            !.map((item) => item.toEntity(appId: appId))
             .toList() : null, 
     );
   }

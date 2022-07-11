@@ -112,9 +112,12 @@ class FeedModel implements ModelBase, WithAppId {
     return 'FeedModel{documentID: $documentID, appId: $appId, description: $description, thumbImage: $thumbImage, photoPost: $photoPost, videoPost: $videoPost, messagePost: $messagePost, audioPost: $audioPost, albumPost: $albumPost, articlePost: $articlePost}';
   }
 
-  FeedEntity toEntity({String? appId, List<ModelReference>? referencesCollector}) {
-    if (referencesCollector != null) {
-    }
+  Future<List<ModelReference>> collectReferences({String? appId}) async {
+    List<ModelReference> referencesCollector = [];
+    return referencesCollector;
+  }
+
+  FeedEntity toEntity({String? appId}) {
     return FeedEntity(
           appId: (appId != null) ? appId : null, 
           description: (description != null) ? description : null, 

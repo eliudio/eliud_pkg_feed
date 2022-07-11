@@ -92,24 +92,44 @@ class FeedMenuModel implements ModelBase, WithAppId {
     return 'FeedMenuModel{documentID: $documentID, appId: $appId, description: $description, bodyComponentsCurrentMember: LabelledBodyComponent[] { $bodyComponentsCurrentMemberCsv }, bodyComponentsOtherMember: LabelledBodyComponent[] { $bodyComponentsOtherMemberCsv }, itemColor: $itemColor, selectedItemColor: $selectedItemColor, backgroundOverride: $backgroundOverride, feedFront: $feedFront, conditions: $conditions}';
   }
 
-  FeedMenuEntity toEntity({String? appId, List<ModelReference>? referencesCollector}) {
-    if (referencesCollector != null) {
-      if (feedFront != null) referencesCollector.add(ModelReference(FeedFrontModel.packageName, FeedFrontModel.id, feedFront!));
+  Future<List<ModelReference>> collectReferences({String? appId}) async {
+    List<ModelReference> referencesCollector = [];
+    if (feedFront != null) {
+      referencesCollector.add(ModelReference(FeedFrontModel.packageName, FeedFrontModel.id, feedFront!));
     }
+    if (bodyComponentsCurrentMember != null) {
+      for (var item in bodyComponentsCurrentMember!) {
+        referencesCollector.addAll(await item.collectReferences(appId: appId));
+      }
+    }
+    if (bodyComponentsOtherMember != null) {
+      for (var item in bodyComponentsOtherMember!) {
+        referencesCollector.addAll(await item.collectReferences(appId: appId));
+      }
+    }
+    if (itemColor != null) referencesCollector.addAll(await itemColor!.collectReferences(appId: appId));
+    if (selectedItemColor != null) referencesCollector.addAll(await selectedItemColor!.collectReferences(appId: appId));
+    if (backgroundOverride != null) referencesCollector.addAll(await backgroundOverride!.collectReferences(appId: appId));
+    if (feedFront != null) referencesCollector.addAll(await feedFront!.collectReferences(appId: appId));
+    if (conditions != null) referencesCollector.addAll(await conditions!.collectReferences(appId: appId));
+    return referencesCollector;
+  }
+
+  FeedMenuEntity toEntity({String? appId}) {
     return FeedMenuEntity(
           appId: (appId != null) ? appId : null, 
           description: (description != null) ? description : null, 
           bodyComponentsCurrentMember: (bodyComponentsCurrentMember != null) ? bodyComponentsCurrentMember
-            !.map((item) => item.toEntity(appId: appId, referencesCollector: referencesCollector))
+            !.map((item) => item.toEntity(appId: appId))
             .toList() : null, 
           bodyComponentsOtherMember: (bodyComponentsOtherMember != null) ? bodyComponentsOtherMember
-            !.map((item) => item.toEntity(appId: appId, referencesCollector: referencesCollector))
+            !.map((item) => item.toEntity(appId: appId))
             .toList() : null, 
-          itemColor: (itemColor != null) ? itemColor!.toEntity(appId: appId, referencesCollector: referencesCollector) : null, 
-          selectedItemColor: (selectedItemColor != null) ? selectedItemColor!.toEntity(appId: appId, referencesCollector: referencesCollector) : null, 
-          backgroundOverride: (backgroundOverride != null) ? backgroundOverride!.toEntity(appId: appId, referencesCollector: referencesCollector) : null, 
+          itemColor: (itemColor != null) ? itemColor!.toEntity(appId: appId) : null, 
+          selectedItemColor: (selectedItemColor != null) ? selectedItemColor!.toEntity(appId: appId) : null, 
+          backgroundOverride: (backgroundOverride != null) ? backgroundOverride!.toEntity(appId: appId) : null, 
           feedFrontId: (feedFront != null) ? feedFront!.documentID : null, 
-          conditions: (conditions != null) ? conditions!.toEntity(appId: appId, referencesCollector: referencesCollector) : null, 
+          conditions: (conditions != null) ? conditions!.toEntity(appId: appId) : null, 
     );
   }
 

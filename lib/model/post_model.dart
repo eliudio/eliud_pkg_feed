@@ -147,9 +147,17 @@ class PostModel implements ModelBase, WithAppId {
     return 'PostModel{documentID: $documentID, authorId: $authorId, timestamp: $timestamp, appId: $appId, feedId: $feedId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, html: $html, description: $description, likes: $likes, dislikes: $dislikes, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }, archived: $archived, externalLink: $externalLink, memberMedia: MemberMediumContainer[] { $memberMediaCsv }}';
   }
 
-  PostEntity toEntity({String? appId, List<ModelReference>? referencesCollector}) {
-    if (referencesCollector != null) {
+  Future<List<ModelReference>> collectReferences({String? appId}) async {
+    List<ModelReference> referencesCollector = [];
+    if (memberMedia != null) {
+      for (var item in memberMedia!) {
+        referencesCollector.addAll(await item.collectReferences(appId: appId));
+      }
     }
+    return referencesCollector;
+  }
+
+  PostEntity toEntity({String? appId}) {
     return PostEntity(
           authorId: (authorId != null) ? authorId : null, 
           timestamp: (timestamp == null) ? null : timestamp!.millisecondsSinceEpoch, 
@@ -168,7 +176,7 @@ class PostModel implements ModelBase, WithAppId {
           archived: (archived != null) ? archived!.index : null, 
           externalLink: (externalLink != null) ? externalLink : null, 
           memberMedia: (memberMedia != null) ? memberMedia
-            !.map((item) => item.toEntity(appId: appId, referencesCollector: referencesCollector))
+            !.map((item) => item.toEntity(appId: appId))
             .toList() : null, 
     );
   }

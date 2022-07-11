@@ -98,9 +98,12 @@ class PostLikeModel implements ModelBase, WithAppId {
     return 'PostLikeModel{documentID: $documentID, postId: $postId, postCommentId: $postCommentId, memberId: $memberId, timestamp: $timestamp, appId: $appId, likeType: $likeType}';
   }
 
-  PostLikeEntity toEntity({String? appId, List<ModelReference>? referencesCollector}) {
-    if (referencesCollector != null) {
-    }
+  Future<List<ModelReference>> collectReferences({String? appId}) async {
+    List<ModelReference> referencesCollector = [];
+    return referencesCollector;
+  }
+
+  PostLikeEntity toEntity({String? appId}) {
     return PostLikeEntity(
           postId: (postId != null) ? postId : null, 
           postCommentId: (postCommentId != null) ? postCommentId : null, 

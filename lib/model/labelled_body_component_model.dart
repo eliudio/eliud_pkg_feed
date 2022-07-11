@@ -76,9 +76,12 @@ class LabelledBodyComponentModel implements ModelBase {
     return 'LabelledBodyComponentModel{documentID: $documentID, label: $label, componentName: $componentName, componentId: $componentId}';
   }
 
-  LabelledBodyComponentEntity toEntity({String? appId, List<ModelReference>? referencesCollector}) {
-    if (referencesCollector != null) {
-    }
+  Future<List<ModelReference>> collectReferences({String? appId}) async {
+    List<ModelReference> referencesCollector = [];
+    return referencesCollector;
+  }
+
+  LabelledBodyComponentEntity toEntity({String? appId}) {
     return LabelledBodyComponentEntity(
           label: (label != null) ? label : null, 
           componentName: (componentName != null) ? componentName : null, 

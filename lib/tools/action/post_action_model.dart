@@ -17,15 +17,18 @@ class PostActionModel extends ActionModel {
   PostActionModel(AppModel app, { this.feed, DisplayConditionsModel? conditions} ) : super(app, actionType: PostActionEntity.label, conditions: conditions);
 
   @override
-  ActionEntity toEntity({String? appId, List<ModelReference>? referencesCollector}) {
-    if (referencesCollector != null) {
-      if (feed != null) referencesCollector.add(ModelReference(FeedModel.packageName, FeedModel.id, feed!));
-    }
-  
+  ActionEntity toEntity({String? appId}) {
     return PostActionEntity(
         feedId: (feed != null) ? feed!.documentID : null,
         conditions: (conditions != null) ? conditions!.toEntity(): null,
         appId: appId);
+  }
+
+  @override
+  Future<List<ModelReference>> collectReferences({String? appId, }) async {
+    List<ModelReference> referencesCollector = [];
+    if (feed != null) referencesCollector.add(ModelReference(FeedModel.packageName, FeedModel.id, feed!));
+    return referencesCollector;
   }
 
   static Future<ActionModel?> fromEntity(AppModel app, PostActionEntity entity) async {
@@ -60,6 +63,7 @@ class PostActionModel extends ActionModel {
 
   @override
   String describe() => 'Post the current page to feed';
+
 }
 
 class PostActionMapper implements ActionModelMapper {

@@ -82,17 +82,26 @@ class FeedFrontModel implements ModelBase, WithAppId {
     return 'FeedFrontModel{documentID: $documentID, appId: $appId, description: $description, feed: $feed, backgroundOverridePosts: $backgroundOverridePosts, backgroundOverrideProfile: $backgroundOverrideProfile, conditions: $conditions}';
   }
 
-  FeedFrontEntity toEntity({String? appId, List<ModelReference>? referencesCollector}) {
-    if (referencesCollector != null) {
-      if (feed != null) referencesCollector.add(ModelReference(FeedModel.packageName, FeedModel.id, feed!));
+  Future<List<ModelReference>> collectReferences({String? appId}) async {
+    List<ModelReference> referencesCollector = [];
+    if (feed != null) {
+      referencesCollector.add(ModelReference(FeedModel.packageName, FeedModel.id, feed!));
     }
+    if (feed != null) referencesCollector.addAll(await feed!.collectReferences(appId: appId));
+    if (backgroundOverridePosts != null) referencesCollector.addAll(await backgroundOverridePosts!.collectReferences(appId: appId));
+    if (backgroundOverrideProfile != null) referencesCollector.addAll(await backgroundOverrideProfile!.collectReferences(appId: appId));
+    if (conditions != null) referencesCollector.addAll(await conditions!.collectReferences(appId: appId));
+    return referencesCollector;
+  }
+
+  FeedFrontEntity toEntity({String? appId}) {
     return FeedFrontEntity(
           appId: (appId != null) ? appId : null, 
           description: (description != null) ? description : null, 
           feedId: (feed != null) ? feed!.documentID : null, 
-          backgroundOverridePosts: (backgroundOverridePosts != null) ? backgroundOverridePosts!.toEntity(appId: appId, referencesCollector: referencesCollector) : null, 
-          backgroundOverrideProfile: (backgroundOverrideProfile != null) ? backgroundOverrideProfile!.toEntity(appId: appId, referencesCollector: referencesCollector) : null, 
-          conditions: (conditions != null) ? conditions!.toEntity(appId: appId, referencesCollector: referencesCollector) : null, 
+          backgroundOverridePosts: (backgroundOverridePosts != null) ? backgroundOverridePosts!.toEntity(appId: appId) : null, 
+          backgroundOverrideProfile: (backgroundOverrideProfile != null) ? backgroundOverrideProfile!.toEntity(appId: appId) : null, 
+          conditions: (conditions != null) ? conditions!.toEntity(appId: appId) : null, 
     );
   }
 

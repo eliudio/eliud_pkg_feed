@@ -113,10 +113,21 @@ class MemberProfileModel implements ModelBase, WithAppId {
     return 'MemberProfileModel{documentID: $documentID, appId: $appId, feedId: $feedId, authorId: $authorId, profile: $profile, profileBackground: $profileBackground, profileOverride: $profileOverride, nameOverride: $nameOverride, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }, memberMedia: MemberMediumContainer[] { $memberMediaCsv }}';
   }
 
-  MemberProfileEntity toEntity({String? appId, List<ModelReference>? referencesCollector}) {
-    if (referencesCollector != null) {
-      if (profileBackground != null) referencesCollector.add(ModelReference(MemberMediumModel.packageName, MemberMediumModel.id, profileBackground!));
+  Future<List<ModelReference>> collectReferences({String? appId}) async {
+    List<ModelReference> referencesCollector = [];
+    if (profileBackground != null) {
+      referencesCollector.add(ModelReference(MemberMediumModel.packageName, MemberMediumModel.id, profileBackground!));
     }
+    if (profileBackground != null) referencesCollector.addAll(await profileBackground!.collectReferences(appId: appId));
+    if (memberMedia != null) {
+      for (var item in memberMedia!) {
+        referencesCollector.addAll(await item.collectReferences(appId: appId));
+      }
+    }
+    return referencesCollector;
+  }
+
+  MemberProfileEntity toEntity({String? appId}) {
     return MemberProfileEntity(
           appId: (appId != null) ? appId : null, 
           feedId: (feedId != null) ? feedId : null, 
@@ -129,7 +140,7 @@ class MemberProfileModel implements ModelBase, WithAppId {
           accessibleByMembers: (accessibleByMembers != null) ? accessibleByMembers : null, 
           readAccess: (readAccess != null) ? readAccess : null, 
           memberMedia: (memberMedia != null) ? memberMedia
-            !.map((item) => item.toEntity(appId: appId, referencesCollector: referencesCollector))
+            !.map((item) => item.toEntity(appId: appId))
             .toList() : null, 
     );
   }
