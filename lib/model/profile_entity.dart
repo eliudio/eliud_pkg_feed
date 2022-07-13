@@ -32,7 +32,9 @@ class ProfileEntity implements EntityBase {
 
   ProfileEntity({required this.appId, this.description, this.feedId, this.backgroundOverride, this.conditions, });
 
-
+  ProfileEntity copyWith({String? documentID, String? appId, String? description, String? feedId, BackgroundEntity? backgroundOverride, StorageConditionsEntity? conditions, }) {
+    return ProfileEntity(appId : appId ?? this.appId, description : description ?? this.description, feedId : feedId ?? this.feedId, backgroundOverride : backgroundOverride ?? this.backgroundOverride, conditions : conditions ?? this.conditions, );
+  }
   List<Object?> get props => [appId, description, feedId, backgroundOverride, conditions, ];
 
   @override
@@ -82,6 +84,12 @@ class ProfileEntity implements EntityBase {
     if (conditions != null) theDocument["conditions"] = conditionsMap;
       else theDocument["conditions"] = null;
     return theDocument;
+  }
+
+  @override
+  ProfileEntity switchAppId({required String newAppId}) {
+    var newEntity = copyWith(appId: newAppId);
+    return newEntity;
   }
 
   static ProfileEntity? fromJsonString(String json) {

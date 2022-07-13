@@ -37,8 +37,8 @@ class PostCommentEntity implements EntityBase {
 
   PostCommentEntity({this.postId, this.postCommentId, this.memberId, this.timestamp, required this.appId, this.comment, this.likes, this.dislikes, this.memberMedia, });
 
-  PostCommentEntity copyWith({Object? timestamp, }) {
-    return PostCommentEntity(postId: postId, postCommentId: postCommentId, memberId: memberId, timestamp : timestamp, appId: appId, comment: comment, likes: likes, dislikes: dislikes, memberMedia: memberMedia, );
+  PostCommentEntity copyWith({String? documentID, String? postId, String? postCommentId, String? memberId, Object? timestamp, String? appId, String? comment, int? likes, int? dislikes, List<MemberMediumEntity>? memberMedia, }) {
+    return PostCommentEntity(postId : postId ?? this.postId, postCommentId : postCommentId ?? this.postCommentId, memberId : memberId ?? this.memberId, timestamp : timestamp ?? this.timestamp, appId : appId ?? this.appId, comment : comment ?? this.comment, likes : likes ?? this.likes, dislikes : dislikes ?? this.dislikes, memberMedia : memberMedia ?? this.memberMedia, );
   }
   List<Object?> get props => [postId, postCommentId, memberId, timestamp, appId, comment, likes, dislikes, memberMedia, ];
 
@@ -99,6 +99,12 @@ class PostCommentEntity implements EntityBase {
     if (memberMedia != null) theDocument["memberMedia"] = memberMediaListMap;
       else theDocument["memberMedia"] = null;
     return theDocument;
+  }
+
+  @override
+  PostCommentEntity switchAppId({required String newAppId}) {
+    var newEntity = copyWith(appId: newAppId);
+    return newEntity;
   }
 
   static PostCommentEntity? fromJsonString(String json) {

@@ -34,8 +34,8 @@ class PostLikeEntity implements EntityBase {
 
   PostLikeEntity({required this.postId, this.postCommentId, required this.memberId, this.timestamp, required this.appId, this.likeType, });
 
-  PostLikeEntity copyWith({Object? timestamp, }) {
-    return PostLikeEntity(postId: postId, postCommentId: postCommentId, memberId: memberId, timestamp : timestamp, appId: appId, likeType: likeType, );
+  PostLikeEntity copyWith({String? documentID, String? postId, String? postCommentId, String? memberId, Object? timestamp, String? appId, int? likeType, }) {
+    return PostLikeEntity(postId : postId ?? this.postId, postCommentId : postCommentId ?? this.postCommentId, memberId : memberId ?? this.memberId, timestamp : timestamp ?? this.timestamp, appId : appId ?? this.appId, likeType : likeType ?? this.likeType, );
   }
   List<Object?> get props => [postId, postCommentId, memberId, timestamp, appId, likeType, ];
 
@@ -72,6 +72,12 @@ class PostLikeEntity implements EntityBase {
     if (likeType != null) theDocument["likeType"] = likeType;
       else theDocument["likeType"] = null;
     return theDocument;
+  }
+
+  @override
+  PostLikeEntity switchAppId({required String newAppId}) {
+    var newEntity = copyWith(appId: newAppId);
+    return newEntity;
   }
 
   static PostLikeEntity? fromJsonString(String json) {

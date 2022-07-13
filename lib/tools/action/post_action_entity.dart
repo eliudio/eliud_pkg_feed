@@ -27,4 +27,9 @@ class PostActionEntity extends ActionEntity {
         conditions: DisplayConditionsEntity.fromMap(snap['conditions']),
     );
   }
+
+  @override
+  PostActionEntity copyWith({String? appId, DisplayConditionsEntity? conditions, String? feedId }) {
+    return PostActionEntity(appId: appId ?? this.appID, conditions : conditions ?? this.conditions, feedId: feedId ?? this.feedId);
+  }
 }

@@ -36,7 +36,9 @@ class FeedEntity implements EntityBase {
 
   FeedEntity({required this.appId, this.description, this.thumbImage, this.photoPost, this.videoPost, this.messagePost, this.audioPost, this.albumPost, this.articlePost, });
 
-
+  FeedEntity copyWith({String? documentID, String? appId, String? description, int? thumbImage, bool? photoPost, bool? videoPost, bool? messagePost, bool? audioPost, bool? albumPost, bool? articlePost, }) {
+    return FeedEntity(appId : appId ?? this.appId, description : description ?? this.description, thumbImage : thumbImage ?? this.thumbImage, photoPost : photoPost ?? this.photoPost, videoPost : videoPost ?? this.videoPost, messagePost : messagePost ?? this.messagePost, audioPost : audioPost ?? this.audioPost, albumPost : albumPost ?? this.albumPost, articlePost : articlePost ?? this.articlePost, );
+  }
   List<Object?> get props => [appId, description, thumbImage, photoPost, videoPost, messagePost, audioPost, albumPost, articlePost, ];
 
   @override
@@ -82,6 +84,12 @@ class FeedEntity implements EntityBase {
     if (articlePost != null) theDocument["articlePost"] = articlePost;
       else theDocument["articlePost"] = null;
     return theDocument;
+  }
+
+  @override
+  FeedEntity switchAppId({required String newAppId}) {
+    var newEntity = copyWith(appId: newAppId);
+    return newEntity;
   }
 
   static FeedEntity? fromJsonString(String json) {

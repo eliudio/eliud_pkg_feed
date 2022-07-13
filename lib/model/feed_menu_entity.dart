@@ -36,7 +36,9 @@ class FeedMenuEntity implements EntityBase {
 
   FeedMenuEntity({required this.appId, this.description, this.bodyComponentsCurrentMember, this.bodyComponentsOtherMember, this.itemColor, this.selectedItemColor, this.backgroundOverride, this.feedFrontId, this.conditions, });
 
-
+  FeedMenuEntity copyWith({String? documentID, String? appId, String? description, List<LabelledBodyComponentEntity>? bodyComponentsCurrentMember, List<LabelledBodyComponentEntity>? bodyComponentsOtherMember, RgbEntity? itemColor, RgbEntity? selectedItemColor, BackgroundEntity? backgroundOverride, String? feedFrontId, StorageConditionsEntity? conditions, }) {
+    return FeedMenuEntity(appId : appId ?? this.appId, description : description ?? this.description, bodyComponentsCurrentMember : bodyComponentsCurrentMember ?? this.bodyComponentsCurrentMember, bodyComponentsOtherMember : bodyComponentsOtherMember ?? this.bodyComponentsOtherMember, itemColor : itemColor ?? this.itemColor, selectedItemColor : selectedItemColor ?? this.selectedItemColor, backgroundOverride : backgroundOverride ?? this.backgroundOverride, feedFrontId : feedFrontId ?? this.feedFrontId, conditions : conditions ?? this.conditions, );
+  }
   List<Object?> get props => [appId, description, bodyComponentsCurrentMember, bodyComponentsOtherMember, itemColor, selectedItemColor, backgroundOverride, feedFrontId, conditions, ];
 
   @override
@@ -137,6 +139,12 @@ class FeedMenuEntity implements EntityBase {
     if (conditions != null) theDocument["conditions"] = conditionsMap;
       else theDocument["conditions"] = null;
     return theDocument;
+  }
+
+  @override
+  FeedMenuEntity switchAppId({required String newAppId}) {
+    var newEntity = copyWith(appId: newAppId);
+    return newEntity;
   }
 
   static FeedMenuEntity? fromJsonString(String json) {

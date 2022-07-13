@@ -38,7 +38,9 @@ class MemberProfileEntity implements EntityBase {
 
   MemberProfileEntity({required this.appId, this.feedId, this.authorId, this.profile, this.profileBackgroundId, this.profileOverride, this.nameOverride, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, this.memberMedia, });
 
-
+  MemberProfileEntity copyWith({String? documentID, String? appId, String? feedId, String? authorId, String? profile, String? profileBackgroundId, String? profileOverride, String? nameOverride, int? accessibleByGroup, List<String>? accessibleByMembers, List<String>? readAccess, List<MemberMediumContainerEntity>? memberMedia, }) {
+    return MemberProfileEntity(appId : appId ?? this.appId, feedId : feedId ?? this.feedId, authorId : authorId ?? this.authorId, profile : profile ?? this.profile, profileBackgroundId : profileBackgroundId ?? this.profileBackgroundId, profileOverride : profileOverride ?? this.profileOverride, nameOverride : nameOverride ?? this.nameOverride, accessibleByGroup : accessibleByGroup ?? this.accessibleByGroup, accessibleByMembers : accessibleByMembers ?? this.accessibleByMembers, readAccess : readAccess ?? this.readAccess, memberMedia : memberMedia ?? this.memberMedia, );
+  }
   List<Object?> get props => [appId, feedId, authorId, profile, profileBackgroundId, profileOverride, nameOverride, accessibleByGroup, accessibleByMembers, readAccess, memberMedia, ];
 
   @override
@@ -107,6 +109,12 @@ class MemberProfileEntity implements EntityBase {
     if (memberMedia != null) theDocument["memberMedia"] = memberMediaListMap;
       else theDocument["memberMedia"] = null;
     return theDocument;
+  }
+
+  @override
+  MemberProfileEntity switchAppId({required String newAppId}) {
+    var newEntity = copyWith(appId: newAppId);
+    return newEntity;
   }
 
   static MemberProfileEntity? fromJsonString(String json) {

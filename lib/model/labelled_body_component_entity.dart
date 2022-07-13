@@ -29,7 +29,9 @@ class LabelledBodyComponentEntity implements EntityBase {
 
   LabelledBodyComponentEntity({this.label, this.componentName, this.componentId, });
 
-
+  LabelledBodyComponentEntity copyWith({String? documentID, String? label, String? componentName, String? componentId, }) {
+    return LabelledBodyComponentEntity(label : label ?? this.label, componentName : componentName ?? this.componentName, componentId : componentId ?? this.componentId, );
+  }
   List<Object?> get props => [label, componentName, componentId, ];
 
   @override
@@ -57,6 +59,12 @@ class LabelledBodyComponentEntity implements EntityBase {
     if (componentId != null) theDocument["componentId"] = componentId;
       else theDocument["componentId"] = null;
     return theDocument;
+  }
+
+  @override
+  LabelledBodyComponentEntity switchAppId({required String newAppId}) {
+    var newEntity = copyWith();
+    return newEntity;
   }
 
   static LabelledBodyComponentEntity? fromJsonString(String json) {

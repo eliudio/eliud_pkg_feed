@@ -33,7 +33,9 @@ class FeedFrontEntity implements EntityBase {
 
   FeedFrontEntity({required this.appId, this.description, this.feedId, this.backgroundOverridePosts, this.backgroundOverrideProfile, this.conditions, });
 
-
+  FeedFrontEntity copyWith({String? documentID, String? appId, String? description, String? feedId, BackgroundEntity? backgroundOverridePosts, BackgroundEntity? backgroundOverrideProfile, StorageConditionsEntity? conditions, }) {
+    return FeedFrontEntity(appId : appId ?? this.appId, description : description ?? this.description, feedId : feedId ?? this.feedId, backgroundOverridePosts : backgroundOverridePosts ?? this.backgroundOverridePosts, backgroundOverrideProfile : backgroundOverrideProfile ?? this.backgroundOverrideProfile, conditions : conditions ?? this.conditions, );
+  }
   List<Object?> get props => [appId, description, feedId, backgroundOverridePosts, backgroundOverrideProfile, conditions, ];
 
   @override
@@ -93,6 +95,12 @@ class FeedFrontEntity implements EntityBase {
     if (conditions != null) theDocument["conditions"] = conditionsMap;
       else theDocument["conditions"] = null;
     return theDocument;
+  }
+
+  @override
+  FeedFrontEntity switchAppId({required String newAppId}) {
+    var newEntity = copyWith(appId: newAppId);
+    return newEntity;
   }
 
   static FeedFrontEntity? fromJsonString(String json) {

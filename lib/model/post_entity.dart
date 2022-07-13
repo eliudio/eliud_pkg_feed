@@ -45,8 +45,8 @@ class PostEntity implements EntityBase {
 
   PostEntity({required this.authorId, this.timestamp, required this.appId, this.feedId, this.postAppId, this.postPageId, this.pageParameters, this.html, this.description, this.likes, this.dislikes, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, this.archived, this.externalLink, this.memberMedia, });
 
-  PostEntity copyWith({Object? timestamp, }) {
-    return PostEntity(authorId: authorId, timestamp : timestamp, appId: appId, feedId: feedId, postAppId: postAppId, postPageId: postPageId, pageParameters: pageParameters, html: html, description: description, likes: likes, dislikes: dislikes, accessibleByGroup: accessibleByGroup, accessibleByMembers: accessibleByMembers, readAccess: readAccess, archived: archived, externalLink: externalLink, memberMedia: memberMedia, );
+  PostEntity copyWith({String? documentID, String? authorId, Object? timestamp, String? appId, String? feedId, String? postAppId, String? postPageId, Map<String, dynamic>? pageParameters, String? html, String? description, int? likes, int? dislikes, int? accessibleByGroup, List<String>? accessibleByMembers, List<String>? readAccess, int? archived, String? externalLink, List<MemberMediumContainerEntity>? memberMedia, }) {
+    return PostEntity(authorId : authorId ?? this.authorId, timestamp : timestamp ?? this.timestamp, appId : appId ?? this.appId, feedId : feedId ?? this.feedId, postAppId : postAppId ?? this.postAppId, postPageId : postPageId ?? this.postPageId, pageParameters : pageParameters ?? this.pageParameters, html : html ?? this.html, description : description ?? this.description, likes : likes ?? this.likes, dislikes : dislikes ?? this.dislikes, accessibleByGroup : accessibleByGroup ?? this.accessibleByGroup, accessibleByMembers : accessibleByMembers ?? this.accessibleByMembers, readAccess : readAccess ?? this.readAccess, archived : archived ?? this.archived, externalLink : externalLink ?? this.externalLink, memberMedia : memberMedia ?? this.memberMedia, );
   }
   List<Object?> get props => [authorId, timestamp, appId, feedId, postAppId, postPageId, pageParameters, html, description, likes, dislikes, accessibleByGroup, accessibleByMembers, readAccess, archived, externalLink, memberMedia, ];
 
@@ -137,6 +137,12 @@ class PostEntity implements EntityBase {
     if (memberMedia != null) theDocument["memberMedia"] = memberMediaListMap;
       else theDocument["memberMedia"] = null;
     return theDocument;
+  }
+
+  @override
+  PostEntity switchAppId({required String newAppId}) {
+    var newEntity = copyWith(appId: newAppId);
+    return newEntity;
   }
 
   static PostEntity? fromJsonString(String json) {
