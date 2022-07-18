@@ -46,11 +46,7 @@ class FeedFormBloc extends Bloc<FeedFormEvent, FeedFormState> {
   final FormAction? formAction;
   final String? appId;
 
-  FeedFormBloc(this.appId, { this.formAction }): super(FeedFormUninitialized());
-  @override
-  Stream<FeedFormState> mapEventToState(FeedFormEvent event) async* {
-    final currentState = state;
-    if (currentState is FeedFormUninitialized) {
+  FeedFormBloc(this.appId, { this.formAction }): super(FeedFormUninitialized()) {
       on <InitialiseNewFeedFormEvent> ((event, emit) {
         FeedFormLoaded loaded = FeedFormLoaded(value: FeedModel(
                                                documentID: "",
@@ -62,17 +58,19 @@ class FeedFormBloc extends Bloc<FeedFormEvent, FeedFormState> {
       });
 
 
-      if (event is InitialiseFeedFormEvent) {
+      on <InitialiseFeedFormEvent> ((event, emit) async {
         // Need to re-retrieve the document from the repository so that I get all associated types
         FeedFormLoaded loaded = FeedFormLoaded(value: await feedRepository(appId: appId)!.get(event.value!.documentID));
         emit(loaded);
-      } else if (event is InitialiseFeedFormNoLoadEvent) {
+      });
+      on <InitialiseFeedFormNoLoadEvent> ((event, emit) async {
         FeedFormLoaded loaded = FeedFormLoaded(value: event.value);
         emit(loaded);
-      }
-    } else if (currentState is FeedFormInitialized) {
+      });
       FeedModel? newValue = null;
       on <ChangedFeedDocumentID> ((event, emit) async {
+      if (state is FeedFormInitialized) {
+        final currentState = state as FeedFormInitialized;
         newValue = currentState.value!.copyWith(documentID: event.value);
         if (formAction == FormAction.AddAction) {
           emit(await _isDocumentIDValid(event.value, newValue!));
@@ -80,53 +78,80 @@ class FeedFormBloc extends Bloc<FeedFormEvent, FeedFormState> {
           emit(SubmittableFeedForm(value: newValue));
         }
 
+      }
       });
       on <ChangedFeedAppId> ((event, emit) async {
+      if (state is FeedFormInitialized) {
+        final currentState = state as FeedFormInitialized;
         newValue = currentState.value!.copyWith(appId: event.value);
         emit(SubmittableFeedForm(value: newValue));
 
+      }
       });
       on <ChangedFeedDescription> ((event, emit) async {
+      if (state is FeedFormInitialized) {
+        final currentState = state as FeedFormInitialized;
         newValue = currentState.value!.copyWith(description: event.value);
         emit(SubmittableFeedForm(value: newValue));
 
+      }
       });
       on <ChangedFeedThumbImage> ((event, emit) async {
+      if (state is FeedFormInitialized) {
+        final currentState = state as FeedFormInitialized;
         newValue = currentState.value!.copyWith(thumbImage: event.value);
         emit(SubmittableFeedForm(value: newValue));
 
+      }
       });
       on <ChangedFeedPhotoPost> ((event, emit) async {
+      if (state is FeedFormInitialized) {
+        final currentState = state as FeedFormInitialized;
         newValue = currentState.value!.copyWith(photoPost: event.value);
         emit(SubmittableFeedForm(value: newValue));
 
+      }
       });
       on <ChangedFeedVideoPost> ((event, emit) async {
+      if (state is FeedFormInitialized) {
+        final currentState = state as FeedFormInitialized;
         newValue = currentState.value!.copyWith(videoPost: event.value);
         emit(SubmittableFeedForm(value: newValue));
 
+      }
       });
       on <ChangedFeedMessagePost> ((event, emit) async {
+      if (state is FeedFormInitialized) {
+        final currentState = state as FeedFormInitialized;
         newValue = currentState.value!.copyWith(messagePost: event.value);
         emit(SubmittableFeedForm(value: newValue));
 
+      }
       });
       on <ChangedFeedAudioPost> ((event, emit) async {
+      if (state is FeedFormInitialized) {
+        final currentState = state as FeedFormInitialized;
         newValue = currentState.value!.copyWith(audioPost: event.value);
         emit(SubmittableFeedForm(value: newValue));
 
+      }
       });
       on <ChangedFeedAlbumPost> ((event, emit) async {
+      if (state is FeedFormInitialized) {
+        final currentState = state as FeedFormInitialized;
         newValue = currentState.value!.copyWith(albumPost: event.value);
         emit(SubmittableFeedForm(value: newValue));
 
+      }
       });
       on <ChangedFeedArticlePost> ((event, emit) async {
+      if (state is FeedFormInitialized) {
+        final currentState = state as FeedFormInitialized;
         newValue = currentState.value!.copyWith(articlePost: event.value);
         emit(SubmittableFeedForm(value: newValue));
 
+      }
       });
-    }
   }
 
 

@@ -41,11 +41,7 @@ import 'package:eliud_pkg_feed/model/labelled_body_component_repository.dart';
 class LabelledBodyComponentFormBloc extends Bloc<LabelledBodyComponentFormEvent, LabelledBodyComponentFormState> {
   final String? appId;
 
-  LabelledBodyComponentFormBloc(this.appId, ): super(LabelledBodyComponentFormUninitialized());
-  @override
-  Stream<LabelledBodyComponentFormState> mapEventToState(LabelledBodyComponentFormEvent event) async* {
-    final currentState = state;
-    if (currentState is LabelledBodyComponentFormUninitialized) {
+  LabelledBodyComponentFormBloc(this.appId, ): super(LabelledBodyComponentFormUninitialized()) {
       on <InitialiseNewLabelledBodyComponentFormEvent> ((event, emit) {
         LabelledBodyComponentFormLoaded loaded = LabelledBodyComponentFormLoaded(value: LabelledBodyComponentModel(
                                                documentID: "IDENTIFIER", 
@@ -58,26 +54,31 @@ class LabelledBodyComponentFormBloc extends Bloc<LabelledBodyComponentFormEvent,
       });
 
 
-      if (event is InitialiseLabelledBodyComponentFormEvent) {
+      on <InitialiseLabelledBodyComponentFormEvent> ((event, emit) async {
         LabelledBodyComponentFormLoaded loaded = LabelledBodyComponentFormLoaded(value: event.value);
         emit(loaded);
-      } else if (event is InitialiseLabelledBodyComponentFormNoLoadEvent) {
+      });
+      on <InitialiseLabelledBodyComponentFormNoLoadEvent> ((event, emit) async {
         LabelledBodyComponentFormLoaded loaded = LabelledBodyComponentFormLoaded(value: event.value);
         emit(loaded);
-      }
-    } else if (currentState is LabelledBodyComponentFormInitialized) {
+      });
       LabelledBodyComponentModel? newValue = null;
       on <ChangedLabelledBodyComponentComponentName> ((event, emit) async {
+      if (state is LabelledBodyComponentFormInitialized) {
+        final currentState = state as LabelledBodyComponentFormInitialized;
         newValue = currentState.value!.copyWith(componentName: event.value);
         emit(SubmittableLabelledBodyComponentForm(value: newValue));
 
+      }
       });
       on <ChangedLabelledBodyComponentComponentId> ((event, emit) async {
+      if (state is LabelledBodyComponentFormInitialized) {
+        final currentState = state as LabelledBodyComponentFormInitialized;
         newValue = currentState.value!.copyWith(componentId: event.value);
         emit(SubmittableLabelledBodyComponentForm(value: newValue));
 
+      }
       });
-    }
   }
 
 

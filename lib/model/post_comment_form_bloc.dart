@@ -50,11 +50,7 @@ class PostCommentFormBloc extends Bloc<PostCommentFormEvent, PostCommentFormStat
   final FormAction? formAction;
   final String? appId;
 
-  PostCommentFormBloc(this.appId, { this.formAction }): super(PostCommentFormUninitialized());
-  @override
-  Stream<PostCommentFormState> mapEventToState(PostCommentFormEvent event) async* {
-    final currentState = state;
-    if (currentState is PostCommentFormUninitialized) {
+  PostCommentFormBloc(this.appId, { this.formAction }): super(PostCommentFormUninitialized()) {
       on <InitialiseNewPostCommentFormEvent> ((event, emit) {
         PostCommentFormLoaded loaded = PostCommentFormLoaded(value: PostCommentModel(
                                                documentID: "",
@@ -72,17 +68,19 @@ class PostCommentFormBloc extends Bloc<PostCommentFormEvent, PostCommentFormStat
       });
 
 
-      if (event is InitialisePostCommentFormEvent) {
+      on <InitialisePostCommentFormEvent> ((event, emit) async {
         // Need to re-retrieve the document from the repository so that I get all associated types
         PostCommentFormLoaded loaded = PostCommentFormLoaded(value: await postCommentRepository(appId: appId)!.get(event.value!.documentID));
         emit(loaded);
-      } else if (event is InitialisePostCommentFormNoLoadEvent) {
+      });
+      on <InitialisePostCommentFormNoLoadEvent> ((event, emit) async {
         PostCommentFormLoaded loaded = PostCommentFormLoaded(value: event.value);
         emit(loaded);
-      }
-    } else if (currentState is PostCommentFormInitialized) {
+      });
       PostCommentModel? newValue = null;
       on <ChangedPostCommentDocumentID> ((event, emit) async {
+      if (state is PostCommentFormInitialized) {
+        final currentState = state as PostCommentFormInitialized;
         newValue = currentState.value!.copyWith(documentID: event.value);
         if (formAction == FormAction.AddAction) {
           emit(await _isDocumentIDValid(event.value, newValue!));
@@ -90,38 +88,59 @@ class PostCommentFormBloc extends Bloc<PostCommentFormEvent, PostCommentFormStat
           emit(SubmittablePostCommentForm(value: newValue));
         }
 
+      }
       });
       on <ChangedPostCommentPostId> ((event, emit) async {
+      if (state is PostCommentFormInitialized) {
+        final currentState = state as PostCommentFormInitialized;
         newValue = currentState.value!.copyWith(postId: event.value);
         emit(SubmittablePostCommentForm(value: newValue));
 
+      }
       });
       on <ChangedPostCommentPostCommentId> ((event, emit) async {
+      if (state is PostCommentFormInitialized) {
+        final currentState = state as PostCommentFormInitialized;
         newValue = currentState.value!.copyWith(postCommentId: event.value);
         emit(SubmittablePostCommentForm(value: newValue));
 
+      }
       });
       on <ChangedPostCommentMemberId> ((event, emit) async {
+      if (state is PostCommentFormInitialized) {
+        final currentState = state as PostCommentFormInitialized;
         newValue = currentState.value!.copyWith(memberId: event.value);
         emit(SubmittablePostCommentForm(value: newValue));
 
+      }
       });
       on <ChangedPostCommentTimestamp> ((event, emit) async {
+      if (state is PostCommentFormInitialized) {
+        final currentState = state as PostCommentFormInitialized;
         newValue = currentState.value!.copyWith(timestamp: dateTimeFromTimestampString(event.value!));
         emit(SubmittablePostCommentForm(value: newValue));
 
+      }
       });
       on <ChangedPostCommentAppId> ((event, emit) async {
+      if (state is PostCommentFormInitialized) {
+        final currentState = state as PostCommentFormInitialized;
         newValue = currentState.value!.copyWith(appId: event.value);
         emit(SubmittablePostCommentForm(value: newValue));
 
+      }
       });
       on <ChangedPostCommentComment> ((event, emit) async {
+      if (state is PostCommentFormInitialized) {
+        final currentState = state as PostCommentFormInitialized;
         newValue = currentState.value!.copyWith(comment: event.value);
         emit(SubmittablePostCommentForm(value: newValue));
 
+      }
       });
       on <ChangedPostCommentLikes> ((event, emit) async {
+      if (state is PostCommentFormInitialized) {
+        final currentState = state as PostCommentFormInitialized;
         if (isInt(event.value)) {
           newValue = currentState.value!.copyWith(likes: int.parse(event.value!));
           emit(SubmittablePostCommentForm(value: newValue));
@@ -130,8 +149,11 @@ class PostCommentFormBloc extends Bloc<PostCommentFormEvent, PostCommentFormStat
           newValue = currentState.value!.copyWith(likes: 0);
           emit(LikesPostCommentFormError(message: "Value should be a number", value: newValue));
         }
+      }
       });
       on <ChangedPostCommentDislikes> ((event, emit) async {
+      if (state is PostCommentFormInitialized) {
+        final currentState = state as PostCommentFormInitialized;
         if (isInt(event.value)) {
           newValue = currentState.value!.copyWith(dislikes: int.parse(event.value!));
           emit(SubmittablePostCommentForm(value: newValue));
@@ -140,13 +162,16 @@ class PostCommentFormBloc extends Bloc<PostCommentFormEvent, PostCommentFormStat
           newValue = currentState.value!.copyWith(dislikes: 0);
           emit(DislikesPostCommentFormError(message: "Value should be a number", value: newValue));
         }
+      }
       });
       on <ChangedPostCommentMemberMedia> ((event, emit) async {
+      if (state is PostCommentFormInitialized) {
+        final currentState = state as PostCommentFormInitialized;
         newValue = currentState.value!.copyWith(memberMedia: event.value);
         emit(SubmittablePostCommentForm(value: newValue));
 
+      }
       });
-    }
   }
 
 

@@ -46,11 +46,7 @@ class FeedFrontFormBloc extends Bloc<FeedFrontFormEvent, FeedFrontFormState> {
   final FormAction? formAction;
   final String? appId;
 
-  FeedFrontFormBloc(this.appId, { this.formAction }): super(FeedFrontFormUninitialized());
-  @override
-  Stream<FeedFrontFormState> mapEventToState(FeedFrontFormEvent event) async* {
-    final currentState = state;
-    if (currentState is FeedFrontFormUninitialized) {
+  FeedFrontFormBloc(this.appId, { this.formAction }): super(FeedFrontFormUninitialized()) {
       on <InitialiseNewFeedFrontFormEvent> ((event, emit) {
         FeedFrontFormLoaded loaded = FeedFrontFormLoaded(value: FeedFrontModel(
                                                documentID: "",
@@ -62,17 +58,19 @@ class FeedFrontFormBloc extends Bloc<FeedFrontFormEvent, FeedFrontFormState> {
       });
 
 
-      if (event is InitialiseFeedFrontFormEvent) {
+      on <InitialiseFeedFrontFormEvent> ((event, emit) async {
         // Need to re-retrieve the document from the repository so that I get all associated types
         FeedFrontFormLoaded loaded = FeedFrontFormLoaded(value: await feedFrontRepository(appId: appId)!.get(event.value!.documentID));
         emit(loaded);
-      } else if (event is InitialiseFeedFrontFormNoLoadEvent) {
+      });
+      on <InitialiseFeedFrontFormNoLoadEvent> ((event, emit) async {
         FeedFrontFormLoaded loaded = FeedFrontFormLoaded(value: event.value);
         emit(loaded);
-      }
-    } else if (currentState is FeedFrontFormInitialized) {
+      });
       FeedFrontModel? newValue = null;
       on <ChangedFeedFrontDocumentID> ((event, emit) async {
+      if (state is FeedFrontFormInitialized) {
+        final currentState = state as FeedFrontFormInitialized;
         newValue = currentState.value!.copyWith(documentID: event.value);
         if (formAction == FormAction.AddAction) {
           emit(await _isDocumentIDValid(event.value, newValue!));
@@ -80,39 +78,57 @@ class FeedFrontFormBloc extends Bloc<FeedFrontFormEvent, FeedFrontFormState> {
           emit(SubmittableFeedFrontForm(value: newValue));
         }
 
+      }
       });
       on <ChangedFeedFrontAppId> ((event, emit) async {
+      if (state is FeedFrontFormInitialized) {
+        final currentState = state as FeedFrontFormInitialized;
         newValue = currentState.value!.copyWith(appId: event.value);
         emit(SubmittableFeedFrontForm(value: newValue));
 
+      }
       });
       on <ChangedFeedFrontDescription> ((event, emit) async {
+      if (state is FeedFrontFormInitialized) {
+        final currentState = state as FeedFrontFormInitialized;
         newValue = currentState.value!.copyWith(description: event.value);
         emit(SubmittableFeedFrontForm(value: newValue));
 
+      }
       });
       on <ChangedFeedFrontFeed> ((event, emit) async {
+      if (state is FeedFrontFormInitialized) {
+        final currentState = state as FeedFrontFormInitialized;
         if (event.value != null)
           newValue = currentState.value!.copyWith(feed: await feedRepository(appId: appId)!.get(event.value));
         emit(SubmittableFeedFrontForm(value: newValue));
 
+      }
       });
       on <ChangedFeedFrontBackgroundOverridePosts> ((event, emit) async {
+      if (state is FeedFrontFormInitialized) {
+        final currentState = state as FeedFrontFormInitialized;
         newValue = currentState.value!.copyWith(backgroundOverridePosts: event.value);
         emit(SubmittableFeedFrontForm(value: newValue));
 
+      }
       });
       on <ChangedFeedFrontBackgroundOverrideProfile> ((event, emit) async {
+      if (state is FeedFrontFormInitialized) {
+        final currentState = state as FeedFrontFormInitialized;
         newValue = currentState.value!.copyWith(backgroundOverrideProfile: event.value);
         emit(SubmittableFeedFrontForm(value: newValue));
 
+      }
       });
       on <ChangedFeedFrontConditions> ((event, emit) async {
+      if (state is FeedFrontFormInitialized) {
+        final currentState = state as FeedFrontFormInitialized;
         newValue = currentState.value!.copyWith(conditions: event.value);
         emit(SubmittableFeedFrontForm(value: newValue));
 
+      }
       });
-    }
   }
 
 

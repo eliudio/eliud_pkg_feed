@@ -46,11 +46,7 @@ class ProfileFormBloc extends Bloc<ProfileFormEvent, ProfileFormState> {
   final FormAction? formAction;
   final String? appId;
 
-  ProfileFormBloc(this.appId, { this.formAction }): super(ProfileFormUninitialized());
-  @override
-  Stream<ProfileFormState> mapEventToState(ProfileFormEvent event) async* {
-    final currentState = state;
-    if (currentState is ProfileFormUninitialized) {
+  ProfileFormBloc(this.appId, { this.formAction }): super(ProfileFormUninitialized()) {
       on <InitialiseNewProfileFormEvent> ((event, emit) {
         ProfileFormLoaded loaded = ProfileFormLoaded(value: ProfileModel(
                                                documentID: "",
@@ -62,17 +58,19 @@ class ProfileFormBloc extends Bloc<ProfileFormEvent, ProfileFormState> {
       });
 
 
-      if (event is InitialiseProfileFormEvent) {
+      on <InitialiseProfileFormEvent> ((event, emit) async {
         // Need to re-retrieve the document from the repository so that I get all associated types
         ProfileFormLoaded loaded = ProfileFormLoaded(value: await profileRepository(appId: appId)!.get(event.value!.documentID));
         emit(loaded);
-      } else if (event is InitialiseProfileFormNoLoadEvent) {
+      });
+      on <InitialiseProfileFormNoLoadEvent> ((event, emit) async {
         ProfileFormLoaded loaded = ProfileFormLoaded(value: event.value);
         emit(loaded);
-      }
-    } else if (currentState is ProfileFormInitialized) {
+      });
       ProfileModel? newValue = null;
       on <ChangedProfileDocumentID> ((event, emit) async {
+      if (state is ProfileFormInitialized) {
+        final currentState = state as ProfileFormInitialized;
         newValue = currentState.value!.copyWith(documentID: event.value);
         if (formAction == FormAction.AddAction) {
           emit(await _isDocumentIDValid(event.value, newValue!));
@@ -80,34 +78,49 @@ class ProfileFormBloc extends Bloc<ProfileFormEvent, ProfileFormState> {
           emit(SubmittableProfileForm(value: newValue));
         }
 
+      }
       });
       on <ChangedProfileAppId> ((event, emit) async {
+      if (state is ProfileFormInitialized) {
+        final currentState = state as ProfileFormInitialized;
         newValue = currentState.value!.copyWith(appId: event.value);
         emit(SubmittableProfileForm(value: newValue));
 
+      }
       });
       on <ChangedProfileDescription> ((event, emit) async {
+      if (state is ProfileFormInitialized) {
+        final currentState = state as ProfileFormInitialized;
         newValue = currentState.value!.copyWith(description: event.value);
         emit(SubmittableProfileForm(value: newValue));
 
+      }
       });
       on <ChangedProfileFeed> ((event, emit) async {
+      if (state is ProfileFormInitialized) {
+        final currentState = state as ProfileFormInitialized;
         if (event.value != null)
           newValue = currentState.value!.copyWith(feed: await feedRepository(appId: appId)!.get(event.value));
         emit(SubmittableProfileForm(value: newValue));
 
+      }
       });
       on <ChangedProfileBackgroundOverride> ((event, emit) async {
+      if (state is ProfileFormInitialized) {
+        final currentState = state as ProfileFormInitialized;
         newValue = currentState.value!.copyWith(backgroundOverride: event.value);
         emit(SubmittableProfileForm(value: newValue));
 
+      }
       });
       on <ChangedProfileConditions> ((event, emit) async {
+      if (state is ProfileFormInitialized) {
+        final currentState = state as ProfileFormInitialized;
         newValue = currentState.value!.copyWith(conditions: event.value);
         emit(SubmittableProfileForm(value: newValue));
 
+      }
       });
-    }
   }
 
 

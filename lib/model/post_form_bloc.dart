@@ -50,11 +50,7 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
   final FormAction? formAction;
   final String? appId;
 
-  PostFormBloc(this.appId, { this.formAction }): super(PostFormUninitialized());
-  @override
-  Stream<PostFormState> mapEventToState(PostFormEvent event) async* {
-    final currentState = state;
-    if (currentState is PostFormUninitialized) {
+  PostFormBloc(this.appId, { this.formAction }): super(PostFormUninitialized()) {
       on <InitialiseNewPostFormEvent> ((event, emit) {
         PostFormLoaded loaded = PostFormLoaded(value: PostModel(
                                                documentID: "",
@@ -78,17 +74,19 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
       });
 
 
-      if (event is InitialisePostFormEvent) {
+      on <InitialisePostFormEvent> ((event, emit) async {
         // Need to re-retrieve the document from the repository so that I get all associated types
         PostFormLoaded loaded = PostFormLoaded(value: await postRepository(appId: appId)!.get(event.value!.documentID));
         emit(loaded);
-      } else if (event is InitialisePostFormNoLoadEvent) {
+      });
+      on <InitialisePostFormNoLoadEvent> ((event, emit) async {
         PostFormLoaded loaded = PostFormLoaded(value: event.value);
         emit(loaded);
-      }
-    } else if (currentState is PostFormInitialized) {
+      });
       PostModel? newValue = null;
       on <ChangedPostDocumentID> ((event, emit) async {
+      if (state is PostFormInitialized) {
+        final currentState = state as PostFormInitialized;
         newValue = currentState.value!.copyWith(documentID: event.value);
         if (formAction == FormAction.AddAction) {
           emit(await _isDocumentIDValid(event.value, newValue!));
@@ -96,53 +94,83 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
           emit(SubmittablePostForm(value: newValue));
         }
 
+      }
       });
       on <ChangedPostAuthorId> ((event, emit) async {
+      if (state is PostFormInitialized) {
+        final currentState = state as PostFormInitialized;
         newValue = currentState.value!.copyWith(authorId: event.value);
         emit(SubmittablePostForm(value: newValue));
 
+      }
       });
       on <ChangedPostTimestamp> ((event, emit) async {
+      if (state is PostFormInitialized) {
+        final currentState = state as PostFormInitialized;
         newValue = currentState.value!.copyWith(timestamp: dateTimeFromTimestampString(event.value!));
         emit(SubmittablePostForm(value: newValue));
 
+      }
       });
       on <ChangedPostAppId> ((event, emit) async {
+      if (state is PostFormInitialized) {
+        final currentState = state as PostFormInitialized;
         newValue = currentState.value!.copyWith(appId: event.value);
         emit(SubmittablePostForm(value: newValue));
 
+      }
       });
       on <ChangedPostFeedId> ((event, emit) async {
+      if (state is PostFormInitialized) {
+        final currentState = state as PostFormInitialized;
         newValue = currentState.value!.copyWith(feedId: event.value);
         emit(SubmittablePostForm(value: newValue));
 
+      }
       });
       on <ChangedPostPostAppId> ((event, emit) async {
+      if (state is PostFormInitialized) {
+        final currentState = state as PostFormInitialized;
         newValue = currentState.value!.copyWith(postAppId: event.value);
         emit(SubmittablePostForm(value: newValue));
 
+      }
       });
       on <ChangedPostPostPageId> ((event, emit) async {
+      if (state is PostFormInitialized) {
+        final currentState = state as PostFormInitialized;
         newValue = currentState.value!.copyWith(postPageId: event.value);
         emit(SubmittablePostForm(value: newValue));
 
+      }
       });
       on <ChangedPostPageParameters> ((event, emit) async {
+      if (state is PostFormInitialized) {
+        final currentState = state as PostFormInitialized;
         newValue = currentState.value!.copyWith(pageParameters: event.value);
         emit(SubmittablePostForm(value: newValue));
 
+      }
       });
       on <ChangedPostHtml> ((event, emit) async {
+      if (state is PostFormInitialized) {
+        final currentState = state as PostFormInitialized;
         newValue = currentState.value!.copyWith(html: event.value);
         emit(SubmittablePostForm(value: newValue));
 
+      }
       });
       on <ChangedPostDescription> ((event, emit) async {
+      if (state is PostFormInitialized) {
+        final currentState = state as PostFormInitialized;
         newValue = currentState.value!.copyWith(description: event.value);
         emit(SubmittablePostForm(value: newValue));
 
+      }
       });
       on <ChangedPostLikes> ((event, emit) async {
+      if (state is PostFormInitialized) {
+        final currentState = state as PostFormInitialized;
         if (isInt(event.value)) {
           newValue = currentState.value!.copyWith(likes: int.parse(event.value!));
           emit(SubmittablePostForm(value: newValue));
@@ -151,8 +179,11 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
           newValue = currentState.value!.copyWith(likes: 0);
           emit(LikesPostFormError(message: "Value should be a number", value: newValue));
         }
+      }
       });
       on <ChangedPostDislikes> ((event, emit) async {
+      if (state is PostFormInitialized) {
+        final currentState = state as PostFormInitialized;
         if (isInt(event.value)) {
           newValue = currentState.value!.copyWith(dislikes: int.parse(event.value!));
           emit(SubmittablePostForm(value: newValue));
@@ -161,28 +192,40 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
           newValue = currentState.value!.copyWith(dislikes: 0);
           emit(DislikesPostFormError(message: "Value should be a number", value: newValue));
         }
+      }
       });
       on <ChangedPostAccessibleByGroup> ((event, emit) async {
+      if (state is PostFormInitialized) {
+        final currentState = state as PostFormInitialized;
         newValue = currentState.value!.copyWith(accessibleByGroup: event.value);
         emit(SubmittablePostForm(value: newValue));
 
+      }
       });
       on <ChangedPostArchived> ((event, emit) async {
+      if (state is PostFormInitialized) {
+        final currentState = state as PostFormInitialized;
         newValue = currentState.value!.copyWith(archived: event.value);
         emit(SubmittablePostForm(value: newValue));
 
+      }
       });
       on <ChangedPostExternalLink> ((event, emit) async {
+      if (state is PostFormInitialized) {
+        final currentState = state as PostFormInitialized;
         newValue = currentState.value!.copyWith(externalLink: event.value);
         emit(SubmittablePostForm(value: newValue));
 
+      }
       });
       on <ChangedPostMemberMedia> ((event, emit) async {
+      if (state is PostFormInitialized) {
+        final currentState = state as PostFormInitialized;
         newValue = currentState.value!.copyWith(memberMedia: event.value);
         emit(SubmittablePostForm(value: newValue));
 
+      }
       });
-    }
   }
 
 

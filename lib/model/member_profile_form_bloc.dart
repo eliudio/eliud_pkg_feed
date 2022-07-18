@@ -46,11 +46,7 @@ class MemberProfileFormBloc extends Bloc<MemberProfileFormEvent, MemberProfileFo
   final FormAction? formAction;
   final String? appId;
 
-  MemberProfileFormBloc(this.appId, { this.formAction }): super(MemberProfileFormUninitialized());
-  @override
-  Stream<MemberProfileFormState> mapEventToState(MemberProfileFormEvent event) async* {
-    final currentState = state;
-    if (currentState is MemberProfileFormUninitialized) {
+  MemberProfileFormBloc(this.appId, { this.formAction }): super(MemberProfileFormUninitialized()) {
       on <InitialiseNewMemberProfileFormEvent> ((event, emit) {
         MemberProfileFormLoaded loaded = MemberProfileFormLoaded(value: MemberProfileModel(
                                                documentID: "",
@@ -69,17 +65,19 @@ class MemberProfileFormBloc extends Bloc<MemberProfileFormEvent, MemberProfileFo
       });
 
 
-      if (event is InitialiseMemberProfileFormEvent) {
+      on <InitialiseMemberProfileFormEvent> ((event, emit) async {
         // Need to re-retrieve the document from the repository so that I get all associated types
         MemberProfileFormLoaded loaded = MemberProfileFormLoaded(value: await memberProfileRepository(appId: appId)!.get(event.value!.documentID));
         emit(loaded);
-      } else if (event is InitialiseMemberProfileFormNoLoadEvent) {
+      });
+      on <InitialiseMemberProfileFormNoLoadEvent> ((event, emit) async {
         MemberProfileFormLoaded loaded = MemberProfileFormLoaded(value: event.value);
         emit(loaded);
-      }
-    } else if (currentState is MemberProfileFormInitialized) {
+      });
       MemberProfileModel? newValue = null;
       on <ChangedMemberProfileDocumentID> ((event, emit) async {
+      if (state is MemberProfileFormInitialized) {
+        final currentState = state as MemberProfileFormInitialized;
         newValue = currentState.value!.copyWith(documentID: event.value);
         if (formAction == FormAction.AddAction) {
           emit(await _isDocumentIDValid(event.value, newValue!));
@@ -87,49 +85,73 @@ class MemberProfileFormBloc extends Bloc<MemberProfileFormEvent, MemberProfileFo
           emit(SubmittableMemberProfileForm(value: newValue));
         }
 
+      }
       });
       on <ChangedMemberProfileFeedId> ((event, emit) async {
+      if (state is MemberProfileFormInitialized) {
+        final currentState = state as MemberProfileFormInitialized;
         newValue = currentState.value!.copyWith(feedId: event.value);
         emit(SubmittableMemberProfileForm(value: newValue));
 
+      }
       });
       on <ChangedMemberProfileAuthorId> ((event, emit) async {
+      if (state is MemberProfileFormInitialized) {
+        final currentState = state as MemberProfileFormInitialized;
         newValue = currentState.value!.copyWith(authorId: event.value);
         emit(SubmittableMemberProfileForm(value: newValue));
 
+      }
       });
       on <ChangedMemberProfileProfile> ((event, emit) async {
+      if (state is MemberProfileFormInitialized) {
+        final currentState = state as MemberProfileFormInitialized;
         newValue = currentState.value!.copyWith(profile: event.value);
         emit(SubmittableMemberProfileForm(value: newValue));
 
+      }
       });
       on <ChangedMemberProfileProfileBackground> ((event, emit) async {
+      if (state is MemberProfileFormInitialized) {
+        final currentState = state as MemberProfileFormInitialized;
         if (event.value != null)
           newValue = currentState.value!.copyWith(profileBackground: await memberMediumRepository(appId: appId)!.get(event.value));
         emit(SubmittableMemberProfileForm(value: newValue));
 
+      }
       });
       on <ChangedMemberProfileProfileOverride> ((event, emit) async {
+      if (state is MemberProfileFormInitialized) {
+        final currentState = state as MemberProfileFormInitialized;
         newValue = currentState.value!.copyWith(profileOverride: event.value);
         emit(SubmittableMemberProfileForm(value: newValue));
 
+      }
       });
       on <ChangedMemberProfileNameOverride> ((event, emit) async {
+      if (state is MemberProfileFormInitialized) {
+        final currentState = state as MemberProfileFormInitialized;
         newValue = currentState.value!.copyWith(nameOverride: event.value);
         emit(SubmittableMemberProfileForm(value: newValue));
 
+      }
       });
       on <ChangedMemberProfileAccessibleByGroup> ((event, emit) async {
+      if (state is MemberProfileFormInitialized) {
+        final currentState = state as MemberProfileFormInitialized;
         newValue = currentState.value!.copyWith(accessibleByGroup: event.value);
         emit(SubmittableMemberProfileForm(value: newValue));
 
+      }
       });
       on <ChangedMemberProfileMemberMedia> ((event, emit) async {
+      if (state is MemberProfileFormInitialized) {
+        final currentState = state as MemberProfileFormInitialized;
         newValue = currentState.value!.copyWith(memberMedia: event.value);
         emit(SubmittableMemberProfileForm(value: newValue));
 
+      }
       });
-    }
   }
 
 
