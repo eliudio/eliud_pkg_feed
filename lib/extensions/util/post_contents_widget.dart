@@ -106,7 +106,7 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
       case PostType.ExternalLink:
         return text(widget.app, context, 'External link not supported yet');
       case PostType.Html:
-        return AbstractTextPlatform.platform!.htmlWidget(postModel.html!);
+        return AbstractTextPlatform.platform!.htmlWidget(context, widget.app, postModel.html!);
       case PostType.Unknown:
         return text(widget.app, context, 'Type not determined');
       case PostType.OnlyDescription:

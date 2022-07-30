@@ -44,7 +44,7 @@ class _ProfileState extends State<Profile> {
                   width: double.infinity,
                   height: 50,
                   child: Text("No profile"), )
-                  : AbstractTextPlatform.platform!.htmlWidget(html)
+                  : AbstractTextPlatform.platform!.htmlWidget(context, widget.app, html)
             ]));
         if (state  is LoggedInProfileInitialized) {
           var ownerId = profile!.authorId!;
