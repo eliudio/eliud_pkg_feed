@@ -15,6 +15,7 @@
 
 import 'dart:collection';
 import 'dart:convert';
+import 'package:eliud_core/tools/random.dart';
 import 'abstract_repository_singleton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/entity_base.dart';
@@ -52,17 +53,23 @@ class MemberProfileEntity implements EntityBase {
     return 'MemberProfileEntity{appId: $appId, feedId: $feedId, authorId: $authorId, profile: $profile, profileBackgroundId: $profileBackgroundId, profileOverride: $profileOverride, nameOverride: $nameOverride, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }, memberMedia: MemberMediumContainer[] { $memberMediaCsv }}';
   }
 
-  static MemberProfileEntity? fromMap(Object? o) {
+  static MemberProfileEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
     if (o == null) return null;
     var map = o as Map<String, dynamic>;
 
+    var profileBackgroundIdNewDocmentId = map['profileBackgroundId'];
+    if ((newDocumentIds != null) && (profileBackgroundIdNewDocmentId != null)) {
+      var profileBackgroundIdOldDocmentId = profileBackgroundIdNewDocmentId;
+      profileBackgroundIdNewDocmentId = newRandomKey();
+      newDocumentIds[profileBackgroundIdOldDocmentId] = profileBackgroundIdNewDocmentId;
+    }
     var memberMediaFromMap;
     memberMediaFromMap = map['memberMedia'];
     var memberMediaList;
     if (memberMediaFromMap != null)
       memberMediaList = (map['memberMedia'] as List<dynamic>)
         .map((dynamic item) =>
-        MemberMediumContainerEntity.fromMap(item as Map)!)
+        MemberMediumContainerEntity.fromMap(item as Map, newDocumentIds: newDocumentIds)!)
         .toList();
 
     return MemberProfileEntity(
@@ -70,7 +77,7 @@ class MemberProfileEntity implements EntityBase {
       feedId: map['feedId'], 
       authorId: map['authorId'], 
       profile: map['profile'], 
-      profileBackgroundId: map['profileBackgroundId'], 
+      profileBackgroundId: profileBackgroundIdNewDocmentId, 
       profileOverride: map['profileOverride'], 
       nameOverride: map['nameOverride'], 
       accessibleByGroup: map['accessibleByGroup'], 
@@ -117,9 +124,9 @@ class MemberProfileEntity implements EntityBase {
     return newEntity;
   }
 
-  static MemberProfileEntity? fromJsonString(String json) {
+  static MemberProfileEntity? fromJsonString(String json, {Map<String, String>? newDocumentIds}) {
     Map<String, dynamic>? generationSpecificationMap = jsonDecode(json);
-    return fromMap(generationSpecificationMap);
+    return fromMap(generationSpecificationMap, newDocumentIds: newDocumentIds);
   }
 
   String toJsonString() {

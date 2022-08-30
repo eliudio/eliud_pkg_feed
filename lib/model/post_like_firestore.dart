@@ -41,8 +41,8 @@ import 'package:eliud_core/tools/common_tools.dart';
 
 class PostLikeFirestore implements PostLikeRepository {
   @override
-  PostLikeEntity? fromMap(Object? o) {
-    return PostLikeEntity.fromMap(o);
+  PostLikeEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
+    return PostLikeEntity.fromMap(o, newDocumentIds: newDocumentIds);
   }
 
   Future<PostLikeEntity> addEntity(String documentID, PostLikeEntity value) {

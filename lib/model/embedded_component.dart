@@ -191,7 +191,7 @@ class LabelledBodyComponentInMemoryRepository implements LabelledBodyComponentRe
   }
 
   @override
-  LabelledBodyComponentEntity? fromMap(Object? o) {
+  LabelledBodyComponentEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
     throw UnimplementedError();
   }
 
@@ -311,7 +311,7 @@ class MemberProfileInMemoryRepository implements MemberProfileRepository {
   }
 
   @override
-  MemberProfileEntity? fromMap(Object? o) {
+  MemberProfileEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
     throw UnimplementedError();
   }
 

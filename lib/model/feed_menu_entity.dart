@@ -15,6 +15,7 @@
 
 import 'dart:collection';
 import 'dart:convert';
+import 'package:eliud_core/tools/random.dart';
 import 'abstract_repository_singleton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/entity_base.dart';
@@ -49,7 +50,7 @@ class FeedMenuEntity implements EntityBase {
     return 'FeedMenuEntity{appId: $appId, description: $description, bodyComponentsCurrentMember: LabelledBodyComponent[] { $bodyComponentsCurrentMemberCsv }, bodyComponentsOtherMember: LabelledBodyComponent[] { $bodyComponentsOtherMemberCsv }, itemColor: $itemColor, selectedItemColor: $selectedItemColor, backgroundOverride: $backgroundOverride, feedFrontId: $feedFrontId, conditions: $conditions}';
   }
 
-  static FeedMenuEntity? fromMap(Object? o) {
+  static FeedMenuEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
     if (o == null) return null;
     var map = o as Map<String, dynamic>;
 
@@ -59,7 +60,7 @@ class FeedMenuEntity implements EntityBase {
     if (bodyComponentsCurrentMemberFromMap != null)
       bodyComponentsCurrentMemberList = (map['bodyComponentsCurrentMember'] as List<dynamic>)
         .map((dynamic item) =>
-        LabelledBodyComponentEntity.fromMap(item as Map)!)
+        LabelledBodyComponentEntity.fromMap(item as Map, newDocumentIds: newDocumentIds)!)
         .toList();
     var bodyComponentsOtherMemberFromMap;
     bodyComponentsOtherMemberFromMap = map['bodyComponentsOtherMember'];
@@ -67,24 +68,24 @@ class FeedMenuEntity implements EntityBase {
     if (bodyComponentsOtherMemberFromMap != null)
       bodyComponentsOtherMemberList = (map['bodyComponentsOtherMember'] as List<dynamic>)
         .map((dynamic item) =>
-        LabelledBodyComponentEntity.fromMap(item as Map)!)
+        LabelledBodyComponentEntity.fromMap(item as Map, newDocumentIds: newDocumentIds)!)
         .toList();
     var itemColorFromMap;
     itemColorFromMap = map['itemColor'];
     if (itemColorFromMap != null)
-      itemColorFromMap = RgbEntity.fromMap(itemColorFromMap);
+      itemColorFromMap = RgbEntity.fromMap(itemColorFromMap, newDocumentIds: newDocumentIds);
     var selectedItemColorFromMap;
     selectedItemColorFromMap = map['selectedItemColor'];
     if (selectedItemColorFromMap != null)
-      selectedItemColorFromMap = RgbEntity.fromMap(selectedItemColorFromMap);
+      selectedItemColorFromMap = RgbEntity.fromMap(selectedItemColorFromMap, newDocumentIds: newDocumentIds);
     var backgroundOverrideFromMap;
     backgroundOverrideFromMap = map['backgroundOverride'];
     if (backgroundOverrideFromMap != null)
-      backgroundOverrideFromMap = BackgroundEntity.fromMap(backgroundOverrideFromMap);
+      backgroundOverrideFromMap = BackgroundEntity.fromMap(backgroundOverrideFromMap, newDocumentIds: newDocumentIds);
     var conditionsFromMap;
     conditionsFromMap = map['conditions'];
     if (conditionsFromMap != null)
-      conditionsFromMap = StorageConditionsEntity.fromMap(conditionsFromMap);
+      conditionsFromMap = StorageConditionsEntity.fromMap(conditionsFromMap, newDocumentIds: newDocumentIds);
 
     return FeedMenuEntity(
       appId: map['appId'], 
@@ -147,9 +148,9 @@ class FeedMenuEntity implements EntityBase {
     return newEntity;
   }
 
-  static FeedMenuEntity? fromJsonString(String json) {
+  static FeedMenuEntity? fromJsonString(String json, {Map<String, String>? newDocumentIds}) {
     Map<String, dynamic>? generationSpecificationMap = jsonDecode(json);
-    return fromMap(generationSpecificationMap);
+    return fromMap(generationSpecificationMap, newDocumentIds: newDocumentIds);
   }
 
   String toJsonString() {

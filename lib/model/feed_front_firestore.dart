@@ -37,8 +37,8 @@ import 'package:eliud_core/tools/common_tools.dart';
 
 class FeedFrontFirestore implements FeedFrontRepository {
   @override
-  FeedFrontEntity? fromMap(Object? o) {
-    return FeedFrontEntity.fromMap(o);
+  FeedFrontEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
+    return FeedFrontEntity.fromMap(o, newDocumentIds: newDocumentIds);
   }
 
   Future<FeedFrontEntity> addEntity(String documentID, FeedFrontEntity value) {

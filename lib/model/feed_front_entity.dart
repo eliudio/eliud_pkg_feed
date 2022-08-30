@@ -15,6 +15,7 @@
 
 import 'dart:collection';
 import 'dart:convert';
+import 'package:eliud_core/tools/random.dart';
 import 'abstract_repository_singleton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/entity_base.dart';
@@ -43,22 +44,22 @@ class FeedFrontEntity implements EntityBase {
     return 'FeedFrontEntity{appId: $appId, description: $description, feedId: $feedId, backgroundOverridePosts: $backgroundOverridePosts, backgroundOverrideProfile: $backgroundOverrideProfile, conditions: $conditions}';
   }
 
-  static FeedFrontEntity? fromMap(Object? o) {
+  static FeedFrontEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
     if (o == null) return null;
     var map = o as Map<String, dynamic>;
 
     var backgroundOverridePostsFromMap;
     backgroundOverridePostsFromMap = map['backgroundOverridePosts'];
     if (backgroundOverridePostsFromMap != null)
-      backgroundOverridePostsFromMap = BackgroundEntity.fromMap(backgroundOverridePostsFromMap);
+      backgroundOverridePostsFromMap = BackgroundEntity.fromMap(backgroundOverridePostsFromMap, newDocumentIds: newDocumentIds);
     var backgroundOverrideProfileFromMap;
     backgroundOverrideProfileFromMap = map['backgroundOverrideProfile'];
     if (backgroundOverrideProfileFromMap != null)
-      backgroundOverrideProfileFromMap = BackgroundEntity.fromMap(backgroundOverrideProfileFromMap);
+      backgroundOverrideProfileFromMap = BackgroundEntity.fromMap(backgroundOverrideProfileFromMap, newDocumentIds: newDocumentIds);
     var conditionsFromMap;
     conditionsFromMap = map['conditions'];
     if (conditionsFromMap != null)
-      conditionsFromMap = StorageConditionsEntity.fromMap(conditionsFromMap);
+      conditionsFromMap = StorageConditionsEntity.fromMap(conditionsFromMap, newDocumentIds: newDocumentIds);
 
     return FeedFrontEntity(
       appId: map['appId'], 
@@ -103,9 +104,9 @@ class FeedFrontEntity implements EntityBase {
     return newEntity;
   }
 
-  static FeedFrontEntity? fromJsonString(String json) {
+  static FeedFrontEntity? fromJsonString(String json, {Map<String, String>? newDocumentIds}) {
     Map<String, dynamic>? generationSpecificationMap = jsonDecode(json);
-    return fromMap(generationSpecificationMap);
+    return fromMap(generationSpecificationMap, newDocumentIds: newDocumentIds);
   }
 
   String toJsonString() {

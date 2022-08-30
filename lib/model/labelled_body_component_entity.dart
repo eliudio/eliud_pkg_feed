@@ -15,6 +15,7 @@
 
 import 'dart:collection';
 import 'dart:convert';
+import 'package:eliud_core/tools/random.dart';
 import 'abstract_repository_singleton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/entity_base.dart';
@@ -39,7 +40,7 @@ class LabelledBodyComponentEntity implements EntityBase {
     return 'LabelledBodyComponentEntity{label: $label, componentName: $componentName, componentId: $componentId}';
   }
 
-  static LabelledBodyComponentEntity? fromMap(Object? o) {
+  static LabelledBodyComponentEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
     if (o == null) return null;
     var map = o as Map<String, dynamic>;
 
@@ -67,9 +68,9 @@ class LabelledBodyComponentEntity implements EntityBase {
     return newEntity;
   }
 
-  static LabelledBodyComponentEntity? fromJsonString(String json) {
+  static LabelledBodyComponentEntity? fromJsonString(String json, {Map<String, String>? newDocumentIds}) {
     Map<String, dynamic>? generationSpecificationMap = jsonDecode(json);
-    return fromMap(generationSpecificationMap);
+    return fromMap(generationSpecificationMap, newDocumentIds: newDocumentIds);
   }
 
   String toJsonString() {

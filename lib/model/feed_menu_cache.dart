@@ -121,8 +121,8 @@ class FeedMenuCache implements FeedMenuRepository {
   }
 
   @override
-  FeedMenuEntity? fromMap(Object? o) {
-    return reference.fromMap(o);
+  FeedMenuEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
+    return reference.fromMap(o, newDocumentIds: newDocumentIds);
   }
 
   Future<void> deleteAll() {

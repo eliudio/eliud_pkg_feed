@@ -41,8 +41,8 @@ import 'package:eliud_core/tools/common_tools.dart';
 
 class PostCommentFirestore implements PostCommentRepository {
   @override
-  PostCommentEntity? fromMap(Object? o) {
-    return PostCommentEntity.fromMap(o);
+  PostCommentEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
+    return PostCommentEntity.fromMap(o, newDocumentIds: newDocumentIds);
   }
 
   Future<PostCommentEntity> addEntity(String documentID, PostCommentEntity value) {

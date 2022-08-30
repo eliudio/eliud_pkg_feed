@@ -194,9 +194,9 @@ class PagedPostsListState extends State<PagedPostsList> {
                   context,
                   widget.app,
                   author.documentID,
-                  (value) {
+                  (htmlReference, value) {
                     postMediumModels.add(MemberMediumContainerModel(
-                        documentID: newRandomKey(), memberMedium: value));
+                        documentID: newRandomKey(), htmlReference: htmlReference, memberMedium: value));
                   },
                   toMemberMediumAccessibleByGroup(currentPostAccessibleByGroup.index),
                   (newArticle) {

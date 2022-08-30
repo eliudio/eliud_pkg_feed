@@ -121,8 +121,8 @@ class FeedCache implements FeedRepository {
   }
 
   @override
-  FeedEntity? fromMap(Object? o) {
-    return reference.fromMap(o);
+  FeedEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
+    return reference.fromMap(o, newDocumentIds: newDocumentIds);
   }
 
   Future<void> deleteAll() {

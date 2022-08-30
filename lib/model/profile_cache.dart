@@ -121,8 +121,8 @@ class ProfileCache implements ProfileRepository {
   }
 
   @override
-  ProfileEntity? fromMap(Object? o) {
-    return reference.fromMap(o);
+  ProfileEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
+    return reference.fromMap(o, newDocumentIds: newDocumentIds);
   }
 
   Future<void> deleteAll() {

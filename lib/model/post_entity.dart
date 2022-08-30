@@ -15,6 +15,7 @@
 
 import 'dart:collection';
 import 'dart:convert';
+import 'package:eliud_core/tools/random.dart';
 import 'abstract_repository_singleton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/entity_base.dart';
@@ -59,7 +60,7 @@ class PostEntity implements EntityBase {
     return 'PostEntity{authorId: $authorId, timestamp: $timestamp, appId: $appId, feedId: $feedId, postAppId: $postAppId, postPageId: $postPageId, pageParameters: $pageParameters, html: $html, description: $description, likes: $likes, dislikes: $dislikes, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }, archived: $archived, externalLink: $externalLink, memberMedia: MemberMediumContainer[] { $memberMediaCsv }}';
   }
 
-  static PostEntity? fromMap(Object? o) {
+  static PostEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
     if (o == null) return null;
     var map = o as Map<String, dynamic>;
 
@@ -73,7 +74,7 @@ class PostEntity implements EntityBase {
     if (memberMediaFromMap != null)
       memberMediaList = (map['memberMedia'] as List<dynamic>)
         .map((dynamic item) =>
-        MemberMediumContainerEntity.fromMap(item as Map)!)
+        MemberMediumContainerEntity.fromMap(item as Map, newDocumentIds: newDocumentIds)!)
         .toList();
 
     return PostEntity(
@@ -145,9 +146,9 @@ class PostEntity implements EntityBase {
     return newEntity;
   }
 
-  static PostEntity? fromJsonString(String json) {
+  static PostEntity? fromJsonString(String json, {Map<String, String>? newDocumentIds}) {
     Map<String, dynamic>? generationSpecificationMap = jsonDecode(json);
-    return fromMap(generationSpecificationMap);
+    return fromMap(generationSpecificationMap, newDocumentIds: newDocumentIds);
   }
 
   String toJsonString() {

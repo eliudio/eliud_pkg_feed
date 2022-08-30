@@ -126,8 +126,8 @@ class PostCache implements PostRepository {
   }
 
   @override
-  PostEntity? fromMap(Object? o) {
-    return reference.fromMap(o);
+  PostEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
+    return reference.fromMap(o, newDocumentIds: newDocumentIds);
   }
 
   Future<void> deleteAll() {

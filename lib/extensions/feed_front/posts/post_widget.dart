@@ -335,9 +335,9 @@ class _PostWidgetState extends State<PostWidget> {
                         context,
                         widget.app,
                         postModel.authorId,
-                        (value) {
+                        (htmlReference, value) {
                           postMediumModels.add(MemberMediumContainerModel(
-                              documentID: newRandomKey(), memberMedium: value));
+                              documentID: newRandomKey(), htmlReference: htmlReference, memberMedium: value));
                         },
                         toMemberMediumAccessibleByGroup(
                             postModel.accessibleByGroup!.index),

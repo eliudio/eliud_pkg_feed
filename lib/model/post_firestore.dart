@@ -41,8 +41,8 @@ import 'package:eliud_core/tools/common_tools.dart';
 
 class PostFirestore implements PostRepository {
   @override
-  PostEntity? fromMap(Object? o) {
-    return PostEntity.fromMap(o);
+  PostEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
+    return PostEntity.fromMap(o, newDocumentIds: newDocumentIds);
   }
 
   Future<PostEntity> addEntity(String documentID, PostEntity value) {

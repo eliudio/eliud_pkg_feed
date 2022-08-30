@@ -92,6 +92,7 @@ class FeedMenuComponentEditorConstructor extends ComponentEditorConstructor {
           )),
     );
   }
+
 }
 
 class FeedMenuComponentEditor extends StatefulWidget {

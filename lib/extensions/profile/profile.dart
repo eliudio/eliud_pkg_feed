@@ -61,8 +61,8 @@ class _ProfileState extends State<Profile> {
                     AbstractTextPlatform.platform!.updateHtmlWithMemberMediumCallback(context,
                         widget.app,
                         ownerId,
-                            (value) {
-                              memberMedia.add(MemberMediumContainerModel(documentID: newRandomKey(), memberMedium: value));
+                            (htmlReference, value) {
+                              memberMedia.add(MemberMediumContainerModel(documentID: newRandomKey(), htmlReference: htmlReference, memberMedium: value));
                         },
                         toMemberMediumAccessibleByGroup(accessibleByGroup!.index),
                             (value) =>

@@ -126,8 +126,8 @@ class PostLikeCache implements PostLikeRepository {
   }
 
   @override
-  PostLikeEntity? fromMap(Object? o) {
-    return reference.fromMap(o);
+  PostLikeEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
+    return reference.fromMap(o, newDocumentIds: newDocumentIds);
   }
 
   Future<void> deleteAll() {
