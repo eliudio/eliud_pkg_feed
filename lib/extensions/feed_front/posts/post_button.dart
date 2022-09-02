@@ -49,7 +49,7 @@ class PostButtonState extends State<PostButton> {
           package: "eliud_pkg_feed");
       if (uploadingProgress == null) {
         return MediaButtons.mediaButtons(context, widget.app,
-            widget.author.documentID, () => Tuple2(toMemberMediumAccessibleByGroup(widget.postAccessibleProviderFunction().item1.index), widget.postAccessibleProviderFunction().item2),
+            () => Tuple2(toMemberMediumAccessibleByGroup(widget.postAccessibleProviderFunction().item1.index), widget.postAccessibleProviderFunction().item2),
             allowCrop: false,
             tooltip: 'Add photo', photoFeedbackFunction: (photo) {
           if (photo != null) {
@@ -72,7 +72,7 @@ class PostButtonState extends State<PostButton> {
           package: "eliud_pkg_feed");
       if (uploadingProgress == null) {
         return MediaButtons.mediaButtons(context, widget.app,
-            widget.author.documentID, () => Tuple2(toMemberMediumAccessibleByGroup(widget.postAccessibleProviderFunction().item1.index), widget.postAccessibleProviderFunction().item2),
+            () => Tuple2(toMemberMediumAccessibleByGroup(widget.postAccessibleProviderFunction().item1.index), widget.postAccessibleProviderFunction().item2),
             allowCrop: false,
             tooltip: 'Add video', videoFeedbackFunction: (video) {
           if (video != null) {

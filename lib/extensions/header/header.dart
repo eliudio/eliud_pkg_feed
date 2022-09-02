@@ -198,7 +198,6 @@ class _HeaderState extends State<Header> {
     return MediaButtons.mediaButtons(
         context,
         widget.app,
-        profileInitialised.watchingThisProfile()!.authorId!,
         () => Tuple2(toMemberMediumAccessibleByGroup(
             profileInitialised.watchingThisProfile()!.accessibleByGroup!.index),
             profileInitialised.watchingThisProfile()!.accessibleByMembers),

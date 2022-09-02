@@ -184,7 +184,7 @@ return widgets;
               ),
               label: 'Update',
               onPressed: () {
-                updateComponent(context, widget.app, 'labelledBodyComponents', widget.value, (newValue) {
+                updateComponent(context, widget.app, 'labelledBodyComponents', widget.value, (newValue, _) {
                   setState(() {
                     widget.value = widget.value;
                   });

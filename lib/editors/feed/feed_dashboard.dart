@@ -59,7 +59,7 @@ class FeedDashboard {
       child: BlocProvider<FeedDashboardBloc>(
           create: (context) => FeedDashboardBloc(
                 app.documentID,
-                (_) {},
+                (_, __) {},
               )..add(EditorBaseInitialise<FeedModel>(model)),
           child: FeedDashboardWidget(
             app: app,

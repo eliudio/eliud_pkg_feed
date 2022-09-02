@@ -43,11 +43,11 @@ Widget selectFeedFrontWidget(
         });
       },
       addCallback: () {
-        addComponent(context, app, 'feedFronts', (_) {});
+        addComponent(context, app, 'feedFronts', (_, __) {});
       },
       deleteCallback: null,
       updateCallback: (item) {
-        updateComponent(context, app, 'feedFronts', item.documentID, (_) {
+        updateComponent(context, app, 'feedFronts', item.documentID, (_, __) {
         });
       },
       selectedCallback: selectedCallback,

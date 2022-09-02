@@ -154,7 +154,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
   PopupMenuButton _mediaButtons(BuildContext context, AppModel app,
       FeedPostFormInitialized state, String memberId) {
     return MediaButtons.mediaButtons(
-        context, app, memberId, () => Tuple2(toMemberMediumAccessibleByGroup(state.postModelDetails.postAccessibleByGroup.index),
+        context, app, () => Tuple2(toMemberMediumAccessibleByGroup(state.postModelDetails.postAccessibleByGroup.index),
         state.postModelDetails.postAccessibleByMembers),
         tooltip: 'Add video or photo',
         photoFeedbackFunction: (photo) {
