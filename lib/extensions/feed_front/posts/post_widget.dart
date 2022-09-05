@@ -26,9 +26,11 @@ import 'package:eliud_pkg_feed/model/feed_model.dart';
 import 'package:eliud_pkg_feed/model/post_like_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:eliud_pkg_text/platform/text_platform.dart';
+import 'package:eliud_pkg_text/platform/widgets/html_text_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../with_medium/post_medium_components.dart';
 import 'new_post/bloc/feed_post_form_event.dart';
 import 'new_post/feed_post_dialog.dart';
 
@@ -119,7 +121,8 @@ class _PostWidgetState extends State<PostWidget> {
     widgets.add(_aBitSpace());
     widgets.add(_postComments(context, widget.details, widget.memberId));
 
-    return topicContainer(widget.app, context, children: widgets, backgroundOverride: widget.backgroundOverride);
+    return topicContainer(widget.app, context,
+        children: widgets, backgroundOverride: widget.backgroundOverride);
   }
 
   static double _width(BuildContext context) =>
@@ -268,19 +271,14 @@ class _PostWidgetState extends State<PostWidget> {
     PostType type = PostTypeHelper.determineType(postModel);
     if (PostTypeHelper.canUpdate(type)) {
       items.add(
-        popupMenuItem<int>(
-          widget.app, context,
-            label: 'Update post', value: 1),
+        popupMenuItem<int>(widget.app, context, label: 'Update post', value: 1),
       );
     }
     items.add(
-      popupMenuItem<int>(
-          widget.app, context,
-          label: 'Delete post', value: 0),
+      popupMenuItem<int>(widget.app, context, label: 'Delete post', value: 0),
     );
 
-    return popupMenuButton(
-        widget.app, context,
+    return popupMenuButton(widget.app, context,
         icon: Icon(Icons.more_vert),
         itemBuilder: (_) => items,
         onSelected: (choice) async {
@@ -313,7 +311,7 @@ class _PostWidgetState extends State<PostWidget> {
                     widget.photoURL!,
                     pageContextInfo,
                     InitialiseUpdateFeedPostFormEvent(
-                      postModel,
+                        postModel,
                         postModel.description == null
                             ? ''
                             : postModel.description!,
@@ -332,24 +330,30 @@ class _PostWidgetState extends State<PostWidget> {
                     postModel.memberMedia ?? [];
                 AbstractTextPlatform.platform!
                     .updateHtmlWithMemberMediumCallback(
-                        context,
-                        widget.app,
-                        postModel.authorId,
-                        (htmlReference, value) {
-                          postMediumModels.add(MemberMediumContainerModel(
-                              documentID: newRandomKey(), htmlReference: htmlReference, memberMedium: value));
-                        },
-                        toMemberMediumAccessibleByGroup(
-                            postModel.accessibleByGroup!.index),
-                        (newArticle) {
-                          BlocProvider.of<PostListPagedBloc>(context).add(
-                              UpdatePostPaged(
-                                  value: postModel.copyWith(
-                                      html: newArticle,
-                                      memberMedia: postMediumModels)));
-                        },
-                        "Article",
-                        postModel.html == null ? '' : postModel.html!,
+                        context, widget.app, postModel.authorId, (newArticle) {
+                  BlocProvider.of<PostListPagedBloc>(context).add(
+                      UpdatePostPaged(
+                          value: postModel.copyWith(
+                              html: newArticle,
+                              memberMedia: postMediumModels)));
+                }, (AddMediaHtml addMediaHtml, String html) async {
+                  // the PostWithMemberMediumComponents uses (unfortunately) a PostModel, so we create one, just to be able to function, and to capturethe postMediumModels
+                  var tempModel = PostModel(
+                    documentID: newRandomKey(),
+                    authorId: postModel.authorId,
+                    appId: widget.app.documentID,
+                    html: html,
+                    memberMedia: postMediumModels,
+                    accessibleByGroup: postModel.accessibleByGroup,
+                    accessibleByMembers: postModel.accessibleByMembers,
+                  );
+                  await PostWithMemberMediumComponents.openIt(
+                      widget.app, context, tempModel, (accepted, model) {
+                    if (accepted) {
+                      postMediumModels = model.htmlMedia;
+                    }
+                  }, addMediaHtml: addMediaHtml);
+                }, "Article", postModel.html == null ? '' : postModel.html!,
                         accessibleByMembers: postModel.accessibleByMembers,
                         extraIcons: PagedPostsListState.getAlbumActionIcons(
                             widget.app,
@@ -575,15 +579,12 @@ class _PostWidgetState extends State<PostWidget> {
       PostDetails postDetail,
       String? memberId,
       PostCommentContainer postComment) {
-    return popupMenuButton(
-        widget.app, context,
+    return popupMenuButton(widget.app, context,
         icon: Icon(Icons.more_vert),
         itemBuilder: (_) => <PopupMenuItem<int>>[
-              popupMenuItem<int>(
-                  widget.app, context,
+              popupMenuItem<int>(widget.app, context,
                   label: 'Update comment', value: 0),
-              popupMenuItem<int>(
-                  widget.app, context,
+              popupMenuItem<int>(widget.app, context,
                   label: 'Delete comment', value: 1),
             ],
         onSelected: (choice) {

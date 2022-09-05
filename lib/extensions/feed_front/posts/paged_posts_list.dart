@@ -1,5 +1,6 @@
 import 'package:eliud_core/model/background_model.dart';
 import 'package:eliud_pkg_feed/model/feed_front_model.dart';
+import 'package:eliud_pkg_text/platform/widgets/html_text_dialog.dart';
 import 'package:tuple/tuple.dart';
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
@@ -25,6 +26,7 @@ import 'package:eliud_pkg_feed/extensions/feed_front/posts/post_privilege/post_p
 import 'package:eliud_pkg_feed/extensions/feed_front/posts/post_widget.dart';
 import 'package:eliud_pkg_feed/extensions/util/access_group_helper.dart';
 import 'package:eliud_pkg_text/platform/text_platform.dart';
+import '../../with_medium/post_medium_components.dart';
 import 'new_post/bloc/feed_post_form_event.dart';
 import 'new_post/feed_post_dialog.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
@@ -111,15 +113,22 @@ class PagedPostsListState extends State<PagedPostsList> {
 
       // Photo
       if (widget.feedFrontModel.feed!.photoPost!) {
-        widgets.add(Container(width: 100, height: 70, child: PostButton(widget.app, widget.feedFrontModel.feed!, PostType.PostPhoto,
-            _retrievePostAccessibile, author)));
+        widgets.add(Container(
+            width: 100,
+            height: 70,
+            child: PostButton(widget.app, widget.feedFrontModel.feed!,
+                PostType.PostPhoto, _retrievePostAccessibile, author)));
         widgets.add(Spacer());
       }
 
       // Video
-      if (widget.feedFrontModel.feed!.videoPost != null && widget.feedFrontModel.feed!.videoPost!) {
-        widgets.add(Container(width: 100, height: 70, child: PostButton(widget.app, widget.feedFrontModel.feed!, PostType.PostVideo,
-            _retrievePostAccessibile, author)));
+      if (widget.feedFrontModel.feed!.videoPost != null &&
+          widget.feedFrontModel.feed!.videoPost!) {
+        widgets.add(Container(
+            width: 100,
+            height: 70,
+            child: PostButton(widget.app, widget.feedFrontModel.feed!,
+                PostType.PostVideo, _retrievePostAccessibile, author)));
         widgets.add(Spacer());
       }
 
@@ -129,53 +138,66 @@ class PagedPostsListState extends State<PagedPostsList> {
         var message = Image.asset(
             "assets/images/segoshvishna.fiverr.com/message.png",
             package: "eliud_pkg_feed");
-        widgets.add(Container(width: 100, height: 70, child: actionContainer(widget.app, context,
-            child: iconButton(widget.app, context,
-                icon: message, tooltip: 'Message', onPressed: () {
-              openEntryDialog(
-                  widget.app, context, widget.app.documentID + '/_message',
-                  title: 'Say something', onPressed: (value) {
-                if (value != null) {
-                  _addPost(
-                      description: value,
-                      authorId: author.documentID,
-                      postAccessibleByGroup: currentPostAccessibleByGroup,
-                      postAccessibleByMembers: currentPostAccessibleByMembers);
-                }
-              });
-            }))));
+        widgets.add(Container(
+            width: 100,
+            height: 70,
+            child: actionContainer(widget.app, context,
+                child: iconButton(widget.app, context,
+                    icon: message, tooltip: 'Message', onPressed: () {
+                  openEntryDialog(
+                      widget.app, context, widget.app.documentID + '/_message',
+                      title: 'Say something', onPressed: (value) {
+                    if (value != null) {
+                      _addPost(
+                          description: value,
+                          authorId: author.documentID,
+                          postAccessibleByGroup: currentPostAccessibleByGroup,
+                          postAccessibleByMembers:
+                              currentPostAccessibleByMembers);
+                    }
+                  });
+                }))));
         widgets.add(Spacer());
       }
 
       // Audio
-      if (widget.feedFrontModel.feed!.audioPost != null && widget.feedFrontModel.feed!.audioPost!) {
+      if (widget.feedFrontModel.feed!.audioPost != null &&
+          widget.feedFrontModel.feed!.audioPost!) {
         var audio = Image.asset(
             "assets/images/segoshvishna.fiverr.com/audio.png",
             package: "eliud_pkg_feed");
-        widgets.add(Container(width: 100, height: 70, child: iconButton(widget.app, context,
-            icon: audio, tooltip: 'Audio', onPressed: () {})));
+        widgets.add(Container(
+            width: 100,
+            height: 70,
+            child: iconButton(widget.app, context,
+                icon: audio, tooltip: 'Audio', onPressed: () {})));
         widgets.add(Spacer());
       }
 
       // Album
-      if (widget.feedFrontModel.feed!.albumPost != null && widget.feedFrontModel.feed!.albumPost!) {
+      if (widget.feedFrontModel.feed!.albumPost != null &&
+          widget.feedFrontModel.feed!.albumPost!) {
         var album = Image.asset(
             "assets/images/segoshvishna.fiverr.com/album.png",
             package: "eliud_pkg_feed");
-        widgets.add(Container(width: 100, height: 70, child: actionContainer(widget.app, context,
-            child: iconButton(widget.app, context,
-                icon: album,
-                tooltip: 'Album',
-                onPressed: () => FeedPostDialog.open(
-                    widget.app,
-                    context,
-                    widget.feedFrontModel.feed!.documentID,
-                    profileInitialized.watchingThisProfile()!.authorId!,
-                    profileInitialized.memberId(),
-                    profileInitialized.profileUrl(),
-                    pageContextInfo,
-                    InitialiseNewFeedPostFormEvent(
-                        currentPostAccessibleByGroup, currentPostAccessibleByMembers))))));
+        widgets.add(Container(
+            width: 100,
+            height: 70,
+            child: actionContainer(widget.app, context,
+                child: iconButton(widget.app, context,
+                    icon: album,
+                    tooltip: 'Album',
+                    onPressed: () => FeedPostDialog.open(
+                        widget.app,
+                        context,
+                        widget.feedFrontModel.feed!.documentID,
+                        profileInitialized.watchingThisProfile()!.authorId!,
+                        profileInitialized.memberId(),
+                        profileInitialized.profileUrl(),
+                        pageContextInfo,
+                        InitialiseNewFeedPostFormEvent(
+                            currentPostAccessibleByGroup,
+                            currentPostAccessibleByMembers))))));
         widgets.add(Spacer());
       }
 
@@ -186,61 +208,79 @@ class PagedPostsListState extends State<PagedPostsList> {
             "assets/images/segoshvishna.fiverr.com/article.png",
             package: "eliud_pkg_feed");
 
-        widgets.add(Container(width: 100, height: 70, child: actionContainer(widget.app, context,
-            child: iconButton(widget.app, context,
-                icon: articleIcon, tooltip: 'Article', onPressed: () {
-              List<MemberMediumContainerModel> postMediumModels = [];
-              AbstractTextPlatform.platform!.updateHtmlWithMemberMediumCallback(
-                  context,
-                  widget.app,
-                  author.documentID,
-                  (htmlReference, value) {
-                    postMediumModels.add(MemberMediumContainerModel(
-                        documentID: newRandomKey(), htmlReference: htmlReference, memberMedium: value));
-                  },
-                  toMemberMediumAccessibleByGroup(currentPostAccessibleByGroup.index),
-                  (newArticle) {
-                    _addPost(
-                        html: newArticle,
-                        authorId: author.documentID,
-                        postAccessibleByGroup: currentPostAccessibleByGroup,
-                        postAccessibleByMembers: currentPostAccessibleByMembers,
-                        postMemberMedia: postMediumModels);
-                  },
-                  "Article",
-                  'Add article for ' +
-                      AccessGroupHelper.nameForPostAccessibleByGroup(
-                          currentPostAccessibleByGroup),
-                  extraIcons: getAlbumActionIcons(
-                      widget.app,
-                      context,
-                      AccessGroupHelper.nameForPostAccessibleByGroup(
-                          currentPostAccessibleByGroup)),
-                  accessibleByMembers: currentPostAccessibleByMembers);
-            }))));
+        widgets.add(Container(
+            width: 100,
+            height: 70,
+            child: actionContainer(widget.app, context,
+                child: iconButton(widget.app, context,
+                    icon: articleIcon, tooltip: 'Article', onPressed: () {
+                  List<MemberMediumContainerModel> postMediumModels = [];
+                  AbstractTextPlatform.platform!
+                      .updateHtmlWithMemberMediumCallback(
+                          context,
+                          widget.app,
+                          author.documentID,
+                          (newArticle) {
+                            _addPost(
+                                html: newArticle,
+                                authorId: author.documentID,
+                                postAccessibleByGroup:
+                                    currentPostAccessibleByGroup,
+                                postAccessibleByMembers:
+                                    currentPostAccessibleByMembers,
+                                postMemberMedia: postMediumModels);
+                          },
+                          (AddMediaHtml addMediaHtml, String html) async {
+                            // the PostWithMemberMediumComponents uses (unfortunately) a PostModel, so we create one, just to be able to function, and to capturethe postMediumModels
+                            var tempModel = PostModel(documentID: newRandomKey(), authorId: author.documentID, appId: widget.app.documentID, html: html, memberMedia: postMediumModels,
+                              accessibleByGroup: currentPostAccessibleByGroup,
+                              accessibleByMembers: currentPostAccessibleByMembers,
+                            );
+                            await PostWithMemberMediumComponents.openIt(
+                                widget.app, context, tempModel,
+                                (accepted, model) {
+                              if (accepted) {
+                                postMediumModels = model.memberMedia;
+                              }
+                            }, addMediaHtml: addMediaHtml);
+                          },
+                          "Article",
+                          'Add article for ' +
+                              AccessGroupHelper.nameForPostAccessibleByGroup(
+                                  currentPostAccessibleByGroup),
+                          extraIcons: getAlbumActionIcons(
+                              widget.app,
+                              context,
+                              AccessGroupHelper.nameForPostAccessibleByGroup(
+                                  currentPostAccessibleByGroup)),
+                          accessibleByMembers: currentPostAccessibleByMembers);
+                }))));
         widgets.add(Spacer());
       }
 
       var accessIcon = Image.asset(
           "assets/images/icons8.com/icons8-eye-100.png",
           package: "eliud_pkg_feed");
-      widgets.add(Container(width: 100, height: 70, child: actionContainer(widget.app, context,
-          child: iconButton(widget.app, context,
-              icon: accessIcon, tooltip: 'Visibility', onPressed: () {
-            PostPrivilegeDialog.openIt(
-                widget.app,
-                context,
-                'Visibility',
-                widget.feedFrontModel.feed!.documentID,
-                author.documentID,
-                author.documentID,
-                currentPostAccessibleByGroup,
-                currentPostAccessibleByMembers,
-                (postAccessibleByGroup, postAccessibleByMembers) {
-              currentPostAccessibleByGroup = postAccessibleByGroup;
-              currentPostAccessibleByMembers = postAccessibleByMembers;
-            });
-          }))));
+      widgets.add(Container(
+          width: 100,
+          height: 70,
+          child: actionContainer(widget.app, context,
+              child: iconButton(widget.app, context,
+                  icon: accessIcon, tooltip: 'Visibility', onPressed: () {
+                PostPrivilegeDialog.openIt(
+                    widget.app,
+                    context,
+                    'Visibility',
+                    widget.feedFrontModel.feed!.documentID,
+                    author.documentID,
+                    author.documentID,
+                    currentPostAccessibleByGroup,
+                    currentPostAccessibleByMembers,
+                    (postAccessibleByGroup, postAccessibleByMembers) {
+                  currentPostAccessibleByGroup = postAccessibleByGroup;
+                  currentPostAccessibleByMembers = postAccessibleByMembers;
+                });
+              }))));
 
       widgets.add(Spacer());
 
@@ -282,10 +322,8 @@ class PagedPostsListState extends State<PagedPostsList> {
                   var photoURL = profileState.profileUrl();
                   List<Widget> widgets = [];
                   if (profileState is LoggedInProfileInitialized) {
-                    widgets.add(_newPostForm(
-                        profileState.currentMember,
-                        profileState,
-                        pageContextInfo));
+                    widgets.add(_newPostForm(profileState.currentMember,
+                        profileState, pageContextInfo));
                   }
                   for (int i = 0; i < state.values.length; i++) {
                     widgets.add(PostWidget(
