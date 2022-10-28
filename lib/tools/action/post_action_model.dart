@@ -64,6 +64,9 @@ class PostActionModel extends ActionModel {
   @override
   String describe() => 'Post the current page to feed';
 
+  @override
+  ActionModel copyWith(AppModel newApp) =>
+    PostActionModel(newApp, feed: feed, conditions: conditions);
 }
 
 class PostActionMapper implements ActionModelMapper {
