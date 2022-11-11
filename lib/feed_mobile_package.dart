@@ -1,5 +1,7 @@
 import 'feed_package.dart';
 
+FeedPackage getFeedPackage() => FeedMobilePackage();
+
 class FeedMobilePackage extends FeedPackage {
   @override
   void init() {

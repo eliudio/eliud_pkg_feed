@@ -1,5 +1,7 @@
 import 'feed_package.dart';
 
+FeedPackage getFeedPackage() => FeedWebPackage();
+
 class FeedWebPackage extends FeedPackage {
   @override
   void init() {

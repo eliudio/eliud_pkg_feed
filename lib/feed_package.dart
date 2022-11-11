@@ -18,6 +18,9 @@ import 'package:eliud_core/tools/action/action_model.dart';
 import 'package:eliud_pkg_feed/model/component_registry.dart';
 
 import 'extensions/util/profile_widget_wrapper.dart';
+import 'package:eliud_pkg_feed/feed_package_stub.dart'
+if (dart.library.io) 'feed_mobile_package.dart'
+if (dart.library.html) 'feed_web_package.dart';
 
 abstract class FeedPackage extends Package {
   FeedPackage() : super('eliud_pkg_feed');
@@ -51,4 +54,6 @@ abstract class FeedPackage extends Package {
 
   @override
   List<MemberCollectionInfo> getMemberCollectionInfo() => AbstractRepositorySingleton.collections;
+
+  static FeedPackage instance() => getFeedPackage();
 }
