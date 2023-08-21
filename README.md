@@ -4,7 +4,7 @@ Eliud feed package
 
 ## Dependency diagram
 
-![Dependency diagram](depends.jpg)
+![Dependency diagram](https://github.com/eliudio/eliud_pkg_feed/blob/main/depends.jpg)
 
 ## eliud.io
 
