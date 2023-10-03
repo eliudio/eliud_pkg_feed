@@ -3,7 +3,7 @@ name: eliud_pkg_feed
 description: "Eliud package for feed, friends, etc"
 homepage: https://eliud.io
 repository: https://github.com/eliudio/eliud_pkg_feed
-version: 1.0.2+8
+version: 1.0.2+11
 environment:
   sdk: '>=2.17.0 <4.0.0'
   flutter: '>=3.0.0'
@@ -24,13 +24,13 @@ dependencies:
   pointer_interceptor: ^0.9.3+3
   transparent_image: ^2.0.0
   tuple: ^2.0.1
-  eliud_core: ^1.0.7+4
-  eliud_pkg_follow: ^1.0.1+8
-  eliud_pkg_medium: ^1.0.1+8
-  eliud_pkg_membership: ^1.0.1+8
-  eliud_pkg_notifications: ^1.0.1+8
-  eliud_pkg_text: ^1.0.2+8
-  eliud_pkg_etc: ^1.0.1+8
+  eliud_core: ^1.0.10+1
+  eliud_pkg_follow: ^1.0.1+11
+  eliud_pkg_medium: ^1.0.1+11
+  eliud_pkg_membership: ^1.0.1+11
+  eliud_pkg_notifications: ^1.0.1+11
+  eliud_pkg_text: ^1.0.2+11
+  eliud_pkg_etc: ^1.0.1+11
 dev_dependencies:
   build_runner: ^2.4.6
   eliud_generator: 1.0.4+1
