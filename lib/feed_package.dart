@@ -1,14 +1,21 @@
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/core/wizards/registry/registry.dart';
+import 'package:eliud_core/core_package.dart';
+import 'package:eliud_core/eliud.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/package/package.dart';
 import 'package:eliud_core/core/registry.dart';
+import 'package:eliud_pkg_etc/etc_package.dart';
 import 'package:eliud_pkg_feed/tools/action/post_action_entity.dart';
 import 'package:eliud_pkg_feed/tools/action/post_action_handler.dart';
 import 'package:eliud_pkg_feed/tools/action/post_action_model.dart';
 import 'package:eliud_pkg_feed/wizards/feed_wizard.dart';
 import 'package:eliud_pkg_follow/follow_package.dart';
+import 'package:eliud_pkg_medium/medium_package.dart';
+import 'package:eliud_pkg_membership/membership_package.dart';
+import 'package:eliud_pkg_notifications/notifications_package.dart';
+import 'package:eliud_pkg_text/text_package.dart';
 import 'package:flutter_bloc/src/bloc_provider.dart';
 import 'package:eliud_core/model/access_model.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
@@ -56,4 +63,17 @@ abstract class FeedPackage extends Package {
   List<MemberCollectionInfo> getMemberCollectionInfo() => AbstractRepositorySingleton.collections;
 
   static FeedPackage instance() => getFeedPackage();
+
+  /*
+   * Register depending packages
+   */
+  void registerDependencies(Eliud eliud) {
+    eliud.registerPackage(CorePackage.instance());
+    eliud.registerPackage(FollowPackage.instance());
+    eliud.registerPackage(MediumPackage.instance());
+    eliud.registerPackage(MembershipPackage.instance());
+    eliud.registerPackage(NotificationsPackage.instance());
+    eliud.registerPackage(TextPackage.instance());
+    eliud.registerPackage(EtcPackage.instance());
+  }
 }
