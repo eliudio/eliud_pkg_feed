@@ -36,6 +36,7 @@ import 'package:eliud_core/core/base/repository_base.dart';
 
 typedef ProfileModelTrigger(List<ProfileModel?> list);
 typedef ProfileChanged(ProfileModel? value);
+typedef ProfileErrorHandler(o, e);
 
 abstract class ProfileRepository extends RepositoryBase<ProfileModel, ProfileEntity> {
   Future<ProfileEntity> addEntity(String documentID, ProfileEntity value);
@@ -52,7 +53,7 @@ abstract class ProfileRepository extends RepositoryBase<ProfileModel, ProfileEnt
 
   StreamSubscription<List<ProfileModel?>> listen(ProfileModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
   StreamSubscription<List<ProfileModel?>> listenWithDetails(ProfileModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
-  StreamSubscription<ProfileModel?> listenTo(String documentId, ProfileChanged changed);
+  StreamSubscription<ProfileModel?> listenTo(String documentId, ProfileChanged changed, {ProfileErrorHandler? errorHandler});
   void flush();
   
   String? timeStampToString(dynamic timeStamp);

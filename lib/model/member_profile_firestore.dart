@@ -127,15 +127,21 @@ class MemberProfileFirestore implements MemberProfileRepository {
   }
 
   @override
-  StreamSubscription<MemberProfileModel?> listenTo(String documentId, MemberProfileChanged changed) {
+  StreamSubscription<MemberProfileModel?> listenTo(String documentId, MemberProfileChanged changed, {MemberProfileErrorHandler? errorHandler}) {
     var stream = MemberProfileCollection.doc(documentId)
         .snapshots()
         .asyncMap((data) {
       return _populateDocPlus(data);
     });
-    return stream.listen((value) {
+    var theStream = stream.listen((value) {
       changed(value);
     });
+    theStream.onError((theException, theStacktrace) {
+      if (errorHandler != null) {
+        errorHandler(theException, theStacktrace);
+      }
+    });
+    return theStream;
   }
 
   Stream<List<MemberProfileModel?>> values({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {

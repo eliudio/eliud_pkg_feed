@@ -36,6 +36,7 @@ import 'package:eliud_core/core/base/repository_base.dart';
 
 typedef FeedModelTrigger(List<FeedModel?> list);
 typedef FeedChanged(FeedModel? value);
+typedef FeedErrorHandler(o, e);
 
 abstract class FeedRepository extends RepositoryBase<FeedModel, FeedEntity> {
   Future<FeedEntity> addEntity(String documentID, FeedEntity value);
@@ -52,7 +53,7 @@ abstract class FeedRepository extends RepositoryBase<FeedModel, FeedEntity> {
 
   StreamSubscription<List<FeedModel?>> listen(FeedModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
   StreamSubscription<List<FeedModel?>> listenWithDetails(FeedModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
-  StreamSubscription<FeedModel?> listenTo(String documentId, FeedChanged changed);
+  StreamSubscription<FeedModel?> listenTo(String documentId, FeedChanged changed, {FeedErrorHandler? errorHandler});
   void flush();
   
   String? timeStampToString(dynamic timeStamp);

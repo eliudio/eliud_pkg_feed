@@ -127,15 +127,21 @@ class FeedMenuFirestore implements FeedMenuRepository {
   }
 
   @override
-  StreamSubscription<FeedMenuModel?> listenTo(String documentId, FeedMenuChanged changed) {
+  StreamSubscription<FeedMenuModel?> listenTo(String documentId, FeedMenuChanged changed, {FeedMenuErrorHandler? errorHandler}) {
     var stream = FeedMenuCollection.doc(documentId)
         .snapshots()
         .asyncMap((data) {
       return _populateDocPlus(data);
     });
-    return stream.listen((value) {
+    var theStream = stream.listen((value) {
       changed(value);
     });
+    theStream.onError((theException, theStacktrace) {
+      if (errorHandler != null) {
+        errorHandler(theException, theStacktrace);
+      }
+    });
+    return theStream;
   }
 
   Stream<List<FeedMenuModel?>> values({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {

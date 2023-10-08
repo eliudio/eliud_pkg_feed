@@ -163,15 +163,21 @@ class PostFirestore implements PostRepository {
   }
 
   @override
-  StreamSubscription<PostModel?> listenTo(String documentId, PostChanged changed) {
+  StreamSubscription<PostModel?> listenTo(String documentId, PostChanged changed, {PostErrorHandler? errorHandler}) {
     var stream = PostCollection.doc(documentId)
         .snapshots()
         .asyncMap((data) {
       return _populateDocPlus(data);
     });
-    return stream.listen((value) {
+    var theStream = stream.listen((value) {
       changed(value);
     });
+    theStream.onError((theException, theStacktrace) {
+      if (errorHandler != null) {
+        errorHandler(theException, theStacktrace);
+      }
+    });
+    return theStream;
   }
 
   Stream<List<PostModel?>> values({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {

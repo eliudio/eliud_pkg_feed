@@ -145,13 +145,13 @@ class PostLikeCache implements PostLikeRepository {
   }
 
   @override
-  StreamSubscription<PostLikeModel?> listenTo(String documentId, PostLikeChanged changed) {
+  StreamSubscription<PostLikeModel?> listenTo(String documentId, PostLikeChanged changed, {PostLikeErrorHandler? errorHandler}) {
     return reference.listenTo(documentId, ((value) {
       if (value != null) {
         fullCache[value.documentID] = value;
       }
       changed(value);
-    }));
+    }), errorHandler: errorHandler);
   }
 
   static Future<PostLikeModel> refreshRelations(PostLikeModel model) async {

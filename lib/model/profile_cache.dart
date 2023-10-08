@@ -140,13 +140,13 @@ class ProfileCache implements ProfileRepository {
   }
 
   @override
-  StreamSubscription<ProfileModel?> listenTo(String documentId, ProfileChanged changed) {
+  StreamSubscription<ProfileModel?> listenTo(String documentId, ProfileChanged changed, {ProfileErrorHandler? errorHandler}) {
     return reference.listenTo(documentId, ((value) {
       if (value != null) {
         fullCache[value.documentID] = value;
       }
       changed(value);
-    }));
+    }), errorHandler: errorHandler);
   }
 
   static Future<ProfileModel> refreshRelations(ProfileModel model) async {

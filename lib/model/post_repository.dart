@@ -40,6 +40,7 @@ import 'package:eliud_core/core/base/repository_base.dart';
 
 typedef PostModelTrigger(List<PostModel?> list);
 typedef PostChanged(PostModel? value);
+typedef PostErrorHandler(o, e);
 
 abstract class PostRepository extends RepositoryBase<PostModel, PostEntity> {
   Future<PostEntity> addEntity(String documentID, PostEntity value);
@@ -56,7 +57,7 @@ abstract class PostRepository extends RepositoryBase<PostModel, PostEntity> {
 
   StreamSubscription<List<PostModel?>> listen(PostModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
   StreamSubscription<List<PostModel?>> listenWithDetails(PostModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
-  StreamSubscription<PostModel?> listenTo(String documentId, PostChanged changed);
+  StreamSubscription<PostModel?> listenTo(String documentId, PostChanged changed, {PostErrorHandler? errorHandler});
   void flush();
   
   String? timeStampToString(dynamic timeStamp);

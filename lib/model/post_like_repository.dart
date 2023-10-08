@@ -40,6 +40,7 @@ import 'package:eliud_core/core/base/repository_base.dart';
 
 typedef PostLikeModelTrigger(List<PostLikeModel?> list);
 typedef PostLikeChanged(PostLikeModel? value);
+typedef PostLikeErrorHandler(o, e);
 
 abstract class PostLikeRepository extends RepositoryBase<PostLikeModel, PostLikeEntity> {
   Future<PostLikeEntity> addEntity(String documentID, PostLikeEntity value);
@@ -56,7 +57,7 @@ abstract class PostLikeRepository extends RepositoryBase<PostLikeModel, PostLike
 
   StreamSubscription<List<PostLikeModel?>> listen(PostLikeModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
   StreamSubscription<List<PostLikeModel?>> listenWithDetails(PostLikeModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
-  StreamSubscription<PostLikeModel?> listenTo(String documentId, PostLikeChanged changed);
+  StreamSubscription<PostLikeModel?> listenTo(String documentId, PostLikeChanged changed, {PostLikeErrorHandler? errorHandler});
   void flush();
   
   String? timeStampToString(dynamic timeStamp);

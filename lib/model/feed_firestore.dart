@@ -127,15 +127,21 @@ class FeedFirestore implements FeedRepository {
   }
 
   @override
-  StreamSubscription<FeedModel?> listenTo(String documentId, FeedChanged changed) {
+  StreamSubscription<FeedModel?> listenTo(String documentId, FeedChanged changed, {FeedErrorHandler? errorHandler}) {
     var stream = FeedCollection.doc(documentId)
         .snapshots()
         .asyncMap((data) {
       return _populateDocPlus(data);
     });
-    return stream.listen((value) {
+    var theStream = stream.listen((value) {
       changed(value);
     });
+    theStream.onError((theException, theStacktrace) {
+      if (errorHandler != null) {
+        errorHandler(theException, theStacktrace);
+      }
+    });
+    return theStream;
   }
 
   Stream<List<FeedModel?>> values({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {

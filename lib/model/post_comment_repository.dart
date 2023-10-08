@@ -40,6 +40,7 @@ import 'package:eliud_core/core/base/repository_base.dart';
 
 typedef PostCommentModelTrigger(List<PostCommentModel?> list);
 typedef PostCommentChanged(PostCommentModel? value);
+typedef PostCommentErrorHandler(o, e);
 
 abstract class PostCommentRepository extends RepositoryBase<PostCommentModel, PostCommentEntity> {
   Future<PostCommentEntity> addEntity(String documentID, PostCommentEntity value);
@@ -56,7 +57,7 @@ abstract class PostCommentRepository extends RepositoryBase<PostCommentModel, Po
 
   StreamSubscription<List<PostCommentModel?>> listen(PostCommentModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
   StreamSubscription<List<PostCommentModel?>> listenWithDetails(PostCommentModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
-  StreamSubscription<PostCommentModel?> listenTo(String documentId, PostCommentChanged changed);
+  StreamSubscription<PostCommentModel?> listenTo(String documentId, PostCommentChanged changed, {PostCommentErrorHandler? errorHandler});
   void flush();
   
   String? timeStampToString(dynamic timeStamp);

@@ -176,7 +176,7 @@ class LabelledBodyComponentInMemoryRepository implements LabelledBodyComponentRe
   }
   
   @override
-  StreamSubscription<LabelledBodyComponentModel> listenTo(String documentId, LabelledBodyComponentChanged changed) {
+  StreamSubscription<LabelledBodyComponentModel> listenTo(String documentId, LabelledBodyComponentChanged changed, {LabelledBodyComponentErrorHandler? errorHandler}) {
     throw UnimplementedError();
   }
 
@@ -296,7 +296,7 @@ class MemberProfileInMemoryRepository implements MemberProfileRepository {
   }
   
   @override
-  StreamSubscription<MemberProfileModel> listenTo(String documentId, MemberProfileChanged changed) {
+  StreamSubscription<MemberProfileModel> listenTo(String documentId, MemberProfileChanged changed, {MemberProfileErrorHandler? errorHandler}) {
     throw UnimplementedError();
   }
 

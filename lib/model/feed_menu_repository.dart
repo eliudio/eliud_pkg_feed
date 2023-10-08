@@ -36,6 +36,7 @@ import 'package:eliud_core/core/base/repository_base.dart';
 
 typedef FeedMenuModelTrigger(List<FeedMenuModel?> list);
 typedef FeedMenuChanged(FeedMenuModel? value);
+typedef FeedMenuErrorHandler(o, e);
 
 abstract class FeedMenuRepository extends RepositoryBase<FeedMenuModel, FeedMenuEntity> {
   Future<FeedMenuEntity> addEntity(String documentID, FeedMenuEntity value);
@@ -52,7 +53,7 @@ abstract class FeedMenuRepository extends RepositoryBase<FeedMenuModel, FeedMenu
 
   StreamSubscription<List<FeedMenuModel?>> listen(FeedMenuModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
   StreamSubscription<List<FeedMenuModel?>> listenWithDetails(FeedMenuModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
-  StreamSubscription<FeedMenuModel?> listenTo(String documentId, FeedMenuChanged changed);
+  StreamSubscription<FeedMenuModel?> listenTo(String documentId, FeedMenuChanged changed, {FeedMenuErrorHandler? errorHandler});
   void flush();
   
   String? timeStampToString(dynamic timeStamp);

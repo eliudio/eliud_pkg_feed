@@ -140,13 +140,13 @@ class FeedMenuCache implements FeedMenuRepository {
   }
 
   @override
-  StreamSubscription<FeedMenuModel?> listenTo(String documentId, FeedMenuChanged changed) {
+  StreamSubscription<FeedMenuModel?> listenTo(String documentId, FeedMenuChanged changed, {FeedMenuErrorHandler? errorHandler}) {
     return reference.listenTo(documentId, ((value) {
       if (value != null) {
         fullCache[value.documentID] = value;
       }
       changed(value);
-    }));
+    }), errorHandler: errorHandler);
   }
 
   static Future<FeedMenuModel> refreshRelations(FeedMenuModel model) async {

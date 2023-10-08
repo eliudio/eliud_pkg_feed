@@ -140,13 +140,13 @@ class FeedFrontCache implements FeedFrontRepository {
   }
 
   @override
-  StreamSubscription<FeedFrontModel?> listenTo(String documentId, FeedFrontChanged changed) {
+  StreamSubscription<FeedFrontModel?> listenTo(String documentId, FeedFrontChanged changed, {FeedFrontErrorHandler? errorHandler}) {
     return reference.listenTo(documentId, ((value) {
       if (value != null) {
         fullCache[value.documentID] = value;
       }
       changed(value);
-    }));
+    }), errorHandler: errorHandler);
   }
 
   static Future<FeedFrontModel> refreshRelations(FeedFrontModel model) async {

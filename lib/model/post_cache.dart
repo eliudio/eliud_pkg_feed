@@ -145,13 +145,13 @@ class PostCache implements PostRepository {
   }
 
   @override
-  StreamSubscription<PostModel?> listenTo(String documentId, PostChanged changed) {
+  StreamSubscription<PostModel?> listenTo(String documentId, PostChanged changed, {PostErrorHandler? errorHandler}) {
     return reference.listenTo(documentId, ((value) {
       if (value != null) {
         fullCache[value.documentID] = value;
       }
       changed(value);
-    }));
+    }), errorHandler: errorHandler);
   }
 
   static Future<PostModel> refreshRelations(PostModel model) async {

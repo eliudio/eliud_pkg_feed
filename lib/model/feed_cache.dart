@@ -140,13 +140,13 @@ class FeedCache implements FeedRepository {
   }
 
   @override
-  StreamSubscription<FeedModel?> listenTo(String documentId, FeedChanged changed) {
+  StreamSubscription<FeedModel?> listenTo(String documentId, FeedChanged changed, {FeedErrorHandler? errorHandler}) {
     return reference.listenTo(documentId, ((value) {
       if (value != null) {
         fullCache[value.documentID] = value;
       }
       changed(value);
-    }));
+    }), errorHandler: errorHandler);
   }
 
   static Future<FeedModel> refreshRelations(FeedModel model) async {
