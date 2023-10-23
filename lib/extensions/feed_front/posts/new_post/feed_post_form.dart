@@ -32,7 +32,7 @@ class MyFeedPostForm extends StatefulWidget {
   final String feedId;
   final String memberId;
   final String? currentMemberId;
-  final String photoURL;
+  final String? photoURL;
   final eliud_router.PageContextInfo pageContextInfo;
   final bool isNew;
 

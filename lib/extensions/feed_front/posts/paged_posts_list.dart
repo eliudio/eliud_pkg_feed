@@ -319,7 +319,11 @@ class PagedPostsListState extends State<PagedPostsList> {
               builder: (context, state) {
                 if (state is PostListPagedState) {
                   var currentMemberId = profileState.memberId();
-                  var photoURL = profileState.profileUrl();
+                  var photoURL = profileState.profileUrl()??
+                      (profileState.app.anonymousProfilePhoto != null
+                          ? profileState.app.anonymousProfilePhoto!.url
+                          : null);
+                  ;
                   List<Widget> widgets = [];
                   if (profileState is LoggedInProfileInitialized) {
                     widgets.add(_newPostForm(profileState.currentMember,

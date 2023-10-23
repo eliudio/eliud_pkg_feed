@@ -64,7 +64,7 @@ abstract class ProfileInitialised extends ProfileState {
 
   String? watchingThisMember();
 
-  String profileUrl();
+  String? profileUrl();
   String profileHTML();
 
   ProfileInitialised progressWith(
@@ -171,11 +171,11 @@ class LoggedInWatchingMyProfile extends LoggedInProfileInitialized {
   }
 
   @override
-  String profileUrl() {
+  String? profileUrl() {
     if (currentMemberProfileModel.profileOverride != null) {
       return currentMemberProfileModel.profileOverride!;
     } else {
-      return currentMember.photoURL!;
+      return currentMember.photoURL;
     }
   }
 
@@ -254,11 +254,11 @@ class LoggedInAndWatchingOtherProfile extends LoggedInProfileInitialized {
   }
 
   @override
-  String profileUrl() {
+  String? profileUrl() {
     if (feedProfileModel.profileOverride != null) {
       return feedProfileModel.profileOverride!;
     } else {
-      return feedPublicInfoModel.photoURL!;
+      return feedPublicInfoModel.photoURL;
     }
   }
 
@@ -353,11 +353,11 @@ class NotLoggedInWatchingSomeone extends ProfileInitialised {
   }
 
   @override
-  String profileUrl() {
+  String? profileUrl() {
     if (feedProfileModel.profileOverride != null) {
       return feedProfileModel.profileOverride!;
     } else {
-      return feedPublicInfoModel.photoURL!;
+      return feedPublicInfoModel.photoURL;
     }
   }
 
@@ -427,7 +427,7 @@ class WatchingPublicProfile extends ProfileInitialised {
   }
 
   @override
-  String profileUrl() {
+  String? profileUrl() {
     return '';
   }
 

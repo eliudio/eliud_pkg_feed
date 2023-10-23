@@ -20,7 +20,7 @@ class FeedPostDialog extends StatefulWidget {
   final PostListPagedBloc postListPagedBloc;
   final String memberId;
   final String? currentMemberId;
-  final String photoURL;
+  final String? photoURL;
   final eliud_router.PageContextInfo pageContextInfo;
   final FeedPostFormEvent initialiseEvent;
 
@@ -42,7 +42,7 @@ class FeedPostDialog extends StatefulWidget {
       String feedId,
       String memberId,
       String? currentMemberId,
-      String photoURL,
+      String? photoURL,
       eliud_router.PageContextInfo pageContextInfo,
       FeedPostFormEvent initialiseEvent) {
     var postListPagedBloc = BlocProvider.of<PostListPagedBloc>(context);
