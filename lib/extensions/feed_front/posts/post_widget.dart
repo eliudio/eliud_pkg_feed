@@ -47,6 +47,7 @@ class PostWidget extends StatefulWidget {
   final PostDetails details;
   final bool isEditable;
   final BackgroundModel? backgroundOverride;
+  final bool canBlock;
 
   const PostWidget(
       {Key? key,
@@ -59,7 +60,8 @@ class PostWidget extends StatefulWidget {
       required this.thumbStyle,
       required this.details,
       required this.isEditable,
-      required this.backgroundOverride})
+      required this.backgroundOverride,
+      required this.canBlock})
       : super(key: key);
 
   @override
@@ -237,6 +239,14 @@ class _PostWidgetState extends State<PostWidget> {
             textAlign: TextAlign.left),
       ]),
       Spacer(),
+      if ((postModel.authorId != widget.currentMemberId) && (widget.canBlock))
+        dialogButton(widget.app, context,
+            label: 'Block member',
+            tooltip:
+                "Block this member to stop seeing all of it's past and future posts, comments, messages, or anything else",
+            onPressed: () {
+          _blockMemberWithPostModel(postModel);
+        }),
     ];
 
     // allow to update / delete
@@ -263,6 +273,34 @@ class _PostWidgetState extends State<PostWidget> {
         Row(crossAxisAlignment: CrossAxisAlignment.start, children: children);
 
     return row;
+  }
+
+  void _blockMemberWithPostModel(PostModel postModel) {
+    openAckNackDialog(
+        widget.app, context, widget.app.documentID + '/_blockmember1',
+        title: 'Block member?',
+        message: 'You are sure you want to block this member?',
+        onSelection: (value) async {
+          if (value == 0) {
+            BlocProvider.of<PostListPagedBloc>(context)
+                .add(BlockMemberFromPost(blockTheAuthorOfThisPost: postModel));
+          }
+        });
+  }
+
+  void _blockMemberWithPostCommentContainer(PostCommentContainer postCommentContainer) {
+    if (postCommentContainer.member!= null) {
+      openAckNackDialog(
+          widget.app, context, widget.app.documentID + '/_blockmember2',
+          title: 'Block member?',
+          message: 'You are sure you want to block this member?',
+          onSelection: (value) async {
+            if (value == 0) {
+              BlocProvider.of<PostListPagedBloc>(context)
+                  .add(BlockMemberFromComment(blockTheAuthorOfThisComment: postCommentContainer));
+            }
+          });
+    }
   }
 
   PopupMenuButton _optionsPost(
@@ -518,35 +556,26 @@ class _PostWidgetState extends State<PostWidget> {
                 height: 0,
                 width: 25,
               ),
-              ButtonTheme(
-                padding: EdgeInsets.symmetric(
-                    vertical: 0.0,
-                    horizontal: 8.0), //adds padding inside the button
-                materialTapTargetSize: MaterialTapTargetSize
-                    .shrinkWrap, //limits the touch area to the button area
-                minWidth: 0, //wraps child's width
-                height: 0, //wraps child's height
-                child: dialogButton(widget.app, context,
-                    label: 'Like',
-                    selected: data.thisMemberLikesThisComment!,
-                    onPressed: () => widget.isEditable
-                        ? _likeComment(context, postDetail, data)
-                        : null), //your original button
-              ),
-              ButtonTheme(
-                  padding: EdgeInsets.symmetric(
-                      vertical: 0.0,
-                      horizontal: 8.0), //adds padding inside the button
-                  materialTapTargetSize: MaterialTapTargetSize
-                      .shrinkWrap, //limits the touch area to the button area
-                  minWidth: 0, //wraps child's width
-                  height: 0, //wraps child's height
-                  child: dialogButton(widget.app, context,
-                      label: 'Reply',
-                      onPressed: () => widget.isEditable
-                          ? allowToAddCommentComment(context, postDetail, data,
-                              data.member!.documentID)
-                          : null)),
+              dialogButton(widget.app, context,
+                  label: 'Like!',
+                  selected: data.thisMemberLikesThisComment!,
+                  onPressed: () => widget.isEditable
+                      ? _likeComment(context, postDetail, data)
+                      : null), //your original button
+              dialogButton(widget.app, context,
+                  label: 'Reply',
+                  onPressed: () => widget.isEditable
+                      ? allowToAddCommentComment(
+                          context, postDetail, data, data.member!.documentID)
+                      : null),
+              if ((data.member!.documentID != widget.currentMemberId) &&
+                  (widget.canBlock))
+                dialogButton(widget.app, context,
+                    label: 'Block member',
+                    tooltip: "Block this member to stop seeing all of it's past and future posts, comments, messages, or anything else",
+                    onPressed: () {
+                      _blockMemberWithPostCommentContainer(data);
+                    }),
             ]),
           ],
         ));

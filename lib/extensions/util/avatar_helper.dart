@@ -46,10 +46,10 @@ class AvatarHelper {
     }
 
     // third, we might not have access, unless it's our own, or we're the owner of the app
-    var memberModel = await memberRepository()!.get(authorId);
-    if (memberModel != null) {
-      name ??= memberModel.name;
-      photoURL ??= memberModel.photoURL;
+    var member = await memberPublicInfoRepository()!.get(authorId);
+    if (member != null) {
+      name ??= member.name;
+      photoURL ??= member.photoURL;
     }
 
     // do we have name and photo?

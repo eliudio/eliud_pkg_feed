@@ -67,12 +67,16 @@ class PostListPagedState extends Equatable {
   final List<PostDetails> values;
   final bool hasReachedMax;
   final Object? lastRowFetched;
+  final List<String> blockedMembers;
+  final bool canBlock;
 
   const PostListPagedState({
     this.status = PostListPagedStatus.initial,
     this.values = const <PostDetails>[],
     this.hasReachedMax = false,
-    this.lastRowFetched
+    this.lastRowFetched,
+    this.blockedMembers = const <String>[],
+    this.canBlock = false,
   });
 
   PostListPagedState copyWith({
@@ -80,12 +84,16 @@ class PostListPagedState extends Equatable {
     List<PostDetails>? values,
     bool? hasReachedMax,
     Object? lastRowFetched,
+    List<String>? blockedMembers,
+    bool? canBlock,
   }) {
     return PostListPagedState(
       status: status ?? this.status,
       values: values ?? this.values,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
       lastRowFetched: lastRowFetched?? this.lastRowFetched,
+      blockedMembers: blockedMembers ?? this.blockedMembers,
+      canBlock: canBlock ?? this.canBlock
     );
   }
 
@@ -116,6 +124,7 @@ class PostListPagedState extends Equatable {
               runtimeType == other.runtimeType &&
               status == other.status &&
               ListEquality().equals(values, other.values) &&
+              ListEquality().equals(blockedMembers, other.blockedMembers) &&
               hasReachedMax == other.hasReachedMax &&
               lastRowFetched == other.lastRowFetched;
 }

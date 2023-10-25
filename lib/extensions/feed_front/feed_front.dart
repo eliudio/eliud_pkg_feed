@@ -36,7 +36,7 @@ class _FeedFrontState extends State<FeedFront> {
           if (accessState is AccessDetermined) {
             return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
               if (state is ProfileInitialised) {
-                return _getIt(context, widget.feedFrontModel, state);
+                return _getIt(context, accessState, widget.feedFrontModel, state);
               } else {
                 return progressIndicator(widget.app, context);
               }
@@ -48,10 +48,10 @@ class _FeedFrontState extends State<FeedFront> {
   }
 
   Widget _getIt(
-      BuildContext context, FeedFrontModel feedFrontModel, ProfileInitialised state) {
+      BuildContext context, AccessDetermined accessDetermined, FeedFrontModel feedFrontModel, ProfileInitialised state) {
     EliudQuery eliudQuery = ProfileBloc.postQuery(state);
     return BlocProvider(
-      create: (_) => PostListPagedBloc(state.memberId() ?? 'PUBLIC', eliudQuery,
+      create: (_) => PostListPagedBloc(accessDetermined, state.memberId() ?? 'PUBLIC', eliudQuery,
           postRepository: posts.postRepository(appId: feedFrontModel.appId)!)
         ..add(PostListPagedFetched()),
       child: PagedPostsList(widget.app, feedFrontModel, backgroundOverride: widget.feedFrontModel.backgroundOverridePosts,),

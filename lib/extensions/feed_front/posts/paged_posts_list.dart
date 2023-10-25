@@ -341,6 +341,7 @@ class PagedPostsListState extends State<PagedPostsList> {
                       currentMemberId: currentMemberId,
                       isEditable: profileState.canEditThisProfile(),
                       photoURL: photoURL,
+                      canBlock: state.canBlock,
                     ));
                   }
                   widgets.add(_buttonNextPage(!state.hasReachedMax));

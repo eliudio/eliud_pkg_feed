@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
+import 'package:eliud_core/core/blocs/access/state/logged_in.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/random.dart';
@@ -13,18 +15,19 @@ import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:eliud_pkg_feed/model/post_repository.dart';
 import 'package:eliud_pkg_feed/tools/post_helper.dart';
 
-const _postLimit = 5;
+const _postLimit = 15;
 
 class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
+  final AccessDetermined accessDetermined;
   final String memberId;
   final PostRepository _postRepository;
   Object? lastRowFetched;
   EliudQuery eliudQuery;
 
-  PostListPagedBloc(this.memberId, this.eliudQuery,
+  PostListPagedBloc(AccessDetermined _accessDetermined, this.memberId, this.eliudQuery,
       {required PostRepository postRepository})
-      : _postRepository = postRepository,
-        super(const PostListPagedState()) {
+      : accessDetermined = _accessDetermined, _postRepository = postRepository,
+        super(PostListPagedState(blockedMembers: _accessDetermined is LoggedIn ? _accessDetermined.getBlocked() : const<String>[], canBlock: _accessDetermined is LoggedIn)) {
     on<PostListPagedFetched>((event, emit) async {
       var value = await _mapPostFetchedToState(state);
       if (value != null) emit(value);
@@ -44,6 +47,27 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
       });
 
       emit(state.copyWith(values: newListOfValues));
+    });
+
+    on <BlockMemberFromPost>((event, emit) async {
+      if (accessDetermined is LoggedIn) {
+        LoggedIn loggedIn = accessDetermined as LoggedIn;
+        var newBlocked = loggedIn.registerBlockedMember(event.blockTheAuthorOfThisPost.authorId);
+        var newValues = filterBlockedMembers(state.values, newBlocked);
+        emit(state.copyWith(values: newValues, blockedMembers: newBlocked));
+      }
+    });
+
+    on <BlockMemberFromComment>((event, emit) async {
+      if (accessDetermined is LoggedIn) {
+        LoggedIn loggedIn = accessDetermined as LoggedIn;
+        if (event.blockTheAuthorOfThisComment.member != null) {
+          var newBlocked = loggedIn.registerBlockedMember(
+              event.blockTheAuthorOfThisComment.member!.documentID);
+          emit(PostListPagedState(blockedMembers: _accessDetermined is LoggedIn ? _accessDetermined.getBlocked() : const<String>[], canBlock: _accessDetermined is LoggedIn));
+          add(PostListPagedFetched()); // refresh all
+        }
+      }
     });
 
     on<AddPostPaged>((event, emit) async {
@@ -67,16 +91,17 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
       });
 
       final extraValues =
-          await _fetchPosts(lastRowFetched: state.lastRowFetched, limit: 1);
+          await _fetchPosts(lastRowFetched: state.lastRowFetched, limit: 1, blockedMembers: state.blockedMembers);
+      final extraExtraValues = filterBlockedMembers(List.of(newListOfValues)..addAll(extraValues), state.blockedMembers);
       var newState = extraValues.isEmpty
           ? state.copyWith(
               hasReachedMax: true,
               status: PostListPagedStatus.success,
-              values: List.of(newListOfValues),
+              values: extraExtraValues,
             )
           : state.copyWith(
               status: PostListPagedStatus.success,
-              values: List.of(newListOfValues)..addAll(extraValues),
+              values: extraExtraValues,
               lastRowFetched: lastRowFetched,
               hasReachedMax:
                   _hasReachedMax(newListOfValues.length + extraValues.length),
@@ -116,6 +141,30 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
     });
   }
 
+  List<PostDetails> filterBlockedMembers(List<PostDetails> values, List<String> blockedMembers) {
+    List<PostDetails> newValues = <PostDetails>[];
+    values.forEach((element) {
+      if (!blockedMembers.contains(element.postModel.authorId)) {
+        newValues.add(element);
+      }
+    });
+    return newValues;
+  }
+
+
+  List<PostCommentContainer>? filterCommentsFromBlockedMembers(List<PostCommentContainer>? postCommentContainer, List<String> blockedMembers) {
+    if (postCommentContainer == null) return null;
+
+    List<PostCommentContainer> newPostCommentContainer = [];
+    postCommentContainer.forEach((element) {
+      if (!blockedMembers.contains(element.member!.documentID)) {
+        newPostCommentContainer.add(element);
+      }
+    });
+
+    return newPostCommentContainer;
+  }
+
   Future<void> _mapDeletePost(DeletePostPaged event) async {
     await _postRepository.delete(event.value!);
   }
@@ -133,21 +182,23 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
     if (state.hasReachedMax) return state;
     try {
       if (state.status == PostListPagedStatus.initial) {
-        final values = await _fetchPosts(limit: 5);
+        final values = await _fetchPosts(limit: 5, blockedMembers: state.blockedMembers);
+        final newValues = filterBlockedMembers(values, state.blockedMembers);
         return state.copyWith(
           status: PostListPagedStatus.success,
-          values: values,
+          values: newValues,
           lastRowFetched: lastRowFetched,
           hasReachedMax: _hasReachedMax(values.length),
         );
       } else {
         final values =
-            await _fetchPosts(lastRowFetched: state.lastRowFetched, limit: 5);
+            await _fetchPosts(lastRowFetched: state.lastRowFetched, limit: 5, blockedMembers: state.blockedMembers);
+        final newValues = filterBlockedMembers(List.of(state.values)..addAll(values), state.blockedMembers);
         return values.isEmpty
             ? state.copyWith(hasReachedMax: true)
             : state.copyWith(
                 status: PostListPagedStatus.success,
-                values: List.of(state.values)..addAll(values),
+                values: newValues,
                 lastRowFetched: lastRowFetched,
                 hasReachedMax: _hasReachedMax(values.length),
               );
@@ -158,7 +209,7 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
   }
 
   Future<List<PostDetails>> _fetchPosts(
-      {Object? lastRowFetched, int? limit}) async {
+      {Object? lastRowFetched, int? limit, required List<String> blockedMembers}) async {
     var values = await _postRepository.valuesListWithDetails(
         orderBy: 'timestamp',
         descending: true,
@@ -170,8 +221,10 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
 
     for (int i = 0; i < values.length; i++) {
       var postModel = values[i];
-      var detail = await _loadComments(postModel!, postModel.appId);
-      details.add(detail);
+      if (postModel != null) {
+        var detail = await _loadComments(postModel, postModel.appId, blockedMembers);
+        details.add(detail);
+      }
     }
 
     return details;
@@ -204,6 +257,7 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
     String postId,
     List<PostCommentModel?>? sourceComments,
     String appId,
+    List<String> blockedMembers,
   ) async {
     if (sourceComments == null) return null;
     if (sourceComments.length == 0) return null;
@@ -225,6 +279,7 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
           postId,
           sourceCommentComments,
           appId,
+          blockedMembers,
         );
 
         var likeKey =
@@ -236,11 +291,10 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
         comments.add(postCommentContainer);
       }
     }
-
-    return comments;
+    return filterCommentsFromBlockedMembers(comments, blockedMembers);
   }
 
-  Future<PostDetails> _loadComments(PostModel postModel, String appId) async {
+  Future<PostDetails> _loadComments(PostModel postModel, String appId, List<String> blockedMembers) async {
     var likeKey = PostHelper.getLikeKey(postModel.documentID, null, memberId);
     var like = await postLikeRepository(appId: appId)!.get(likeKey);
 
@@ -259,10 +313,12 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
       postModel.documentID,
       sourceComments,
       appId,
+      blockedMembers,
     );
+    var newComments = filterCommentsFromBlockedMembers(comments, blockedMembers);
     return PostDetails(
         postModel: postModel,
-        comments: comments,
+        comments: newComments,
         thisMembersLikeType: like == null ? null : like.likeType);
   }
 
@@ -550,7 +606,7 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
       return theState.replacePost(newPostDetail);
     } else {
       // just implement for 1 element on top level
-      // update the state without having to retrieving it from the db
+      // update the state without having to retrieving it from the store
       return theState.replacePost(postDetail.copyWith(
           comments: _copyCommentsAndUpdateALike(
               postDetail.comments,

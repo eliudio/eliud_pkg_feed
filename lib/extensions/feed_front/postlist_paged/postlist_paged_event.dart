@@ -22,6 +22,24 @@ class DeletePostPaged extends PostPagedEvent {
   List<Object?> get props => [ value ];
 }
 
+class BlockMemberFromPost extends PostPagedEvent {
+  final PostModel blockTheAuthorOfThisPost;
+
+  BlockMemberFromPost({ required this.blockTheAuthorOfThisPost });
+
+  @override
+  List<Object?> get props => [ blockTheAuthorOfThisPost ];
+}
+
+class BlockMemberFromComment extends PostPagedEvent {
+  final PostCommentContainer blockTheAuthorOfThisComment;
+
+  BlockMemberFromComment({ required this.blockTheAuthorOfThisComment });
+
+  @override
+  List<Object?> get props => [ blockTheAuthorOfThisComment ];
+}
+
 class AddPostPaged extends PostPagedEvent {
   final PostModel value;
 
