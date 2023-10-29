@@ -3,7 +3,7 @@ name: eliud_pkg_feed
 description: "Eliud package for feed, friends, etc"
 homepage: https://eliud.io
 repository: https://github.com/eliudio/eliud_pkg_feed
-version: 1.0.6+4
+version: 1.0.6+5
 environment:
   sdk: '>=2.17.0 <4.0.0'
   flutter: '>=3.0.0'

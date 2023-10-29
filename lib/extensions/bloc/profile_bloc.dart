@@ -229,7 +229,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       MemberProfileAccessibleByGroup accessibleByGroup,
       List<String>? accessibleByMembers) async {
     return getMemberProfileModel(create, app, feedId, member.documentID,
-        member.photoURL, member.name!, accessibleByGroup, accessibleByMembers);
+        member.photoURL, member.name ?? "Anonymous" + member.documentID, accessibleByGroup, accessibleByMembers);
   }
 
   static Future<MemberProfileModel> getMemberProfileModel(
