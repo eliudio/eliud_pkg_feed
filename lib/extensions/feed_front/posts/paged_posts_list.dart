@@ -26,6 +26,7 @@ import 'package:eliud_pkg_feed/extensions/feed_front/posts/post_privilege/post_p
 import 'package:eliud_pkg_feed/extensions/feed_front/posts/post_widget.dart';
 import 'package:eliud_pkg_feed/extensions/util/access_group_helper.dart';
 import 'package:eliud_pkg_text/platform/text_platform.dart';
+import '../../../tools/row_widget_builder.dart';
 import '../../with_medium/post_medium_components.dart';
 import 'new_post/bloc/feed_post_form_event.dart';
 import 'new_post/feed_post_dialog.dart';
@@ -108,28 +109,22 @@ class PagedPostsListState extends State<PagedPostsList> {
       LoggedInProfileInitialized profileInitialized,
       eliudrouter.PageContextInfo pageContextInfo) {
     if (profileInitialized is LoggedInWatchingMyProfile) {
+      var rwb = RowWidgetBuilder(rowHeight: 100, rowSpace: 10, widgetHeight: 70, widgetWidth: 100, minSpace: 10);
+
       List<Widget> widgets = [];
       widgets.add(Spacer());
 
       // Photo
       if (widget.feedFrontModel.feed!.photoPost!) {
-        widgets.add(Container(
-            width: 100,
-            height: 70,
-            child: PostButton(widget.app, widget.feedFrontModel.feed!,
-                PostType.PostPhoto, _retrievePostAccessibile, author)));
-        widgets.add(Spacer());
+        rwb.add(PostButton(widget.app, widget.feedFrontModel.feed!,
+                PostType.PostPhoto, _retrievePostAccessibile, author));
       }
 
       // Video
       if (widget.feedFrontModel.feed!.videoPost != null &&
           widget.feedFrontModel.feed!.videoPost!) {
-        widgets.add(Container(
-            width: 100,
-            height: 70,
-            child: PostButton(widget.app, widget.feedFrontModel.feed!,
-                PostType.PostVideo, _retrievePostAccessibile, author)));
-        widgets.add(Spacer());
+        rwb.add(PostButton(widget.app, widget.feedFrontModel.feed!,
+                PostType.PostVideo, _retrievePostAccessibile, author));
       }
 
       // Message
@@ -138,10 +133,7 @@ class PagedPostsListState extends State<PagedPostsList> {
         var message = Image.asset(
             "assets/images/segoshvishna.fiverr.com/message.png",
             package: "eliud_pkg_feed");
-        widgets.add(Container(
-            width: 100,
-            height: 70,
-            child: actionContainer(widget.app, context,
+        rwb.add(actionContainer(widget.app, context,
                 child: iconButton(widget.app, context,
                     icon: message, tooltip: 'Message', onPressed: () {
                   openEntryDialog(
@@ -156,8 +148,7 @@ class PagedPostsListState extends State<PagedPostsList> {
                               currentPostAccessibleByMembers);
                     }
                   });
-                }))));
-        widgets.add(Spacer());
+                })));
       }
 
       // Audio
@@ -166,12 +157,8 @@ class PagedPostsListState extends State<PagedPostsList> {
         var audio = Image.asset(
             "assets/images/segoshvishna.fiverr.com/audio.png",
             package: "eliud_pkg_feed");
-        widgets.add(Container(
-            width: 100,
-            height: 70,
-            child: iconButton(widget.app, context,
-                icon: audio, tooltip: 'Audio', onPressed: () {})));
-        widgets.add(Spacer());
+        rwb.add(iconButton(widget.app, context,
+                icon: audio, tooltip: 'Audio', onPressed: () {}));
       }
 
       // Album
@@ -180,10 +167,7 @@ class PagedPostsListState extends State<PagedPostsList> {
         var album = Image.asset(
             "assets/images/segoshvishna.fiverr.com/album.png",
             package: "eliud_pkg_feed");
-        widgets.add(Container(
-            width: 100,
-            height: 70,
-            child: actionContainer(widget.app, context,
+        rwb.add(actionContainer(widget.app, context,
                 child: iconButton(widget.app, context,
                     icon: album,
                     tooltip: 'Album',
@@ -197,8 +181,7 @@ class PagedPostsListState extends State<PagedPostsList> {
                         pageContextInfo,
                         InitialiseNewFeedPostFormEvent(
                             currentPostAccessibleByGroup,
-                            currentPostAccessibleByMembers))))));
-        widgets.add(Spacer());
+                            currentPostAccessibleByMembers)))));
       }
 
       // Article
@@ -208,10 +191,7 @@ class PagedPostsListState extends State<PagedPostsList> {
             "assets/images/segoshvishna.fiverr.com/article.png",
             package: "eliud_pkg_feed");
 
-        widgets.add(Container(
-            width: 100,
-            height: 70,
-            child: actionContainer(widget.app, context,
+        rwb.add(actionContainer(widget.app, context,
                 child: iconButton(widget.app, context,
                     icon: articleIcon, tooltip: 'Article', onPressed: () {
                   List<MemberMediumContainerModel> postMediumModels = [];
@@ -254,17 +234,13 @@ class PagedPostsListState extends State<PagedPostsList> {
                               AccessGroupHelper.nameForPostAccessibleByGroup(
                                   currentPostAccessibleByGroup)),
                           accessibleByMembers: currentPostAccessibleByMembers);
-                }))));
-        widgets.add(Spacer());
+                })));
       }
 
       var accessIcon = Image.asset(
           "assets/images/icons8.com/icons8-eye-100.png",
           package: "eliud_pkg_feed");
-      widgets.add(Container(
-          width: 100,
-          height: 70,
-          child: actionContainer(widget.app, context,
+      rwb.add(actionContainer(widget.app, context,
               child: iconButton(widget.app, context,
                   icon: accessIcon, tooltip: 'Visibility', onPressed: () {
                 PostPrivilegeDialog.openIt(
@@ -280,15 +256,14 @@ class PagedPostsListState extends State<PagedPostsList> {
                   currentPostAccessibleByGroup = postAccessibleByGroup;
                   currentPostAccessibleByMembers = postAccessibleByMembers;
                 });
-              }))));
+              })));
 
-      widgets.add(Spacer());
-
-      return Container(height: 110, child: Row(children: widgets));
+      return rwb.constructWidgets(context);
     } else {
       return Container(height: 0);
     }
   }
+
 
   static List<Widget> getAlbumActionIcons(
       AppModel app, BuildContext context, String accessible) {
