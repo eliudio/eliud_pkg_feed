@@ -1,7 +1,6 @@
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/storage_conditions_model.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
-import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/widgets/editor/select_widget.dart';
 import 'package:eliud_pkg_feed/editors/feed/feed_dashboard.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';

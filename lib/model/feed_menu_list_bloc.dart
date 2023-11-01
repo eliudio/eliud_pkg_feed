@@ -15,16 +15,20 @@
 
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
 
 import 'package:eliud_pkg_feed/model/feed_menu_repository.dart';
 import 'package:eliud_pkg_feed/model/feed_menu_list_event.dart';
 import 'package:eliud_pkg_feed/model/feed_menu_list_state.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 
+import 'feed_menu_model.dart';
+
+typedef List<FeedMenuModel?> FilterFeedMenuModels(List<FeedMenuModel?> values);
+
 
 
 class FeedMenuListBloc extends Bloc<FeedMenuListEvent, FeedMenuListState> {
+  final FilterFeedMenuModels? filter;
   final FeedMenuRepository _feedMenuRepository;
   StreamSubscription? _feedMenusListSubscription;
   EliudQuery? eliudQuery;
@@ -35,9 +39,8 @@ class FeedMenuListBloc extends Bloc<FeedMenuListEvent, FeedMenuListState> {
   final bool? detailed;
   final int feedMenuLimit;
 
-  FeedMenuListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required FeedMenuRepository feedMenuRepository, this.feedMenuLimit = 5})
-      : assert(feedMenuRepository != null),
-        _feedMenuRepository = feedMenuRepository,
+  FeedMenuListBloc({this.filter, this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required FeedMenuRepository feedMenuRepository, this.feedMenuLimit = 5})
+      : _feedMenuRepository = feedMenuRepository,
         super(FeedMenuListLoading()) {
     on <LoadFeedMenuList> ((event, emit) {
       if ((detailed == null) || (!detailed!)) {
@@ -78,11 +81,19 @@ class FeedMenuListBloc extends Bloc<FeedMenuListEvent, FeedMenuListState> {
     });
   }
 
+  List<FeedMenuModel?> _filter(List<FeedMenuModel?> original) {
+    if (filter != null) {
+      return filter!(original);
+    } else {
+      return original;
+    }
+  }
+
   Future<void> _mapLoadFeedMenuListToState() async {
     int amountNow =  (state is FeedMenuListLoaded) ? (state as FeedMenuListLoaded).values!.length : 0;
     _feedMenusListSubscription?.cancel();
     _feedMenusListSubscription = _feedMenuRepository.listen(
-          (list) => add(FeedMenuListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+          (list) => add(FeedMenuListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
       orderBy: orderBy,
       descending: descending,
       eliudQuery: eliudQuery,
@@ -94,7 +105,7 @@ class FeedMenuListBloc extends Bloc<FeedMenuListEvent, FeedMenuListState> {
     int amountNow =  (state is FeedMenuListLoaded) ? (state as FeedMenuListLoaded).values!.length : 0;
     _feedMenusListSubscription?.cancel();
     _feedMenusListSubscription = _feedMenuRepository.listenWithDetails(
-            (list) => add(FeedMenuListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+            (list) => add(FeedMenuListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,

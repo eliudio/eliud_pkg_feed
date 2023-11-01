@@ -15,15 +15,10 @@
 
 import 'dart:collection';
 import 'dart:convert';
-import 'package:eliud_core/tools/random.dart';
-import 'abstract_repository_singleton.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/entity_base.dart';
 import 'package:eliud_core/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_feed/model/entity_export.dart';
 
-import 'package:eliud_core/tools/common_tools.dart';
 class FeedMenuEntity implements EntityBase {
   final String? appId;
   final String? description;
@@ -56,20 +51,26 @@ class FeedMenuEntity implements EntityBase {
 
     var bodyComponentsCurrentMemberFromMap;
     bodyComponentsCurrentMemberFromMap = map['bodyComponentsCurrentMember'];
-    var bodyComponentsCurrentMemberList;
-    if (bodyComponentsCurrentMemberFromMap != null)
+    List<LabelledBodyComponentEntity> bodyComponentsCurrentMemberList;
+    if (bodyComponentsCurrentMemberFromMap != null) {
       bodyComponentsCurrentMemberList = (map['bodyComponentsCurrentMember'] as List<dynamic>)
         .map((dynamic item) =>
         LabelledBodyComponentEntity.fromMap(item as Map, newDocumentIds: newDocumentIds)!)
         .toList();
+    } else {
+      bodyComponentsCurrentMemberList = [];
+    }
     var bodyComponentsOtherMemberFromMap;
     bodyComponentsOtherMemberFromMap = map['bodyComponentsOtherMember'];
-    var bodyComponentsOtherMemberList;
-    if (bodyComponentsOtherMemberFromMap != null)
+    List<LabelledBodyComponentEntity> bodyComponentsOtherMemberList;
+    if (bodyComponentsOtherMemberFromMap != null) {
       bodyComponentsOtherMemberList = (map['bodyComponentsOtherMember'] as List<dynamic>)
         .map((dynamic item) =>
         LabelledBodyComponentEntity.fromMap(item as Map, newDocumentIds: newDocumentIds)!)
         .toList();
+    } else {
+      bodyComponentsOtherMemberList = [];
+    }
     var itemColorFromMap;
     itemColorFromMap = map['itemColor'];
     if (itemColorFromMap != null)

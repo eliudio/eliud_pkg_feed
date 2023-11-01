@@ -9,7 +9,6 @@ import 'package:eliud_core/tools/extensiontype_formfield.dart';
 import 'package:eliud_core/tools/widgets/header_widget.dart';
 import 'package:eliud_pkg_feed/model/labelled_body_component_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 typedef void LabelledBodyComponentModelCallback(
     LabelledBodyComponentModel labelledBodyComponentModel);

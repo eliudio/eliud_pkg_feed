@@ -16,11 +16,9 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 
-import 'package:eliud_pkg_feed/model/feed_menu_model.dart';
 import 'package:eliud_pkg_feed/model/feed_menu_component_event.dart';
 import 'package:eliud_pkg_feed/model/feed_menu_component_state.dart';
 import 'package:eliud_pkg_feed/model/feed_menu_repository.dart';
-import 'package:flutter/services.dart';
 
 
 class FeedMenuComponentBloc extends Bloc<FeedMenuComponentEvent, FeedMenuComponentState> {

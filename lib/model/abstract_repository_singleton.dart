@@ -16,15 +16,11 @@
 import '../model/feed_repository.dart';
 import '../model/feed_front_repository.dart';
 import '../model/feed_menu_repository.dart';
-import '../model/labelled_body_component_repository.dart';
 import '../model/member_profile_repository.dart';
 import '../model/post_repository.dart';
 import '../model/post_comment_repository.dart';
 import '../model/post_like_repository.dart';
 import '../model/profile_repository.dart';
-import 'package:eliud_core/core/blocs/access/repo/user_repository.dart';
-import 'package:eliud_core/tools/common_tools.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
 import 'package:eliud_core/package/package.dart';
 
 FeedRepository? feedRepository({ String? appId }) => AbstractRepositorySingleton.singleton.feedRepository(appId);

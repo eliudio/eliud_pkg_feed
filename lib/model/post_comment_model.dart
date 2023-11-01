@@ -14,33 +14,15 @@
 */
 
 import 'package:collection/collection.dart';
-import 'package:eliud_core/tools/common_tools.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/model_base.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:eliud_core/model/app_model.dart';
 
-import 'package:eliud_core/model/repository_export.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_membership/model/repository_export.dart';
-import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
-import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_feed/model/repository_export.dart';
 import 'package:eliud_core/model/model_export.dart';
-import 'package:eliud_pkg_membership/model/model_export.dart';
-import '../tools/bespoke_models.dart';
-import 'package:eliud_pkg_feed/model/model_export.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import 'package:eliud_pkg_membership/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_feed/model/entity_export.dart';
 
 
 import 'package:eliud_pkg_feed/model/post_comment_entity.dart';
 
-import 'package:eliud_core/tools/random.dart';
 
 
 
@@ -61,9 +43,7 @@ class PostCommentModel implements ModelBase, WithAppId {
   int? dislikes;
   List<MemberMediumModel>? memberMedia;
 
-  PostCommentModel({required this.documentID, this.postId, this.postCommentId, this.memberId, this.timestamp, required this.appId, this.comment, this.likes, this.dislikes, this.memberMedia, })  {
-    assert(documentID != null);
-  }
+  PostCommentModel({required this.documentID, this.postId, this.postCommentId, this.memberId, this.timestamp, required this.appId, this.comment, this.likes, this.dislikes, this.memberMedia, });
 
   PostCommentModel copyWith({String? documentID, String? postId, String? postCommentId, String? memberId, DateTime? timestamp, String? appId, String? comment, int? likes, int? dislikes, List<MemberMediumModel>? memberMedia, }) {
     return PostCommentModel(documentID: documentID ?? this.documentID, postId: postId ?? this.postId, postCommentId: postCommentId ?? this.postCommentId, memberId: memberId ?? this.memberId, timestamp: timestamp ?? this.timestamp, appId: appId ?? this.appId, comment: comment ?? this.comment, likes: likes ?? this.likes, dislikes: dislikes ?? this.dislikes, memberMedia: memberMedia ?? this.memberMedia, );

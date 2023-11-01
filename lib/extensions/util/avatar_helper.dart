@@ -3,8 +3,6 @@ import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/style/frontend/has_profile_photo.dart';
 import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
-import 'package:eliud_core/style/style_registry.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/extensions/util/switch_member.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:flutter/material.dart';
@@ -78,11 +76,9 @@ class AvatarHelper {
         future: _getProfileAttributes(memberId, app, feedId),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            var profileAttributes = snapshot.data;
-            if (profileAttributes!.name != null) {
-              return h1(app, context, profileAttributes.name);
-            }
-          }
+            var profileAttributes = snapshot.data!;
+            return h1(app, context, profileAttributes.name);
+                    }
           return progressIndicator(app, context);
         });
   }
@@ -93,11 +89,9 @@ class AvatarHelper {
         future: _getProfileAttributes(memberId, app, feedId),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            var profileAttributes = snapshot.data;
-            if (profileAttributes!.name != null) {
-              return h2(app, context, profileAttributes.name);
-            }
-          }
+            var profileAttributes = snapshot.data!;
+            return h2(app, context, profileAttributes.name);
+                    }
           return progressIndicator(app, context);
         });
   }
@@ -108,11 +102,9 @@ class AvatarHelper {
         future: _getProfileAttributes(memberId, app, feedId),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            var profileAttributes = snapshot.data;
-            if (profileAttributes!.name != null) {
-              return h3(app, context, profileAttributes.name);
-            }
-          }
+            var profileAttributes = snapshot.data!;
+            return h3(app, context, profileAttributes.name);
+                    }
           return progressIndicator(app, context);
         });
   }
@@ -123,11 +115,9 @@ class AvatarHelper {
         future: _getProfileAttributes(memberId, app, feedId),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            var profileAttributes = snapshot.data;
-            if (profileAttributes!.name != null) {
-              return h4(app, context, profileAttributes.name);
-            }
-          }
+            var profileAttributes = snapshot.data!;
+            return h4(app, context, profileAttributes.name);
+                    }
           return progressIndicator(app, context);
         });
   }
@@ -138,11 +128,9 @@ class AvatarHelper {
         future: _getProfileAttributes(memberId, app, feedId),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            var profileAttributes = snapshot.data;
-            if (profileAttributes!.name != null) {
-              return h5(app, context, profileAttributes.name);
-            }
-          }
+            var profileAttributes = snapshot.data!;
+            return h5(app, context, profileAttributes.name);
+                    }
           return progressIndicator(app, context);
         });
   }
@@ -153,11 +141,9 @@ class AvatarHelper {
         future: _getProfileAttributes(memberId, app, feedId),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            var profileAttributes = snapshot.data;
-            if (profileAttributes!.name != null) {
-              return text(app, context, profileAttributes.name);
-            }
-          }
+            var profileAttributes = snapshot.data!;
+            return text(app, context, profileAttributes.name);
+                    }
           return progressIndicator(app, context);
         });
   }

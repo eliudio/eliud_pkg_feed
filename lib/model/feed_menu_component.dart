@@ -17,7 +17,6 @@
 import 'package:eliud_pkg_feed/model/feed_menu_component_bloc.dart';
 import 'package:eliud_pkg_feed/model/feed_menu_component_event.dart';
 import 'package:eliud_pkg_feed/model/feed_menu_model.dart';
-import 'package:eliud_pkg_feed/model/feed_menu_repository.dart';
 import 'package:eliud_pkg_feed/model/feed_menu_component_state.dart';
 
 import 'package:flutter/material.dart';
@@ -25,7 +24,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'abstract_repository_singleton.dart';
 import 'package:eliud_core/core/widgets/alert_widget.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
 import 'package:eliud_core/model/app_model.dart';
 
 abstract class AbstractFeedMenuComponent extends StatelessWidget {
@@ -48,11 +46,7 @@ abstract class AbstractFeedMenuComponent extends StatelessWidget {
   Widget _feedMenuBlockBuilder(BuildContext context) {
     return BlocBuilder<FeedMenuComponentBloc, FeedMenuComponentState>(builder: (context, state) {
       if (state is FeedMenuComponentLoaded) {
-        if (state.value == null) {
-          return AlertWidget(app: app, title: "Error", content: 'No FeedMenu defined');
-        } else {
-          return yourWidget(context, state.value);
-        }
+        return yourWidget(context, state.value);
       } else if (state is FeedMenuComponentPermissionDenied) {
         return Icon(
           Icons.highlight_off,

@@ -16,21 +16,12 @@
 import 'dart:async';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
-import 'package:eliud_pkg_feed/model/feed_menu_model.dart';
 import 'package:eliud_pkg_feed/model/feed_menu_repository.dart';
 
-import 'package:eliud_core/model/repository_export.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/repository_export.dart';
-import 'package:eliud_core/model/cache_export.dart';
 import 'package:eliud_pkg_feed/model/cache_export.dart';
-import 'package:eliud_core/model/model_export.dart';
-import '../tools/bespoke_models.dart';
 import 'package:eliud_pkg_feed/model/model_export.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_feed/model/entity_export.dart';
 
 class FeedMenuCache implements FeedMenuRepository {
@@ -162,14 +153,14 @@ class FeedMenuCache implements FeedMenuRepository {
 
     List<LabelledBodyComponentModel>? bodyComponentsCurrentMemberHolder;
     if (model.bodyComponentsCurrentMember != null) {
-      bodyComponentsCurrentMemberHolder = List<LabelledBodyComponentModel>.from(await Future.wait(await model.bodyComponentsCurrentMember!.map((element) async {
+      bodyComponentsCurrentMemberHolder = List<LabelledBodyComponentModel>.from(await Future.wait(model.bodyComponentsCurrentMember!.map((element) async {
         return await LabelledBodyComponentCache.refreshRelations(element);
       }))).toList();
     }
 
     List<LabelledBodyComponentModel>? bodyComponentsOtherMemberHolder;
     if (model.bodyComponentsOtherMember != null) {
-      bodyComponentsOtherMemberHolder = List<LabelledBodyComponentModel>.from(await Future.wait(await model.bodyComponentsOtherMember!.map((element) async {
+      bodyComponentsOtherMemberHolder = List<LabelledBodyComponentModel>.from(await Future.wait(model.bodyComponentsOtherMember!.map((element) async {
         return await LabelledBodyComponentCache.refreshRelations(element);
       }))).toList();
     }

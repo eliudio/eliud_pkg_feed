@@ -13,25 +13,13 @@
 
 */
 
-import 'package:eliud_core/tools/common_tools.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/model_base.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:eliud_core/model/app_model.dart';
 
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
-import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_feed/model/repository_export.dart';
-import '../tools/bespoke_models.dart';
-import 'package:eliud_pkg_feed/model/model_export.dart';
-import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_feed/model/entity_export.dart';
 
 
 import 'package:eliud_pkg_feed/model/labelled_body_component_entity.dart';
 
-import 'package:eliud_core/tools/random.dart';
 
 
 
@@ -50,9 +38,7 @@ class LabelledBodyComponentModel implements ModelBase {
   // For that specific component, e.g. 'carousel', which Component ID, i.e. which carousel to include in the page
   String? componentId;
 
-  LabelledBodyComponentModel({required this.documentID, this.label, this.componentName, this.componentId, })  {
-    assert(documentID != null);
-  }
+  LabelledBodyComponentModel({required this.documentID, this.label, this.componentName, this.componentId, });
 
   LabelledBodyComponentModel copyWith({String? documentID, String? label, String? componentName, String? componentId, }) {
     return LabelledBodyComponentModel(documentID: documentID ?? this.documentID, label: label ?? this.label, componentName: componentName ?? this.componentName, componentId: componentId ?? this.componentId, );

@@ -133,7 +133,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       var defaultPostGroup = PostAccessibleByGroup.Public;
       var defaultMemberProfileGroup =
           toMemberProfileAccessibleByGroup(defaultPostGroup.index);
-      var defaultMembers = null;
+      var defaultMembers;
       // Determine current member
       var param;
       if (pageContextInfo.parameters != null) {

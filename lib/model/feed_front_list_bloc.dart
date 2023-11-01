@@ -15,16 +15,20 @@
 
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
 
 import 'package:eliud_pkg_feed/model/feed_front_repository.dart';
 import 'package:eliud_pkg_feed/model/feed_front_list_event.dart';
 import 'package:eliud_pkg_feed/model/feed_front_list_state.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 
+import 'feed_front_model.dart';
+
+typedef List<FeedFrontModel?> FilterFeedFrontModels(List<FeedFrontModel?> values);
+
 
 
 class FeedFrontListBloc extends Bloc<FeedFrontListEvent, FeedFrontListState> {
+  final FilterFeedFrontModels? filter;
   final FeedFrontRepository _feedFrontRepository;
   StreamSubscription? _feedFrontsListSubscription;
   EliudQuery? eliudQuery;
@@ -35,9 +39,8 @@ class FeedFrontListBloc extends Bloc<FeedFrontListEvent, FeedFrontListState> {
   final bool? detailed;
   final int feedFrontLimit;
 
-  FeedFrontListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required FeedFrontRepository feedFrontRepository, this.feedFrontLimit = 5})
-      : assert(feedFrontRepository != null),
-        _feedFrontRepository = feedFrontRepository,
+  FeedFrontListBloc({this.filter, this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required FeedFrontRepository feedFrontRepository, this.feedFrontLimit = 5})
+      : _feedFrontRepository = feedFrontRepository,
         super(FeedFrontListLoading()) {
     on <LoadFeedFrontList> ((event, emit) {
       if ((detailed == null) || (!detailed!)) {
@@ -78,11 +81,19 @@ class FeedFrontListBloc extends Bloc<FeedFrontListEvent, FeedFrontListState> {
     });
   }
 
+  List<FeedFrontModel?> _filter(List<FeedFrontModel?> original) {
+    if (filter != null) {
+      return filter!(original);
+    } else {
+      return original;
+    }
+  }
+
   Future<void> _mapLoadFeedFrontListToState() async {
     int amountNow =  (state is FeedFrontListLoaded) ? (state as FeedFrontListLoaded).values!.length : 0;
     _feedFrontsListSubscription?.cancel();
     _feedFrontsListSubscription = _feedFrontRepository.listen(
-          (list) => add(FeedFrontListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+          (list) => add(FeedFrontListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
       orderBy: orderBy,
       descending: descending,
       eliudQuery: eliudQuery,
@@ -94,7 +105,7 @@ class FeedFrontListBloc extends Bloc<FeedFrontListEvent, FeedFrontListState> {
     int amountNow =  (state is FeedFrontListLoaded) ? (state as FeedFrontListLoaded).values!.length : 0;
     _feedFrontsListSubscription?.cancel();
     _feedFrontsListSubscription = _feedFrontRepository.listenWithDetails(
-            (list) => add(FeedFrontListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+            (list) => add(FeedFrontListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,

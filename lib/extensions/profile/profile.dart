@@ -1,11 +1,9 @@
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/background_model.dart';
 import 'package:eliud_core/model/member_medium_container_model.dart';
-import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/style/frontend/has_container.dart';
 import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
-import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/bloc/profile_event.dart';
@@ -15,7 +13,6 @@ import 'package:eliud_pkg_text/platform/text_platform.dart';
 import 'package:eliud_pkg_text/platform/widgets/html_text_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../model/member_profile_model.dart';
@@ -42,7 +39,7 @@ class _ProfileState extends State<Profile> {
         var child = topicContainer(widget.app, context,
             backgroundOverride: widget.backgroundOverride,
             children: ([
-              html == null || html.length == 0
+              html.length == 0
                   ? Container(
                       width: double.infinity,
                       height: 50,

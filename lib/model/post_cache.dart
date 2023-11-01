@@ -19,23 +19,10 @@ import 'package:eliud_core/tools/common_tools.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:eliud_pkg_feed/model/post_repository.dart';
 
-import 'package:eliud_core/model/repository_export.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_membership/model/repository_export.dart';
-import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
-import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/repository_export.dart';
 import 'package:eliud_core/model/cache_export.dart';
-import 'package:eliud_pkg_membership/model/cache_export.dart';
-import 'package:eliud_pkg_feed/model/cache_export.dart';
 import 'package:eliud_core/model/model_export.dart';
-import 'package:eliud_pkg_membership/model/model_export.dart';
-import '../tools/bespoke_models.dart';
 import 'package:eliud_pkg_feed/model/model_export.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import 'package:eliud_pkg_membership/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_feed/model/entity_export.dart';
 
 class PostCache implements PostRepository {
@@ -158,7 +145,7 @@ class PostCache implements PostRepository {
 
     List<MemberMediumContainerModel>? memberMediaHolder;
     if (model.memberMedia != null) {
-      memberMediaHolder = List<MemberMediumContainerModel>.from(await Future.wait(await model.memberMedia!.map((element) async {
+      memberMediaHolder = List<MemberMediumContainerModel>.from(await Future.wait(model.memberMedia!.map((element) async {
         return await MemberMediumContainerCache.refreshRelations(element);
       }))).toList();
     }

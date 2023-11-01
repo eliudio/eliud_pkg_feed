@@ -28,7 +28,6 @@ import 'feed_menu_component_selector.dart';
 import '../extensions/profile_component.dart';
 import '../editors/profile_component_editor.dart';
 import 'profile_component_selector.dart';
-import 'package:eliud_pkg_feed/model/internal_component.dart';
 
 
 

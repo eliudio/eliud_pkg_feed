@@ -1,15 +1,12 @@
 import 'package:eliud_core/core/wizards/builders/single_component_page_builder.dart';
-import 'package:eliud_core/core/wizards/registry/registry.dart';
 import 'package:eliud_core/core/wizards/tools/documentIdentifier.dart';
 import 'package:eliud_core/model/model_export.dart';
 import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_feed/model/feed_front_component.dart';
 import 'package:eliud_pkg_feed/model/feed_menu_component.dart';
 import 'package:eliud_pkg_feed/model/feed_menu_model.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
 import 'package:eliud_pkg_feed/model/labelled_body_component_model.dart';
-import 'package:eliud_pkg_feed/model/profile_component.dart';
 import 'package:eliud_pkg_follow/wizards/builders/follow/follow_requests_dashboard_page_builder.dart';
 import 'package:eliud_pkg_follow/wizards/builders/follow/followers_dashboard_page_builder.dart';
 import 'package:eliud_pkg_follow/wizards/builders/follow/following_dashboard_page_builder.dart';
@@ -17,8 +14,6 @@ import 'package:eliud_pkg_follow/wizards/builders/follow/invite_dashboard_page_b
 import 'package:eliud_pkg_follow/model/follow_requests_dashboard_component.dart';
 import 'package:eliud_pkg_follow/model/following_dashboard_component.dart';
 import 'package:eliud_pkg_follow/model/invite_dashboard_component.dart';
-import 'package:eliud_pkg_membership/model/membership_dashboard_component.dart';
-import 'package:flutter/material.dart';
 
 import 'feed_front_page_builder.dart';
 

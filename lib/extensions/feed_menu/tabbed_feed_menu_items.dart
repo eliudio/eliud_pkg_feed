@@ -5,9 +5,7 @@ import 'package:eliud_pkg_feed/extensions/profile/profile.dart';
 import 'package:eliud_pkg_feed/model/feed_front_model.dart';
 import 'package:eliud_pkg_feed/model/labelled_body_component_model.dart';
 import 'package:eliud_core/style/frontend/has_tabs.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 
 class TabbedFeedMenuItems extends StatefulWidget {
@@ -44,10 +42,8 @@ class _TabbedFeedMenuItemsState extends State<TabbedFeedMenuItems>
 
   @override
   void dispose() {
-    if (_tabController != null) {
-      _tabController.dispose();
-    }
-    super.dispose();
+    _tabController.dispose();
+      super.dispose();
   }
 
   @override

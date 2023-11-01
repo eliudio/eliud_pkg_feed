@@ -15,16 +15,20 @@
 
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
 
 import 'package:eliud_pkg_feed/model/profile_repository.dart';
 import 'package:eliud_pkg_feed/model/profile_list_event.dart';
 import 'package:eliud_pkg_feed/model/profile_list_state.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 
+import 'profile_model.dart';
+
+typedef List<ProfileModel?> FilterProfileModels(List<ProfileModel?> values);
+
 
 
 class ProfileListBloc extends Bloc<ProfileListEvent, ProfileListState> {
+  final FilterProfileModels? filter;
   final ProfileRepository _profileRepository;
   StreamSubscription? _profilesListSubscription;
   EliudQuery? eliudQuery;
@@ -35,9 +39,8 @@ class ProfileListBloc extends Bloc<ProfileListEvent, ProfileListState> {
   final bool? detailed;
   final int profileLimit;
 
-  ProfileListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required ProfileRepository profileRepository, this.profileLimit = 5})
-      : assert(profileRepository != null),
-        _profileRepository = profileRepository,
+  ProfileListBloc({this.filter, this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required ProfileRepository profileRepository, this.profileLimit = 5})
+      : _profileRepository = profileRepository,
         super(ProfileListLoading()) {
     on <LoadProfileList> ((event, emit) {
       if ((detailed == null) || (!detailed!)) {
@@ -78,11 +81,19 @@ class ProfileListBloc extends Bloc<ProfileListEvent, ProfileListState> {
     });
   }
 
+  List<ProfileModel?> _filter(List<ProfileModel?> original) {
+    if (filter != null) {
+      return filter!(original);
+    } else {
+      return original;
+    }
+  }
+
   Future<void> _mapLoadProfileListToState() async {
     int amountNow =  (state is ProfileListLoaded) ? (state as ProfileListLoaded).values!.length : 0;
     _profilesListSubscription?.cancel();
     _profilesListSubscription = _profileRepository.listen(
-          (list) => add(ProfileListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+          (list) => add(ProfileListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
       orderBy: orderBy,
       descending: descending,
       eliudQuery: eliudQuery,
@@ -94,7 +105,7 @@ class ProfileListBloc extends Bloc<ProfileListEvent, ProfileListState> {
     int amountNow =  (state is ProfileListLoaded) ? (state as ProfileListLoaded).values!.length : 0;
     _profilesListSubscription?.cancel();
     _profilesListSubscription = _profileRepository.listenWithDetails(
-            (list) => add(ProfileListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+            (list) => add(ProfileListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,

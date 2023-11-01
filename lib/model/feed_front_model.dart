@@ -13,29 +13,16 @@
 
 */
 
-import 'package:eliud_core/tools/common_tools.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/model_base.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:eliud_core/model/app_model.dart';
 
-import 'package:eliud_core/model/repository_export.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_feed/model/repository_export.dart';
 import 'package:eliud_core/model/model_export.dart';
-import '../tools/bespoke_models.dart';
 import 'package:eliud_pkg_feed/model/model_export.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_feed/model/entity_export.dart';
 
 
 import 'package:eliud_pkg_feed/model/feed_front_entity.dart';
 
-import 'package:eliud_core/tools/random.dart';
 
 
 
@@ -53,9 +40,7 @@ class FeedFrontModel implements ModelBase, WithAppId {
   BackgroundModel? backgroundOverrideProfile;
   StorageConditionsModel? conditions;
 
-  FeedFrontModel({required this.documentID, required this.appId, this.description, this.feed, this.backgroundOverridePosts, this.backgroundOverrideProfile, this.conditions, })  {
-    assert(documentID != null);
-  }
+  FeedFrontModel({required this.documentID, required this.appId, this.description, this.feed, this.backgroundOverridePosts, this.backgroundOverrideProfile, this.conditions, });
 
   FeedFrontModel copyWith({String? documentID, String? appId, String? description, FeedModel? feed, BackgroundModel? backgroundOverridePosts, BackgroundModel? backgroundOverrideProfile, StorageConditionsModel? conditions, }) {
     return FeedFrontModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, feed: feed ?? this.feed, backgroundOverridePosts: backgroundOverridePosts ?? this.backgroundOverridePosts, backgroundOverrideProfile: backgroundOverrideProfile ?? this.backgroundOverrideProfile, conditions: conditions ?? this.conditions, );

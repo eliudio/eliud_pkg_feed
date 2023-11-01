@@ -8,7 +8,6 @@ import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
 import 'package:eliud_core/core/blocs/access/state/access_state.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_medium_container_model.dart';
-import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/style/frontend/has_button.dart';
 import 'package:eliud_core/style/frontend/has_container.dart';
@@ -30,7 +29,6 @@ import '../../../tools/row_widget_builder.dart';
 import '../../with_medium/post_medium_components.dart';
 import 'new_post/bloc/feed_post_form_event.dart';
 import 'new_post/feed_post_dialog.dart';
-import 'package:eliud_pkg_feed/model/feed_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -298,7 +296,6 @@ class PagedPostsListState extends State<PagedPostsList> {
                       (profileState.app.anonymousProfilePhoto != null
                           ? profileState.app.anonymousProfilePhoto!.url
                           : null);
-                  ;
                   List<Widget> widgets = [];
                   if (profileState is LoggedInProfileInitialized) {
                     widgets.add(_newPostForm(profileState.currentMember,

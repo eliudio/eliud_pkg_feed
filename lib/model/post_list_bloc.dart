@@ -15,16 +15,20 @@
 
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
 
 import 'package:eliud_pkg_feed/model/post_repository.dart';
 import 'package:eliud_pkg_feed/model/post_list_event.dart';
 import 'package:eliud_pkg_feed/model/post_list_state.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 
+import 'post_model.dart';
+
+typedef List<PostModel?> FilterPostModels(List<PostModel?> values);
+
 
 
 class PostListBloc extends Bloc<PostListEvent, PostListState> {
+  final FilterPostModels? filter;
   final PostRepository _postRepository;
   StreamSubscription? _postsListSubscription;
   EliudQuery? eliudQuery;
@@ -35,9 +39,8 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
   final bool? detailed;
   final int postLimit;
 
-  PostListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required PostRepository postRepository, this.postLimit = 5})
-      : assert(postRepository != null),
-        _postRepository = postRepository,
+  PostListBloc({this.filter, this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required PostRepository postRepository, this.postLimit = 5})
+      : _postRepository = postRepository,
         super(PostListLoading()) {
     on <LoadPostList> ((event, emit) {
       if ((detailed == null) || (!detailed!)) {
@@ -78,11 +81,19 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
     });
   }
 
+  List<PostModel?> _filter(List<PostModel?> original) {
+    if (filter != null) {
+      return filter!(original);
+    } else {
+      return original;
+    }
+  }
+
   Future<void> _mapLoadPostListToState() async {
     int amountNow =  (state is PostListLoaded) ? (state as PostListLoaded).values!.length : 0;
     _postsListSubscription?.cancel();
     _postsListSubscription = _postRepository.listen(
-          (list) => add(PostListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+          (list) => add(PostListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
       orderBy: orderBy,
       descending: descending,
       eliudQuery: eliudQuery,
@@ -94,7 +105,7 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
     int amountNow =  (state is PostListLoaded) ? (state as PostListLoaded).values!.length : 0;
     _postsListSubscription?.cancel();
     _postsListSubscription = _postRepository.listenWithDetails(
-            (list) => add(PostListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+            (list) => add(PostListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,

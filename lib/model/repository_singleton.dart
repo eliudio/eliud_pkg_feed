@@ -25,8 +25,6 @@ import '../model/feed_front_cache.dart';
 import '../model/feed_menu_firestore.dart';
 import '../model/feed_menu_repository.dart';
 import '../model/feed_menu_cache.dart';
-import '../model/labelled_body_component_repository.dart';
-import '../model/labelled_body_component_cache.dart';
 import '../model/member_profile_firestore.dart';
 import '../model/member_profile_repository.dart';
 import '../model/post_firestore.dart';
@@ -42,10 +40,6 @@ import '../model/profile_firestore.dart';
 import '../model/profile_repository.dart';
 import '../model/profile_cache.dart';
 
-import '../model/feed_front_model.dart';
-import '../model/feed_menu_model.dart';
-import '../model/member_profile_model.dart';
-import '../model/profile_model.dart';
 
 class RepositorySingleton extends AbstractRepositorySingleton {
     var _feedRepository = HashMap<String, FeedRepository>();

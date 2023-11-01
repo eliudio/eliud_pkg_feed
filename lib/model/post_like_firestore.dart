@@ -16,20 +16,8 @@
 import 'package:eliud_pkg_feed/model/post_like_repository.dart';
 
 
-import 'package:eliud_core/model/repository_export.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_membership/model/repository_export.dart';
-import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
-import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/repository_export.dart';
-import 'package:eliud_core/model/model_export.dart';
-import 'package:eliud_pkg_membership/model/model_export.dart';
-import '../tools/bespoke_models.dart';
 import 'package:eliud_pkg_feed/model/model_export.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import 'package:eliud_pkg_membership/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_feed/model/entity_export.dart';
 
 
@@ -116,7 +104,8 @@ class PostLikeFirestore implements PostLikeRepository {
         print("Error whilst retrieving PostLike with id $id");
         print("Exceptoin: $e");
       }
-    };
+    }
+return null;
   }
 
   Future<PostLikeModel?> get(String? id, {Function(Exception)? onError}) async {
@@ -131,7 +120,8 @@ class PostLikeFirestore implements PostLikeRepository {
         print("Error whilst retrieving PostLike with id $id");
         print("Exceptoin: $e");
       }
-    };
+    }
+return null;
   }
 
   StreamSubscription<List<PostLikeModel?>> listen(PostLikeModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery}) {

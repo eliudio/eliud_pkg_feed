@@ -15,16 +15,20 @@
 
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
 
 import 'package:eliud_pkg_feed/model/post_like_repository.dart';
 import 'package:eliud_pkg_feed/model/post_like_list_event.dart';
 import 'package:eliud_pkg_feed/model/post_like_list_state.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 
+import 'post_like_model.dart';
+
+typedef List<PostLikeModel?> FilterPostLikeModels(List<PostLikeModel?> values);
+
 
 
 class PostLikeListBloc extends Bloc<PostLikeListEvent, PostLikeListState> {
+  final FilterPostLikeModels? filter;
   final PostLikeRepository _postLikeRepository;
   StreamSubscription? _postLikesListSubscription;
   EliudQuery? eliudQuery;
@@ -35,9 +39,8 @@ class PostLikeListBloc extends Bloc<PostLikeListEvent, PostLikeListState> {
   final bool? detailed;
   final int postLikeLimit;
 
-  PostLikeListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required PostLikeRepository postLikeRepository, this.postLikeLimit = 5})
-      : assert(postLikeRepository != null),
-        _postLikeRepository = postLikeRepository,
+  PostLikeListBloc({this.filter, this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required PostLikeRepository postLikeRepository, this.postLikeLimit = 5})
+      : _postLikeRepository = postLikeRepository,
         super(PostLikeListLoading()) {
     on <LoadPostLikeList> ((event, emit) {
       if ((detailed == null) || (!detailed!)) {
@@ -78,11 +81,19 @@ class PostLikeListBloc extends Bloc<PostLikeListEvent, PostLikeListState> {
     });
   }
 
+  List<PostLikeModel?> _filter(List<PostLikeModel?> original) {
+    if (filter != null) {
+      return filter!(original);
+    } else {
+      return original;
+    }
+  }
+
   Future<void> _mapLoadPostLikeListToState() async {
     int amountNow =  (state is PostLikeListLoaded) ? (state as PostLikeListLoaded).values!.length : 0;
     _postLikesListSubscription?.cancel();
     _postLikesListSubscription = _postLikeRepository.listen(
-          (list) => add(PostLikeListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+          (list) => add(PostLikeListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
       orderBy: orderBy,
       descending: descending,
       eliudQuery: eliudQuery,
@@ -94,7 +105,7 @@ class PostLikeListBloc extends Bloc<PostLikeListEvent, PostLikeListState> {
     int amountNow =  (state is PostLikeListLoaded) ? (state as PostLikeListLoaded).values!.length : 0;
     _postLikesListSubscription?.cancel();
     _postLikesListSubscription = _postLikeRepository.listenWithDetails(
-            (list) => add(PostLikeListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+            (list) => add(PostLikeListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,

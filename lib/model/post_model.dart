@@ -14,33 +14,15 @@
 */
 
 import 'package:collection/collection.dart';
-import 'package:eliud_core/tools/common_tools.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/model_base.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:eliud_core/model/app_model.dart';
 
-import 'package:eliud_core/model/repository_export.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_membership/model/repository_export.dart';
-import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
-import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_feed/model/repository_export.dart';
 import 'package:eliud_core/model/model_export.dart';
-import 'package:eliud_pkg_membership/model/model_export.dart';
-import '../tools/bespoke_models.dart';
-import 'package:eliud_pkg_feed/model/model_export.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import 'package:eliud_pkg_membership/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_feed/model/entity_export.dart';
 
 
 import 'package:eliud_pkg_feed/model/post_entity.dart';
 
-import 'package:eliud_core/tools/random.dart';
 
 enum PostAccessibleByGroup {
   Public, Followers, Me, SpecificMembers, Unknown
@@ -103,9 +85,7 @@ class PostModel implements ModelBase, WithAppId {
   String? externalLink;
   List<MemberMediumContainerModel>? memberMedia;
 
-  PostModel({required this.documentID, required this.authorId, this.timestamp, required this.appId, this.feedId, this.postAppId, this.postPageId, this.pageParameters, this.html, this.description, this.likes, this.dislikes, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, this.archived, this.externalLink, this.memberMedia, })  {
-    assert(documentID != null);
-  }
+  PostModel({required this.documentID, required this.authorId, this.timestamp, required this.appId, this.feedId, this.postAppId, this.postPageId, this.pageParameters, this.html, this.description, this.likes, this.dislikes, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, this.archived, this.externalLink, this.memberMedia, });
 
   PostModel copyWith({String? documentID, String? authorId, DateTime? timestamp, String? appId, String? feedId, String? postAppId, String? postPageId, Map<String, dynamic>? pageParameters, String? html, String? description, int? likes, int? dislikes, PostAccessibleByGroup? accessibleByGroup, List<String>? accessibleByMembers, List<String>? readAccess, PostArchiveStatus? archived, String? externalLink, List<MemberMediumContainerModel>? memberMedia, }) {
     return PostModel(documentID: documentID ?? this.documentID, authorId: authorId ?? this.authorId, timestamp: timestamp ?? this.timestamp, appId: appId ?? this.appId, feedId: feedId ?? this.feedId, postAppId: postAppId ?? this.postAppId, postPageId: postPageId ?? this.postPageId, pageParameters: pageParameters ?? this.pageParameters, html: html ?? this.html, description: description ?? this.description, likes: likes ?? this.likes, dislikes: dislikes ?? this.dislikes, accessibleByGroup: accessibleByGroup ?? this.accessibleByGroup, accessibleByMembers: accessibleByMembers ?? this.accessibleByMembers, readAccess: readAccess ?? this.readAccess, archived: archived ?? this.archived, externalLink: externalLink ?? this.externalLink, memberMedia: memberMedia ?? this.memberMedia, );

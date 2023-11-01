@@ -15,16 +15,20 @@
 
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
 
 import 'package:eliud_pkg_feed/model/feed_repository.dart';
 import 'package:eliud_pkg_feed/model/feed_list_event.dart';
 import 'package:eliud_pkg_feed/model/feed_list_state.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 
+import 'feed_model.dart';
+
+typedef List<FeedModel?> FilterFeedModels(List<FeedModel?> values);
+
 
 
 class FeedListBloc extends Bloc<FeedListEvent, FeedListState> {
+  final FilterFeedModels? filter;
   final FeedRepository _feedRepository;
   StreamSubscription? _feedsListSubscription;
   EliudQuery? eliudQuery;
@@ -35,9 +39,8 @@ class FeedListBloc extends Bloc<FeedListEvent, FeedListState> {
   final bool? detailed;
   final int feedLimit;
 
-  FeedListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required FeedRepository feedRepository, this.feedLimit = 5})
-      : assert(feedRepository != null),
-        _feedRepository = feedRepository,
+  FeedListBloc({this.filter, this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required FeedRepository feedRepository, this.feedLimit = 5})
+      : _feedRepository = feedRepository,
         super(FeedListLoading()) {
     on <LoadFeedList> ((event, emit) {
       if ((detailed == null) || (!detailed!)) {
@@ -78,11 +81,19 @@ class FeedListBloc extends Bloc<FeedListEvent, FeedListState> {
     });
   }
 
+  List<FeedModel?> _filter(List<FeedModel?> original) {
+    if (filter != null) {
+      return filter!(original);
+    } else {
+      return original;
+    }
+  }
+
   Future<void> _mapLoadFeedListToState() async {
     int amountNow =  (state is FeedListLoaded) ? (state as FeedListLoaded).values!.length : 0;
     _feedsListSubscription?.cancel();
     _feedsListSubscription = _feedRepository.listen(
-          (list) => add(FeedListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+          (list) => add(FeedListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
       orderBy: orderBy,
       descending: descending,
       eliudQuery: eliudQuery,
@@ -94,7 +105,7 @@ class FeedListBloc extends Bloc<FeedListEvent, FeedListState> {
     int amountNow =  (state is FeedListLoaded) ? (state as FeedListLoaded).values!.length : 0;
     _feedsListSubscription?.cancel();
     _feedsListSubscription = _feedRepository.listenWithDetails(
-            (list) => add(FeedListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+            (list) => add(FeedListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,

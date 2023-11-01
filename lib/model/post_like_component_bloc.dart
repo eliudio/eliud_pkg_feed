@@ -16,11 +16,9 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 
-import 'package:eliud_pkg_feed/model/post_like_model.dart';
 import 'package:eliud_pkg_feed/model/post_like_component_event.dart';
 import 'package:eliud_pkg_feed/model/post_like_component_state.dart';
 import 'package:eliud_pkg_feed/model/post_like_repository.dart';
-import 'package:flutter/services.dart';
 
 class PostLikeComponentBloc extends Bloc<PostLikeComponentEvent, PostLikeComponentState> {
   final PostLikeRepository? postLikeRepository;

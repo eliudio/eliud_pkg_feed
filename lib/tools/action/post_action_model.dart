@@ -1,13 +1,11 @@
 import 'package:eliud_core/core/base/model_base.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/display_conditions_model.dart';
-import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/tools/action/action_entity.dart';
 import 'package:eliud_core/tools/action/action_model.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
 import 'package:eliud_pkg_feed/tools/action/post_action_entity.dart';
-import 'package:flutter/material.dart';
 
 // Post the current page to your feed
 class PostActionModel extends ActionModel {

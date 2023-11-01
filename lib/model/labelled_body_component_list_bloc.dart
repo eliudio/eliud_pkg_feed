@@ -15,16 +15,20 @@
 
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
 
 import 'package:eliud_pkg_feed/model/labelled_body_component_repository.dart';
 import 'package:eliud_pkg_feed/model/labelled_body_component_list_event.dart';
 import 'package:eliud_pkg_feed/model/labelled_body_component_list_state.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 
+import 'labelled_body_component_model.dart';
+
+typedef List<LabelledBodyComponentModel?> FilterLabelledBodyComponentModels(List<LabelledBodyComponentModel?> values);
+
 
 
 class LabelledBodyComponentListBloc extends Bloc<LabelledBodyComponentListEvent, LabelledBodyComponentListState> {
+  final FilterLabelledBodyComponentModels? filter;
   final LabelledBodyComponentRepository _labelledBodyComponentRepository;
   StreamSubscription? _labelledBodyComponentsListSubscription;
   EliudQuery? eliudQuery;
@@ -35,9 +39,8 @@ class LabelledBodyComponentListBloc extends Bloc<LabelledBodyComponentListEvent,
   final bool? detailed;
   final int labelledBodyComponentLimit;
 
-  LabelledBodyComponentListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required LabelledBodyComponentRepository labelledBodyComponentRepository, this.labelledBodyComponentLimit = 5})
-      : assert(labelledBodyComponentRepository != null),
-        _labelledBodyComponentRepository = labelledBodyComponentRepository,
+  LabelledBodyComponentListBloc({this.filter, this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required LabelledBodyComponentRepository labelledBodyComponentRepository, this.labelledBodyComponentLimit = 5})
+      : _labelledBodyComponentRepository = labelledBodyComponentRepository,
         super(LabelledBodyComponentListLoading()) {
     on <LoadLabelledBodyComponentList> ((event, emit) {
       if ((detailed == null) || (!detailed!)) {
@@ -78,11 +81,19 @@ class LabelledBodyComponentListBloc extends Bloc<LabelledBodyComponentListEvent,
     });
   }
 
+  List<LabelledBodyComponentModel?> _filter(List<LabelledBodyComponentModel?> original) {
+    if (filter != null) {
+      return filter!(original);
+    } else {
+      return original;
+    }
+  }
+
   Future<void> _mapLoadLabelledBodyComponentListToState() async {
     int amountNow =  (state is LabelledBodyComponentListLoaded) ? (state as LabelledBodyComponentListLoaded).values!.length : 0;
     _labelledBodyComponentsListSubscription?.cancel();
     _labelledBodyComponentsListSubscription = _labelledBodyComponentRepository.listen(
-          (list) => add(LabelledBodyComponentListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+          (list) => add(LabelledBodyComponentListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
       orderBy: orderBy,
       descending: descending,
       eliudQuery: eliudQuery,
@@ -94,7 +105,7 @@ class LabelledBodyComponentListBloc extends Bloc<LabelledBodyComponentListEvent,
     int amountNow =  (state is LabelledBodyComponentListLoaded) ? (state as LabelledBodyComponentListLoaded).values!.length : 0;
     _labelledBodyComponentsListSubscription?.cancel();
     _labelledBodyComponentsListSubscription = _labelledBodyComponentRepository.listenWithDetails(
-            (list) => add(LabelledBodyComponentListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+            (list) => add(LabelledBodyComponentListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,

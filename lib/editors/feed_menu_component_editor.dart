@@ -29,7 +29,6 @@ import 'package:flutter/material.dart';
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'bloc/feed_menu_bloc.dart';
-import 'feed/select_feed_widget.dart';
 
 class FeedMenuComponentEditorConstructor extends ComponentEditorConstructor {
   @override

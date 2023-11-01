@@ -2,13 +2,11 @@ import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/background_model.dart';
 import 'package:eliud_core/model/member_medium_container_model.dart';
-import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/style/frontend/has_button.dart';
 import 'package:eliud_core/style/frontend/has_container.dart';
 import 'package:eliud_core/style/frontend/has_dialog.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/style/frontend/has_text_form_field.dart';
-import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_core/tools/storage/medium_base.dart';
@@ -17,7 +15,6 @@ import 'package:eliud_pkg_feed/extensions/feed_front/postlist_paged/postlist_pag
 import 'package:eliud_pkg_feed/extensions/feed_front/postlist_paged/postlist_paged_event.dart';
 import 'package:eliud_pkg_feed/extensions/feed_front/postlist_paged/postlist_paged_state.dart';
 import 'package:eliud_pkg_feed/extensions/feed_front/posts/paged_posts_list.dart';
-import 'package:eliud_pkg_feed/extensions/feed_front/posts/post_privilege/bloc/member_service.dart';
 import 'package:eliud_pkg_feed/extensions/util/access_group_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/avatar_helper.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_contents_widget.dart';
@@ -511,7 +508,7 @@ class _PostWidgetState extends State<PostWidget> {
             h5(
               widget.app,
               context,
-              '${name}',
+              '$name',
             ),
             SizedBox(
               height: 4,

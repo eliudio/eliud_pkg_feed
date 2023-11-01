@@ -15,16 +15,20 @@
 
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
 
 import 'package:eliud_pkg_feed/model/post_comment_repository.dart';
 import 'package:eliud_pkg_feed/model/post_comment_list_event.dart';
 import 'package:eliud_pkg_feed/model/post_comment_list_state.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 
+import 'post_comment_model.dart';
+
+typedef List<PostCommentModel?> FilterPostCommentModels(List<PostCommentModel?> values);
+
 
 
 class PostCommentListBloc extends Bloc<PostCommentListEvent, PostCommentListState> {
+  final FilterPostCommentModels? filter;
   final PostCommentRepository _postCommentRepository;
   StreamSubscription? _postCommentsListSubscription;
   EliudQuery? eliudQuery;
@@ -35,9 +39,8 @@ class PostCommentListBloc extends Bloc<PostCommentListEvent, PostCommentListStat
   final bool? detailed;
   final int postCommentLimit;
 
-  PostCommentListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required PostCommentRepository postCommentRepository, this.postCommentLimit = 5})
-      : assert(postCommentRepository != null),
-        _postCommentRepository = postCommentRepository,
+  PostCommentListBloc({this.filter, this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required PostCommentRepository postCommentRepository, this.postCommentLimit = 5})
+      : _postCommentRepository = postCommentRepository,
         super(PostCommentListLoading()) {
     on <LoadPostCommentList> ((event, emit) {
       if ((detailed == null) || (!detailed!)) {
@@ -78,11 +81,19 @@ class PostCommentListBloc extends Bloc<PostCommentListEvent, PostCommentListStat
     });
   }
 
+  List<PostCommentModel?> _filter(List<PostCommentModel?> original) {
+    if (filter != null) {
+      return filter!(original);
+    } else {
+      return original;
+    }
+  }
+
   Future<void> _mapLoadPostCommentListToState() async {
     int amountNow =  (state is PostCommentListLoaded) ? (state as PostCommentListLoaded).values!.length : 0;
     _postCommentsListSubscription?.cancel();
     _postCommentsListSubscription = _postCommentRepository.listen(
-          (list) => add(PostCommentListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+          (list) => add(PostCommentListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
       orderBy: orderBy,
       descending: descending,
       eliudQuery: eliudQuery,
@@ -94,7 +105,7 @@ class PostCommentListBloc extends Bloc<PostCommentListEvent, PostCommentListStat
     int amountNow =  (state is PostCommentListLoaded) ? (state as PostCommentListLoaded).values!.length : 0;
     _postCommentsListSubscription?.cancel();
     _postCommentsListSubscription = _postCommentRepository.listenWithDetails(
-            (list) => add(PostCommentListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+            (list) => add(PostCommentListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,

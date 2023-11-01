@@ -13,29 +13,13 @@
 
 */
 
-import 'package:eliud_core/tools/common_tools.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/model_base.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:eliud_core/model/app_model.dart';
 
-import 'package:eliud_core/model/repository_export.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
-import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_feed/model/repository_export.dart';
-import 'package:eliud_core/model/model_export.dart';
-import '../tools/bespoke_models.dart';
-import 'package:eliud_pkg_feed/model/model_export.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_feed/model/entity_export.dart';
 
 
 import 'package:eliud_pkg_feed/model/feed_entity.dart';
 
-import 'package:eliud_core/tools/random.dart';
 
 enum ThumbStyle {
   Thumbs, Banana, Unknown
@@ -80,9 +64,7 @@ class FeedModel implements ModelBase, WithAppId {
   // Allow article posts
   bool? articlePost;
 
-  FeedModel({required this.documentID, required this.appId, this.description, this.thumbImage, this.photoPost, this.videoPost, this.messagePost, this.audioPost, this.albumPost, this.articlePost, })  {
-    assert(documentID != null);
-  }
+  FeedModel({required this.documentID, required this.appId, this.description, this.thumbImage, this.photoPost, this.videoPost, this.messagePost, this.audioPost, this.albumPost, this.articlePost, });
 
   FeedModel copyWith({String? documentID, String? appId, String? description, ThumbStyle? thumbImage, bool? photoPost, bool? videoPost, bool? messagePost, bool? audioPost, bool? albumPost, bool? articlePost, }) {
     return FeedModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, thumbImage: thumbImage ?? this.thumbImage, photoPost: photoPost ?? this.photoPost, videoPost: videoPost ?? this.videoPost, messagePost: messagePost ?? this.messagePost, audioPost: audioPost ?? this.audioPost, albumPost: albumPost ?? this.albumPost, articlePost: articlePost ?? this.articlePost, );

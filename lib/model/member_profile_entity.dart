@@ -16,14 +16,9 @@
 import 'dart:collection';
 import 'dart:convert';
 import 'package:eliud_core/tools/random.dart';
-import 'abstract_repository_singleton.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/entity_base.dart';
 import 'package:eliud_core/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
-import 'package:eliud_pkg_feed/model/entity_export.dart';
 
-import 'package:eliud_core/tools/common_tools.dart';
 class MemberProfileEntity implements EntityBase {
   final String? appId;
   final String? feedId;
@@ -65,12 +60,15 @@ class MemberProfileEntity implements EntityBase {
     }
     var memberMediaFromMap;
     memberMediaFromMap = map['memberMedia'];
-    var memberMediaList;
-    if (memberMediaFromMap != null)
+    List<MemberMediumContainerEntity> memberMediaList;
+    if (memberMediaFromMap != null) {
       memberMediaList = (map['memberMedia'] as List<dynamic>)
         .map((dynamic item) =>
         MemberMediumContainerEntity.fromMap(item as Map, newDocumentIds: newDocumentIds)!)
         .toList();
+    } else {
+      memberMediaList = [];
+    }
 
     return MemberProfileEntity(
       appId: map['appId'], 

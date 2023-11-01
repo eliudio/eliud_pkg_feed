@@ -16,11 +16,9 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 
-import 'package:eliud_pkg_feed/model/post_comment_model.dart';
 import 'package:eliud_pkg_feed/model/post_comment_component_event.dart';
 import 'package:eliud_pkg_feed/model/post_comment_component_state.dart';
 import 'package:eliud_pkg_feed/model/post_comment_repository.dart';
-import 'package:flutter/services.dart';
 
 class PostCommentComponentBloc extends Bloc<PostCommentComponentEvent, PostCommentComponentState> {
   final PostCommentRepository? postCommentRepository;

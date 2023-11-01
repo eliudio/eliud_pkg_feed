@@ -15,16 +15,20 @@
 
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
 
 import 'package:eliud_pkg_feed/model/member_profile_repository.dart';
 import 'package:eliud_pkg_feed/model/member_profile_list_event.dart';
 import 'package:eliud_pkg_feed/model/member_profile_list_state.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 
+import 'member_profile_model.dart';
+
+typedef List<MemberProfileModel?> FilterMemberProfileModels(List<MemberProfileModel?> values);
+
 
 
 class MemberProfileListBloc extends Bloc<MemberProfileListEvent, MemberProfileListState> {
+  final FilterMemberProfileModels? filter;
   final MemberProfileRepository _memberProfileRepository;
   StreamSubscription? _memberProfilesListSubscription;
   EliudQuery? eliudQuery;
@@ -35,9 +39,8 @@ class MemberProfileListBloc extends Bloc<MemberProfileListEvent, MemberProfileLi
   final bool? detailed;
   final int memberProfileLimit;
 
-  MemberProfileListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required MemberProfileRepository memberProfileRepository, this.memberProfileLimit = 5})
-      : assert(memberProfileRepository != null),
-        _memberProfileRepository = memberProfileRepository,
+  MemberProfileListBloc({this.filter, this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required MemberProfileRepository memberProfileRepository, this.memberProfileLimit = 5})
+      : _memberProfileRepository = memberProfileRepository,
         super(MemberProfileListLoading()) {
     on <LoadMemberProfileList> ((event, emit) {
       if ((detailed == null) || (!detailed!)) {
@@ -78,11 +81,19 @@ class MemberProfileListBloc extends Bloc<MemberProfileListEvent, MemberProfileLi
     });
   }
 
+  List<MemberProfileModel?> _filter(List<MemberProfileModel?> original) {
+    if (filter != null) {
+      return filter!(original);
+    } else {
+      return original;
+    }
+  }
+
   Future<void> _mapLoadMemberProfileListToState() async {
     int amountNow =  (state is MemberProfileListLoaded) ? (state as MemberProfileListLoaded).values!.length : 0;
     _memberProfilesListSubscription?.cancel();
     _memberProfilesListSubscription = _memberProfileRepository.listen(
-          (list) => add(MemberProfileListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+          (list) => add(MemberProfileListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
       orderBy: orderBy,
       descending: descending,
       eliudQuery: eliudQuery,
@@ -94,7 +105,7 @@ class MemberProfileListBloc extends Bloc<MemberProfileListEvent, MemberProfileLi
     int amountNow =  (state is MemberProfileListLoaded) ? (state as MemberProfileListLoaded).values!.length : 0;
     _memberProfilesListSubscription?.cancel();
     _memberProfilesListSubscription = _memberProfileRepository.listenWithDetails(
-            (list) => add(MemberProfileListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+            (list) => add(MemberProfileListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,

@@ -8,7 +8,6 @@ import 'package:eliud_core/tools/screen_size.dart';
 import 'package:eliud_pkg_medium/tools/media_buttons.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuple/tuple.dart';
 import 'package:eliud_core/core/editor/ext_editor_base_bloc/ext_editor_base_state.dart';
@@ -21,7 +20,6 @@ import 'package:eliud_core/style/frontend/has_dialog.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/tools/widgets/header_widget.dart';
 import 'package:eliud_core/core/registry.dart';
-import '../../model/post_model.dart';
 import 'bloc/post_medium_component_bloc.dart';
 
 /*
@@ -87,7 +85,7 @@ class PostWithMemberMediumComponents extends StatefulWidget {
 class _PostWithMemberMediumComponentsState
     extends State<PostWithMemberMediumComponents> {
   double? uploadingProgress;
-  Offset? onTapPosition = null;
+  Offset? onTapPosition;
 
   @override
   Widget build(BuildContext context) {

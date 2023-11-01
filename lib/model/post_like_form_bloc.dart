@@ -17,34 +17,16 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:eliud_core/tools/firestore/firestore_tools.dart';
-import 'package:flutter/cupertino.dart';
 
 import 'package:eliud_core/tools/enums.dart';
-import 'package:eliud_core/tools/common_tools.dart';
 
-import 'package:eliud_core/model/rgb_model.dart';
 
-import 'package:eliud_core/tools/string_validator.dart';
 
-import 'package:eliud_core/model/repository_export.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_membership/model/repository_export.dart';
-import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_feed/model/repository_export.dart';
-import 'package:eliud_core/model/model_export.dart';
-import 'package:eliud_pkg_membership/model/model_export.dart';
-import '../tools/bespoke_models.dart';
 import 'package:eliud_pkg_feed/model/model_export.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import 'package:eliud_pkg_membership/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
-import 'package:eliud_pkg_feed/model/entity_export.dart';
 
 import 'package:eliud_pkg_feed/model/post_like_form_event.dart';
 import 'package:eliud_pkg_feed/model/post_like_form_state.dart';
-import 'package:eliud_pkg_feed/model/post_like_repository.dart';
 
 class PostLikeFormBloc extends Bloc<PostLikeFormEvent, PostLikeFormState> {
   final FormAction? formAction;
@@ -73,7 +55,7 @@ class PostLikeFormBloc extends Bloc<PostLikeFormEvent, PostLikeFormState> {
         PostLikeFormLoaded loaded = PostLikeFormLoaded(value: event.value);
         emit(loaded);
       });
-      PostLikeModel? newValue = null;
+      PostLikeModel? newValue;
       on <ChangedPostLikeDocumentID> ((event, emit) async {
       if (state is PostLikeFormInitialized) {
         final currentState = state as PostLikeFormInitialized;
