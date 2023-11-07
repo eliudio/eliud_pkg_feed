@@ -13,7 +13,6 @@
 
 */
 
-
 import 'package:eliud_pkg_feed/model/post_component_bloc.dart';
 import 'package:eliud_pkg_feed/model/post_component_event.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
@@ -31,20 +30,21 @@ abstract class AbstractPostComponent extends StatelessWidget {
   final AppModel app;
   final String postId;
 
-  AbstractPostComponent({Key? key, required this.app, required this.postId}): super(key: key);
+  AbstractPostComponent({super.key, required this.app, required this.postId});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<PostComponentBloc> (
-          create: (context) => PostComponentBloc(
-            postRepository: postRepository(appId: app.documentID)!)
+    return BlocProvider<PostComponentBloc>(
+      create: (context) => PostComponentBloc(
+          postRepository: postRepository(appId: app.documentID)!)
         ..add(FetchPostComponent(id: postId)),
       child: _postBlockBuilder(context),
     );
   }
 
   Widget _postBlockBuilder(BuildContext context) {
-    return BlocBuilder<PostComponentBloc, PostComponentState>(builder: (context, state) {
+    return BlocBuilder<PostComponentBloc, PostComponentState>(
+        builder: (context, state) {
       if (state is PostComponentLoaded) {
         return yourWidget(context, state.value);
       } else if (state is PostComponentPermissionDenied) {
@@ -57,7 +57,11 @@ abstract class AbstractPostComponent extends StatelessWidget {
         return AlertWidget(app: app, title: 'Error', content: state.message);
       } else {
         return Center(
-          child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().progressIndicatorStyle().progressIndicator(app, context),
+          child: StyleRegistry.registry()
+              .styleWithApp(app)
+              .frontEndStyle()
+              .progressIndicatorStyle()
+              .progressIndicator(app, context),
         );
       }
     });
@@ -65,4 +69,3 @@ abstract class AbstractPostComponent extends StatelessWidget {
 
   Widget yourWidget(BuildContext context, PostModel value);
 }
-

@@ -22,10 +22,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eliud_core/style/style_registry.dart';
 
-
-
-
-
 import 'package:eliud_core/tools/enums.dart';
 
 import 'package:eliud_core/model/model_export.dart';
@@ -38,52 +34,65 @@ import 'package:eliud_pkg_feed/model/feed_form_bloc.dart';
 import 'package:eliud_pkg_feed/model/feed_form_event.dart';
 import 'package:eliud_pkg_feed/model/feed_form_state.dart';
 
-
 class FeedForm extends StatelessWidget {
   final AppModel app;
-  FormAction formAction;
-  FeedModel? value;
-  ActionModel? submitAction;
+  final FormAction formAction;
+  final FeedModel? value;
+  final ActionModel? submitAction;
 
-  FeedForm({Key? key, required this.app, required this.formAction, required this.value, this.submitAction}) : super(key: key);
+  FeedForm(
+      {super.key,
+      required this.app,
+      required this.formAction,
+      required this.value,
+      this.submitAction});
 
+  /// Build the FeedForm
   @override
   Widget build(BuildContext context) {
-    var accessState = AccessBloc.getState(context);
+    //var accessState = AccessBloc.getState(context);
     var appId = app.documentID;
-    if (formAction == FormAction.ShowData) {
-      return BlocProvider<FeedFormBloc >(
-            create: (context) => FeedFormBloc(appId,
-                                       formAction: formAction,
-
-                                                )..add(InitialiseFeedFormEvent(value: value)),
-  
-        child: MyFeedForm(app:app, submitAction: submitAction, formAction: formAction),
-          );
-    } if (formAction == FormAction.ShowPreloadedData) {
-      return BlocProvider<FeedFormBloc >(
-            create: (context) => FeedFormBloc(appId,
-                                       formAction: formAction,
-
-                                                )..add(InitialiseFeedFormNoLoadEvent(value: value)),
-  
-        child: MyFeedForm(app:app, submitAction: submitAction, formAction: formAction),
-          );
+    if (formAction == FormAction.showData) {
+      return BlocProvider<FeedFormBloc>(
+        create: (context) => FeedFormBloc(
+          appId,
+          formAction: formAction,
+        )..add(InitialiseFeedFormEvent(value: value)),
+        child: MyFeedForm(
+            app: app, submitAction: submitAction, formAction: formAction),
+      );
+    }
+    if (formAction == FormAction.showPreloadedData) {
+      return BlocProvider<FeedFormBloc>(
+        create: (context) => FeedFormBloc(
+          appId,
+          formAction: formAction,
+        )..add(InitialiseFeedFormNoLoadEvent(value: value)),
+        child: MyFeedForm(
+            app: app, submitAction: submitAction, formAction: formAction),
+      );
     } else {
       return Scaffold(
-        appBar: StyleRegistry.registry().styleWithApp(app).adminFormStyle().appBarWithString(app, context, title: formAction == FormAction.UpdateAction ? 'Update Feed' : 'Add Feed'),
-        body: BlocProvider<FeedFormBloc >(
-            create: (context) => FeedFormBloc(appId,
-                                       formAction: formAction,
-
-                                                )..add((formAction == FormAction.UpdateAction ? InitialiseFeedFormEvent(value: value) : InitialiseNewFeedFormEvent())),
-  
-        child: MyFeedForm(app: app, submitAction: submitAction, formAction: formAction),
+          appBar: StyleRegistry.registry()
+              .styleWithApp(app)
+              .adminFormStyle()
+              .appBarWithString(app, context,
+                  title: formAction == FormAction.updateAction
+                      ? 'Update Feed'
+                      : 'Add Feed'),
+          body: BlocProvider<FeedFormBloc>(
+            create: (context) => FeedFormBloc(
+              appId,
+              formAction: formAction,
+            )..add((formAction == FormAction.updateAction
+                ? InitialiseFeedFormEvent(value: value)
+                : InitialiseNewFeedFormEvent())),
+            child: MyFeedForm(
+                app: app, submitAction: submitAction, formAction: formAction),
           ));
     }
   }
 }
-
 
 class MyFeedForm extends StatefulWidget {
   final AppModel app;
@@ -92,9 +101,9 @@ class MyFeedForm extends StatefulWidget {
 
   MyFeedForm({required this.app, this.formAction, this.submitAction});
 
-  _MyFeedFormState createState() => _MyFeedFormState(this.formAction);
+  @override
+  State<MyFeedForm> createState() => _MyFeedFormState(formAction);
 }
-
 
 class _MyFeedFormState extends State<MyFeedForm> {
   final FormAction? formAction;
@@ -110,7 +119,6 @@ class _MyFeedFormState extends State<MyFeedForm> {
   bool? _audioPostSelection;
   bool? _albumPostSelection;
   bool? _articlePostSelection;
-
 
   _MyFeedFormState(this.formAction);
 
@@ -134,185 +142,303 @@ class _MyFeedFormState extends State<MyFeedForm> {
   Widget build(BuildContext context) {
     var accessState = AccessBloc.getState(context);
     return BlocBuilder<FeedFormBloc, FeedFormState>(builder: (context, state) {
-      if (state is FeedFormUninitialized) return Center(
-        child: StyleRegistry.registry().styleWithApp(widget.app).adminListStyle().progressIndicator(widget.app, context),
-      );
+      if (state is FeedFormUninitialized) {
+        return Center(
+          child: StyleRegistry.registry()
+              .styleWithApp(widget.app)
+              .adminListStyle()
+              .progressIndicator(widget.app, context),
+        );
+      }
 
       if (state is FeedFormLoaded) {
-        if (state.value!.documentID != null)
-          _documentIDController.text = state.value!.documentID.toString();
-        else
-          _documentIDController.text = "";
-        if (state.value!.appId != null)
-          _appIdController.text = state.value!.appId.toString();
-        else
-          _appIdController.text = "";
-        if (state.value!.description != null)
-          _descriptionController.text = state.value!.description.toString();
-        else
-          _descriptionController.text = "";
-        if (state.value!.thumbImage != null)
+        _documentIDController.text = state.value!.documentID.toString();
+        _appIdController.text = state.value!.appId.toString();
+        _descriptionController.text = state.value!.description.toString();
+        if (state.value!.thumbImage != null) {
           _thumbImageSelectedRadioTile = state.value!.thumbImage!.index;
-        else
+        } else {
           _thumbImageSelectedRadioTile = 0;
-        if (state.value!.photoPost != null)
-        _photoPostSelection = state.value!.photoPost;
-        else
-        _photoPostSelection = false;
-        if (state.value!.videoPost != null)
-        _videoPostSelection = state.value!.videoPost;
-        else
-        _videoPostSelection = false;
-        if (state.value!.messagePost != null)
-        _messagePostSelection = state.value!.messagePost;
-        else
-        _messagePostSelection = false;
-        if (state.value!.audioPost != null)
-        _audioPostSelection = state.value!.audioPost;
-        else
-        _audioPostSelection = false;
-        if (state.value!.albumPost != null)
-        _albumPostSelection = state.value!.albumPost;
-        else
-        _albumPostSelection = false;
-        if (state.value!.articlePost != null)
-        _articlePostSelection = state.value!.articlePost;
-        else
-        _articlePostSelection = false;
+        }
+        if (state.value!.photoPost != null) {
+          _photoPostSelection = state.value!.photoPost;
+        } else {
+          _photoPostSelection = false;
+        }
+        if (state.value!.videoPost != null) {
+          _videoPostSelection = state.value!.videoPost;
+        } else {
+          _videoPostSelection = false;
+        }
+        if (state.value!.messagePost != null) {
+          _messagePostSelection = state.value!.messagePost;
+        } else {
+          _messagePostSelection = false;
+        }
+        if (state.value!.audioPost != null) {
+          _audioPostSelection = state.value!.audioPost;
+        } else {
+          _audioPostSelection = false;
+        }
+        if (state.value!.albumPost != null) {
+          _albumPostSelection = state.value!.albumPost;
+        } else {
+          _albumPostSelection = false;
+        }
+        if (state.value!.articlePost != null) {
+          _articlePostSelection = state.value!.articlePost;
+        } else {
+          _articlePostSelection = false;
+        }
       }
       if (state is FeedFormInitialized) {
         List<Widget> children = [];
-         children.add(Container(
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                  child: StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().groupTitle(widget.app, context, 'General')
-                ));
+        children.add(Container(
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+            child: StyleRegistry.registry()
+                .styleWithApp(widget.app)
+                .adminFormStyle()
+                .groupTitle(widget.app, context, 'General')));
 
-        children.add(
+        children.add(StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .radioListTile(
+                widget.app,
+                context,
+                0,
+                _thumbImageSelectedRadioTile,
+                'thumbs',
+                'thumbs',
+                !accessState.memberIsOwner(widget.app.documentID)
+                    ? null
+                    : (dynamic val) => setSelectionThumbImage(val)));
+        children.add(StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .radioListTile(
+                widget.app,
+                context,
+                0,
+                _thumbImageSelectedRadioTile,
+                'banana',
+                'banana',
+                !accessState.memberIsOwner(widget.app.documentID)
+                    ? null
+                    : (dynamic val) => setSelectionThumbImage(val)));
 
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _thumbImageSelectedRadioTile, 'Thumbs', 'Thumbs', !accessState.memberIsOwner(widget.app.documentID) ? null : (dynamic val) => setSelectionThumbImage(val))
-          );
-        children.add(
+        children.add(StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .checkboxListTile(
+                widget.app,
+                context,
+                'Photo Post',
+                _photoPostSelection,
+                _readOnly(accessState, state)
+                    ? null
+                    : (dynamic val) => setSelectionPhotoPost(val)));
 
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _thumbImageSelectedRadioTile, 'Banana', 'Banana', !accessState.memberIsOwner(widget.app.documentID) ? null : (dynamic val) => setSelectionThumbImage(val))
-          );
+        children.add(StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .checkboxListTile(
+                widget.app,
+                context,
+                'Video Post',
+                _videoPostSelection,
+                _readOnly(accessState, state)
+                    ? null
+                    : (dynamic val) => setSelectionVideoPost(val)));
 
-        children.add(
+        children.add(StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .checkboxListTile(
+                widget.app,
+                context,
+                'Message Post',
+                _messagePostSelection,
+                _readOnly(accessState, state)
+                    ? null
+                    : (dynamic val) => setSelectionMessagePost(val)));
 
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().checkboxListTile(widget.app, context, 'Photo Post', _photoPostSelection, _readOnly(accessState, state) ? null : (dynamic val) => setSelectionPhotoPost(val))
-          );
+        children.add(StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .checkboxListTile(
+                widget.app,
+                context,
+                'Audio Post',
+                _audioPostSelection,
+                _readOnly(accessState, state)
+                    ? null
+                    : (dynamic val) => setSelectionAudioPost(val)));
 
-        children.add(
+        children.add(StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .checkboxListTile(
+                widget.app,
+                context,
+                'Album Post',
+                _albumPostSelection,
+                _readOnly(accessState, state)
+                    ? null
+                    : (dynamic val) => setSelectionAlbumPost(val)));
 
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().checkboxListTile(widget.app, context, 'Video Post', _videoPostSelection, _readOnly(accessState, state) ? null : (dynamic val) => setSelectionVideoPost(val))
-          );
-
-        children.add(
-
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().checkboxListTile(widget.app, context, 'Message Post', _messagePostSelection, _readOnly(accessState, state) ? null : (dynamic val) => setSelectionMessagePost(val))
-          );
-
-        children.add(
-
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().checkboxListTile(widget.app, context, 'Audio Post', _audioPostSelection, _readOnly(accessState, state) ? null : (dynamic val) => setSelectionAudioPost(val))
-          );
-
-        children.add(
-
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().checkboxListTile(widget.app, context, 'Album Post', _albumPostSelection, _readOnly(accessState, state) ? null : (dynamic val) => setSelectionAlbumPost(val))
-          );
-
-        children.add(
-
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().checkboxListTile(widget.app, context, 'Article Post', _articlePostSelection, _readOnly(accessState, state) ? null : (dynamic val) => setSelectionArticlePost(val))
-          );
-
+        children.add(StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .checkboxListTile(
+                widget.app,
+                context,
+                'Article Post',
+                _articlePostSelection,
+                _readOnly(accessState, state)
+                    ? null
+                    : (dynamic val) => setSelectionArticlePost(val)));
 
         children.add(Container(height: 20.0));
-        children.add(StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().divider(widget.app, context));
+        children.add(StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .divider(widget.app, context));
 
+        children.add(Container(
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+            child: StyleRegistry.registry()
+                .styleWithApp(widget.app)
+                .adminFormStyle()
+                .groupTitle(widget.app, context, 'General')));
 
-         children.add(Container(
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                  child: StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().groupTitle(widget.app, context, 'General')
-                ));
+        children.add(StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .textFormField(widget.app, context,
+                labelText: 'Document ID',
+                icon: Icons.vpn_key,
+                readOnly: (formAction == FormAction.updateAction),
+                textEditingController: _documentIDController,
+                keyboardType: TextInputType.text,
+                validator: (_) =>
+                    state is DocumentIDFeedFormError ? state.message : null,
+                hintText: null));
 
-        children.add(
+        children.add(StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .textFormField(widget.app, context,
+                labelText: 'App Identifier',
+                icon: Icons.text_format,
+                readOnly: _readOnly(accessState, state),
+                textEditingController: _appIdController,
+                keyboardType: TextInputType.text,
+                validator: (_) =>
+                    state is AppIdFeedFormError ? state.message : null,
+                hintText: 'field.remark'));
 
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().textFormField(widget.app, context, labelText: 'Document ID', icon: Icons.vpn_key, readOnly: (formAction == FormAction.UpdateAction), textEditingController: _documentIDController, keyboardType: TextInputType.text, validator: (_) => state is DocumentIDFeedFormError ? state.message : null, hintText: null)
-          );
-
-        children.add(
-
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().textFormField(widget.app, context, labelText: 'App Identifier', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _appIdController, keyboardType: TextInputType.text, validator: (_) => state is AppIdFeedFormError ? state.message : null, hintText: 'field.remark')
-          );
-
-        children.add(
-
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().textFormField(widget.app, context, labelText: 'Description', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _descriptionController, keyboardType: TextInputType.text, validator: (_) => state is DescriptionFeedFormError ? state.message : null, hintText: null)
-          );
-
+        children.add(StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .textFormField(widget.app, context,
+                labelText: 'Description',
+                icon: Icons.text_format,
+                readOnly: _readOnly(accessState, state),
+                textEditingController: _descriptionController,
+                keyboardType: TextInputType.text,
+                validator: (_) =>
+                    state is DescriptionFeedFormError ? state.message : null,
+                hintText: null));
 
         children.add(Container(height: 20.0));
-        children.add(StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().divider(widget.app, context));
+        children.add(StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .divider(widget.app, context));
 
+        if ((formAction != FormAction.showData) &&
+            (formAction != FormAction.showPreloadedData)) {
+          children.add(StyleRegistry.registry()
+              .styleWithApp(widget.app)
+              .adminFormStyle()
+              .button(
+                widget.app,
+                context,
+                label: 'Submit',
+                onPressed: _readOnly(accessState, state)
+                    ? null
+                    : () {
+                        if (state is FeedFormError) {
+                          return;
+                        } else {
+                          if (formAction == FormAction.updateAction) {
+                            BlocProvider.of<FeedListBloc>(context)
+                                .add(UpdateFeedList(
+                                    value: state.value!.copyWith(
+                              documentID: state.value!.documentID,
+                              appId: state.value!.appId,
+                              description: state.value!.description,
+                              thumbImage: state.value!.thumbImage,
+                              photoPost: state.value!.photoPost,
+                              videoPost: state.value!.videoPost,
+                              messagePost: state.value!.messagePost,
+                              audioPost: state.value!.audioPost,
+                              albumPost: state.value!.albumPost,
+                              articlePost: state.value!.articlePost,
+                            )));
+                          } else {
+                            BlocProvider.of<FeedListBloc>(context)
+                                .add(AddFeedList(
+                                    value: FeedModel(
+                              documentID: state.value!.documentID,
+                              appId: state.value!.appId,
+                              description: state.value!.description,
+                              thumbImage: state.value!.thumbImage,
+                              photoPost: state.value!.photoPost,
+                              videoPost: state.value!.videoPost,
+                              messagePost: state.value!.messagePost,
+                              audioPost: state.value!.audioPost,
+                              albumPost: state.value!.albumPost,
+                              articlePost: state.value!.articlePost,
+                            )));
+                          }
+                          if (widget.submitAction != null) {
+                            eliudrouter.Router.navigateTo(
+                                context, widget.submitAction!);
+                          } else {
+                            Navigator.pop(context);
+                          }
+                        }
+                      },
+              ));
+        }
 
-        if ((formAction != FormAction.ShowData) && (formAction != FormAction.ShowPreloadedData))
-          children.add(StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().button(widget.app, context, label: 'Submit',
-                  onPressed: _readOnly(accessState, state) ? null : () {
-                    if (state is FeedFormError) {
-                      return null;
-                    } else {
-                      if (formAction == FormAction.UpdateAction) {
-                        BlocProvider.of<FeedListBloc>(context).add(
-                          UpdateFeedList(value: state.value!.copyWith(
-                              documentID: state.value!.documentID, 
-                              appId: state.value!.appId, 
-                              description: state.value!.description, 
-                              thumbImage: state.value!.thumbImage, 
-                              photoPost: state.value!.photoPost, 
-                              videoPost: state.value!.videoPost, 
-                              messagePost: state.value!.messagePost, 
-                              audioPost: state.value!.audioPost, 
-                              albumPost: state.value!.albumPost, 
-                              articlePost: state.value!.articlePost, 
-                        )));
-                      } else {
-                        BlocProvider.of<FeedListBloc>(context).add(
-                          AddFeedList(value: FeedModel(
-                              documentID: state.value!.documentID, 
-                              appId: state.value!.appId, 
-                              description: state.value!.description, 
-                              thumbImage: state.value!.thumbImage, 
-                              photoPost: state.value!.photoPost, 
-                              videoPost: state.value!.videoPost, 
-                              messagePost: state.value!.messagePost, 
-                              audioPost: state.value!.audioPost, 
-                              albumPost: state.value!.albumPost, 
-                              articlePost: state.value!.articlePost, 
-                          )));
-                      }
-                      if (widget.submitAction != null) {
-                        eliudrouter.Router.navigateTo(context, widget.submitAction!);
-                      } else {
-                        Navigator.pop(context);
-                      }
-                    }
-                  },
-                ));
-
-        return StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().container(widget.app, context, Form(
-            child: ListView(
-              padding: const EdgeInsets.all(8),
-              physics: ((formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData)) ? NeverScrollableScrollPhysics() : null,
-              shrinkWrap: ((formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData)),
-              children: children
-            ),
-          ), formAction!
-        );
+        return StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .container(
+                widget.app,
+                context,
+                Form(
+                  child: ListView(
+                      padding: const EdgeInsets.all(8),
+                      physics: ((formAction == FormAction.showData) ||
+                              (formAction == FormAction.showPreloadedData))
+                          ? NeverScrollableScrollPhysics()
+                          : null,
+                      shrinkWrap: ((formAction == FormAction.showData) ||
+                          (formAction == FormAction.showPreloadedData)),
+                      children: children),
+                ),
+                formAction!);
       } else {
-        return StyleRegistry.registry().styleWithApp(widget.app).adminListStyle().progressIndicator(widget.app, context);
+        return StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminListStyle()
+            .progressIndicator(widget.app, context);
       }
     });
   }
@@ -321,16 +447,13 @@ class _MyFeedFormState extends State<MyFeedForm> {
     _myFormBloc.add(ChangedFeedDocumentID(value: _documentIDController.text));
   }
 
-
   void _onAppIdChanged() {
     _myFormBloc.add(ChangedFeedAppId(value: _appIdController.text));
   }
 
-
   void _onDescriptionChanged() {
     _myFormBloc.add(ChangedFeedDescription(value: _descriptionController.text));
   }
-
 
   void setSelectionThumbImage(int? val) {
     setState(() {
@@ -338,7 +461,6 @@ class _MyFeedFormState extends State<MyFeedForm> {
     });
     _myFormBloc.add(ChangedFeedThumbImage(value: toThumbStyle(val)));
   }
-
 
   void setSelectionPhotoPost(bool? val) {
     setState(() {
@@ -382,7 +504,6 @@ class _MyFeedFormState extends State<MyFeedForm> {
     _myFormBloc.add(ChangedFeedArticlePost(value: val));
   }
 
-
   @override
   void dispose() {
     _documentIDController.dispose();
@@ -391,12 +512,10 @@ class _MyFeedFormState extends State<MyFeedForm> {
     super.dispose();
   }
 
+  /// Is the form read-only?
   bool _readOnly(AccessState accessState, FeedFormInitialized state) {
-    return (formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData) || (!accessState.memberIsOwner(widget.app.documentID));
+    return (formAction == FormAction.showData) ||
+        (formAction == FormAction.showPreloadedData) ||
+        (!accessState.memberIsOwner(widget.app.documentID));
   }
-  
-
 }
-
-
-

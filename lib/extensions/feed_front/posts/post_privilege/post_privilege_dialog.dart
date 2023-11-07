@@ -9,7 +9,8 @@ import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-typedef PostPrivilegeFeedback(PostAccessibleByGroup postAccessibleByGroup,
+typedef PostPrivilegeFeedback = Function(
+    PostAccessibleByGroup postAccessibleByGroup,
     List<String>? postAccessibleByMembers);
 
 class PostPrivilegeDialog {
@@ -29,7 +30,7 @@ class PostPrivilegeDialog {
     List<String>? currentPostAccessibleByMembers =
         initialPostAccessibleByMembers;
 
-    openFlexibleDialog(app, context, app.documentID + '/chat',
+    openFlexibleDialog(app, context, '${app.documentID}/chat',
         title: 'Select visibility of your next post',
         child: BlocProvider<PostPrivilegeBloc>(
             create: (context) => PostPrivilegeBloc(app, feedId, memberId,

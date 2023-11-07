@@ -30,10 +30,10 @@ class NewPage extends MemberProfileListEvent {}
 class AddMemberProfileList extends MemberProfileListEvent {
   final MemberProfileModel? value;
 
-  const AddMemberProfileList({ this.value });
+  const AddMemberProfileList({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'AddMemberProfileList{ value: $value }';
@@ -42,10 +42,10 @@ class AddMemberProfileList extends MemberProfileListEvent {
 class UpdateMemberProfileList extends MemberProfileListEvent {
   final MemberProfileModel? value;
 
-  const UpdateMemberProfileList({ this.value });
+  const UpdateMemberProfileList({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'UpdateMemberProfileList{ value: $value }';
@@ -54,10 +54,10 @@ class UpdateMemberProfileList extends MemberProfileListEvent {
 class DeleteMemberProfileList extends MemberProfileListEvent {
   final MemberProfileModel? value;
 
-  const DeleteMemberProfileList({ this.value });
+  const DeleteMemberProfileList({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'DeleteMemberProfileList{ value: $value }';
@@ -67,24 +67,24 @@ class MemberProfileListUpdated extends MemberProfileListEvent {
   final List<MemberProfileModel?>? value;
   final bool? mightHaveMore;
 
-  const MemberProfileListUpdated({ this.value, this.mightHaveMore });
+  const MemberProfileListUpdated({this.value, this.mightHaveMore});
 
   @override
-  List<Object?> get props => [ value, mightHaveMore ];
+  List<Object?> get props => [value, mightHaveMore];
 
   @override
-  String toString() => 'MemberProfileListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
+  String toString() =>
+      'MemberProfileListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
 }
 
 class MemberProfileChangeQuery extends MemberProfileListEvent {
   final EliudQuery? newQuery;
 
-  const MemberProfileChangeQuery({ required this.newQuery });
+  const MemberProfileChangeQuery({required this.newQuery});
 
   @override
-  List<Object?> get props => [ newQuery ];
+  List<Object?> get props => [newQuery];
 
   @override
   String toString() => 'MemberProfileChangeQuery{ value: $newQuery }';
 }
-

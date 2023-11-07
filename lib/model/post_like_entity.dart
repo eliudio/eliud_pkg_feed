@@ -26,45 +26,94 @@ class PostLikeEntity implements EntityBase {
   final String? appId;
   final int? likeType;
 
-  PostLikeEntity({required this.postId, this.postCommentId, required this.memberId, this.timestamp, required this.appId, this.likeType, });
+  PostLikeEntity({
+    required this.postId,
+    this.postCommentId,
+    required this.memberId,
+    this.timestamp,
+    required this.appId,
+    this.likeType,
+  });
 
-  PostLikeEntity copyWith({String? documentID, String? postId, String? postCommentId, String? memberId, Object? timestamp, String? appId, int? likeType, }) {
-    return PostLikeEntity(postId : postId ?? this.postId, postCommentId : postCommentId ?? this.postCommentId, memberId : memberId ?? this.memberId, timestamp : timestamp ?? this.timestamp, appId : appId ?? this.appId, likeType : likeType ?? this.likeType, );
+  PostLikeEntity copyWith({
+    String? documentID,
+    String? postId,
+    String? postCommentId,
+    String? memberId,
+    Object? timestamp,
+    String? appId,
+    int? likeType,
+  }) {
+    return PostLikeEntity(
+      postId: postId ?? this.postId,
+      postCommentId: postCommentId ?? this.postCommentId,
+      memberId: memberId ?? this.memberId,
+      timestamp: timestamp ?? this.timestamp,
+      appId: appId ?? this.appId,
+      likeType: likeType ?? this.likeType,
+    );
   }
-  List<Object?> get props => [postId, postCommentId, memberId, timestamp, appId, likeType, ];
+
+  List<Object?> get props => [
+        postId,
+        postCommentId,
+        memberId,
+        timestamp,
+        appId,
+        likeType,
+      ];
 
   @override
   String toString() {
     return 'PostLikeEntity{postId: $postId, postCommentId: $postCommentId, memberId: $memberId, timestamp: $timestamp, appId: $appId, likeType: $likeType}';
   }
 
-  static PostLikeEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
+  static PostLikeEntity? fromMap(Object? o,
+      {Map<String, String>? newDocumentIds}) {
     if (o == null) return null;
     var map = o as Map<String, dynamic>;
 
     return PostLikeEntity(
-      postId: map['postId'], 
-      postCommentId: map['postCommentId'], 
-      memberId: map['memberId'], 
-      timestamp: map['timestamp'] == null ? null : (map['timestamp']  as Timestamp).millisecondsSinceEpoch,
-      appId: map['appId'], 
-      likeType: map['likeType'], 
+      postId: map['postId'],
+      postCommentId: map['postCommentId'],
+      memberId: map['memberId'],
+      timestamp: map['timestamp'] == null
+          ? null
+          : (map['timestamp'] as Timestamp).millisecondsSinceEpoch,
+      appId: map['appId'],
+      likeType: map['likeType'],
     );
   }
 
+  @override
   Map<String, Object?> toDocument() {
     Map<String, Object?> theDocument = HashMap();
-    if (postId != null) theDocument["postId"] = postId;
-      else theDocument["postId"] = null;
-    if (postCommentId != null) theDocument["postCommentId"] = postCommentId;
-      else theDocument["postCommentId"] = null;
-    if (memberId != null) theDocument["memberId"] = memberId;
-      else theDocument["memberId"] = null;
+    if (postId != null) {
+      theDocument["postId"] = postId;
+    } else {
+      theDocument["postId"] = null;
+    }
+    if (postCommentId != null) {
+      theDocument["postCommentId"] = postCommentId;
+    } else {
+      theDocument["postCommentId"] = null;
+    }
+    if (memberId != null) {
+      theDocument["memberId"] = memberId;
+    } else {
+      theDocument["memberId"] = null;
+    }
     theDocument["timestamp"] = timestamp;
-    if (appId != null) theDocument["appId"] = appId;
-      else theDocument["appId"] = null;
-    if (likeType != null) theDocument["likeType"] = likeType;
-      else theDocument["likeType"] = null;
+    if (appId != null) {
+      theDocument["appId"] = appId;
+    } else {
+      theDocument["appId"] = null;
+    }
+    if (likeType != null) {
+      theDocument["likeType"] = likeType;
+    } else {
+      theDocument["likeType"] = null;
+    }
     return theDocument;
   }
 
@@ -74,7 +123,8 @@ class PostLikeEntity implements EntityBase {
     return newEntity;
   }
 
-  static PostLikeEntity? fromJsonString(String json, {Map<String, String>? newDocumentIds}) {
+  static PostLikeEntity? fromJsonString(String json,
+      {Map<String, String>? newDocumentIds}) {
     Map<String, dynamic>? generationSpecificationMap = jsonDecode(json);
     return fromMap(generationSpecificationMap, newDocumentIds: newDocumentIds);
   }
@@ -83,9 +133,9 @@ class PostLikeEntity implements EntityBase {
     return jsonEncode(toDocument());
   }
 
-  Future<Map<String, Object?>> enrichedDocument(Map<String, Object?> theDocument) async {
+  @override
+  Future<Map<String, Object?>> enrichedDocument(
+      Map<String, Object?> theDocument) async {
     return theDocument;
   }
-
 }
-

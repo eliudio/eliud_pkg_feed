@@ -7,16 +7,17 @@ import 'package:eliud_pkg_feed/model/labelled_body_component_model.dart';
 import 'package:eliud_core/style/frontend/has_tabs.dart';
 import 'package:flutter/material.dart';
 
-
 class TabbedFeedMenuItems extends StatefulWidget {
   final AppModel app;
   final FeedFrontModel feedFrontModel;
   final Map<String, dynamic>? parameters;
-  List<LabelledBodyComponentModel> bodyComponents;
+  final List<LabelledBodyComponentModel> bodyComponents;
 
-  TabbedFeedMenuItems(this.app, this.bodyComponents, this.parameters, this.feedFrontModel);
+  TabbedFeedMenuItems(
+      this.app, this.bodyComponents, this.parameters, this.feedFrontModel);
 
-  _TabbedFeedMenuItemsState createState() => _TabbedFeedMenuItemsState();
+  @override
+  State<TabbedFeedMenuItems> createState() => _TabbedFeedMenuItemsState();
 }
 
 class _TabbedFeedMenuItemsState extends State<TabbedFeedMenuItems>
@@ -43,36 +44,36 @@ class _TabbedFeedMenuItemsState extends State<TabbedFeedMenuItems>
   @override
   void dispose() {
     _tabController.dispose();
-      super.dispose();
+    super.dispose();
   }
 
   @override
   @override
   Widget build(BuildContext context) {
-    return ListView(
-        shrinkWrap: true,
-        physics: ScrollPhysics(),
-        children: [
-          tabBar(widget.app, context,
-              items: newLabels, tabController: _tabController),
-          component(),
-        ]);
+    return ListView(shrinkWrap: true, physics: ScrollPhysics(), children: [
+      tabBar(widget.app, context,
+          items: newLabels, tabController: _tabController),
+      component(),
+    ]);
   }
 
   Widget component() {
-    if (_tabController.index == 0) return FeedFront(widget.app, widget.feedFrontModel);
-    if (_tabController.index == 1) return Profile(app: widget.app, backgroundOverride: widget.feedFrontModel.backgroundOverrideProfile);
+    if (_tabController.index == 0) {
+      return FeedFront(widget.app, widget.feedFrontModel);
+    }
+    if (_tabController.index == 1) {
+      return Profile(
+          app: widget.app,
+          backgroundOverride: widget.feedFrontModel.backgroundOverrideProfile);
+    }
     var component = widget.bodyComponents[_tabController.index - 2];
     return Registry.registry()!.component(
-        context,
-        widget.app,
-        component.componentName!,
-        component.componentId!,
+        context, widget.app, component.componentName!, component.componentId!,
         parameters: widget.parameters);
   }
 
   void _handleTabSelection() {
-    if ((_tabController != null) && (_tabController.indexIsChanging)) {
+    if (_tabController.indexIsChanging) {
       setState(() {});
     }
   }

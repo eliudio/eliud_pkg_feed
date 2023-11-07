@@ -13,45 +13,106 @@
 
 */
 
-
-
 import 'package:eliud_pkg_feed/model/model_export.dart';
 import 'package:eliud_pkg_feed/model/entity_export.dart';
-
 
 import 'dart:async';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 import 'package:eliud_core/core/base/repository_base.dart';
 
-typedef PostCommentModelTrigger(List<PostCommentModel?> list);
-typedef PostCommentChanged(PostCommentModel? value);
-typedef PostCommentErrorHandler(o, e);
+typedef PostCommentModelTrigger = Function(List<PostCommentModel?> list);
+typedef PostCommentChanged = Function(PostCommentModel? value);
+typedef PostCommentErrorHandler = Function(dynamic o, dynamic e);
 
-abstract class PostCommentRepository extends RepositoryBase<PostCommentModel, PostCommentEntity> {
-  Future<PostCommentEntity> addEntity(String documentID, PostCommentEntity value);
-  Future<PostCommentEntity> updateEntity(String documentID, PostCommentEntity value);
+abstract class PostCommentRepository
+    extends RepositoryBase<PostCommentModel, PostCommentEntity> {
+  @override
+  Future<PostCommentEntity> addEntity(
+      String documentID, PostCommentEntity value);
+  @override
+  Future<PostCommentEntity> updateEntity(
+      String documentID, PostCommentEntity value);
+  @override
   Future<PostCommentModel> add(PostCommentModel value);
+  @override
   Future<void> delete(PostCommentModel value);
-  Future<PostCommentModel?> get(String? id, { Function(Exception)? onError });
+  @override
+  Future<PostCommentModel?> get(String? id, {Function(Exception)? onError});
+  @override
   Future<PostCommentModel> update(PostCommentModel value);
 
-  Stream<List<PostCommentModel?>> values({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery });
-  Stream<List<PostCommentModel?>> valuesWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery });
-  Future<List<PostCommentModel?>> valuesList({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery });
-  Future<List<PostCommentModel?>> valuesListWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery });
+  @override
+  Stream<List<PostCommentModel?>> values(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery});
+  @override
+  Stream<List<PostCommentModel?>> valuesWithDetails(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery});
+  @override
+  Future<List<PostCommentModel?>> valuesList(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery});
+  @override
+  Future<List<PostCommentModel?>> valuesListWithDetails(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery});
 
-  StreamSubscription<List<PostCommentModel?>> listen(PostCommentModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
-  StreamSubscription<List<PostCommentModel?>> listenWithDetails(PostCommentModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
-  StreamSubscription<PostCommentModel?> listenTo(String documentId, PostCommentChanged changed, {PostCommentErrorHandler? errorHandler});
+  @override
+  StreamSubscription<List<PostCommentModel?>> listen(
+      PostCommentModelTrigger trigger,
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery});
+  @override
+  StreamSubscription<List<PostCommentModel?>> listenWithDetails(
+      PostCommentModelTrigger trigger,
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery});
+  @override
+  StreamSubscription<PostCommentModel?> listenTo(
+      String documentId, PostCommentChanged changed,
+      {PostCommentErrorHandler? errorHandler});
+  @override
   void flush();
-  
+
+  @override
   String? timeStampToString(dynamic timeStamp);
 
+  @override
   dynamic getSubCollection(String documentId, String name);
-  Future<PostCommentModel?> changeValue(String documentId, String fieldName, num changeByThisValue);
+  @override
+  Future<PostCommentModel?> changeValue(
+      String documentId, String fieldName, num changeByThisValue);
 
+  @override
   Future<void> deleteAll();
 }
-
-

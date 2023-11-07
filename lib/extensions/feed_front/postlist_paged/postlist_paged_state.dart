@@ -8,34 +8,68 @@ import 'package:collection/collection.dart';
 enum PostListPagedStatus { initial, success, failure }
 
 class PostCommentContainer extends Equatable {
-  final PostCommentModel ?postComment;
-  final String ?dateTime;
-  final MemberPublicInfoModel ?member;
-  final String ?comment;
-  final bool ?thisMemberLikesThisComment;
+  final PostCommentModel? postComment;
+  final String? dateTime;
+  final MemberPublicInfoModel? member;
+  final String? comment;
+  final bool? thisMemberLikesThisComment;
 
   // comments on this comment
   final List<PostCommentContainer?>? postCommentContainer;
 
-  PostCommentContainer({this.postComment, this.dateTime, this.member, this.comment, this.thisMemberLikesThisComment, this.postCommentContainer});
+  PostCommentContainer(
+      {this.postComment,
+      this.dateTime,
+      this.member,
+      this.comment,
+      this.thisMemberLikesThisComment,
+      this.postCommentContainer});
 
-  PostCommentContainer copyWith({PostCommentModel? postComment, String? dateTime, MemberPublicInfoModel? member, String? comment, bool? thisMemberLikesThisComment, List<PostCommentContainer>? postCommentContainer}) {
-    return PostCommentContainer(postComment: postComment ?? this.postComment, dateTime: dateTime ?? this.dateTime, member: member ?? this.member, comment : comment ?? this.comment, thisMemberLikesThisComment: thisMemberLikesThisComment ?? this.thisMemberLikesThisComment, postCommentContainer: postCommentContainer ?? this.postCommentContainer);
+  PostCommentContainer copyWith(
+      {PostCommentModel? postComment,
+      String? dateTime,
+      MemberPublicInfoModel? member,
+      String? comment,
+      bool? thisMemberLikesThisComment,
+      List<PostCommentContainer>? postCommentContainer}) {
+    return PostCommentContainer(
+        postComment: postComment ?? this.postComment,
+        dateTime: dateTime ?? this.dateTime,
+        member: member ?? this.member,
+        comment: comment ?? this.comment,
+        thisMemberLikesThisComment:
+            thisMemberLikesThisComment ?? this.thisMemberLikesThisComment,
+        postCommentContainer:
+            postCommentContainer ?? this.postCommentContainer);
   }
 
   @override
-  List<Object?> get props => [postComment, dateTime, member, comment, thisMemberLikesThisComment, postCommentContainer];
+  List<Object?> get props => [
+        postComment,
+        dateTime,
+        member,
+        comment,
+        thisMemberLikesThisComment,
+        postCommentContainer
+      ];
 
   @override
-  bool operator == (Object other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
-          other is PostCommentContainer &&
-              runtimeType == other.runtimeType &&
-              postComment == other.postComment &&
-              dateTime == other.dateTime &&
-              member == other.member &&
-              comment == other.comment &&
-              thisMemberLikesThisComment == other.thisMemberLikesThisComment;
+      other is PostCommentContainer &&
+          runtimeType == other.runtimeType &&
+          postComment == other.postComment &&
+          dateTime == other.dateTime &&
+          member == other.member &&
+          comment == other.comment &&
+          thisMemberLikesThisComment == other.thisMemberLikesThisComment;
+
+  @override
+  int get hashCode =>
+      postComment.hashCode ^
+      dateTime.hashCode ^
+      member.hashCode ^
+      comment.hashCode & thisMemberLikesThisComment.hashCode;
 }
 
 class PostDetails extends Equatable {
@@ -43,23 +77,37 @@ class PostDetails extends Equatable {
   final LikeType? thisMembersLikeType;
   final PostModel postModel;
 
-  PostDetails({this.comments, this.thisMembersLikeType, required this.postModel});
+  PostDetails(
+      {this.comments, this.thisMembersLikeType, required this.postModel});
 
-  PostDetails copyWith({List<PostCommentContainer>? comments, LikeType? thisMembersLikeType, PostModel? postModel}) {
-    return PostDetails(comments: comments ?? this.comments, thisMembersLikeType: thisMembersLikeType ?? this.thisMembersLikeType, postModel: postModel ?? this.postModel);
+  PostDetails copyWith(
+      {List<PostCommentContainer>? comments,
+      LikeType? thisMembersLikeType,
+      PostModel? postModel}) {
+    return PostDetails(
+        comments: comments ?? this.comments,
+        thisMembersLikeType: thisMembersLikeType ?? this.thisMembersLikeType,
+        postModel: postModel ?? this.postModel);
   }
 
   @override
   List<Object?> get props => [comments, postModel, thisMembersLikeType];
 
   @override
-  bool operator == (Object other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
-          other is PostDetails &&
-              runtimeType == other.runtimeType &&
-              comments == other.comments &&
-              postModel == other.postModel &&
-              thisMembersLikeType == other.thisMembersLikeType;
+      other is PostDetails &&
+          runtimeType == other.runtimeType &&
+          comments == other.comments &&
+          postModel == other.postModel &&
+          thisMembersLikeType == other.thisMembersLikeType;
+
+  @override
+  int get hashCode =>
+      comments.hashCode ^
+      comments.hashCode ^
+      postModel.hashCode ^
+      thisMembersLikeType.hashCode;
 }
 
 class PostListPagedState extends Equatable {
@@ -88,20 +136,17 @@ class PostListPagedState extends Equatable {
     bool? canBlock,
   }) {
     return PostListPagedState(
-      status: status ?? this.status,
-      values: values ?? this.values,
-      hasReachedMax: hasReachedMax ?? this.hasReachedMax,
-      lastRowFetched: lastRowFetched?? this.lastRowFetched,
-      blockedMembers: blockedMembers ?? this.blockedMembers,
-      canBlock: canBlock ?? this.canBlock
-    );
+        status: status ?? this.status,
+        values: values ?? this.values,
+        hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+        lastRowFetched: lastRowFetched ?? this.lastRowFetched,
+        blockedMembers: blockedMembers ?? this.blockedMembers,
+        canBlock: canBlock ?? this.canBlock);
   }
 
-  PostListPagedState replacePost(
-      PostDetails value
-  ) {
+  PostListPagedState replacePost(PostDetails value) {
     List<PostDetails> newValues = [];
-    for (int i = 0 ; i < values.length ; i++) {
+    for (int i = 0; i < values.length; i++) {
       if (values[i].postModel.documentID != value.postModel.documentID) {
         newValues.add(values[i]);
       } else {
@@ -118,13 +163,21 @@ class PostListPagedState extends Equatable {
   List<Object?> get props => [status, values, hasReachedMax, lastRowFetched];
 
   @override
-  bool operator == (Object other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
-          other is PostListPagedState &&
-              runtimeType == other.runtimeType &&
-              status == other.status &&
-              ListEquality().equals(values, other.values) &&
-              ListEquality().equals(blockedMembers, other.blockedMembers) &&
-              hasReachedMax == other.hasReachedMax &&
-              lastRowFetched == other.lastRowFetched;
+      other is PostListPagedState &&
+          runtimeType == other.runtimeType &&
+          status == other.status &&
+          ListEquality().equals(values, other.values) &&
+          ListEquality().equals(blockedMembers, other.blockedMembers) &&
+          hasReachedMax == other.hasReachedMax &&
+          lastRowFetched == other.lastRowFetched;
+
+  @override
+  int get hashCode =>
+      status.hashCode ^
+      values.hashCode ^
+      blockedMembers.hashCode ^
+      hasReachedMax.hashCode ^
+      lastRowFetched.hashCode;
 }

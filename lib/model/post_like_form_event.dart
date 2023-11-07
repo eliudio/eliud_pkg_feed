@@ -17,7 +17,6 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:eliud_pkg_feed/model/model_export.dart';
 
-
 @immutable
 abstract class PostLikeFormEvent extends Equatable {
   const PostLikeFormEvent();
@@ -26,15 +25,13 @@ abstract class PostLikeFormEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class InitialiseNewPostLikeFormEvent extends PostLikeFormEvent {
-}
-
+class InitialiseNewPostLikeFormEvent extends PostLikeFormEvent {}
 
 class InitialisePostLikeFormEvent extends PostLikeFormEvent {
   final PostLikeModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   InitialisePostLikeFormEvent({this.value});
 }
@@ -43,7 +40,7 @@ class InitialisePostLikeFormNoLoadEvent extends PostLikeFormEvent {
   final PostLikeModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   InitialisePostLikeFormNoLoadEvent({this.value});
 }
@@ -54,7 +51,7 @@ class ChangedPostLikeDocumentID extends PostLikeFormEvent {
   ChangedPostLikeDocumentID({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostLikeDocumentID{ value: $value }';
@@ -66,7 +63,7 @@ class ChangedPostLikePostId extends PostLikeFormEvent {
   ChangedPostLikePostId({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostLikePostId{ value: $value }';
@@ -78,7 +75,7 @@ class ChangedPostLikePostCommentId extends PostLikeFormEvent {
   ChangedPostLikePostCommentId({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostLikePostCommentId{ value: $value }';
@@ -90,7 +87,7 @@ class ChangedPostLikeMemberId extends PostLikeFormEvent {
   ChangedPostLikeMemberId({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostLikeMemberId{ value: $value }';
@@ -102,7 +99,7 @@ class ChangedPostLikeTimestamp extends PostLikeFormEvent {
   ChangedPostLikeTimestamp({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostLikeTimestamp{ value: $value }';
@@ -114,7 +111,7 @@ class ChangedPostLikeAppId extends PostLikeFormEvent {
   ChangedPostLikeAppId({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostLikeAppId{ value: $value }';
@@ -126,9 +123,8 @@ class ChangedPostLikeLikeType extends PostLikeFormEvent {
   ChangedPostLikeLikeType({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostLikeLikeType{ value: $value }';
 }
-

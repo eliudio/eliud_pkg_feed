@@ -24,13 +24,11 @@ abstract class FeedFrontComponentEvent extends Equatable {
 class FetchFeedFrontComponent extends FeedFrontComponentEvent {
   final String? id;
 
-  FetchFeedFrontComponent({ this.id });
+  FetchFeedFrontComponent({this.id});
 }
 
 class FeedFrontComponentUpdated extends FeedFrontComponentEvent {
   final FeedFrontModel value;
 
-  FeedFrontComponentUpdated({ required this.value });
+  FeedFrontComponentUpdated({required this.value});
 }
-
-

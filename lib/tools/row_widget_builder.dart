@@ -46,7 +46,8 @@ class RowWidgetBuilder {
     List<Widget> mappedIntoRows = rows
         .map((v) => Container(
             height: rowHeight,
-            child: Container(height: rowHeight + rowSpace, child: Row(children: v))))
+            child: Container(
+                height: rowHeight + rowSpace, child: Row(children: v))))
         .toList();
     return Column(children: mappedIntoRows);
   }

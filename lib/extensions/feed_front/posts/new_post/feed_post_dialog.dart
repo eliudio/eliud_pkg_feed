@@ -23,7 +23,7 @@ class FeedPostDialog extends StatefulWidget {
   final FeedPostFormEvent initialiseEvent;
 
   FeedPostDialog(
-      {Key? key,
+      {super.key,
       required this.app,
       required this.feedId,
       required this.postListPagedBloc,
@@ -31,8 +31,7 @@ class FeedPostDialog extends StatefulWidget {
       required this.currentMemberId,
       required this.photoURL,
       required this.pageContextInfo,
-      required this.initialiseEvent})
-      : super(key: key);
+      required this.initialiseEvent});
 
   static void open(
       AppModel app,
@@ -44,9 +43,9 @@ class FeedPostDialog extends StatefulWidget {
       eliud_router.PageContextInfo pageContextInfo,
       FeedPostFormEvent initialiseEvent) {
     var postListPagedBloc = BlocProvider.of<PostListPagedBloc>(context);
-    openWidgetDialog(app, context, app.documentID + '/_feed',
+    openWidgetDialog(app, context, '${app.documentID}/_feed',
         child: FeedPostDialog(
-          app: app,
+            app: app,
             feedId: feedId,
             postListPagedBloc: postListPagedBloc,
             memberId: memberId,
@@ -57,7 +56,8 @@ class FeedPostDialog extends StatefulWidget {
   }
 
   @override
-  _FeedPostDialogState createState() => _FeedPostDialogState(postListPagedBloc);
+  State<FeedPostDialog> createState() =>
+      _FeedPostDialogState(postListPagedBloc);
 }
 
 class _FeedPostDialogState extends State<FeedPostDialog> {
@@ -72,22 +72,17 @@ class _FeedPostDialogState extends State<FeedPostDialog> {
         builder: (context, accessState) {
       if (accessState is LoggedIn) {
         return BlocProvider<FeedPostFormBloc>(
-            create: (context) => FeedPostFormBloc(
-                app,
-                postListPagedBloc,
-                accessState.member.documentID,
-                widget.feedId,
-                accessState)
+            create: (context) => FeedPostFormBloc(app, postListPagedBloc,
+                accessState.member.documentID, widget.feedId, accessState)
               ..add(widget.initialiseEvent),
             child: MyFeedPostForm(
-              app,
-              widget.feedId,
-              widget.memberId,
-              widget.currentMemberId,
-              widget.photoURL,
-              widget.pageContextInfo,
-              widget.initialiseEvent is InitialiseNewFeedPostFormEvent
-            ));
+                app,
+                widget.feedId,
+                widget.memberId,
+                widget.currentMemberId,
+                widget.photoURL,
+                widget.pageContextInfo,
+                widget.initialiseEvent is InitialiseNewFeedPostFormEvent));
       } else {
         return StyleRegistry.registry()
             .styleWithApp(app)

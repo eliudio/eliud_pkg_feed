@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:eliud_pkg_medium/tools/media_helper.dart';
 
 class PostMediaHelper {
-  static Widget staggeredMemberMediumModelFromPostMedia(BuildContext context, AppModel app, List<MemberMediumContainerModel> media,
+  static Widget staggeredMemberMediumModelFromPostMedia(BuildContext context,
+      AppModel app, List<MemberMediumContainerModel> media,
       {Function(int index)? deleteAction, Function(int index)? viewAction}) {
     var mmm = media.map((pm) => pm.memberMedium!).toList();
     return MediaHelper.staggeredMemberMediumModel(app, context, mmm,

@@ -29,6 +29,9 @@ class ProfileError extends ProfileState {
       other is ProfileError &&
           runtimeType == other.runtimeType &&
           message == other.message;
+
+  @override
+  int get hashCode => message.hashCode;
 }
 
 // Startup: menu has not been initialised yet and so we should show a "loading indicator" or something
@@ -45,6 +48,9 @@ class ProfileStateUninitialized extends ProfileState {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is ProfileStateUninitialized && runtimeType == other.runtimeType;
+
+  @override
+  int get hashCode => 0;
 }
 
 abstract class ProfileInitialised extends ProfileState {
@@ -120,13 +126,13 @@ class LoggedInWatchingMyProfile extends LoggedInProfileInitialized {
       double? uploadingBGProgress,
       double? uploadingProfilePhotoProgress}) {
     return LoggedInWatchingMyProfile(
-      feedId: this.feedId,
-      app: this.app,
+      feedId: feedId,
+      app: app,
       currentMemberProfileModel: newMemberProfileModel,
-      currentMember: this.currentMember,
-      postAccessibleByGroup: this.postAccessibleByGroup,
-      postAccessibleByMembers: this.postAccessibleByMembers,
-      onlyMyPosts: this.onlyMyPosts,
+      currentMember: currentMember,
+      postAccessibleByGroup: postAccessibleByGroup,
+      postAccessibleByMembers: postAccessibleByMembers,
+      onlyMyPosts: onlyMyPosts,
       uploadingBGProgress: uploadingBGProgress == null
           ? uploadingBGProgress
           : this.uploadingBGProgress,
@@ -136,22 +142,20 @@ class LoggedInWatchingMyProfile extends LoggedInProfileInitialized {
     );
   }
 
+  @override
   LoggedInWatchingMyProfile progressWith(
       {double? uploadingBGProgress, double? uploadingProfilePhotoProgress}) {
     return LoggedInWatchingMyProfile(
-      feedId: this.feedId,
-      app: this.app,
-      currentMemberProfileModel: this.currentMemberProfileModel,
-      currentMember: this.currentMember,
-      postAccessibleByGroup: this.postAccessibleByGroup,
-      postAccessibleByMembers: this.postAccessibleByMembers,
-      onlyMyPosts: this.onlyMyPosts,
-      uploadingBGProgress: uploadingBGProgress == null
-          ? this.uploadingBGProgress
-          : uploadingBGProgress,
-      uploadingProfilePhotoProgress: uploadingProfilePhotoProgress == null
-          ? this.uploadingProfilePhotoProgress
-          : uploadingProfilePhotoProgress,
+      feedId: feedId,
+      app: app,
+      currentMemberProfileModel: currentMemberProfileModel,
+      currentMember: currentMember,
+      postAccessibleByGroup: postAccessibleByGroup,
+      postAccessibleByMembers: postAccessibleByMembers,
+      onlyMyPosts: onlyMyPosts,
+      uploadingBGProgress: uploadingBGProgress ?? this.uploadingBGProgress,
+      uploadingProfilePhotoProgress:
+          uploadingProfilePhotoProgress ?? this.uploadingProfilePhotoProgress,
     );
   }
 
@@ -201,7 +205,8 @@ class LoggedInWatchingMyProfile extends LoggedInProfileInitialized {
           currentMemberProfileModel == other.currentMemberProfileModel &&
           currentMember == other.currentMember &&
           postAccessibleByGroup == other.postAccessibleByGroup &&
-          ListEquality().equals(postAccessibleByMembers, other.postAccessibleByMembers) &&
+          ListEquality()
+              .equals(postAccessibleByMembers, other.postAccessibleByMembers) &&
           uploadingBGProgress == other.uploadingBGProgress &&
           uploadingProfilePhotoProgress == other.uploadingProfilePhotoProgress;
 
@@ -209,6 +214,17 @@ class LoggedInWatchingMyProfile extends LoggedInProfileInitialized {
   String? watchingThisMember() {
     return currentMember.documentID;
   }
+
+  @override
+  int get hashCode =>
+      feedId.hashCode ^
+      app.hashCode ^
+      currentMemberProfileModel.hashCode ^
+      currentMember.hashCode ^
+      postAccessibleByGroup.hashCode ^
+      postAccessibleByMembers.hashCode ^
+      uploadingBGProgress.hashCode ^
+      uploadingProfilePhotoProgress.hashCode;
 }
 
 class LoggedInAndWatchingOtherProfile extends LoggedInProfileInitialized {
@@ -233,8 +249,8 @@ class LoggedInAndWatchingOtherProfile extends LoggedInProfileInitialized {
             app,
             currentMemberProfileModel,
             currentMember,
-      postAccessibleByGroup,
-      postAccessibleByMembers,
+            postAccessibleByGroup,
+            postAccessibleByMembers,
             uploadingBGProgress,
             uploadingProfilePhotoProgress);
 
@@ -268,8 +284,8 @@ class LoggedInAndWatchingOtherProfile extends LoggedInProfileInitialized {
         app,
         currentMemberProfileModel,
         currentMember,
-    postAccessibleByGroup,
-    postAccessibleByMembers,
+        postAccessibleByGroup,
+        postAccessibleByMembers,
         iFollowThisPerson,
         feedProfileModel,
         feedPublicInfoModel,
@@ -287,7 +303,8 @@ class LoggedInAndWatchingOtherProfile extends LoggedInProfileInitialized {
           currentMemberProfileModel == other.currentMemberProfileModel &&
           currentMember == other.currentMember &&
           postAccessibleByGroup == other.postAccessibleByGroup &&
-          ListEquality().equals(postAccessibleByMembers, other.postAccessibleByMembers) &&
+          ListEquality()
+              .equals(postAccessibleByMembers, other.postAccessibleByMembers) &&
           iFollowThisPerson == other.iFollowThisPerson &&
           feedProfileModel == other.feedProfileModel &&
           feedPublicInfoModel == other.feedPublicInfoModel &&
@@ -299,26 +316,38 @@ class LoggedInAndWatchingOtherProfile extends LoggedInProfileInitialized {
     return feedPublicInfoModel.documentID;
   }
 
+  @override
   LoggedInAndWatchingOtherProfile progressWith(
       {double? uploadingBGProgress, double? uploadingProfilePhotoProgress}) {
     return LoggedInAndWatchingOtherProfile(
-      feedId: this.feedId,
-      app: this.app,
-      currentMemberProfileModel: this.currentMemberProfileModel,
-      currentMember: this.currentMember,
-      postAccessibleByGroup: this.postAccessibleByGroup,
-      postAccessibleByMembers: this.postAccessibleByMembers,
-      feedProfileModel: this.feedProfileModel,
-      feedPublicInfoModel: this.feedPublicInfoModel,
-      iFollowThisPerson: this.iFollowThisPerson,
-      uploadingBGProgress: uploadingBGProgress == null
-          ? this.uploadingBGProgress
-          : uploadingBGProgress,
-      uploadingProfilePhotoProgress: uploadingProfilePhotoProgress == null
-          ? this.uploadingProfilePhotoProgress
-          : uploadingProfilePhotoProgress,
+      feedId: feedId,
+      app: app,
+      currentMemberProfileModel: currentMemberProfileModel,
+      currentMember: currentMember,
+      postAccessibleByGroup: postAccessibleByGroup,
+      postAccessibleByMembers: postAccessibleByMembers,
+      feedProfileModel: feedProfileModel,
+      feedPublicInfoModel: feedPublicInfoModel,
+      iFollowThisPerson: iFollowThisPerson,
+      uploadingBGProgress: uploadingBGProgress ?? this.uploadingBGProgress,
+      uploadingProfilePhotoProgress:
+          uploadingProfilePhotoProgress ?? this.uploadingProfilePhotoProgress,
     );
   }
+
+  @override
+  int get hashCode =>
+      feedId.hashCode ^
+      app.hashCode ^
+      currentMemberProfileModel.hashCode ^
+      currentMember.hashCode ^
+      postAccessibleByGroup.hashCode ^
+      postAccessibleByMembers.hashCode ^
+      feedProfileModel.hashCode ^
+      feedPublicInfoModel.hashCode ^
+      iFollowThisPerson.hashCode ^
+      uploadingBGProgress.hashCode ^
+      uploadingProfilePhotoProgress.hashCode;
 }
 
 class NotLoggedInWatchingSomeone extends ProfileInitialised {
@@ -391,18 +420,22 @@ class NotLoggedInWatchingSomeone extends ProfileInitialised {
   NotLoggedInWatchingSomeone progressWith(
       {double? uploadingBGProgress, double? uploadingProfilePhotoProgress}) {
     return NotLoggedInWatchingSomeone(
-      feedId: this.feedId,
-      app: this.app,
-      feedProfileModel: this.feedProfileModel,
-      feedPublicInfoModel: this.feedPublicInfoModel,
-      uploadingBGProgress: uploadingBGProgress == null
-          ? this.uploadingBGProgress
-          : uploadingBGProgress,
-      uploadingProfilePhotoProgress: uploadingProfilePhotoProgress == null
-          ? this.uploadingProfilePhotoProgress
-          : uploadingProfilePhotoProgress,
+      feedId: feedId,
+      app: app,
+      feedProfileModel: feedProfileModel,
+      feedPublicInfoModel: feedPublicInfoModel,
+      uploadingBGProgress: uploadingBGProgress ?? this.uploadingBGProgress,
+      uploadingProfilePhotoProgress:
+          uploadingProfilePhotoProgress ?? this.uploadingProfilePhotoProgress,
     );
   }
+
+  @override
+  int get hashCode =>
+      feedProfileModel.hashCode ^
+      feedPublicInfoModel.hashCode ^
+      uploadingBGProgress.hashCode ^
+      uploadingProfilePhotoProgress.hashCode;
 }
 
 class WatchingPublicProfile extends ProfileInitialised {
@@ -413,6 +446,7 @@ class WatchingPublicProfile extends ProfileInitialised {
       required double? uploadingProfilePhotoProgress})
       : super(feedId, app, uploadingBGProgress, uploadingProfilePhotoProgress);
 
+  @override
   String? memberId() => null;
 
   @override
@@ -454,9 +488,16 @@ class WatchingPublicProfile extends ProfileInitialised {
   ProfileInitialised progressWith(
       {double? uploadingBGProgress, double? uploadingProfilePhotoProgress}) {
     return WatchingPublicProfile(
-        feedId: this.feedId,
-        app: this.app,
+        feedId: feedId,
+        app: app,
         uploadingBGProgress: this.uploadingBGProgress,
         uploadingProfilePhotoProgress: this.uploadingProfilePhotoProgress);
   }
+
+  @override
+  int get hashCode =>
+      feedId.hashCode ^
+      app.hashCode ^
+      uploadingBGProgress.hashCode ^
+      uploadingProfilePhotoProgress.hashCode;
 }

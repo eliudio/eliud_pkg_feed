@@ -8,23 +8,26 @@ import 'package:eliud_pkg_feed/model/labelled_body_component_model.dart';
 
 import '../../model/feed_menu_entity.dart';
 
-class FeedMenuBloc extends ExtEditorBaseBloc<FeedMenuModel, LabelledBodyComponentModel, FeedMenuEntity> {
-
+class FeedMenuBloc extends ExtEditorBaseBloc<FeedMenuModel,
+    LabelledBodyComponentModel, FeedMenuEntity> {
   FeedMenuBloc(String appId, EditorFeedback feedback)
       : super(appId, feedMenuRepository(appId: appId)!, feedback);
 
   @override
-  FeedMenuModel addItem(FeedMenuModel model, LabelledBodyComponentModel newItem) {
-    List<LabelledBodyComponentModel> newItems = model.bodyComponentsCurrentMember == null
-        ? []
-        : model.bodyComponentsCurrentMember!.map((e) => e).toList();
+  FeedMenuModel addItem(
+      FeedMenuModel model, LabelledBodyComponentModel newItem) {
+    List<LabelledBodyComponentModel> newItems =
+        model.bodyComponentsCurrentMember == null
+            ? []
+            : model.bodyComponentsCurrentMember!.map((e) => e).toList();
     newItems.add(newItem);
-    var newModel = model.copyWith(bodyComponentsCurrentMember:  newItems);
+    var newModel = model.copyWith(bodyComponentsCurrentMember: newItems);
     return newModel;
   }
 
   @override
-  FeedMenuModel deleteItem(FeedMenuModel model, LabelledBodyComponentModel deleteItem) {
+  FeedMenuModel deleteItem(
+      FeedMenuModel model, LabelledBodyComponentModel deleteItem) {
     var newItems = <LabelledBodyComponentModel>[];
     for (var item in model.bodyComponentsCurrentMember!) {
       if (item != deleteItem) {
@@ -46,16 +49,18 @@ class FeedMenuBloc extends ExtEditorBaseBloc<FeedMenuModel, LabelledBodyComponen
   }
 
   @override
-  FeedMenuModel setDefaultValues(FeedMenuModel t, StorageConditionsModel conditions) {
-    return t.copyWith(
-        conditions: t.conditions ?? conditions);
+  FeedMenuModel setDefaultValues(
+      FeedMenuModel t, StorageConditionsModel conditions) {
+    return t.copyWith(conditions: t.conditions ?? conditions);
   }
 
   @override
-  FeedMenuModel updateItem(FeedMenuModel model, LabelledBodyComponentModel oldItem, LabelledBodyComponentModel newItem) {
-    List<LabelledBodyComponentModel> currentItems = model.bodyComponentsCurrentMember == null
-        ? []
-        : model.bodyComponentsCurrentMember!;
+  FeedMenuModel updateItem(FeedMenuModel model,
+      LabelledBodyComponentModel oldItem, LabelledBodyComponentModel newItem) {
+    List<LabelledBodyComponentModel> currentItems =
+        model.bodyComponentsCurrentMember == null
+            ? []
+            : model.bodyComponentsCurrentMember!;
     var index = currentItems.indexOf(oldItem);
     if (index != -1) {
       var newItems = currentItems.map((e) => e).toList();
@@ -63,7 +68,7 @@ class FeedMenuBloc extends ExtEditorBaseBloc<FeedMenuModel, LabelledBodyComponen
       var newModel = model.copyWith(bodyComponentsCurrentMember: newItems);
       return newModel;
     } else {
-      throw Exception("Could not find " + oldItem.toString());
+      throw Exception("Could not find $oldItem");
     }
   }
 
@@ -71,5 +76,4 @@ class FeedMenuBloc extends ExtEditorBaseBloc<FeedMenuModel, LabelledBodyComponen
   List<LabelledBodyComponentModel> copyOf(List<LabelledBodyComponentModel> ts) {
     return ts.map((e) => e).toList();
   }
-
 }

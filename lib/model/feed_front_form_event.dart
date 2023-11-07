@@ -18,7 +18,6 @@ import 'package:meta/meta.dart';
 import 'package:eliud_core/model/model_export.dart';
 import 'package:eliud_pkg_feed/model/model_export.dart';
 
-
 @immutable
 abstract class FeedFrontFormEvent extends Equatable {
   const FeedFrontFormEvent();
@@ -27,15 +26,13 @@ abstract class FeedFrontFormEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class InitialiseNewFeedFrontFormEvent extends FeedFrontFormEvent {
-}
-
+class InitialiseNewFeedFrontFormEvent extends FeedFrontFormEvent {}
 
 class InitialiseFeedFrontFormEvent extends FeedFrontFormEvent {
   final FeedFrontModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   InitialiseFeedFrontFormEvent({this.value});
 }
@@ -44,7 +41,7 @@ class InitialiseFeedFrontFormNoLoadEvent extends FeedFrontFormEvent {
   final FeedFrontModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   InitialiseFeedFrontFormNoLoadEvent({this.value});
 }
@@ -55,7 +52,7 @@ class ChangedFeedFrontDocumentID extends FeedFrontFormEvent {
   ChangedFeedFrontDocumentID({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedFeedFrontDocumentID{ value: $value }';
@@ -67,7 +64,7 @@ class ChangedFeedFrontAppId extends FeedFrontFormEvent {
   ChangedFeedFrontAppId({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedFeedFrontAppId{ value: $value }';
@@ -79,7 +76,7 @@ class ChangedFeedFrontDescription extends FeedFrontFormEvent {
   ChangedFeedFrontDescription({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedFeedFrontDescription{ value: $value }';
@@ -91,7 +88,7 @@ class ChangedFeedFrontFeed extends FeedFrontFormEvent {
   ChangedFeedFrontFeed({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedFeedFrontFeed{ value: $value }';
@@ -103,10 +100,11 @@ class ChangedFeedFrontBackgroundOverridePosts extends FeedFrontFormEvent {
   ChangedFeedFrontBackgroundOverridePosts({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
-  String toString() => 'ChangedFeedFrontBackgroundOverridePosts{ value: $value }';
+  String toString() =>
+      'ChangedFeedFrontBackgroundOverridePosts{ value: $value }';
 }
 
 class ChangedFeedFrontBackgroundOverrideProfile extends FeedFrontFormEvent {
@@ -115,10 +113,11 @@ class ChangedFeedFrontBackgroundOverrideProfile extends FeedFrontFormEvent {
   ChangedFeedFrontBackgroundOverrideProfile({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
-  String toString() => 'ChangedFeedFrontBackgroundOverrideProfile{ value: $value }';
+  String toString() =>
+      'ChangedFeedFrontBackgroundOverrideProfile{ value: $value }';
 }
 
 class ChangedFeedFrontConditions extends FeedFrontFormEvent {
@@ -127,9 +126,8 @@ class ChangedFeedFrontConditions extends FeedFrontFormEvent {
   ChangedFeedFrontConditions({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedFeedFrontConditions{ value: $value }';
 }
-

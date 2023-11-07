@@ -24,13 +24,11 @@ abstract class PostLikeComponentEvent extends Equatable {
 class FetchPostLikeComponent extends PostLikeComponentEvent {
   final String? id;
 
-  FetchPostLikeComponent({ this.id });
+  FetchPostLikeComponent({this.id});
 }
 
 class PostLikeComponentUpdated extends PostLikeComponentEvent {
   final PostLikeModel value;
 
-  PostLikeComponentUpdated({ required this.value });
+  PostLikeComponentUpdated({required this.value});
 }
-
-

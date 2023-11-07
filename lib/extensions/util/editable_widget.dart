@@ -1,15 +1,14 @@
 import 'package:eliud_pkg_feed/extensions/util/post_helper.dart';
 import 'package:flutter/material.dart';
 
-typedef EditFunction();
+typedef EditFunction = Function();
 
 // Puts an edit button top right on a widget
 class EditableWidget extends StatelessWidget {
   final Widget child;
   final Widget button;
 
-  const EditableWidget({Key? key, required this.child, required this.button})
-      : super(key: key);
+  const EditableWidget({super.key, required this.child, required this.button});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +26,7 @@ class EditableWidget extends StatelessWidget {
 class EditableButton extends StatelessWidget {
   final Widget button;
 
-  const EditableButton({Key? key, required this.button}) : super(key: key);
+  const EditableButton({super.key, required this.button});
 
   @override
   Widget build(BuildContext context) {
@@ -40,10 +39,10 @@ Widget getEditIcon({EditAction? onPressed}) {
   var pen = Image.asset("assets/images/segoshvishna.fiverr.com/pen128.png",
       package: "eliud_pkg_feed");
   double size = 33;
-  var _container = Container(
+  var container = Container(
       height: size,
       width: size,
-      decoration: new BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white,
         shape: BoxShape.circle,
         border: Border.all(color: Colors.white, width: 8),
@@ -56,10 +55,8 @@ Widget getEditIcon({EditAction? onPressed}) {
       ),
       child: pen);
   if (onPressed != null) {
-    return GestureDetector(
-        child: _container,
-        onTap: onPressed);
+    return GestureDetector(child: container, onTap: onPressed);
   } else {
-    return _container;
+    return container;
   }
 }

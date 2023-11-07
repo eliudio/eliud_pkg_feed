@@ -20,30 +20,32 @@ Widget selectFeedWidget(
     FeedModel? feed,
     Function(dynamic selected) selectedCallback) {
   return SelectWidget<FeedModel>(
-      app: app,
-      currentlySelected: feed,
-      title: 'Feed',
-      selectTitle: 'Select feed',
-      displayItemFunction: (item) => text(
-          app, context, item.documentID + ' ' + (item.description ?? '?')),
-      blocProviderProvider: () => BlocProvider<FeedListBloc>(
-            create: (context) => FeedListBloc(
-              feedRepository: feedRepository(appId: app.documentID)!,
-            )..add(LoadFeedList()),
-          ),
-      blocBuilder: (contentsLoaded, contentsNotLoaded) {
-        return BlocBuilder<FeedListBloc, FeedListState>(
-            builder: (context, state) {
-          if ((state is FeedListLoaded) && (state.values != null)) {
-            return contentsLoaded(context, state.values!);
-          } else {
-            return contentsNotLoaded(context, );
-          }
-        });
-      },
-      selectedCallback: selectedCallback,
-      addCallback: () => FeedDashboard.addFeed(app, context),
-      deleteCallback: null,
-      updateCallback: (item) => FeedDashboard.updateFeed(app, context, item),
+    app: app,
+    currentlySelected: feed,
+    title: 'Feed',
+    selectTitle: 'Select feed',
+    displayItemFunction: (item) =>
+        text(app, context, item.documentID + ' ' + (item.description ?? '?')),
+    blocProviderProvider: () => BlocProvider<FeedListBloc>(
+      create: (context) => FeedListBloc(
+        feedRepository: feedRepository(appId: app.documentID)!,
+      )..add(LoadFeedList()),
+    ),
+    blocBuilder: (contentsLoaded, contentsNotLoaded) {
+      return BlocBuilder<FeedListBloc, FeedListState>(
+          builder: (context, state) {
+        if ((state is FeedListLoaded) && (state.values != null)) {
+          return contentsLoaded(context, state.values!);
+        } else {
+          return contentsNotLoaded(
+            context,
+          );
+        }
+      });
+    },
+    selectedCallback: selectedCallback,
+    addCallback: () => FeedDashboard.addFeed(app, context),
+    deleteCallback: null,
+    updateCallback: (item) => FeedDashboard.updateFeed(app, context, item),
   );
 }

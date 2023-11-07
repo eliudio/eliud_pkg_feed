@@ -13,45 +13,102 @@
 
 */
 
-
-
 import 'package:eliud_pkg_feed/model/model_export.dart';
 import 'package:eliud_pkg_feed/model/entity_export.dart';
-
 
 import 'dart:async';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 import 'package:eliud_core/core/base/repository_base.dart';
 
-typedef PostModelTrigger(List<PostModel?> list);
-typedef PostChanged(PostModel? value);
-typedef PostErrorHandler(o, e);
+typedef PostModelTrigger = Function(List<PostModel?> list);
+typedef PostChanged = Function(PostModel? value);
+typedef PostErrorHandler = Function(dynamic o, dynamic e);
 
 abstract class PostRepository extends RepositoryBase<PostModel, PostEntity> {
+  @override
   Future<PostEntity> addEntity(String documentID, PostEntity value);
+  @override
   Future<PostEntity> updateEntity(String documentID, PostEntity value);
+  @override
   Future<PostModel> add(PostModel value);
+  @override
   Future<void> delete(PostModel value);
-  Future<PostModel?> get(String? id, { Function(Exception)? onError });
+  @override
+  Future<PostModel?> get(String? id, {Function(Exception)? onError});
+  @override
   Future<PostModel> update(PostModel value);
 
-  Stream<List<PostModel?>> values({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery });
-  Stream<List<PostModel?>> valuesWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery });
-  Future<List<PostModel?>> valuesList({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery });
-  Future<List<PostModel?>> valuesListWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery });
+  @override
+  Stream<List<PostModel?>> values(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery});
+  @override
+  Stream<List<PostModel?>> valuesWithDetails(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery});
+  @override
+  Future<List<PostModel?>> valuesList(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery});
+  @override
+  Future<List<PostModel?>> valuesListWithDetails(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery});
 
-  StreamSubscription<List<PostModel?>> listen(PostModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
-  StreamSubscription<List<PostModel?>> listenWithDetails(PostModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
-  StreamSubscription<PostModel?> listenTo(String documentId, PostChanged changed, {PostErrorHandler? errorHandler});
+  @override
+  StreamSubscription<List<PostModel?>> listen(PostModelTrigger trigger,
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery});
+  @override
+  StreamSubscription<List<PostModel?>> listenWithDetails(
+      PostModelTrigger trigger,
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery});
+  @override
+  StreamSubscription<PostModel?> listenTo(
+      String documentId, PostChanged changed,
+      {PostErrorHandler? errorHandler});
+  @override
   void flush();
-  
+
+  @override
   String? timeStampToString(dynamic timeStamp);
 
+  @override
   dynamic getSubCollection(String documentId, String name);
-  Future<PostModel?> changeValue(String documentId, String fieldName, num changeByThisValue);
+  @override
+  Future<PostModel?> changeValue(
+      String documentId, String fieldName, num changeByThisValue);
 
+  @override
   Future<void> deleteAll();
 }
-
-

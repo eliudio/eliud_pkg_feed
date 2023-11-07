@@ -4,6 +4,7 @@ import 'package:eliud_core/core/blocs/access/state/access_state.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_pkg_feed/extensions/feed_menu/tabbed_feed_menu_items.dart';
 import 'package:eliud_pkg_feed/extensions/header/header.dart';
+import 'package:eliud_pkg_feed/model/labelled_body_component_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
@@ -16,14 +17,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-
 class FeedMenu extends StatefulWidget {
   final AppModel app;
   final FeedMenuModel feedMenuModel;
 
   FeedMenu(this.app, this.feedMenuModel);
 
-  _FeedMenuState createState() => _FeedMenuState();
+  @override
+  State<FeedMenu> createState() => _FeedMenuState();
 }
 
 class _FeedMenuState extends State<FeedMenu>
@@ -32,45 +33,58 @@ class _FeedMenuState extends State<FeedMenu>
 
   @override
   Widget build(BuildContext context) {
-    if (widget.feedMenuModel.feedFront == null) return text(widget.app, context, "feedMenuModel.feedFront == null");
+    if (widget.feedMenuModel.feedFront == null) {
+      return text(widget.app, context, "feedMenuModel.feedFront == null");
+    }
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (context, accessState) {
-          if (accessState is AccessDetermined) {
-            var pageContextInfo = eliudrouter.Router.getPageContextInfo(context,);
-            var parameters = pageContextInfo.parameters;
-            bool otherMember = false;
-            if (parameters != null) {
-              var openingForMemberId = parameters[SwitchMember.switchMemberFeedPageParameter];
-              if (openingForMemberId != accessState.getMember()!.documentID) {
-                otherMember = true;
-              }
+      if (accessState is AccessDetermined) {
+        var pageContextInfo = eliudrouter.Router.getPageContextInfo(
+          context,
+        );
+        var parameters = pageContextInfo.parameters;
+        bool otherMember = false;
+        if (parameters != null) {
+          var openingForMemberId =
+              parameters[SwitchMember.switchMemberFeedPageParameter];
+          if (openingForMemberId != accessState.getMember()!.documentID) {
+            otherMember = true;
+          }
+        }
+        return BlocBuilder<ProfileBloc, ProfileState>(
+            builder: (context, state) {
+          if (state is ProfileInitialised) {
+            List<LabelledBodyComponentModel>? items;
+            if (otherMember) {
+              items = widget.feedMenuModel.bodyComponentsOtherMember;
+            } else {
+              items = widget.feedMenuModel.bodyComponentsCurrentMember;
             }
-            return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
-              if (state is ProfileInitialised) {
-                var items;
-                var labels;
-                if (otherMember) {
-                  items = widget.feedMenuModel.bodyComponentsOtherMember;
-                } else {
-                  items = widget.feedMenuModel.bodyComponentsCurrentMember;
-                }
 
-                // add feed and profile
-
-                return ListView(
-                    shrinkWrap: true,
-                    physics: ScrollPhysics(),
-                    children: [
-                    Header(app: widget.app, backgroundOverride: widget.feedMenuModel.backgroundOverride),
-              TabbedFeedMenuItems(widget.app, items, parameters, widget.feedMenuModel.feedFront!),]);
+            // add feed and profile
+            if (items != null) {
+              return ListView(
+                  shrinkWrap: true,
+                  physics: ScrollPhysics(),
+                  children: [
+                    Header(
+                        app: widget.app,
+                        backgroundOverride:
+                            widget.feedMenuModel.backgroundOverride),
+                    TabbedFeedMenuItems(widget.app, items, parameters,
+                        widget.feedMenuModel.feedFront!),
+                  ]);
+            } else {
+              return Container();
+            }
 //                return FeedMenuItems(widget.app, items, labels, parameters);
-              } else {
-                return progressIndicator(widget.app, context);
-              }
-            });
           } else {
             return progressIndicator(widget.app, context);
           }
         });
+      } else {
+        return progressIndicator(widget.app, context);
+      }
+    });
   }
 }

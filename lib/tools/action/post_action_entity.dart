@@ -7,29 +7,40 @@ class PostActionEntity extends ActionEntity {
   static const String label = "Post";
   final String? feedId;
 
-  const PostActionEntity({String? appId, DisplayConditionsEntity? conditions, this.feedId}) : super(appId, conditions: conditions, actionType : label);
+  const PostActionEntity(
+      {String? appId, DisplayConditionsEntity? conditions, this.feedId})
+      : super(appId, conditions: conditions, actionType: label);
 
+  @override
   Map<String, Object?> toDocument() {
     Map<String, Object?> theDocument = HashMap();
     theDocument["appID"] = appID;
     theDocument["actionType"] = actionType;
-    if (feedId != null) theDocument["feedId"] = feedId;
-    else theDocument["feedId"] = null;
-    theDocument['conditions'] = conditions == null ? null : conditions!.toDocument();
+    if (feedId != null) {
+      theDocument["feedId"] = feedId;
+    } else {
+      theDocument["feedId"] = null;
+    }
+    theDocument['conditions'] =
+        conditions == null ? null : conditions!.toDocument();
 
     return theDocument;
   }
 
   static PostActionEntity fromMap(Map snap) {
     return PostActionEntity(
-        appId     : snap["appID"],
-        feedId    : snap["feedId"],
-        conditions: DisplayConditionsEntity.fromMap(snap['conditions']),
+      appId: snap["appID"],
+      feedId: snap["feedId"],
+      conditions: DisplayConditionsEntity.fromMap(snap['conditions']),
     );
   }
 
   @override
-  PostActionEntity copyWith({String? appId, DisplayConditionsEntity? conditions, String? feedId }) {
-    return PostActionEntity(appId: appId ?? this.appID, conditions : conditions ?? this.conditions, feedId: feedId ?? this.feedId);
+  PostActionEntity copyWith(
+      {String? appId, DisplayConditionsEntity? conditions, String? feedId}) {
+    return PostActionEntity(
+        appId: appId ?? appID,
+        conditions: conditions ?? this.conditions,
+        feedId: feedId ?? this.feedId);
   }
 }

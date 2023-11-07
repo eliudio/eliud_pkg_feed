@@ -13,7 +13,6 @@
 
 */
 
-
 import 'package:eliud_pkg_feed/model/post_comment_component_bloc.dart';
 import 'package:eliud_pkg_feed/model/post_comment_component_event.dart';
 import 'package:eliud_pkg_feed/model/post_comment_model.dart';
@@ -31,20 +30,22 @@ abstract class AbstractPostCommentComponent extends StatelessWidget {
   final AppModel app;
   final String postCommentId;
 
-  AbstractPostCommentComponent({Key? key, required this.app, required this.postCommentId}): super(key: key);
+  AbstractPostCommentComponent(
+      {super.key, required this.app, required this.postCommentId});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<PostCommentComponentBloc> (
-          create: (context) => PostCommentComponentBloc(
-            postCommentRepository: postCommentRepository(appId: app.documentID)!)
+    return BlocProvider<PostCommentComponentBloc>(
+      create: (context) => PostCommentComponentBloc(
+          postCommentRepository: postCommentRepository(appId: app.documentID)!)
         ..add(FetchPostCommentComponent(id: postCommentId)),
       child: _postCommentBlockBuilder(context),
     );
   }
 
   Widget _postCommentBlockBuilder(BuildContext context) {
-    return BlocBuilder<PostCommentComponentBloc, PostCommentComponentState>(builder: (context, state) {
+    return BlocBuilder<PostCommentComponentBloc, PostCommentComponentState>(
+        builder: (context, state) {
       if (state is PostCommentComponentLoaded) {
         return yourWidget(context, state.value);
       } else if (state is PostCommentComponentPermissionDenied) {
@@ -57,7 +58,11 @@ abstract class AbstractPostCommentComponent extends StatelessWidget {
         return AlertWidget(app: app, title: 'Error', content: state.message);
       } else {
         return Center(
-          child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().progressIndicatorStyle().progressIndicator(app, context),
+          child: StyleRegistry.registry()
+              .styleWithApp(app)
+              .frontEndStyle()
+              .progressIndicatorStyle()
+              .progressIndicator(app, context),
         );
       }
     });
@@ -65,4 +70,3 @@ abstract class AbstractPostCommentComponent extends StatelessWidget {
 
   Widget yourWidget(BuildContext context, PostCommentModel value);
 }
-

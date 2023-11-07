@@ -30,10 +30,10 @@ class NewPage extends PostListEvent {}
 class AddPostList extends PostListEvent {
   final PostModel? value;
 
-  const AddPostList({ this.value });
+  const AddPostList({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'AddPostList{ value: $value }';
@@ -42,10 +42,10 @@ class AddPostList extends PostListEvent {
 class UpdatePostList extends PostListEvent {
   final PostModel? value;
 
-  const UpdatePostList({ this.value });
+  const UpdatePostList({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'UpdatePostList{ value: $value }';
@@ -54,10 +54,10 @@ class UpdatePostList extends PostListEvent {
 class DeletePostList extends PostListEvent {
   final PostModel? value;
 
-  const DeletePostList({ this.value });
+  const DeletePostList({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'DeletePostList{ value: $value }';
@@ -67,24 +67,24 @@ class PostListUpdated extends PostListEvent {
   final List<PostModel?>? value;
   final bool? mightHaveMore;
 
-  const PostListUpdated({ this.value, this.mightHaveMore });
+  const PostListUpdated({this.value, this.mightHaveMore});
 
   @override
-  List<Object?> get props => [ value, mightHaveMore ];
+  List<Object?> get props => [value, mightHaveMore];
 
   @override
-  String toString() => 'PostListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
+  String toString() =>
+      'PostListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
 }
 
 class PostChangeQuery extends PostListEvent {
   final EliudQuery? newQuery;
 
-  const PostChangeQuery({ required this.newQuery });
+  const PostChangeQuery({required this.newQuery});
 
   @override
-  List<Object?> get props => [ newQuery ];
+  List<Object?> get props => [newQuery];
 
   @override
   String toString() => 'PostChangeQuery{ value: $newQuery }';
 }
-

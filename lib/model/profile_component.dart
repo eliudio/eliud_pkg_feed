@@ -13,7 +13,6 @@
 
 */
 
-
 import 'package:eliud_pkg_feed/model/profile_component_bloc.dart';
 import 'package:eliud_pkg_feed/model/profile_component_event.dart';
 import 'package:eliud_pkg_feed/model/profile_model.dart';
@@ -31,20 +30,22 @@ abstract class AbstractProfileComponent extends StatelessWidget {
   final AppModel app;
   final String profileId;
 
-  AbstractProfileComponent({Key? key, required this.app, required this.profileId}): super(key: key);
+  AbstractProfileComponent(
+      {super.key, required this.app, required this.profileId});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<ProfileComponentBloc> (
-          create: (context) => ProfileComponentBloc(
-            profileRepository: profileRepository(appId: app.documentID)!)
+    return BlocProvider<ProfileComponentBloc>(
+      create: (context) => ProfileComponentBloc(
+          profileRepository: profileRepository(appId: app.documentID)!)
         ..add(FetchProfileComponent(id: profileId)),
       child: _profileBlockBuilder(context),
     );
   }
 
   Widget _profileBlockBuilder(BuildContext context) {
-    return BlocBuilder<ProfileComponentBloc, ProfileComponentState>(builder: (context, state) {
+    return BlocBuilder<ProfileComponentBloc, ProfileComponentState>(
+        builder: (context, state) {
       if (state is ProfileComponentLoaded) {
         return yourWidget(context, state.value);
       } else if (state is ProfileComponentPermissionDenied) {
@@ -57,7 +58,11 @@ abstract class AbstractProfileComponent extends StatelessWidget {
         return AlertWidget(app: app, title: 'Error', content: state.message);
       } else {
         return Center(
-          child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().progressIndicatorStyle().progressIndicator(app, context),
+          child: StyleRegistry.registry()
+              .styleWithApp(app)
+              .frontEndStyle()
+              .progressIndicatorStyle()
+              .progressIndicator(app, context),
         );
       }
     });
@@ -65,4 +70,3 @@ abstract class AbstractProfileComponent extends StatelessWidget {
 
   Widget yourWidget(BuildContext context, ProfileModel value);
 }
-

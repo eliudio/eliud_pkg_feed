@@ -27,7 +27,7 @@ class PostCommentComponentUninitialized extends PostCommentComponentState {}
 
 class PostCommentComponentError extends PostCommentComponentState {
   final String? message;
-  PostCommentComponentError({ this.message });
+  PostCommentComponentError({this.message});
 }
 
 class PostCommentComponentPermissionDenied extends PostCommentComponentState {
@@ -37,10 +37,10 @@ class PostCommentComponentPermissionDenied extends PostCommentComponentState {
 class PostCommentComponentLoaded extends PostCommentComponentState {
   final PostCommentModel value;
 
-  const PostCommentComponentLoaded({ required this.value });
+  const PostCommentComponentLoaded({required this.value});
 
-  PostCommentComponentLoaded copyWith({ PostCommentModel? copyThis }) {
-    return PostCommentComponentLoaded(value: copyThis ?? this.value);
+  PostCommentComponentLoaded copyWith({PostCommentModel? copyThis}) {
+    return PostCommentComponentLoaded(value: copyThis ?? value);
   }
 
   @override
@@ -49,4 +49,3 @@ class PostCommentComponentLoaded extends PostCommentComponentState {
   @override
   String toString() => 'PostCommentComponentLoaded { value: $value }';
 }
-

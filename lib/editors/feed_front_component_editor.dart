@@ -47,7 +47,7 @@ class FeedFrontComponentEditorConstructor extends ComponentEditorConstructor {
           description: 'New feed front',
           conditions: StorageConditionsModel(
               privilegeLevelRequired:
-                  PrivilegeLevelRequiredSimple.NoPrivilegeRequiredSimple),
+                  PrivilegeLevelRequiredSimple.noPrivilegeRequiredSimple),
         ),
         feedback);
   }
@@ -59,7 +59,7 @@ class FeedFrontComponentEditorConstructor extends ComponentEditorConstructor {
     if (feedFront != null) {
       _openIt(app, context, false, feedFront, feedback);
     } else {
-      openErrorDialog(app, context, app.documentID + '/_error',
+      openErrorDialog(app, context, '${app.documentID}/_error',
           title: 'Error',
           errorMessage: 'Cannot find notification dashboard with id $id');
     }
@@ -70,7 +70,7 @@ class FeedFrontComponentEditorConstructor extends ComponentEditorConstructor {
     openComplexDialog(
       app,
       context,
-      app.documentID + '/notificationdashboard',
+      '${app.documentID}/notificationdashboard',
       title: create
           ? 'Create Notification Dashboard'
           : 'Update Notification Dashboard',
@@ -114,9 +114,9 @@ class FeedFrontComponentEditor extends StatefulWidget {
   final AppModel app;
 
   const FeedFrontComponentEditor({
-    Key? key,
+    super.key,
     required this.app,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() => _FeedFrontComponentEditorState();
@@ -237,7 +237,8 @@ class _FeedFrontComponentEditorState extends State<FeedFrontComponentEditor> {
                                     }
                                   });
                                 }),
-                                if (feedFrontState.model.backgroundOverridePosts !=
+                                if (feedFrontState
+                                        .model.backgroundOverridePosts !=
                                     null)
                                   BackgroundWidget(
                                       withTopicContainer: false,

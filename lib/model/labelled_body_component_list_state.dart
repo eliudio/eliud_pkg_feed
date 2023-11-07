@@ -30,21 +30,24 @@ class LabelledBodyComponentListLoaded extends LabelledBodyComponentListState {
   final List<LabelledBodyComponentModel?>? values;
   final bool? mightHaveMore;
 
-  const LabelledBodyComponentListLoaded({this.mightHaveMore, this.values = const []});
+  const LabelledBodyComponentListLoaded(
+      {this.mightHaveMore, this.values = const []});
 
   @override
-  List<Object?> get props => [ values, mightHaveMore ];
+  List<Object?> get props => [values, mightHaveMore];
 
   @override
   String toString() => 'LabelledBodyComponentListLoaded { values: $values }';
 
   @override
-  bool operator ==(Object other) => 
-          other is LabelledBodyComponentListLoaded &&
-              runtimeType == other.runtimeType &&
-              ListEquality().equals(values, other.values) &&
-              mightHaveMore == other.mightHaveMore;
+  bool operator ==(Object other) =>
+      other is LabelledBodyComponentListLoaded &&
+      runtimeType == other.runtimeType &&
+      ListEquality().equals(values, other.values) &&
+      mightHaveMore == other.mightHaveMore;
+
+  @override
+  int get hashCode => values.hashCode ^ mightHaveMore.hashCode;
 }
 
 class LabelledBodyComponentNotLoaded extends LabelledBodyComponentListState {}
-

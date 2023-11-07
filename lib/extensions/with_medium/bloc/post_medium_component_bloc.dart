@@ -8,11 +8,12 @@ import '../../../model/abstract_repository_singleton.dart';
 import '../../../model/post_entity.dart';
 import '../../../model/post_model.dart';
 
-class HtmlPostMediumBloc extends ExtEditorBaseBloc<PostModel, MemberMediumContainerModel, PostEntity> {
-
+class HtmlPostMediumBloc extends ExtEditorBaseBloc<PostModel,
+    MemberMediumContainerModel, PostEntity> {
   HtmlPostMediumBloc(String appId)
       : super(appId, postRepository(appId: appId)!, null) {
-    on<HtmlMediaMoveEvent<PostModel,MemberMediumContainerModel>>((event, emit) async {
+    on<HtmlMediaMoveEvent<PostModel, MemberMediumContainerModel>>(
+        (event, emit) async {
       var theState = state as ExtEditorBaseInitialised;
       var items = theState.model.htmlMedia!;
       var newListedItems = copyOf(items);
@@ -47,7 +48,7 @@ class HtmlPostMediumBloc extends ExtEditorBaseBloc<PostModel, MemberMediumContai
         ? []
         : model.memberMedia!.map((e) => e).toList();
     newItems.add(newItem);
-    var newModel = model.copyWith(memberMedia:  newItems);
+    var newModel = model.copyWith(memberMedia: newItems);
     return newModel;
   }
 
@@ -74,7 +75,8 @@ class HtmlPostMediumBloc extends ExtEditorBaseBloc<PostModel, MemberMediumContai
   }
 
   @override
-  PostModel updateItem(PostModel model, MemberMediumContainerModel oldItem, MemberMediumContainerModel newItem) {
+  PostModel updateItem(PostModel model, MemberMediumContainerModel oldItem,
+      MemberMediumContainerModel newItem) {
     throw Exception("Not implemented");
   }
 
@@ -82,5 +84,4 @@ class HtmlPostMediumBloc extends ExtEditorBaseBloc<PostModel, MemberMediumContai
   List<MemberMediumContainerModel> copyOf(List<MemberMediumContainerModel> ts) {
     return ts.map((e) => e).toList();
   }
-
 }

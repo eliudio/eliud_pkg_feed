@@ -27,7 +27,7 @@ class FeedMenuComponentUninitialized extends FeedMenuComponentState {}
 
 class FeedMenuComponentError extends FeedMenuComponentState {
   final String? message;
-  FeedMenuComponentError({ this.message });
+  FeedMenuComponentError({this.message});
 }
 
 class FeedMenuComponentPermissionDenied extends FeedMenuComponentState {
@@ -37,10 +37,10 @@ class FeedMenuComponentPermissionDenied extends FeedMenuComponentState {
 class FeedMenuComponentLoaded extends FeedMenuComponentState {
   final FeedMenuModel value;
 
-  const FeedMenuComponentLoaded({ required this.value });
+  const FeedMenuComponentLoaded({required this.value});
 
-  FeedMenuComponentLoaded copyWith({ FeedMenuModel? copyThis }) {
-    return FeedMenuComponentLoaded(value: copyThis ?? this.value);
+  FeedMenuComponentLoaded copyWith({FeedMenuModel? copyThis}) {
+    return FeedMenuComponentLoaded(value: copyThis ?? value);
   }
 
   @override
@@ -49,4 +49,3 @@ class FeedMenuComponentLoaded extends FeedMenuComponentState {
   @override
   String toString() => 'FeedMenuComponentLoaded { value: $value }';
 }
-

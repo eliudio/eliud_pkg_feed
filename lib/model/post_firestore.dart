@@ -15,11 +15,9 @@
 
 import 'package:eliud_pkg_feed/model/post_repository.dart';
 
-
 import 'package:eliud_pkg_feed/model/repository_export.dart';
 import 'package:eliud_pkg_feed/model/model_export.dart';
 import 'package:eliud_pkg_feed/model/entity_export.dart';
-
 
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -33,56 +31,83 @@ class PostFirestore implements PostRepository {
     return PostEntity.fromMap(o, newDocumentIds: newDocumentIds);
   }
 
+  @override
   Future<PostEntity> addEntity(String documentID, PostEntity value) {
-    return PostCollection.doc(documentID).set(value.toDocument()).then((_) => value).then((v) async {
+    return postCollection
+        .doc(documentID)
+        .set(value.toDocument())
+        .then((_) => value)
+        .then((v) async {
       var newValue = await getEntity(documentID);
       if (newValue == null) {
         return value;
       } else {
         return newValue;
       }
-    })
-;
+    });
   }
 
+  @override
   Future<PostEntity> updateEntity(String documentID, PostEntity value) {
-    return PostCollection.doc(documentID).update(value.toDocument()).then((_) => value).then((v) async {
+    return postCollection
+        .doc(documentID)
+        .update(value.toDocument())
+        .then((_) => value)
+        .then((v) async {
       var newValue = await getEntity(documentID);
       if (newValue == null) {
         return value;
       } else {
         return newValue;
       }
-    })
-;
+    });
   }
 
+  @override
   Future<PostModel> add(PostModel value) {
-    return PostCollection.doc(value.documentID).set(value.toEntity(appId: appId).copyWith(timestamp : FieldValue.serverTimestamp(), ).toDocument()).then((_) => value).then((v) async {
+    return postCollection
+        .doc(value.documentID)
+        .set(value
+            .toEntity(appId: appId)
+            .copyWith(
+              timestamp: FieldValue.serverTimestamp(),
+            )
+            .toDocument())
+        .then((_) => value)
+        .then((v) async {
       var newValue = await get(value.documentID);
       if (newValue == null) {
         return value;
       } else {
         return newValue;
       }
-    })
-;
+    });
   }
 
+  @override
   Future<void> delete(PostModel value) {
-    return PostCollection.doc(value.documentID).delete();
+    return postCollection.doc(value.documentID).delete();
   }
 
+  @override
   Future<PostModel> update(PostModel value) {
-    return PostCollection.doc(value.documentID).update(value.toEntity(appId: appId).copyWith(timestamp : FieldValue.serverTimestamp(), ).toDocument()).then((_) => value).then((v) async {
+    return postCollection
+        .doc(value.documentID)
+        .update(value
+            .toEntity(appId: appId)
+            .copyWith(
+              timestamp: FieldValue.serverTimestamp(),
+            )
+            .toDocument())
+        .then((_) => value)
+        .then((v) async {
       var newValue = await get(value.documentID);
       if (newValue == null) {
         return value;
       } else {
         return newValue;
       }
-    })
-;
+    });
   }
 
   Future<PostModel?> _populateDoc(DocumentSnapshot value) async {
@@ -90,14 +115,18 @@ class PostFirestore implements PostRepository {
   }
 
   Future<PostModel?> _populateDocPlus(DocumentSnapshot value) async {
-    return PostModel.fromEntityPlus(value.id, PostEntity.fromMap(value.data()), appId: appId);  }
+    return PostModel.fromEntityPlus(value.id, PostEntity.fromMap(value.data()),
+        appId: appId);
+  }
 
-  Future<PostEntity?> getEntity(String? id, {Function(Exception)? onError}) async {
+  @override
+  Future<PostEntity?> getEntity(String? id,
+      {Function(Exception)? onError}) async {
     try {
-      var collection = PostCollection.doc(id);
+      var collection = postCollection.doc(id);
       var doc = await collection.get();
       return PostEntity.fromMap(doc.data());
-    } on Exception catch(e) {
+    } on Exception catch (e) {
       if (onError != null) {
         onError(e);
       } else {
@@ -105,15 +134,16 @@ class PostFirestore implements PostRepository {
         print("Exceptoin: $e");
       }
     }
-return null;
+    return null;
   }
 
+  @override
   Future<PostModel?> get(String? id, {Function(Exception)? onError}) async {
     try {
-      var collection = PostCollection.doc(id);
+      var collection = postCollection.doc(id);
       var doc = await collection.get();
       return await _populateDocPlus(doc);
-    } on Exception catch(e) {
+    } on Exception catch (e) {
       if (onError != null) {
         onError(e);
       } else {
@@ -121,30 +151,32 @@ return null;
         print("Exceptoin: $e");
       }
     }
-return null;
+    return null;
   }
 
-  StreamSubscription<List<PostModel?>> listen(PostModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery}) {
+  @override
+  StreamSubscription<List<PostModel?>> listen(PostModelTrigger trigger,
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery}) {
     Stream<List<PostModel?>> stream;
-    stream = getQuery(getCollection(), orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots()
+    stream = getQuery(getCollection(),
+            orderBy: orderBy,
+            descending: descending,
+            startAfter: startAfter as DocumentSnapshot?,
+            limit: limit,
+            privilegeLevel: privilegeLevel,
+            eliudQuery: eliudQuery,
+            appId: appId)!
+        .snapshots()
 //  see comment listen(...) above
-//  stream = getQuery(PostCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots()
+//  stream = getQuery(postCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots()
         .asyncMap((data) async {
-      return await Future.wait(data.docs.map((doc) =>  _populateDoc(doc)).toList());
-    });
-
-    return stream.listen((listOfPostModels) {
-      trigger(listOfPostModels);
-    });
-  }
-
-  StreamSubscription<List<PostModel?>> listenWithDetails(PostModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery}) {
-    Stream<List<PostModel?>> stream;
-    stream = getQuery(getCollection(), orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots()
-//  see comment listen(...) above
-//  stream = getQuery(PostCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots()
-        .asyncMap((data) async {
-      return await Future.wait(data.docs.map((doc) =>  _populateDocPlus(doc)).toList());
+      return await Future.wait(
+          data.docs.map((doc) => _populateDoc(doc)).toList());
     });
 
     return stream.listen((listOfPostModels) {
@@ -153,10 +185,41 @@ return null;
   }
 
   @override
-  StreamSubscription<PostModel?> listenTo(String documentId, PostChanged changed, {PostErrorHandler? errorHandler}) {
-    var stream = PostCollection.doc(documentId)
+  StreamSubscription<List<PostModel?>> listenWithDetails(
+      PostModelTrigger trigger,
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery}) {
+    Stream<List<PostModel?>> stream;
+    stream = getQuery(getCollection(),
+            orderBy: orderBy,
+            descending: descending,
+            startAfter: startAfter as DocumentSnapshot?,
+            limit: limit,
+            privilegeLevel: privilegeLevel,
+            eliudQuery: eliudQuery,
+            appId: appId)!
         .snapshots()
-        .asyncMap((data) {
+//  see comment listen(...) above
+//  stream = getQuery(postCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots()
+        .asyncMap((data) async {
+      return await Future.wait(
+          data.docs.map((doc) => _populateDocPlus(doc)).toList());
+    });
+
+    return stream.listen((listOfPostModels) {
+      trigger(listOfPostModels);
+    });
+  }
+
+  @override
+  StreamSubscription<PostModel?> listenTo(
+      String documentId, PostChanged changed,
+      {PostErrorHandler? errorHandler}) {
+    var stream = postCollection.doc(documentId).snapshots().asyncMap((data) {
       return _populateDocPlus(data);
     });
     var theStream = stream.listen((value) {
@@ -170,33 +233,84 @@ return null;
     return theStream;
   }
 
-  Stream<List<PostModel?>> values({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {
+  @override
+  Stream<List<PostModel?>> values(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery}) {
     DocumentSnapshot? lastDoc;
-    Stream<List<PostModel?>> _values = getQuery(PostCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?, limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots().asyncMap((snapshot) {
+    Stream<List<PostModel?>> values = getQuery(postCollection,
+            orderBy: orderBy,
+            descending: descending,
+            startAfter: startAfter as DocumentSnapshot?,
+            limit: limit,
+            privilegeLevel: privilegeLevel,
+            eliudQuery: eliudQuery,
+            appId: appId)!
+        .snapshots()
+        .asyncMap((snapshot) {
       return Future.wait(snapshot.docs.map((doc) {
         lastDoc = doc;
         return _populateDoc(doc);
       }).toList());
     });
     if ((setLastDoc != null) && (lastDoc != null)) setLastDoc(lastDoc);
-    return _values;
+    return values;
   }
 
-  Stream<List<PostModel?>> valuesWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {
+  @override
+  Stream<List<PostModel?>> valuesWithDetails(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery}) {
     DocumentSnapshot? lastDoc;
-    Stream<List<PostModel?>> _values = getQuery(PostCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?, limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots().asyncMap((snapshot) {
+    Stream<List<PostModel?>> values = getQuery(postCollection,
+            orderBy: orderBy,
+            descending: descending,
+            startAfter: startAfter as DocumentSnapshot?,
+            limit: limit,
+            privilegeLevel: privilegeLevel,
+            eliudQuery: eliudQuery,
+            appId: appId)!
+        .snapshots()
+        .asyncMap((snapshot) {
       return Future.wait(snapshot.docs.map((doc) {
         lastDoc = doc;
         return _populateDocPlus(doc);
       }).toList());
     });
     if ((setLastDoc != null) && (lastDoc != null)) setLastDoc(lastDoc);
-    return _values;
+    return values;
   }
 
-  Future<List<PostModel?>> valuesList({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) async {
+  @override
+  Future<List<PostModel?>> valuesList(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery}) async {
     DocumentSnapshot? lastDoc;
-    List<PostModel?> _values = await getQuery(PostCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.get().then((value) {
+    List<PostModel?> values = await getQuery(postCollection,
+            orderBy: orderBy,
+            descending: descending,
+            startAfter: startAfter as DocumentSnapshot?,
+            limit: limit,
+            privilegeLevel: privilegeLevel,
+            eliudQuery: eliudQuery,
+            appId: appId)!
+        .get()
+        .then((value) {
       var list = value.docs;
       return Future.wait(list.map((doc) {
         lastDoc = doc;
@@ -204,12 +318,29 @@ return null;
       }).toList());
     });
     if ((setLastDoc != null) && (lastDoc != null)) setLastDoc(lastDoc);
-    return _values;
+    return values;
   }
 
-  Future<List<PostModel?>> valuesListWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) async {
+  @override
+  Future<List<PostModel?>> valuesListWithDetails(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery}) async {
     DocumentSnapshot? lastDoc;
-    List<PostModel?> _values = await getQuery(PostCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.get().then((value) {
+    List<PostModel?> values = await getQuery(postCollection,
+            orderBy: orderBy,
+            descending: descending,
+            startAfter: startAfter as DocumentSnapshot?,
+            limit: limit,
+            privilegeLevel: privilegeLevel,
+            eliudQuery: eliudQuery,
+            appId: appId)!
+        .get()
+        .then((value) {
       var list = value.docs;
       return Future.wait(list.map((doc) {
         lastDoc = doc;
@@ -217,37 +348,44 @@ return null;
       }).toList());
     });
     if ((setLastDoc != null) && (lastDoc != null)) setLastDoc(lastDoc);
-    return _values;
+    return values;
   }
 
+  @override
   void flush() {}
 
+  @override
   Future<void> deleteAll() {
-    return PostCollection.get().then((snapshot) {
-      for (DocumentSnapshot ds in snapshot.docs){
+    return postCollection.get().then((snapshot) {
+      for (DocumentSnapshot ds in snapshot.docs) {
         ds.reference.delete();
       }
     });
   }
 
+  @override
   dynamic getSubCollection(String documentId, String name) {
-    return PostCollection.doc(documentId).collection(name);
+    return postCollection.doc(documentId).collection(name);
   }
 
+  @override
   String? timeStampToString(dynamic timeStamp) {
     return firestoreTimeStampToString(timeStamp);
-  } 
-
-  Future<PostModel?> changeValue(String documentId, String fieldName, num changeByThisValue) {
-    var change = FieldValue.increment(changeByThisValue);
-    return PostCollection.doc(documentId).update({fieldName: change}).then((v) => get(documentId));
   }
 
+  @override
+  Future<PostModel?> changeValue(
+      String documentId, String fieldName, num changeByThisValue) {
+    var change = FieldValue.increment(changeByThisValue);
+    return postCollection
+        .doc(documentId)
+        .update({fieldName: change}).then((v) => get(documentId));
+  }
 
   final String appId;
-  PostFirestore(this.getCollection, this.appId): PostCollection = getCollection();
+  PostFirestore(this.getCollection, this.appId)
+      : postCollection = getCollection();
 
-  final CollectionReference PostCollection;
+  final CollectionReference postCollection;
   final GetCollection getCollection;
 }
-

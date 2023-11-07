@@ -17,7 +17,6 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:eliud_pkg_feed/model/model_export.dart';
 
-
 @immutable
 abstract class FeedFormEvent extends Equatable {
   const FeedFormEvent();
@@ -26,15 +25,13 @@ abstract class FeedFormEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class InitialiseNewFeedFormEvent extends FeedFormEvent {
-}
-
+class InitialiseNewFeedFormEvent extends FeedFormEvent {}
 
 class InitialiseFeedFormEvent extends FeedFormEvent {
   final FeedModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   InitialiseFeedFormEvent({this.value});
 }
@@ -43,7 +40,7 @@ class InitialiseFeedFormNoLoadEvent extends FeedFormEvent {
   final FeedModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   InitialiseFeedFormNoLoadEvent({this.value});
 }
@@ -54,7 +51,7 @@ class ChangedFeedDocumentID extends FeedFormEvent {
   ChangedFeedDocumentID({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedFeedDocumentID{ value: $value }';
@@ -66,7 +63,7 @@ class ChangedFeedAppId extends FeedFormEvent {
   ChangedFeedAppId({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedFeedAppId{ value: $value }';
@@ -78,7 +75,7 @@ class ChangedFeedDescription extends FeedFormEvent {
   ChangedFeedDescription({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedFeedDescription{ value: $value }';
@@ -90,7 +87,7 @@ class ChangedFeedThumbImage extends FeedFormEvent {
   ChangedFeedThumbImage({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedFeedThumbImage{ value: $value }';
@@ -102,7 +99,7 @@ class ChangedFeedPhotoPost extends FeedFormEvent {
   ChangedFeedPhotoPost({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedFeedPhotoPost{ value: $value }';
@@ -114,7 +111,7 @@ class ChangedFeedVideoPost extends FeedFormEvent {
   ChangedFeedVideoPost({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedFeedVideoPost{ value: $value }';
@@ -126,7 +123,7 @@ class ChangedFeedMessagePost extends FeedFormEvent {
   ChangedFeedMessagePost({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedFeedMessagePost{ value: $value }';
@@ -138,7 +135,7 @@ class ChangedFeedAudioPost extends FeedFormEvent {
   ChangedFeedAudioPost({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedFeedAudioPost{ value: $value }';
@@ -150,7 +147,7 @@ class ChangedFeedAlbumPost extends FeedFormEvent {
   ChangedFeedAlbumPost({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedFeedAlbumPost{ value: $value }';
@@ -162,9 +159,8 @@ class ChangedFeedArticlePost extends FeedFormEvent {
   ChangedFeedArticlePost({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedFeedArticlePost{ value: $value }';
 }
-

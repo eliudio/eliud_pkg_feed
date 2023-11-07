@@ -24,8 +24,8 @@ Widget selectFeedFrontWidget(
       currentlySelected: feedFront,
       title: 'Feed Front',
       selectTitle: 'Select feed front',
-      displayItemFunction: (item) => text(
-          app, context, item.documentID + ' ' + (item.description ?? '?')),
+      displayItemFunction: (item) =>
+          text(app, context, item.documentID + ' ' + (item.description ?? '?')),
       blocProviderProvider: () => BlocProvider<FeedFrontListBloc>(
             create: (context) => FeedFrontListBloc(
               eliudQuery: getComponentSelectorQuery(0, app.documentID),
@@ -38,7 +38,9 @@ Widget selectFeedFrontWidget(
           if ((state is FeedFrontListLoaded) && (state.values != null)) {
             return contentsLoaded(context, state.values!);
           } else {
-            return contentsNotLoaded(context, );
+            return contentsNotLoaded(
+              context,
+            );
           }
         });
       },
@@ -47,11 +49,12 @@ Widget selectFeedFrontWidget(
       },
       deleteCallback: null,
       updateCallback: (item) {
-        updateComponent(context, app, 'feedFronts', item.documentID, (_, __) {
-        });
+        updateComponent(
+            context, app, 'feedFronts', item.documentID, (_, __) {});
       },
       selectedCallback: selectedCallback,
-      changePrivilegeEventCallback: (BuildContext newContext, int privilegeLevel) {
+      changePrivilegeEventCallback:
+          (BuildContext newContext, int privilegeLevel) {
         BlocProvider.of<FeedFrontListBloc>(newContext).add(FeedFrontChangeQuery(
             newQuery:
                 getComponentSelectorQuery(privilegeLevel, app.documentID)));

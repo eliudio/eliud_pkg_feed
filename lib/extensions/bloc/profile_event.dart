@@ -19,7 +19,8 @@ class InitialiseProfileEvent extends ProfileEvent {
   final AccessDetermined accessDetermined;
   final ModalRoute modalRoute;
 
-  InitialiseProfileEvent(this.app, this.feedId, this.accessDetermined, this.modalRoute);
+  InitialiseProfileEvent(
+      this.app, this.feedId, this.accessDetermined, this.modalRoute);
 }
 
 class ProfileChangedProfileEvent extends ProfileEvent {
@@ -29,10 +30,11 @@ class ProfileChangedProfileEvent extends ProfileEvent {
   ProfileChangedProfileEvent(this.html, this.memberMedia);
 
   @override
-  List<Object?> get props => [ html, memberMedia ];
+  List<Object?> get props => [html, memberMedia];
 
   @override
-  String toString() => 'ChangedProfileEventProfile{ value: $html, memberMedia: $memberMedia }';
+  String toString() =>
+      'ChangedProfileEventProfile{ value: $html, memberMedia: $memberMedia }';
 }
 
 class ProfilePhotoChangedProfileEvent extends ProfileEvent {
@@ -41,7 +43,7 @@ class ProfilePhotoChangedProfileEvent extends ProfileEvent {
   ProfilePhotoChangedProfileEvent(this.value);
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ProfilePhotoChangedProfileEvent{ value: $value }';
@@ -53,7 +55,7 @@ class UploadingProfilePhotoEvent extends ProfileEvent {
   UploadingProfilePhotoEvent(this.progress);
 
   @override
-  List<Object?> get props => [ progress ];
+  List<Object?> get props => [progress];
 
   @override
   String toString() => 'UploadingProfilePhotoEvent{ value: $progress }';
@@ -65,7 +67,7 @@ class ProfileBGPhotoChangedProfileEvent extends ProfileEvent {
   ProfileBGPhotoChangedProfileEvent(this.value);
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ProfileBGPhotoChangedProfileEvent{ value: $value }';
@@ -77,9 +79,8 @@ class UploadingBGPhotoEvent extends ProfileEvent {
   UploadingBGPhotoEvent(this.progress);
 
   @override
-  List<Object?> get props => [ progress ];
+  List<Object?> get props => [progress];
 
   @override
   String toString() => 'UploadingProfilePhotoEvent{ value: $progress }';
 }
-

@@ -41,9 +41,9 @@ class FeedMenuFormInitialized extends FeedMenuFormState {
   final FeedMenuModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
-  const FeedMenuFormInitialized({ this.value });
+  const FeedMenuFormInitialized({this.value});
 }
 
 // Menu has been initialised and hence a menu is available
@@ -51,9 +51,9 @@ abstract class FeedMenuFormError extends FeedMenuFormInitialized {
   final String? message;
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
-  const FeedMenuFormError({this.message, FeedMenuModel? value }) : super(value: value);
+  const FeedMenuFormError({this.message, super.value});
 
   @override
   String toString() {
@@ -63,11 +63,12 @@ abstract class FeedMenuFormError extends FeedMenuFormInitialized {
     }''';
   }
 }
-class DocumentIDFeedMenuFormError extends FeedMenuFormError { 
-  const DocumentIDFeedMenuFormError({ String? message, FeedMenuModel? value }): super(message: message, value: value);
+
+class DocumentIDFeedMenuFormError extends FeedMenuFormError {
+  const DocumentIDFeedMenuFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -78,12 +79,11 @@ class DocumentIDFeedMenuFormError extends FeedMenuFormError {
   }
 }
 
-
-class AppIdFeedMenuFormError extends FeedMenuFormError { 
-  const AppIdFeedMenuFormError({ String? message, FeedMenuModel? value }): super(message: message, value: value);
+class AppIdFeedMenuFormError extends FeedMenuFormError {
+  const AppIdFeedMenuFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -94,12 +94,11 @@ class AppIdFeedMenuFormError extends FeedMenuFormError {
   }
 }
 
-
-class DescriptionFeedMenuFormError extends FeedMenuFormError { 
-  const DescriptionFeedMenuFormError({ String? message, FeedMenuModel? value }): super(message: message, value: value);
+class DescriptionFeedMenuFormError extends FeedMenuFormError {
+  const DescriptionFeedMenuFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -110,12 +109,12 @@ class DescriptionFeedMenuFormError extends FeedMenuFormError {
   }
 }
 
-
-class BodyComponentsCurrentMemberFeedMenuFormError extends FeedMenuFormError { 
-  const BodyComponentsCurrentMemberFeedMenuFormError({ String? message, FeedMenuModel? value }): super(message: message, value: value);
+class BodyComponentsCurrentMemberFeedMenuFormError extends FeedMenuFormError {
+  const BodyComponentsCurrentMemberFeedMenuFormError(
+      {super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -126,12 +125,12 @@ class BodyComponentsCurrentMemberFeedMenuFormError extends FeedMenuFormError {
   }
 }
 
-
-class BodyComponentsOtherMemberFeedMenuFormError extends FeedMenuFormError { 
-  const BodyComponentsOtherMemberFeedMenuFormError({ String? message, FeedMenuModel? value }): super(message: message, value: value);
+class BodyComponentsOtherMemberFeedMenuFormError extends FeedMenuFormError {
+  const BodyComponentsOtherMemberFeedMenuFormError(
+      {super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -142,12 +141,11 @@ class BodyComponentsOtherMemberFeedMenuFormError extends FeedMenuFormError {
   }
 }
 
-
-class ItemColorFeedMenuFormError extends FeedMenuFormError { 
-  const ItemColorFeedMenuFormError({ String? message, FeedMenuModel? value }): super(message: message, value: value);
+class ItemColorFeedMenuFormError extends FeedMenuFormError {
+  const ItemColorFeedMenuFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -158,12 +156,11 @@ class ItemColorFeedMenuFormError extends FeedMenuFormError {
   }
 }
 
-
-class SelectedItemColorFeedMenuFormError extends FeedMenuFormError { 
-  const SelectedItemColorFeedMenuFormError({ String? message, FeedMenuModel? value }): super(message: message, value: value);
+class SelectedItemColorFeedMenuFormError extends FeedMenuFormError {
+  const SelectedItemColorFeedMenuFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -174,12 +171,11 @@ class SelectedItemColorFeedMenuFormError extends FeedMenuFormError {
   }
 }
 
-
-class BackgroundOverrideFeedMenuFormError extends FeedMenuFormError { 
-  const BackgroundOverrideFeedMenuFormError({ String? message, FeedMenuModel? value }): super(message: message, value: value);
+class BackgroundOverrideFeedMenuFormError extends FeedMenuFormError {
+  const BackgroundOverrideFeedMenuFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -190,12 +186,11 @@ class BackgroundOverrideFeedMenuFormError extends FeedMenuFormError {
   }
 }
 
-
-class FeedFrontFeedMenuFormError extends FeedMenuFormError { 
-  const FeedFrontFeedMenuFormError({ String? message, FeedMenuModel? value }): super(message: message, value: value);
+class FeedFrontFeedMenuFormError extends FeedMenuFormError {
+  const FeedFrontFeedMenuFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -206,12 +201,11 @@ class FeedFrontFeedMenuFormError extends FeedMenuFormError {
   }
 }
 
-
-class ConditionsFeedMenuFormError extends FeedMenuFormError { 
-  const ConditionsFeedMenuFormError({ String? message, FeedMenuModel? value }): super(message: message, value: value);
+class ConditionsFeedMenuFormError extends FeedMenuFormError {
+  const ConditionsFeedMenuFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -222,12 +216,11 @@ class ConditionsFeedMenuFormError extends FeedMenuFormError {
   }
 }
 
-
-class FeedMenuFormLoaded extends FeedMenuFormInitialized { 
-  const FeedMenuFormLoaded({ FeedMenuModel? value }): super(value: value);
+class FeedMenuFormLoaded extends FeedMenuFormInitialized {
+  const FeedMenuFormLoaded({super.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() {
@@ -237,12 +230,11 @@ class FeedMenuFormLoaded extends FeedMenuFormInitialized {
   }
 }
 
-
-class SubmittableFeedMenuForm extends FeedMenuFormInitialized { 
-  const SubmittableFeedMenuForm({ FeedMenuModel? value }): super(value: value);
+class SubmittableFeedMenuForm extends FeedMenuFormInitialized {
+  const SubmittableFeedMenuForm({super.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() {
@@ -251,5 +243,3 @@ class SubmittableFeedMenuForm extends FeedMenuFormInitialized {
     }''';
   }
 }
-
-

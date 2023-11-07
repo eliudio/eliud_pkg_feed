@@ -30,10 +30,10 @@ class NewPage extends PostLikeListEvent {}
 class AddPostLikeList extends PostLikeListEvent {
   final PostLikeModel? value;
 
-  const AddPostLikeList({ this.value });
+  const AddPostLikeList({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'AddPostLikeList{ value: $value }';
@@ -42,10 +42,10 @@ class AddPostLikeList extends PostLikeListEvent {
 class UpdatePostLikeList extends PostLikeListEvent {
   final PostLikeModel? value;
 
-  const UpdatePostLikeList({ this.value });
+  const UpdatePostLikeList({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'UpdatePostLikeList{ value: $value }';
@@ -54,10 +54,10 @@ class UpdatePostLikeList extends PostLikeListEvent {
 class DeletePostLikeList extends PostLikeListEvent {
   final PostLikeModel? value;
 
-  const DeletePostLikeList({ this.value });
+  const DeletePostLikeList({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'DeletePostLikeList{ value: $value }';
@@ -67,24 +67,24 @@ class PostLikeListUpdated extends PostLikeListEvent {
   final List<PostLikeModel?>? value;
   final bool? mightHaveMore;
 
-  const PostLikeListUpdated({ this.value, this.mightHaveMore });
+  const PostLikeListUpdated({this.value, this.mightHaveMore});
 
   @override
-  List<Object?> get props => [ value, mightHaveMore ];
+  List<Object?> get props => [value, mightHaveMore];
 
   @override
-  String toString() => 'PostLikeListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
+  String toString() =>
+      'PostLikeListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
 }
 
 class PostLikeChangeQuery extends PostLikeListEvent {
   final EliudQuery? newQuery;
 
-  const PostLikeChangeQuery({ required this.newQuery });
+  const PostLikeChangeQuery({required this.newQuery});
 
   @override
-  List<Object?> get props => [ newQuery ];
+  List<Object?> get props => [newQuery];
 
   @override
   String toString() => 'PostLikeChangeQuery{ value: $newQuery }';
 }
-

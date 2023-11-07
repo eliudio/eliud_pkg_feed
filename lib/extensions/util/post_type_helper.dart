@@ -2,36 +2,50 @@ import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 
 enum PostType {
-  EmbeddedPage, SinglePhoto, SingleVideo, Album, ExternalLink, Html, OnlyDescription, Unknown
+  embeddedPage,
+  singlePhoto,
+  singleVideo,
+  album,
+  externalLink,
+  html,
+  onlyDescription,
+  unknown
 }
 
 class PostTypeHelper {
   static PostType determineType(PostModel postModel) {
     if (postModel.postPageId != null) {
-      return PostType.EmbeddedPage;
+      return PostType.embeddedPage;
     } else if (postModel.html != null) {
-      return PostType.Html;
+      return PostType.html;
     } else if ((postModel.memberMedia != null) &&
-        (postModel.memberMedia!.length > 0)) {
+        (postModel.memberMedia!.isNotEmpty)) {
       if (postModel.memberMedia!.length == 1) {
         var medium = postModel.memberMedia![0];
-        if (medium.memberMedium == null) return PostType.OnlyDescription;
-        if (medium.memberMedium!.mediumType != MediumType.Photo) return PostType.SinglePhoto;
-        if (medium.memberMedium!.mediumType != MediumType.Video) return PostType.SingleVideo;
+        if (medium.memberMedium == null) return PostType.onlyDescription;
+        if (medium.memberMedium!.mediumType == MediumType.photo) {
+          return PostType.singlePhoto;
+        }
+        if (medium.memberMedium!.mediumType == MediumType.video) {
+          return PostType.singleVideo;
+        }
       } else {
-        return PostType.Album;
+        return PostType.album;
       }
     } else if (postModel.externalLink != null) {
-      return PostType.ExternalLink;
+      return PostType.externalLink;
     } else {
-      return PostType.OnlyDescription;
+      return PostType.onlyDescription;
     }
 
-    return PostType.Unknown;
+    return PostType.unknown;
   }
 
   static bool canUpdate(PostType type) {
-    return (type == PostType.SinglePhoto) || (type == PostType.SingleVideo) || (type == PostType.Album) || (type == PostType.OnlyDescription) || (type == PostType.Html);
+    return (type == PostType.singlePhoto) ||
+        (type == PostType.singleVideo) ||
+        (type == PostType.album) ||
+        (type == PostType.onlyDescription) ||
+        (type == PostType.html);
   }
 }
-

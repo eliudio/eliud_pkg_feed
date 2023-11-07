@@ -9,7 +9,6 @@ import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/style/frontend/has_text_form_field.dart';
 import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/random.dart';
-import 'package:eliud_core/tools/storage/medium_base.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliud_router;
 import 'package:eliud_pkg_feed/extensions/feed_front/postlist_paged/postlist_paged_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/feed_front/postlist_paged/postlist_paged_event.dart';
@@ -47,7 +46,7 @@ class PostWidget extends StatefulWidget {
   final bool canBlock;
 
   const PostWidget(
-      {Key? key,
+      {super.key,
       required this.app,
       required this.pageId,
       required this.memberId,
@@ -58,8 +57,7 @@ class PostWidget extends StatefulWidget {
       required this.details,
       required this.isEditable,
       required this.backgroundOverride,
-      required this.canBlock})
-      : super(key: key);
+      required this.canBlock});
 
   @override
   State<StatefulWidget> createState() {
@@ -68,10 +66,11 @@ class PostWidget extends StatefulWidget {
 }
 
 class _PostWidgetState extends State<PostWidget> {
-  static TextStyle textStyleSmall =
+  /*static TextStyle textStyleSmall =
       TextStyle(fontSize: 8, fontWeight: FontWeight.bold);
   static TextStyle textStyle =
       TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
+  */
   final TextEditingController _commentController = TextEditingController();
 
   Size? size;
@@ -92,7 +91,7 @@ class _PostWidgetState extends State<PostWidget> {
   @override
   Widget build(BuildContext context) {
     var postModel = widget.details.postModel;
-    if (size == null) size = MediaQuery.of(context).size;
+    size ??= MediaQuery.of(context).size;
     var originalAccessBloc = BlocProvider.of<AccessBloc>(context);
 
     List<Widget> widgets = [];
@@ -101,7 +100,7 @@ class _PostWidgetState extends State<PostWidget> {
 
     widgets.add(_aBitSpace());
     if ((postModel.description != null) &&
-        (postModel.description!.length > 0)) {
+        (postModel.description!.isNotEmpty)) {
       widgets.add(_description(postModel));
       widgets.add(_aBitSpace());
     }
@@ -124,8 +123,10 @@ class _PostWidgetState extends State<PostWidget> {
         children: widgets, backgroundOverride: widget.backgroundOverride);
   }
 
+/*
   static double _width(BuildContext context) =>
       MediaQuery.of(context).size.width;
+*/
 
   Widget _description(PostModel? postModel) {
     if ((postModel != null) && (postModel.description != null)) {
@@ -167,8 +168,7 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   void _addComment(BuildContext context, PostDetails detail) {
-    if ((_commentController.text != null) &&
-        (_commentController.text.length > 0)) {
+    if (_commentController.text.isNotEmpty) {
       BlocProvider.of<PostListPagedBloc>(context)
           .add(AddCommentEvent(detail, _commentController.text));
       _commentController.clear();
@@ -201,10 +201,7 @@ class _PostWidgetState extends State<PostWidget> {
 
   Widget _heading(BuildContext context, PostModel? postModel) {
     if (postModel == null) return text(widget.app, context, 'No post');
-    if (postModel.authorId == null)
-      return text(widget.app, context, 'No author');
-
-    var timeStamp;
+    DateTime timeStamp;
     if (postModel.timestamp == null) {
       timeStamp = DateTime.now();
     } else {
@@ -274,29 +271,31 @@ class _PostWidgetState extends State<PostWidget> {
 
   void _blockMemberWithPostModel(PostModel postModel) {
     openAckNackDialog(
-        widget.app, context, widget.app.documentID + '/_blockmember1',
+        widget.app, context, '${widget.app.documentID}/_blockmember1',
         title: 'Block member?',
         message: 'You are sure you want to block this member?',
         onSelection: (value) async {
-          if (value == 0) {
-            BlocProvider.of<PostListPagedBloc>(context)
-                .add(BlockMemberFromPost(blockTheAuthorOfThisPost: postModel));
-          }
-        });
+      if (value == 0) {
+        BlocProvider.of<PostListPagedBloc>(context)
+            .add(BlockMemberFromPost(blockTheAuthorOfThisPost: postModel));
+      }
+    });
   }
 
-  void _blockMemberWithPostCommentContainer(PostCommentContainer postCommentContainer) {
-    if (postCommentContainer.member!= null) {
+  void _blockMemberWithPostCommentContainer(
+      PostCommentContainer postCommentContainer) {
+    if (postCommentContainer.member != null) {
       openAckNackDialog(
-          widget.app, context, widget.app.documentID + '/_blockmember2',
+          widget.app, context, '${widget.app.documentID}/_blockmember2',
           title: 'Block member?',
           message: 'You are sure you want to block this member?',
           onSelection: (value) async {
-            if (value == 0) {
-              BlocProvider.of<PostListPagedBloc>(context)
-                  .add(BlockMemberFromComment(blockTheAuthorOfThisComment: postCommentContainer));
-            }
-          });
+        if (value == 0) {
+          BlocProvider.of<PostListPagedBloc>(context).add(
+              BlockMemberFromComment(
+                  blockTheAuthorOfThisComment: postCommentContainer));
+        }
+      });
     }
   }
 
@@ -319,7 +318,7 @@ class _PostWidgetState extends State<PostWidget> {
         onSelected: (choice) async {
           if (choice == 0) {
             openAckNackDialog(
-                widget.app, context, widget.app.documentID + '/_deletepost',
+                widget.app, context, '${widget.app.documentID}/_deletepost',
                 title: 'Delete post?',
                 message: 'You are sure you want to delete this post?',
                 onSelection: (value) async {
@@ -330,10 +329,10 @@ class _PostWidgetState extends State<PostWidget> {
             });
           } else if (choice == 1) {
             switch (type) {
-              case PostType.SingleVideo:
-              case PostType.SinglePhoto:
-              case PostType.Album:
-              case PostType.OnlyDescription:
+              case PostType.singleVideo:
+              case PostType.singlePhoto:
+              case PostType.album:
+              case PostType.onlyDescription:
                 var pageContextInfo = eliud_router.Router.getPageContextInfo(
                   context,
                 );
@@ -354,13 +353,13 @@ class _PostWidgetState extends State<PostWidget> {
                             ? <MemberMediumContainerModel>[]
                             : postModel.memberMedia!,
                         postModel.accessibleByGroup ??
-                            PostAccessibleByGroup.Public,
+                            PostAccessibleByGroup.public,
                         postAccessibleByMembers:
                             postModel.accessibleByMembers == null
                                 ? []
                                 : postModel.accessibleByMembers!));
                 break;
-              case PostType.Html:
+              case PostType.html:
                 List<MemberMediumContainerModel> postMediumModels =
                     postModel.memberMedia ?? [];
                 AbstractTextPlatform.platform!
@@ -372,7 +371,7 @@ class _PostWidgetState extends State<PostWidget> {
                               html: newArticle,
                               memberMedia: postMediumModels)));
                 }, (AddMediaHtml addMediaHtml, String html) async {
-                  // the PostWithMemberMediumComponents uses (unfortunately) a PostModel, so we create one, just to be able to function, and to capturethe postMediumModels
+                  // the PostWithMemberMediumComponents uses (unfortunately) a PostModel, so we create one, just to be able to function, and to capture the postMediumModels
                   var tempModel = PostModel(
                     documentID: newRandomKey(),
                     authorId: postModel.authorId,
@@ -396,6 +395,12 @@ class _PostWidgetState extends State<PostWidget> {
                             AccessGroupHelper.nameForPostAccessibleByGroup(
                                 postModel.accessibleByGroup!)));
                 break;
+              case PostType.embeddedPage:
+                break;
+              case PostType.externalLink:
+                break;
+              case PostType.unknown:
+                break;
             }
           }
         });
@@ -406,7 +411,7 @@ class _PostWidgetState extends State<PostWidget> {
     openEntryDialog(
       widget.app,
       context,
-      widget.app.documentID + '/_reply',
+      '${widget.app.documentID}/_reply',
       title: 'Reply to comment',
       ackButtonLabel: 'Reply',
       nackButtonLabel: 'Discard',
@@ -421,7 +426,7 @@ class _PostWidgetState extends State<PostWidget> {
 
   void allowToAddCommentComment(BuildContext context, PostDetails postDetail,
       PostCommentContainer postCommentContainer, String memberId) {
-    openEntryDialog(widget.app, context, widget.app.documentID + '/_reply',
+    openEntryDialog(widget.app, context, '${widget.app.documentID}/_reply',
         title: 'Reply to comment',
         hintText: 'Reply',
         ackButtonLabel: 'Reply',
@@ -436,7 +441,7 @@ class _PostWidgetState extends State<PostWidget> {
   void allowToUpdateComment(BuildContext context, PostDetails postDetail,
       String? memberId, PostCommentContainer postCommentContainer) {
     openEntryDialog(
-        widget.app, context, widget.app.documentID + '/_updatecomment',
+        widget.app, context, '${widget.app.documentID}/_updatecomment',
         title: 'Update comment',
         hintText: 'Comment',
         initialValue: postCommentContainer.comment!,
@@ -452,7 +457,7 @@ class _PostWidgetState extends State<PostWidget> {
   void allowToDeleteComment(BuildContext context, PostDetails postDetail,
       String? memberId, PostCommentContainer? postCommentContainer) {
     openAckNackDialog(
-        widget.app, context, widget.app.documentID + '/_deletecomment',
+        widget.app, context, '${widget.app.documentID}/_deletecomment',
         message: "Do you want to delete this comment",
         onSelection: (value) async {
       if (value == 0) {
@@ -481,14 +486,14 @@ class _PostWidgetState extends State<PostWidget> {
       PostCommentContainer? data) {
     if (data == null) return text(widget.app, context, 'No Comments');
 
-    var name;
+    String name;
     if (data.member == null) {
       name = "No name";
     } else {
       if (data.member!.name == null) {
         name = "No name";
       } else {
-        name = data.member!.name;
+        name = data.member!.name!;
       }
     }
 
@@ -508,7 +513,7 @@ class _PostWidgetState extends State<PostWidget> {
             h5(
               widget.app,
               context,
-              '$name',
+              name,
             ),
             SizedBox(
               height: 4,
@@ -569,10 +574,11 @@ class _PostWidgetState extends State<PostWidget> {
                   (widget.canBlock))
                 dialogButton(widget.app, context,
                     label: 'Block member',
-                    tooltip: "Block this member to stop seeing all of it's past and future posts, comments, messages, or anything else",
+                    tooltip:
+                        "Block this member to stop seeing all of it's past and future posts, comments, messages, or anything else",
                     onPressed: () {
-                      _blockMemberWithPostCommentContainer(data);
-                    }),
+                  _blockMemberWithPostCommentContainer(data);
+                }),
             ]),
           ],
         ));
@@ -588,13 +594,14 @@ class _PostWidgetState extends State<PostWidget> {
         children.add(getCommentTreeWidget(
             context, postDetail, data.postCommentContainer![i]));
       }
-      if (children.length > 0)
+      if (children.isNotEmpty) {
         items.add(Padding(
             padding: const EdgeInsets.only(top: 0.0, left: 40),
             child: ListView(
                 physics: ScrollPhysics(),
                 shrinkWrap: true,
                 children: children)));
+      }
     }
     return ListView(
         physics: ScrollPhysics(), shrinkWrap: true, children: items);
@@ -614,10 +621,12 @@ class _PostWidgetState extends State<PostWidget> {
                   label: 'Delete comment', value: 1),
             ],
         onSelected: (choice) {
-          if (choice == 0)
+          if (choice == 0) {
             allowToUpdateComment(context, postDetail, memberId, postComment);
-          if (choice == 1)
+          }
+          if (choice == 1) {
             allowToDeleteComment(context, postDetail, memberId, postComment);
+          }
         });
   }
 
@@ -628,8 +637,8 @@ class _PostWidgetState extends State<PostWidget> {
   ) {
     var likes = postDetails.postModel.likes;
     var dislikes = postDetails.postModel.dislikes;
-    if (likes == null) likes = 0;
-    if (dislikes == null) dislikes = 0;
+    likes ??= 0;
+    dislikes ??= 0;
     LikeType? thisMemberLikeType;
     thisMemberLikeType = postDetails.thisMembersLikeType;
     return Row(
@@ -666,9 +675,9 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   AssetImage _assetThumbUp(LikeType? thisMemberLikeType) {
-    if (widget.thumbStyle == ThumbStyle.Thumbs) {
+    if (widget.thumbStyle == ThumbStyle.thumbs) {
       if ((thisMemberLikeType == null) ||
-          (thisMemberLikeType != LikeType.Like)) {
+          (thisMemberLikeType != LikeType.like)) {
         return AssetImage("assets/images/segoshvishna.fiverr.com/thumbs-up.png",
             package: "eliud_pkg_feed");
       } else {
@@ -678,7 +687,7 @@ class _PostWidgetState extends State<PostWidget> {
       }
     } else {
       if ((thisMemberLikeType == null) ||
-          (thisMemberLikeType != LikeType.Like)) {
+          (thisMemberLikeType != LikeType.like)) {
         return AssetImage("assets/images/segoshvishna.fiverr.com/banana.png",
             package: "eliud_pkg_feed");
       } else {
@@ -690,9 +699,9 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   AssetImage _assetThumbDown(LikeType? thisMemberLikeType) {
-    if (widget.thumbStyle == ThumbStyle.Thumbs) {
+    if (widget.thumbStyle == ThumbStyle.thumbs) {
       if ((thisMemberLikeType == null) ||
-          (thisMemberLikeType != LikeType.Dislike)) {
+          (thisMemberLikeType != LikeType.dislike)) {
         return AssetImage(
             "assets/images/segoshvishna.fiverr.com/thumbs-down.png",
             package: "eliud_pkg_feed");
@@ -703,7 +712,7 @@ class _PostWidgetState extends State<PostWidget> {
       }
     } else {
       if ((thisMemberLikeType == null) ||
-          (thisMemberLikeType != LikeType.Dislike)) {
+          (thisMemberLikeType != LikeType.dislike)) {
         return AssetImage(
             "assets/images/segoshvishna.fiverr.com/bananapeel.png",
             package: "eliud_pkg_feed");
@@ -717,13 +726,13 @@ class _PostWidgetState extends State<PostWidget> {
 
   Future<void> _like(BuildContext context, PostDetails postDetail) async {
     BlocProvider.of<PostListPagedBloc>(context)
-        .add(LikePostEvent(postDetail, LikeType.Like));
+        .add(LikePostEvent(postDetail, LikeType.like));
   }
 
   Future<void> _likeComment(BuildContext context, PostDetails postDetail,
       PostCommentContainer postCommentContainer) async {
     BlocProvider.of<PostListPagedBloc>(context).add(
-        LikeCommentPostEvent(postDetail, postCommentContainer, LikeType.Like));
+        LikeCommentPostEvent(postDetail, postCommentContainer, LikeType.like));
   }
 
   void _dislike(
@@ -731,12 +740,13 @@ class _PostWidgetState extends State<PostWidget> {
     PostDetails postDetail,
   ) async {
     BlocProvider.of<PostListPagedBloc>(context)
-        .add(LikePostEvent(postDetail, LikeType.Dislike));
+        .add(LikePostEvent(postDetail, LikeType.dislike));
   }
 
+  /*
   Widget _postLikes(int? likes, int? dislikes) {
-    if (likes == null) likes = 0;
-    if (dislikes == null) dislikes = 0;
+    likes ??= 0;
+    dislikes ??= 0;
     return Padding(
       padding: const EdgeInsets.only(left: 14.0),
       child: text(
@@ -750,15 +760,14 @@ class _PostWidgetState extends State<PostWidget> {
 
   Future<void> _photoAvailable(PhotoWithThumbnail photoWithThumbnail) async {
     throw Exception("Needs proper implementation.");
-/*
     var memberImageModel = await UploadFile.uploadMediumAndItsThumbnailData(widget.postModel.appId!, mediumAndItsThumbnailData, widget.member!.documentID, widget.postModel.readAccess!);
     postModel.memberMedia!.add(
         PostMediumModel(documentID: newRandomKey(), memberMedium: memberImageModel)
     );
-*/
   }
 
   Future<void> _videoAvailable(VideoWithThumbnail videoWithThumbnail) async {
     throw Exception("Needs proper implementation.");
   }
+   */
 }

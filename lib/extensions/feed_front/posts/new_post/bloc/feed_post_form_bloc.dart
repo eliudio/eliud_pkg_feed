@@ -23,7 +23,7 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
       this.accessState)
       : super(FeedPostFormUninitialized()) {
     if (state is FeedPostFormUninitialized) {
-      final currentState = state as FeedPostFormUninitialized;
+      //final currentState = state as FeedPostFormUninitialized;
     }
     on<InitialiseNewFeedPostFormEvent>((event, emit) async {
       post = null;
@@ -112,7 +112,7 @@ class FeedPostFormBloc extends Bloc<FeedPostFormEvent, FeedPostFormState> {
       dislikes: 0,
       accessibleByGroup: feedPostModelDetails.postAccessibleByGroup,
       accessibleByMembers: feedPostModelDetails.postAccessibleByMembers,
-      archived: PostArchiveStatus.Active,
+      archived: PostArchiveStatus.active,
       memberMedia: feedPostModelDetails.memberMedia,
       readAccess: [
         memberId

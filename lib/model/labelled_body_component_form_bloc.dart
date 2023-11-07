@@ -13,60 +13,55 @@
 
 */
 
-
 import 'package:bloc/bloc.dart';
-
-
-
 
 import 'package:eliud_pkg_feed/model/model_export.dart';
 
 import 'package:eliud_pkg_feed/model/labelled_body_component_form_event.dart';
 import 'package:eliud_pkg_feed/model/labelled_body_component_form_state.dart';
 
-class LabelledBodyComponentFormBloc extends Bloc<LabelledBodyComponentFormEvent, LabelledBodyComponentFormState> {
+class LabelledBodyComponentFormBloc extends Bloc<LabelledBodyComponentFormEvent,
+    LabelledBodyComponentFormState> {
   final String? appId;
 
-  LabelledBodyComponentFormBloc(this.appId, ): super(LabelledBodyComponentFormUninitialized()) {
-      on <InitialiseNewLabelledBodyComponentFormEvent> ((event, emit) {
-        LabelledBodyComponentFormLoaded loaded = LabelledBodyComponentFormLoaded(value: LabelledBodyComponentModel(
-                                               documentID: "IDENTIFIER", 
-                                 label: "",
-                                 componentName: "",
-                                 componentId: "",
+  LabelledBodyComponentFormBloc(
+    this.appId,
+  ) : super(LabelledBodyComponentFormUninitialized()) {
+    on<InitialiseNewLabelledBodyComponentFormEvent>((event, emit) {
+      LabelledBodyComponentFormLoaded loaded = LabelledBodyComponentFormLoaded(
+          value: LabelledBodyComponentModel(
+        documentID: "IDENTIFIER",
+        label: "",
+        componentName: "",
+        componentId: "",
+      ));
+      emit(loaded);
+    });
 
-        ));
-        emit(loaded);
-      });
-
-
-      on <InitialiseLabelledBodyComponentFormEvent> ((event, emit) async {
-        LabelledBodyComponentFormLoaded loaded = LabelledBodyComponentFormLoaded(value: event.value);
-        emit(loaded);
-      });
-      on <InitialiseLabelledBodyComponentFormNoLoadEvent> ((event, emit) async {
-        LabelledBodyComponentFormLoaded loaded = LabelledBodyComponentFormLoaded(value: event.value);
-        emit(loaded);
-      });
-      LabelledBodyComponentModel? newValue;
-      on <ChangedLabelledBodyComponentComponentName> ((event, emit) async {
+    on<InitialiseLabelledBodyComponentFormEvent>((event, emit) async {
+      LabelledBodyComponentFormLoaded loaded =
+          LabelledBodyComponentFormLoaded(value: event.value);
+      emit(loaded);
+    });
+    on<InitialiseLabelledBodyComponentFormNoLoadEvent>((event, emit) async {
+      LabelledBodyComponentFormLoaded loaded =
+          LabelledBodyComponentFormLoaded(value: event.value);
+      emit(loaded);
+    });
+    LabelledBodyComponentModel? newValue;
+    on<ChangedLabelledBodyComponentComponentName>((event, emit) async {
       if (state is LabelledBodyComponentFormInitialized) {
         final currentState = state as LabelledBodyComponentFormInitialized;
         newValue = currentState.value!.copyWith(componentName: event.value);
         emit(SubmittableLabelledBodyComponentForm(value: newValue));
-
       }
-      });
-      on <ChangedLabelledBodyComponentComponentId> ((event, emit) async {
+    });
+    on<ChangedLabelledBodyComponentComponentId>((event, emit) async {
       if (state is LabelledBodyComponentFormInitialized) {
         final currentState = state as LabelledBodyComponentFormInitialized;
         newValue = currentState.value!.copyWith(componentId: event.value);
         emit(SubmittableLabelledBodyComponentForm(value: newValue));
-
       }
-      });
+    });
   }
-
-
 }
-

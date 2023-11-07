@@ -12,10 +12,12 @@ abstract class PostPrivilegeState extends Equatable {
   List<Object?> get props => [];
 
   @override
-  bool operator == (Object other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
-          other is PostPrivilegeState &&
-              runtimeType == other.runtimeType;
+      other is PostPrivilegeState && runtimeType == other.runtimeType;
+
+  @override
+  int get hashCode => 0;
 }
 
 // Startup: menu has not been initialised yet and so we should show a "loading indicator" or something
@@ -29,28 +31,38 @@ class PostPrivilegeUninitialized extends PostPrivilegeState {
   List<Object?> get props => [];
 
   @override
-  bool operator == (Object other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
-          other is PostPrivilegeUninitialized &&
-              runtimeType == other.runtimeType;
+      other is PostPrivilegeUninitialized && runtimeType == other.runtimeType;
+
+  @override
+  int get hashCode => 0;
 }
 
 class PostPrivilegeInitialized extends PostPrivilegeState {
   final PostAccessibleByGroup postAccessibleByGroup;
   final List<SelectedMember>? specificSelectedMembers;
 
-  const PostPrivilegeInitialized({ required this.postAccessibleByGroup, this.specificSelectedMembers });
+  const PostPrivilegeInitialized(
+      {required this.postAccessibleByGroup, this.specificSelectedMembers});
 
   @override
-  List<Object?> get props => [ postAccessibleByGroup, specificSelectedMembers ];
+  List<Object?> get props => [postAccessibleByGroup, specificSelectedMembers];
 
   @override
-  bool operator == (Object other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
-          other is PostPrivilegeInitialized &&
-              runtimeType == other.runtimeType &&
-              postAccessibleByGroup == other.postAccessibleByGroup &&
-              ListEquality().equals(specificSelectedMembers, other.specificSelectedMembers);
+      other is PostPrivilegeInitialized &&
+          runtimeType == other.runtimeType &&
+          postAccessibleByGroup == other.postAccessibleByGroup &&
+          ListEquality()
+              .equals(specificSelectedMembers, other.specificSelectedMembers);
 
-  List<String>? getPostAccessibleByMembers() => specificSelectedMembers == null ? null : specificSelectedMembers!.map((e) => e.memberId).toList();
+  List<String>? getPostAccessibleByMembers() => specificSelectedMembers == null
+      ? null
+      : specificSelectedMembers!.map((e) => e.memberId).toList();
+
+  @override
+  int get hashCode =>
+      postAccessibleByGroup.hashCode ^ specificSelectedMembers.hashCode;
 }

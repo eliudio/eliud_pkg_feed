@@ -36,7 +36,7 @@ class PostWithMemberMediumComponents extends StatefulWidget {
     await openComplexDialog(
       app,
       context,
-      app.documentID + '/html_components',
+      '${app.documentID}/html_components',
       title: 'Images and Videos',
       includeHeading: false,
       widthFraction: .9,
@@ -56,8 +56,7 @@ class PostWithMemberMediumComponents extends StatefulWidget {
         child: BlocProvider<HtmlPostMediumBloc>(
             create: (context) => HtmlPostMediumBloc(
                   app.documentID,
-                )..add(ExtEditorBaseInitialise<PostModel>(
-                    model,
+                )..add(ExtEditorBaseInitialise<PostModel>(model,
                     reretrieveModel: false)),
             child: PostWithMemberMediumComponents._(
               app: app,
@@ -71,15 +70,13 @@ class PostWithMemberMediumComponents extends StatefulWidget {
   final EditorFeedback editorFeedback;
 
   const PostWithMemberMediumComponents._({
-    Key? key,
     required this.app,
     this.addMediaHtml,
     required this.editorFeedback,
-  }) : super(key: key);
+  });
 
   @override
-  State<StatefulWidget> createState() =>
-      _PostWithMemberMediumComponentsState();
+  State<StatefulWidget> createState() => _PostWithMemberMediumComponentsState();
 }
 
 class _PostWithMemberMediumComponentsState
@@ -89,11 +86,9 @@ class _PostWithMemberMediumComponentsState
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HtmlPostMediumBloc,
-            ExtEditorBaseState<PostModel>>(
+    return BlocBuilder<HtmlPostMediumBloc, ExtEditorBaseState<PostModel>>(
         builder: (ppContext, htmlWithPMM) {
-      if (htmlWithPMM
-          is ExtEditorBaseInitialised<PostModel, dynamic>) {
+      if (htmlWithPMM is ExtEditorBaseInitialised<PostModel, dynamic>) {
         return ListView(shrinkWrap: true, physics: ScrollPhysics(), children: [
           if (widget.addMediaHtml != null)
             HeaderWidget(
@@ -130,7 +125,8 @@ class _PostWithMemberMediumComponentsState
         var medium = item.memberMedium;
         if (medium != null) {
           widgets.add(GestureDetector(
-              onTapDown: (TapDownDetails details) => onTapPosition = details.globalPosition,
+              onTapDown: (TapDownDetails details) =>
+                  onTapPosition = details.globalPosition,
               onTap: () async {
                 var x = onTapPosition == null
                     ? fullScreenWidth(context) / 2
@@ -139,8 +135,8 @@ class _PostWithMemberMediumComponentsState
                     ? fullScreenHeight(context) / 2
                     : onTapPosition!.dy;
                 var value = await showMenu<int>(
-                    context: context,
-                    position: RelativeRect.fromLTRB(x, y, x, y),
+                  context: context,
+                  position: RelativeRect.fromLTRB(x, y, x, y),
                   items: [
                     if (widget.addMediaHtml != null)
                       PopupMenuItem<int>(child: const Text('Select'), value: 0),
@@ -149,8 +145,7 @@ class _PostWithMemberMediumComponentsState
                     PopupMenuItem<int>(child: const Text('Move up'), value: 2),
                     PopupMenuItem<int>(
                         child: const Text('Move down'), value: 3),
-                    PopupMenuItem<int>(
-                        child: const Text('Delete'), value: 4),
+                    PopupMenuItem<int>(child: const Text('Delete'), value: 4),
                   ],
                   elevation: 8.0,
                 );
@@ -158,13 +153,13 @@ class _PostWithMemberMediumComponentsState
                 switch (value) {
                   case 0:
                     widget.editorFeedback(true, postModel);
-                    if (medium.mediumType == MediumType.Photo) {
+                    if (medium.mediumType == MediumType.photo) {
                       var htmlCode = constructHtmlForImg(medium.url!,
-                          kDOCUMENT_LABEL_MEMBER, item.htmlReference!);
+                          kDocumentLabelMember, item.htmlReference!);
                       widget.addMediaHtml!(htmlCode);
                     } else {
                       var htmlCode = constructHtmlForVideo(medium.url!,
-                          kDOCUMENT_LABEL_MEMBER, item.htmlReference!);
+                          kDocumentLabelMember, item.htmlReference!);
                       widget.addMediaHtml!(htmlCode);
                     }
                     Navigator.of(context).pop();
@@ -173,52 +168,63 @@ class _PostWithMemberMediumComponentsState
                     Registry.registry()!.getMediumApi().showPhotos(
                         context,
                         widget.app,
-                        memberMediumContainerModels.map((e) => e.memberMedium!).toList(),
+                        memberMediumContainerModels
+                            .map((e) => e.memberMedium!)
+                            .toList(),
                         i);
                     break;
                   case 2:
-                    BlocProvider.of<HtmlPostMediumBloc>(context).add(
-                        HtmlMediaMoveEvent(
-                            isUp: true, item: item));
+                    BlocProvider.of<HtmlPostMediumBloc>(context)
+                        .add(HtmlMediaMoveEvent(isUp: true, item: item));
                     break;
                   case 3:
-                    BlocProvider.of<HtmlPostMediumBloc>(context).add(
-                        HtmlMediaMoveEvent(
-                            isUp: false, item: item));
+                    BlocProvider.of<HtmlPostMediumBloc>(context)
+                        .add(HtmlMediaMoveEvent(isUp: false, item: item));
                     break;
                   case 4:
-                    if ((item.htmlReference == null) || ((htmlWithPMM.model.html != null) && (!htmlWithPMM.model.html.contains(item.htmlReference)))) {
+                    if ((item.htmlReference == null) ||
+                        ((htmlWithPMM.model.html != null) &&
+                            (!htmlWithPMM.model.html
+                                .contains(item.htmlReference)))) {
                       BlocProvider.of<HtmlPostMediumBloc>(context).add(
                           DeleteItemEvent<PostModel,
-                              MemberMediumContainerModel>(
-                              itemModel: item));
+                              MemberMediumContainerModel>(itemModel: item));
                     } else {
-                      openErrorDialog(widget.app, context, widget.app.documentID + '/_error', title: 'Problem', errorMessage: "This medium is used in the html so I can't delete it");
+                      openErrorDialog(widget.app, context,
+                          '${widget.app.documentID}/_error',
+                          title: 'Problem',
+                          errorMessage:
+                              "This medium is used in the html so I can't delete it");
                     }
                     break;
                 }
               },
               child: Tooltip(
-                  message: _message(item), child : (item == htmlWithPMM.currentEdit
-                  ? Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.red, width: 1),
-                      ),
-                      child: Image.network(
-                        medium.urlThumbnail!,
-                        //            height: height,
-                      ))
-                  : Image.network(
-                      medium.urlThumbnail!,
-                      //            height: height,
-                    )))));
+                  message: _message(item),
+                  child: (item == htmlWithPMM.currentEdit
+                      ? Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.red, width: 1),
+                          ),
+                          child: Image.network(
+                            medium.urlThumbnail!,
+                            //            height: height,
+                          ))
+                      : Image.network(
+                          medium.urlThumbnail!,
+                          //            height: height,
+                        )))));
         }
       }
       if (uploadingProgress == null) {
         widgets.add(MediaButtons.mediaButtons(
           context,
           widget.app,
-          () => Tuple2(postModel.accessibleByGroup == null ? MemberMediumAccessibleByGroup.Public : toMemberMediumAccessibleByGroup(postModel.accessibleByGroup!.index),
+          () => Tuple2(
+              postModel.accessibleByGroup == null
+                  ? MemberMediumAccessibleByGroup.public
+                  : toMemberMediumAccessibleByGroup(
+                      postModel.accessibleByGroup!.index),
               postModel.accessibleByMembers),
           allowCrop: false,
           tooltip: 'Add photo',
@@ -281,7 +287,7 @@ class _PostWithMemberMediumComponentsState
     if (item == null) {
       return '?';
     } else {
-      return (((item.memberMedium == null) || (item.memberMedium!.base == null)) ? 'no name' : item.memberMedium!.base!) + '.' + (((item.memberMedium == null) || (item.memberMedium!.ext == null)) ? 'no ext' : item.memberMedium!.ext!);
+      return '${((item.memberMedium == null) || (item.memberMedium!.base == null)) ? 'no name' : item.memberMedium!.base!}.${((item.memberMedium == null) || (item.memberMedium!.ext == null)) ? 'no ext' : item.memberMedium!.ext!}';
     }
   }
 }

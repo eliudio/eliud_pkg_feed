@@ -18,36 +18,42 @@ class ProfileComponentConstructorDefault implements ComponentConstructor {
   ProfileComponentConstructorDefault();
 
   @override
-  Widget createNew({Key? key, required AppModel app, required String id, Map<String, dynamic>? parameters}) {
+  Widget createNew(
+      {Key? key,
+      required AppModel app,
+      required String id,
+      Map<String, dynamic>? parameters}) {
     return ProfileComponent(key: key, app: app, id: id);
   }
 
   @override
-  Future<dynamic> getModel({required AppModel app, required String id}) async => await profileRepository(appId: app.documentID)!.get(id);
+  Future<dynamic> getModel({required AppModel app, required String id}) async =>
+      await profileRepository(appId: app.documentID)!.get(id);
 }
 
 class ProfileComponent extends AbstractProfileComponent {
-  ProfileComponent({Key? key, required AppModel app, required String id}) : super(key: key, app: app, profileId: id);
+  ProfileComponent({super.key, required super.app, required String id})
+      : super(profileId: id);
 
   @override
-  Widget yourWidget(BuildContext context, ProfileModel? profileModel) {
+  Widget yourWidget(BuildContext context, ProfileModel? value) {
     var modalRoute = ModalRoute.of(context) as ModalRoute;
-    var feedId = profileModel!.feed!.documentID;
+    var feedId = value!.feed!.documentID;
 
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (context, accessState) {
-          if (accessState is AccessDetermined) {
-            return BlocProvider<ProfileBloc>(
-                create: (context) =>
-                ProfileBloc()
-                  ..add(InitialiseProfileEvent(app,
-                      feedId, accessState, modalRoute)),
-                child: Profile(app: app, backgroundOverride: profileModel.backgroundOverride,)
-            );
-          } else {
-            return progressIndicator(app, context);
-          }
-        });
+      if (accessState is AccessDetermined) {
+        return BlocProvider<ProfileBloc>(
+            create: (context) => ProfileBloc()
+              ..add(
+                  InitialiseProfileEvent(app, feedId, accessState, modalRoute)),
+            child: Profile(
+              app: app,
+              backgroundOverride: value.backgroundOverride,
+            ));
+      } else {
+        return progressIndicator(app, context);
+      }
+    });
   }
-
 }

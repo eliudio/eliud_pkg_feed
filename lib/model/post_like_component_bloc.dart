@@ -20,7 +20,8 @@ import 'package:eliud_pkg_feed/model/post_like_component_event.dart';
 import 'package:eliud_pkg_feed/model/post_like_component_state.dart';
 import 'package:eliud_pkg_feed/model/post_like_repository.dart';
 
-class PostLikeComponentBloc extends Bloc<PostLikeComponentEvent, PostLikeComponentState> {
+class PostLikeComponentBloc
+    extends Bloc<PostLikeComponentEvent, PostLikeComponentState> {
   final PostLikeRepository? postLikeRepository;
   StreamSubscription? _postLikeSubscription;
 
@@ -33,11 +34,12 @@ class PostLikeComponentBloc extends Bloc<PostLikeComponentEvent, PostLikeCompone
     });
   }
 
-  PostLikeComponentBloc({ this.postLikeRepository }): super(PostLikeComponentUninitialized()) {
-    on <FetchPostLikeComponent> ((event, emit) {
+  PostLikeComponentBloc({this.postLikeRepository})
+      : super(PostLikeComponentUninitialized()) {
+    on<FetchPostLikeComponent>((event, emit) {
       _mapLoadPostLikeComponentUpdateToState(event.id!);
     });
-    on <PostLikeComponentUpdated> ((event, emit) {
+    on<PostLikeComponentUpdated>((event, emit) {
       emit(PostLikeComponentLoaded(value: event.value));
     });
   }
@@ -47,6 +49,4 @@ class PostLikeComponentBloc extends Bloc<PostLikeComponentEvent, PostLikeCompone
     _postLikeSubscription?.cancel();
     return super.close();
   }
-
 }
-

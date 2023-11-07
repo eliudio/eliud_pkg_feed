@@ -27,7 +27,7 @@ class FeedFrontComponentUninitialized extends FeedFrontComponentState {}
 
 class FeedFrontComponentError extends FeedFrontComponentState {
   final String? message;
-  FeedFrontComponentError({ this.message });
+  FeedFrontComponentError({this.message});
 }
 
 class FeedFrontComponentPermissionDenied extends FeedFrontComponentState {
@@ -37,10 +37,10 @@ class FeedFrontComponentPermissionDenied extends FeedFrontComponentState {
 class FeedFrontComponentLoaded extends FeedFrontComponentState {
   final FeedFrontModel value;
 
-  const FeedFrontComponentLoaded({ required this.value });
+  const FeedFrontComponentLoaded({required this.value});
 
-  FeedFrontComponentLoaded copyWith({ FeedFrontModel? copyThis }) {
-    return FeedFrontComponentLoaded(value: copyThis ?? this.value);
+  FeedFrontComponentLoaded copyWith({FeedFrontModel? copyThis}) {
+    return FeedFrontComponentLoaded(value: copyThis ?? value);
   }
 
   @override
@@ -49,4 +49,3 @@ class FeedFrontComponentLoaded extends FeedFrontComponentState {
   @override
   String toString() => 'FeedFrontComponentLoaded { value: $value }';
 }
-

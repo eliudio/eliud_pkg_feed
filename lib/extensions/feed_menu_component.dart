@@ -20,39 +20,47 @@ class FeedMenuComponentConstructorDefault implements ComponentConstructor {
   FeedMenuComponentConstructorDefault();
 
   @override
-  Widget createNew({Key? key, required AppModel app, required String id, Map<String, dynamic>? parameters}) {
+  Widget createNew(
+      {Key? key,
+      required AppModel app,
+      required String id,
+      Map<String, dynamic>? parameters}) {
     return FeedMenuComponent(key: key, app: app, id: id);
   }
 
   @override
-  Future<dynamic> getModel({required AppModel app, required String id}) async => await feedMenuRepository(appId: app.documentID)!.get(id);
+  Future<dynamic> getModel({required AppModel app, required String id}) async =>
+      await feedMenuRepository(appId: app.documentID)!.get(id);
 }
 
 class FeedMenuComponent extends AbstractFeedMenuComponent {
-  FeedMenuComponent({Key? key, required AppModel app, required String id}) : super(key: key, app: app, feedMenuId: id);
-
+  FeedMenuComponent({super.key, required super.app, required String id})
+      : super(feedMenuId: id);
 
   @override
-  Widget yourWidget(BuildContext context, FeedMenuModel? feedMenuModel) {
-    if (feedMenuModel == null) return text(app, context, "feedMenuModel is null");
-    if (feedMenuModel.feedFront == null) return text(app, context, "feedMenuModel.feedFront is null");
-    if (feedMenuModel.feedFront!.feed == null) return text(app, context, "feedMenuModel.feedFront!.feed is null");
+  Widget yourWidget(BuildContext context, FeedMenuModel? value) {
+    if (value == null) {
+      return text(app, context, "feedMenuModel is null");
+    }
+    if (value.feedFront == null) {
+      return text(app, context, "feedMenuModel.feedFront is null");
+    }
+    if (value.feedFront!.feed == null) {
+      return text(app, context, "feedMenuModel.feedFront!.feed is null");
+    }
     var modalRoute = ModalRoute.of(context) as ModalRoute;
-    var feedId = feedMenuModel.feedFront!.feed!.documentID;
+    var feedId = value.feedFront!.feed!.documentID;
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (context, accessState) {
-          if (accessState is AccessDetermined) {
-            return BlocProvider<ProfileBloc>(
-                create: (context) =>
-                ProfileBloc()
-                  ..add(InitialiseProfileEvent(app,
-                      feedId, accessState, modalRoute)),
-                child: FeedMenu(app, feedMenuModel)
-            );
-          } else {
-            return progressIndicator(app, context);
-          }
-        });
+      if (accessState is AccessDetermined) {
+        return BlocProvider<ProfileBloc>(
+            create: (context) => ProfileBloc()
+              ..add(
+                  InitialiseProfileEvent(app, feedId, accessState, modalRoute)),
+            child: FeedMenu(app, value));
+      } else {
+        return progressIndicator(app, context);
+      }
+    });
   }
-
 }

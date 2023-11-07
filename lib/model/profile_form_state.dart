@@ -41,9 +41,9 @@ class ProfileFormInitialized extends ProfileFormState {
   final ProfileModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
-  const ProfileFormInitialized({ this.value });
+  const ProfileFormInitialized({this.value});
 }
 
 // Menu has been initialised and hence a menu is available
@@ -51,9 +51,9 @@ abstract class ProfileFormError extends ProfileFormInitialized {
   final String? message;
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
-  const ProfileFormError({this.message, ProfileModel? value }) : super(value: value);
+  const ProfileFormError({this.message, super.value});
 
   @override
   String toString() {
@@ -63,11 +63,12 @@ abstract class ProfileFormError extends ProfileFormInitialized {
     }''';
   }
 }
-class DocumentIDProfileFormError extends ProfileFormError { 
-  const DocumentIDProfileFormError({ String? message, ProfileModel? value }): super(message: message, value: value);
+
+class DocumentIDProfileFormError extends ProfileFormError {
+  const DocumentIDProfileFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -78,12 +79,11 @@ class DocumentIDProfileFormError extends ProfileFormError {
   }
 }
 
-
-class AppIdProfileFormError extends ProfileFormError { 
-  const AppIdProfileFormError({ String? message, ProfileModel? value }): super(message: message, value: value);
+class AppIdProfileFormError extends ProfileFormError {
+  const AppIdProfileFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -94,12 +94,11 @@ class AppIdProfileFormError extends ProfileFormError {
   }
 }
 
-
-class DescriptionProfileFormError extends ProfileFormError { 
-  const DescriptionProfileFormError({ String? message, ProfileModel? value }): super(message: message, value: value);
+class DescriptionProfileFormError extends ProfileFormError {
+  const DescriptionProfileFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -110,12 +109,11 @@ class DescriptionProfileFormError extends ProfileFormError {
   }
 }
 
-
-class FeedProfileFormError extends ProfileFormError { 
-  const FeedProfileFormError({ String? message, ProfileModel? value }): super(message: message, value: value);
+class FeedProfileFormError extends ProfileFormError {
+  const FeedProfileFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -126,12 +124,11 @@ class FeedProfileFormError extends ProfileFormError {
   }
 }
 
-
-class BackgroundOverrideProfileFormError extends ProfileFormError { 
-  const BackgroundOverrideProfileFormError({ String? message, ProfileModel? value }): super(message: message, value: value);
+class BackgroundOverrideProfileFormError extends ProfileFormError {
+  const BackgroundOverrideProfileFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -142,12 +139,11 @@ class BackgroundOverrideProfileFormError extends ProfileFormError {
   }
 }
 
-
-class ConditionsProfileFormError extends ProfileFormError { 
-  const ConditionsProfileFormError({ String? message, ProfileModel? value }): super(message: message, value: value);
+class ConditionsProfileFormError extends ProfileFormError {
+  const ConditionsProfileFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -158,12 +154,11 @@ class ConditionsProfileFormError extends ProfileFormError {
   }
 }
 
-
-class ProfileFormLoaded extends ProfileFormInitialized { 
-  const ProfileFormLoaded({ ProfileModel? value }): super(value: value);
+class ProfileFormLoaded extends ProfileFormInitialized {
+  const ProfileFormLoaded({super.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() {
@@ -173,12 +168,11 @@ class ProfileFormLoaded extends ProfileFormInitialized {
   }
 }
 
-
-class SubmittableProfileForm extends ProfileFormInitialized { 
-  const SubmittableProfileForm({ ProfileModel? value }): super(value: value);
+class SubmittableProfileForm extends ProfileFormInitialized {
+  const SubmittableProfileForm({super.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() {
@@ -187,5 +181,3 @@ class SubmittableProfileForm extends ProfileFormInitialized {
     }''';
   }
 }
-
-

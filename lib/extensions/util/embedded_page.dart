@@ -80,7 +80,7 @@ class EmbeddedPageHelper {
                       widget = Registry.registry()!.wrapWidgetInBloc(
                           state.value!.widgetWrapper!, context, componentInfo);
                     }
-*//*
+*/ /*
 
                     if (widget == null) {
                       return PageBody(

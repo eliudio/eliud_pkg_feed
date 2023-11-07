@@ -41,16 +41,16 @@ class PagedPostsList extends StatefulWidget {
   const PagedPostsList(
     this.app,
     this.feedFrontModel, {
-    Key? key,
+    super.key,
     required this.backgroundOverride,
-  }) : super(key: key);
+  });
 
   @override
   PagedPostsListState createState() => PagedPostsListState();
 }
 
 class PagedPostsListState extends State<PagedPostsList> {
-  static double BUTTONSIZE = 40;
+  static double buttonSize = 40;
   late PostListPagedBloc _postBloc;
   double? photoUploadingProgress;
   double? videoUploadingProgress;
@@ -60,16 +60,18 @@ class PagedPostsListState extends State<PagedPostsList> {
   @override
   void initState() {
     super.initState();
-    currentPostAccessibleByGroup = PostAccessibleByGroup.Public;
+    currentPostAccessibleByGroup = PostAccessibleByGroup.public;
     currentPostAccessibleByMembers = [];
     _postBloc = BlocProvider.of<PostListPagedBloc>(context);
   }
 
+/*
   void _videoUploading(double progress) {
     setState(_) {
       videoUploadingProgress = progress;
     }
   }
+*/
 
   void _addPost(
       {String? html,
@@ -89,7 +91,7 @@ class PagedPostsListState extends State<PagedPostsList> {
       description: description,
       accessibleByGroup: postAccessibleByGroup,
       accessibleByMembers: postAccessibleByMembers,
-      archived: PostArchiveStatus.Active,
+      archived: PostArchiveStatus.active,
       html: html,
       memberMedia: postMemberMedia,
       readAccess: [
@@ -107,7 +109,12 @@ class PagedPostsListState extends State<PagedPostsList> {
       LoggedInProfileInitialized profileInitialized,
       eliudrouter.PageContextInfo pageContextInfo) {
     if (profileInitialized is LoggedInWatchingMyProfile) {
-      var rwb = RowWidgetBuilder(rowHeight: 100, rowSpace: 10, widgetHeight: 70, widgetWidth: 100, minSpace: 10);
+      var rwb = RowWidgetBuilder(
+          rowHeight: 100,
+          rowSpace: 10,
+          widgetHeight: 70,
+          widgetWidth: 100,
+          minSpace: 10);
 
       List<Widget> widgets = [];
       widgets.add(Spacer());
@@ -115,14 +122,14 @@ class PagedPostsListState extends State<PagedPostsList> {
       // Photo
       if (widget.feedFrontModel.feed!.photoPost!) {
         rwb.add(PostButton(widget.app, widget.feedFrontModel.feed!,
-                PostType.PostPhoto, _retrievePostAccessibile, author));
+            PostType.postPhoto, _retrievePostAccessibile, author));
       }
 
       // Video
       if (widget.feedFrontModel.feed!.videoPost != null &&
           widget.feedFrontModel.feed!.videoPost!) {
         rwb.add(PostButton(widget.app, widget.feedFrontModel.feed!,
-                PostType.PostVideo, _retrievePostAccessibile, author));
+            PostType.postVideo, _retrievePostAccessibile, author));
       }
 
       // Message
@@ -132,21 +139,20 @@ class PagedPostsListState extends State<PagedPostsList> {
             "assets/images/segoshvishna.fiverr.com/message.png",
             package: "eliud_pkg_feed");
         rwb.add(actionContainer(widget.app, context,
-                child: iconButton(widget.app, context,
-                    icon: message, tooltip: 'Message', onPressed: () {
-                  openEntryDialog(
-                      widget.app, context, widget.app.documentID + '/_message',
-                      title: 'Say something', onPressed: (value) {
-                    if (value != null) {
-                      _addPost(
-                          description: value,
-                          authorId: author.documentID,
-                          postAccessibleByGroup: currentPostAccessibleByGroup,
-                          postAccessibleByMembers:
-                              currentPostAccessibleByMembers);
-                    }
-                  });
-                })));
+            child: iconButton(widget.app, context,
+                icon: message, tooltip: 'Message', onPressed: () {
+              openEntryDialog(
+                  widget.app, context, '${widget.app.documentID}/_message',
+                  title: 'Say something', onPressed: (value) {
+                if (value != null) {
+                  _addPost(
+                      description: value,
+                      authorId: author.documentID,
+                      postAccessibleByGroup: currentPostAccessibleByGroup,
+                      postAccessibleByMembers: currentPostAccessibleByMembers);
+                }
+              });
+            })));
       }
 
       // Audio
@@ -156,7 +162,7 @@ class PagedPostsListState extends State<PagedPostsList> {
             "assets/images/segoshvishna.fiverr.com/audio.png",
             package: "eliud_pkg_feed");
         rwb.add(iconButton(widget.app, context,
-                icon: audio, tooltip: 'Audio', onPressed: () {}));
+            icon: audio, tooltip: 'Audio', onPressed: () {}));
       }
 
       // Album
@@ -166,20 +172,19 @@ class PagedPostsListState extends State<PagedPostsList> {
             "assets/images/segoshvishna.fiverr.com/album.png",
             package: "eliud_pkg_feed");
         rwb.add(actionContainer(widget.app, context,
-                child: iconButton(widget.app, context,
-                    icon: album,
-                    tooltip: 'Album',
-                    onPressed: () => FeedPostDialog.open(
-                        widget.app,
-                        context,
-                        widget.feedFrontModel.feed!.documentID,
-                        profileInitialized.watchingThisProfile()!.authorId!,
-                        profileInitialized.memberId(),
-                        profileInitialized.profileUrl(),
-                        pageContextInfo,
-                        InitialiseNewFeedPostFormEvent(
-                            currentPostAccessibleByGroup,
-                            currentPostAccessibleByMembers)))));
+            child: iconButton(widget.app, context,
+                icon: album,
+                tooltip: 'Album',
+                onPressed: () => FeedPostDialog.open(
+                    widget.app,
+                    context,
+                    widget.feedFrontModel.feed!.documentID,
+                    profileInitialized.watchingThisProfile()!.authorId!,
+                    profileInitialized.memberId(),
+                    profileInitialized.profileUrl(),
+                    pageContextInfo,
+                    InitialiseNewFeedPostFormEvent(currentPostAccessibleByGroup,
+                        currentPostAccessibleByMembers)))));
       }
 
       // Article
@@ -190,78 +195,71 @@ class PagedPostsListState extends State<PagedPostsList> {
             package: "eliud_pkg_feed");
 
         rwb.add(actionContainer(widget.app, context,
-                child: iconButton(widget.app, context,
-                    icon: articleIcon, tooltip: 'Article', onPressed: () {
-                  List<MemberMediumContainerModel> postMediumModels = [];
-                  AbstractTextPlatform.platform!
-                      .updateHtmlWithMemberMediumCallback(
-                          context,
-                          widget.app,
-                          author.documentID,
-                          (newArticle) {
-                            _addPost(
-                                html: newArticle,
-                                authorId: author.documentID,
-                                postAccessibleByGroup:
-                                    currentPostAccessibleByGroup,
-                                postAccessibleByMembers:
-                                    currentPostAccessibleByMembers,
-                                postMemberMedia: postMediumModels);
-                          },
-                          (AddMediaHtml addMediaHtml, String html) async {
-                            // the PostWithMemberMediumComponents uses (unfortunately) a PostModel, so we create one, just to be able to function, and to capturethe postMediumModels
-                            var tempModel = PostModel(documentID: newRandomKey(), authorId: author.documentID, appId: widget.app.documentID, html: html, memberMedia: postMediumModels,
-                              accessibleByGroup: currentPostAccessibleByGroup,
-                              accessibleByMembers: currentPostAccessibleByMembers,
-                            );
-                            await PostWithMemberMediumComponents.openIt(
-                                widget.app, context, tempModel,
-                                (accepted, model) {
-                              if (accepted) {
-                                postMediumModels = model.memberMedia;
-                              }
-                            }, addMediaHtml: addMediaHtml);
-                          },
-                          "Article",
-                          'Add article for ' +
-                              AccessGroupHelper.nameForPostAccessibleByGroup(
-                                  currentPostAccessibleByGroup),
-                          extraIcons: getAlbumActionIcons(
-                              widget.app,
-                              context,
-                              AccessGroupHelper.nameForPostAccessibleByGroup(
-                                  currentPostAccessibleByGroup)),
-                          accessibleByMembers: currentPostAccessibleByMembers);
-                })));
+            child: iconButton(widget.app, context,
+                icon: articleIcon, tooltip: 'Article', onPressed: () {
+              List<MemberMediumContainerModel> postMediumModels = [];
+              AbstractTextPlatform.platform!.updateHtmlWithMemberMediumCallback(
+                  context, widget.app, author.documentID, (newArticle) {
+                _addPost(
+                    html: newArticle,
+                    authorId: author.documentID,
+                    postAccessibleByGroup: currentPostAccessibleByGroup,
+                    postAccessibleByMembers: currentPostAccessibleByMembers,
+                    postMemberMedia: postMediumModels);
+              }, (AddMediaHtml addMediaHtml, String html) async {
+                // the PostWithMemberMediumComponents uses (unfortunately) a PostModel, so we create one, just to be able to function, and to capturethe postMediumModels
+                var tempModel = PostModel(
+                  documentID: newRandomKey(),
+                  authorId: author.documentID,
+                  appId: widget.app.documentID,
+                  html: html,
+                  memberMedia: postMediumModels,
+                  accessibleByGroup: currentPostAccessibleByGroup,
+                  accessibleByMembers: currentPostAccessibleByMembers,
+                );
+                await PostWithMemberMediumComponents.openIt(
+                    widget.app, context, tempModel, (accepted, model) {
+                  if (accepted) {
+                    postMediumModels = model.memberMedia;
+                  }
+                }, addMediaHtml: addMediaHtml);
+              }, "Article",
+                  'Add article for ${AccessGroupHelper.nameForPostAccessibleByGroup(currentPostAccessibleByGroup)}',
+                  extraIcons: getAlbumActionIcons(
+                      widget.app,
+                      context,
+                      AccessGroupHelper.nameForPostAccessibleByGroup(
+                          currentPostAccessibleByGroup)),
+                  accessibleByMembers: currentPostAccessibleByMembers);
+            })));
       }
 
       var accessIcon = Image.asset(
           "assets/images/icons8.com/icons8-eye-100.png",
           package: "eliud_pkg_feed");
       rwb.add(actionContainer(widget.app, context,
-              child: iconButton(widget.app, context,
-                  icon: accessIcon, tooltip: 'Visibility', onPressed: () {
-                PostPrivilegeDialog.openIt(
-                    widget.app,
-                    context,
-                    'Visibility',
-                    widget.feedFrontModel.feed!.documentID,
-                    author.documentID,
-                    author.documentID,
-                    currentPostAccessibleByGroup,
-                    currentPostAccessibleByMembers,
-                    (postAccessibleByGroup, postAccessibleByMembers) {
-                  currentPostAccessibleByGroup = postAccessibleByGroup;
-                  currentPostAccessibleByMembers = postAccessibleByMembers;
-                });
-              })));
+          child: iconButton(widget.app, context,
+              icon: accessIcon, tooltip: 'Visibility', onPressed: () {
+            PostPrivilegeDialog.openIt(
+                widget.app,
+                context,
+                'Visibility',
+                widget.feedFrontModel.feed!.documentID,
+                author.documentID,
+                author.documentID,
+                currentPostAccessibleByGroup,
+                currentPostAccessibleByMembers,
+                (postAccessibleByGroup, postAccessibleByMembers) {
+              currentPostAccessibleByGroup = postAccessibleByGroup;
+              currentPostAccessibleByMembers = postAccessibleByMembers;
+            });
+          })));
 
       return rwb.constructWidgets(context);
     } else {
       return Container(height: 0);
     }
   }
-
 
   static List<Widget> getAlbumActionIcons(
       AppModel app, BuildContext context, String accessible) {
@@ -270,9 +268,9 @@ class PagedPostsListState extends State<PagedPostsList> {
         openMessageDialog(
           app,
           context,
-          app.documentID + '/_accessible',
+          '${app.documentID}/_accessible',
           title: 'Accessible',
-          message: 'Article accessible by: ' + accessible,
+          message: 'Article accessible by: $accessible',
         );
       })
     ];
@@ -290,40 +288,40 @@ class PagedPostsListState extends State<PagedPostsList> {
           if (profileState is ProfileInitialised) {
             return BlocBuilder<PostListPagedBloc, PostListPagedState>(
               builder: (context, state) {
-                if (state is PostListPagedState) {
-                  var currentMemberId = profileState.memberId();
-                  var photoURL = profileState.profileUrl()??
-                      (profileState.app.anonymousProfilePhoto != null
-                          ? profileState.app.anonymousProfilePhoto!.url
-                          : null);
-                  List<Widget> widgets = [];
-                  if (profileState is LoggedInProfileInitialized) {
-                    widgets.add(_newPostForm(profileState.currentMember,
-                        profileState, pageContextInfo));
-                  }
-                  for (int i = 0; i < state.values.length; i++) {
-                    widgets.add(PostWidget(
-                      backgroundOverride: widget.backgroundOverride,
-                      thumbStyle: widget.feedFrontModel.feed!.thumbImage,
-                      app: widget.app,
-                      feedId: widget.feedFrontModel.feed!.documentID,
-                      details: state.values[i],
-                      pageId: pageId,
-                      memberId: state.values[i].postModel.authorId,
-                      currentMemberId: currentMemberId,
-                      isEditable: profileState.canEditThisProfile(),
-                      photoURL: photoURL,
-                      canBlock: state.canBlock,
-                    ));
-                  }
-                  widgets.add(_buttonNextPage(!state.hasReachedMax));
-                  return ListView(
-                      shrinkWrap: true,
-                      physics: ScrollPhysics(),
-                      children: widgets);
-                } else {
-                  return progressIndicator(widget.app, context);
+                //if (state is PostListPagedState) {
+                var currentMemberId = profileState.memberId();
+                var photoURL = profileState.profileUrl() ??
+                    (profileState.app.anonymousProfilePhoto != null
+                        ? profileState.app.anonymousProfilePhoto!.url
+                        : null);
+                List<Widget> widgets = [];
+                if (profileState is LoggedInProfileInitialized) {
+                  widgets.add(_newPostForm(profileState.currentMember,
+                      profileState, pageContextInfo));
                 }
+                for (int i = 0; i < state.values.length; i++) {
+                  widgets.add(PostWidget(
+                    backgroundOverride: widget.backgroundOverride,
+                    thumbStyle: widget.feedFrontModel.feed!.thumbImage,
+                    app: widget.app,
+                    feedId: widget.feedFrontModel.feed!.documentID,
+                    details: state.values[i],
+                    pageId: pageId,
+                    memberId: state.values[i].postModel.authorId,
+                    currentMemberId: currentMemberId,
+                    isEditable: profileState.canEditThisProfile(),
+                    photoURL: photoURL,
+                    canBlock: state.canBlock,
+                  ));
+                }
+                widgets.add(_buttonNextPage(!state.hasReachedMax));
+                return ListView(
+                    shrinkWrap: true,
+                    physics: ScrollPhysics(),
+                    children: widgets);
+                /*} else {
+                  return progressIndicator(widget.app, context);
+                }*/
               },
             );
           } else {
@@ -369,7 +367,7 @@ class PagedPostsListState extends State<PagedPostsList> {
   }
 }
 
-typedef OnClickFunction();
+typedef OnClickFunction = Function();
 
 class MyButton extends StatefulWidget {
   final AppModel app;
@@ -377,13 +375,12 @@ class MyButton extends StatefulWidget {
   final OnClickFunction? onClickFunction;
 
   const MyButton(
-      {Key? key,
+      {super.key,
       required this.app,
-      /*this.buttonColor, */ this.onClickFunction})
-      : super(key: key);
+      /*this.buttonColor, */ this.onClickFunction});
 
   @override
-  _MyButtonState createState() => _MyButtonState();
+  State<MyButton> createState() => _MyButtonState();
 }
 
 class _MyButtonState extends State<MyButton> {

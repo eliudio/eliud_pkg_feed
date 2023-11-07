@@ -22,37 +22,66 @@ class LabelledBodyComponentEntity implements EntityBase {
   final String? componentName;
   final String? componentId;
 
-  LabelledBodyComponentEntity({this.label, this.componentName, this.componentId, });
+  LabelledBodyComponentEntity({
+    this.label,
+    this.componentName,
+    this.componentId,
+  });
 
-  LabelledBodyComponentEntity copyWith({String? documentID, String? label, String? componentName, String? componentId, }) {
-    return LabelledBodyComponentEntity(label : label ?? this.label, componentName : componentName ?? this.componentName, componentId : componentId ?? this.componentId, );
+  LabelledBodyComponentEntity copyWith({
+    String? documentID,
+    String? label,
+    String? componentName,
+    String? componentId,
+  }) {
+    return LabelledBodyComponentEntity(
+      label: label ?? this.label,
+      componentName: componentName ?? this.componentName,
+      componentId: componentId ?? this.componentId,
+    );
   }
-  List<Object?> get props => [label, componentName, componentId, ];
+
+  List<Object?> get props => [
+        label,
+        componentName,
+        componentId,
+      ];
 
   @override
   String toString() {
     return 'LabelledBodyComponentEntity{label: $label, componentName: $componentName, componentId: $componentId}';
   }
 
-  static LabelledBodyComponentEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
+  static LabelledBodyComponentEntity? fromMap(Object? o,
+      {Map<String, String>? newDocumentIds}) {
     if (o == null) return null;
     var map = o as Map<String, dynamic>;
 
     return LabelledBodyComponentEntity(
-      label: map['label'], 
-      componentName: map['componentName'], 
-      componentId: map['componentId'], 
+      label: map['label'],
+      componentName: map['componentName'],
+      componentId: map['componentId'],
     );
   }
 
+  @override
   Map<String, Object?> toDocument() {
     Map<String, Object?> theDocument = HashMap();
-    if (label != null) theDocument["label"] = label;
-      else theDocument["label"] = null;
-    if (componentName != null) theDocument["componentName"] = componentName;
-      else theDocument["componentName"] = null;
-    if (componentId != null) theDocument["componentId"] = componentId;
-      else theDocument["componentId"] = null;
+    if (label != null) {
+      theDocument["label"] = label;
+    } else {
+      theDocument["label"] = null;
+    }
+    if (componentName != null) {
+      theDocument["componentName"] = componentName;
+    } else {
+      theDocument["componentName"] = null;
+    }
+    if (componentId != null) {
+      theDocument["componentId"] = componentId;
+    } else {
+      theDocument["componentId"] = null;
+    }
     return theDocument;
   }
 
@@ -62,7 +91,8 @@ class LabelledBodyComponentEntity implements EntityBase {
     return newEntity;
   }
 
-  static LabelledBodyComponentEntity? fromJsonString(String json, {Map<String, String>? newDocumentIds}) {
+  static LabelledBodyComponentEntity? fromJsonString(String json,
+      {Map<String, String>? newDocumentIds}) {
     Map<String, dynamic>? generationSpecificationMap = jsonDecode(json);
     return fromMap(generationSpecificationMap, newDocumentIds: newDocumentIds);
   }
@@ -71,9 +101,9 @@ class LabelledBodyComponentEntity implements EntityBase {
     return jsonEncode(toDocument());
   }
 
-  Future<Map<String, Object?>> enrichedDocument(Map<String, Object?> theDocument) async {
+  @override
+  Future<Map<String, Object?>> enrichedDocument(
+      Map<String, Object?> theDocument) async {
     return theDocument;
   }
-
 }
-

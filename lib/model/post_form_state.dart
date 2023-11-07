@@ -41,9 +41,9 @@ class PostFormInitialized extends PostFormState {
   final PostModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
-  const PostFormInitialized({ this.value });
+  const PostFormInitialized({this.value});
 }
 
 // Menu has been initialised and hence a menu is available
@@ -51,9 +51,9 @@ abstract class PostFormError extends PostFormInitialized {
   final String? message;
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
-  const PostFormError({this.message, PostModel? value }) : super(value: value);
+  const PostFormError({this.message, super.value});
 
   @override
   String toString() {
@@ -63,11 +63,12 @@ abstract class PostFormError extends PostFormInitialized {
     }''';
   }
 }
-class DocumentIDPostFormError extends PostFormError { 
-  const DocumentIDPostFormError({ String? message, PostModel? value }): super(message: message, value: value);
+
+class DocumentIDPostFormError extends PostFormError {
+  const DocumentIDPostFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -78,12 +79,11 @@ class DocumentIDPostFormError extends PostFormError {
   }
 }
 
-
-class AuthorIdPostFormError extends PostFormError { 
-  const AuthorIdPostFormError({ String? message, PostModel? value }): super(message: message, value: value);
+class AuthorIdPostFormError extends PostFormError {
+  const AuthorIdPostFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -94,12 +94,11 @@ class AuthorIdPostFormError extends PostFormError {
   }
 }
 
-
-class TimestampPostFormError extends PostFormError { 
-  const TimestampPostFormError({ String? message, PostModel? value }): super(message: message, value: value);
+class TimestampPostFormError extends PostFormError {
+  const TimestampPostFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -110,12 +109,11 @@ class TimestampPostFormError extends PostFormError {
   }
 }
 
-
-class AppIdPostFormError extends PostFormError { 
-  const AppIdPostFormError({ String? message, PostModel? value }): super(message: message, value: value);
+class AppIdPostFormError extends PostFormError {
+  const AppIdPostFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -126,12 +124,11 @@ class AppIdPostFormError extends PostFormError {
   }
 }
 
-
-class FeedIdPostFormError extends PostFormError { 
-  const FeedIdPostFormError({ String? message, PostModel? value }): super(message: message, value: value);
+class FeedIdPostFormError extends PostFormError {
+  const FeedIdPostFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -142,12 +139,11 @@ class FeedIdPostFormError extends PostFormError {
   }
 }
 
-
-class PostAppIdPostFormError extends PostFormError { 
-  const PostAppIdPostFormError({ String? message, PostModel? value }): super(message: message, value: value);
+class PostAppIdPostFormError extends PostFormError {
+  const PostAppIdPostFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -158,12 +154,11 @@ class PostAppIdPostFormError extends PostFormError {
   }
 }
 
-
-class PostPageIdPostFormError extends PostFormError { 
-  const PostPageIdPostFormError({ String? message, PostModel? value }): super(message: message, value: value);
+class PostPageIdPostFormError extends PostFormError {
+  const PostPageIdPostFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -174,12 +169,11 @@ class PostPageIdPostFormError extends PostFormError {
   }
 }
 
-
-class PageParametersPostFormError extends PostFormError { 
-  const PageParametersPostFormError({ String? message, PostModel? value }): super(message: message, value: value);
+class PageParametersPostFormError extends PostFormError {
+  const PageParametersPostFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -190,12 +184,11 @@ class PageParametersPostFormError extends PostFormError {
   }
 }
 
-
-class HtmlPostFormError extends PostFormError { 
-  const HtmlPostFormError({ String? message, PostModel? value }): super(message: message, value: value);
+class HtmlPostFormError extends PostFormError {
+  const HtmlPostFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -206,12 +199,11 @@ class HtmlPostFormError extends PostFormError {
   }
 }
 
-
-class DescriptionPostFormError extends PostFormError { 
-  const DescriptionPostFormError({ String? message, PostModel? value }): super(message: message, value: value);
+class DescriptionPostFormError extends PostFormError {
+  const DescriptionPostFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -222,12 +214,11 @@ class DescriptionPostFormError extends PostFormError {
   }
 }
 
-
-class LikesPostFormError extends PostFormError { 
-  const LikesPostFormError({ String? message, PostModel? value }): super(message: message, value: value);
+class LikesPostFormError extends PostFormError {
+  const LikesPostFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -238,12 +229,11 @@ class LikesPostFormError extends PostFormError {
   }
 }
 
-
-class DislikesPostFormError extends PostFormError { 
-  const DislikesPostFormError({ String? message, PostModel? value }): super(message: message, value: value);
+class DislikesPostFormError extends PostFormError {
+  const DislikesPostFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -254,12 +244,11 @@ class DislikesPostFormError extends PostFormError {
   }
 }
 
-
-class AccessibleByGroupPostFormError extends PostFormError { 
-  const AccessibleByGroupPostFormError({ String? message, PostModel? value }): super(message: message, value: value);
+class AccessibleByGroupPostFormError extends PostFormError {
+  const AccessibleByGroupPostFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -270,12 +259,11 @@ class AccessibleByGroupPostFormError extends PostFormError {
   }
 }
 
-
-class AccessibleByMembersPostFormError extends PostFormError { 
-  const AccessibleByMembersPostFormError({ String? message, PostModel? value }): super(message: message, value: value);
+class AccessibleByMembersPostFormError extends PostFormError {
+  const AccessibleByMembersPostFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -286,12 +274,11 @@ class AccessibleByMembersPostFormError extends PostFormError {
   }
 }
 
-
-class ReadAccessPostFormError extends PostFormError { 
-  const ReadAccessPostFormError({ String? message, PostModel? value }): super(message: message, value: value);
+class ReadAccessPostFormError extends PostFormError {
+  const ReadAccessPostFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -302,12 +289,11 @@ class ReadAccessPostFormError extends PostFormError {
   }
 }
 
-
-class ArchivedPostFormError extends PostFormError { 
-  const ArchivedPostFormError({ String? message, PostModel? value }): super(message: message, value: value);
+class ArchivedPostFormError extends PostFormError {
+  const ArchivedPostFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -318,12 +304,11 @@ class ArchivedPostFormError extends PostFormError {
   }
 }
 
-
-class ExternalLinkPostFormError extends PostFormError { 
-  const ExternalLinkPostFormError({ String? message, PostModel? value }): super(message: message, value: value);
+class ExternalLinkPostFormError extends PostFormError {
+  const ExternalLinkPostFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -334,12 +319,11 @@ class ExternalLinkPostFormError extends PostFormError {
   }
 }
 
-
-class MemberMediaPostFormError extends PostFormError { 
-  const MemberMediaPostFormError({ String? message, PostModel? value }): super(message: message, value: value);
+class MemberMediaPostFormError extends PostFormError {
+  const MemberMediaPostFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -350,12 +334,11 @@ class MemberMediaPostFormError extends PostFormError {
   }
 }
 
-
-class PostFormLoaded extends PostFormInitialized { 
-  const PostFormLoaded({ PostModel? value }): super(value: value);
+class PostFormLoaded extends PostFormInitialized {
+  const PostFormLoaded({super.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() {
@@ -365,12 +348,11 @@ class PostFormLoaded extends PostFormInitialized {
   }
 }
 
-
-class SubmittablePostForm extends PostFormInitialized { 
-  const SubmittablePostForm({ PostModel? value }): super(value: value);
+class SubmittablePostForm extends PostFormInitialized {
+  const SubmittablePostForm({super.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() {
@@ -379,5 +361,3 @@ class SubmittablePostForm extends PostFormInitialized {
     }''';
   }
 }
-
-

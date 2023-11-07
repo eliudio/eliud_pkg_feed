@@ -30,10 +30,10 @@ class NewPage extends PostCommentListEvent {}
 class AddPostCommentList extends PostCommentListEvent {
   final PostCommentModel? value;
 
-  const AddPostCommentList({ this.value });
+  const AddPostCommentList({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'AddPostCommentList{ value: $value }';
@@ -42,10 +42,10 @@ class AddPostCommentList extends PostCommentListEvent {
 class UpdatePostCommentList extends PostCommentListEvent {
   final PostCommentModel? value;
 
-  const UpdatePostCommentList({ this.value });
+  const UpdatePostCommentList({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'UpdatePostCommentList{ value: $value }';
@@ -54,10 +54,10 @@ class UpdatePostCommentList extends PostCommentListEvent {
 class DeletePostCommentList extends PostCommentListEvent {
   final PostCommentModel? value;
 
-  const DeletePostCommentList({ this.value });
+  const DeletePostCommentList({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'DeletePostCommentList{ value: $value }';
@@ -67,24 +67,24 @@ class PostCommentListUpdated extends PostCommentListEvent {
   final List<PostCommentModel?>? value;
   final bool? mightHaveMore;
 
-  const PostCommentListUpdated({ this.value, this.mightHaveMore });
+  const PostCommentListUpdated({this.value, this.mightHaveMore});
 
   @override
-  List<Object?> get props => [ value, mightHaveMore ];
+  List<Object?> get props => [value, mightHaveMore];
 
   @override
-  String toString() => 'PostCommentListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
+  String toString() =>
+      'PostCommentListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
 }
 
 class PostCommentChangeQuery extends PostCommentListEvent {
   final EliudQuery? newQuery;
 
-  const PostCommentChangeQuery({ required this.newQuery });
+  const PostCommentChangeQuery({required this.newQuery});
 
   @override
-  List<Object?> get props => [ newQuery ];
+  List<Object?> get props => [newQuery];
 
   @override
   String toString() => 'PostCommentChangeQuery{ value: $newQuery }';
 }
-

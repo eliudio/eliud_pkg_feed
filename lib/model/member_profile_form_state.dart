@@ -41,9 +41,9 @@ class MemberProfileFormInitialized extends MemberProfileFormState {
   final MemberProfileModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
-  const MemberProfileFormInitialized({ this.value });
+  const MemberProfileFormInitialized({this.value});
 }
 
 // Menu has been initialised and hence a menu is available
@@ -51,9 +51,9 @@ abstract class MemberProfileFormError extends MemberProfileFormInitialized {
   final String? message;
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
-  const MemberProfileFormError({this.message, MemberProfileModel? value }) : super(value: value);
+  const MemberProfileFormError({this.message, super.value});
 
   @override
   String toString() {
@@ -63,11 +63,12 @@ abstract class MemberProfileFormError extends MemberProfileFormInitialized {
     }''';
   }
 }
-class DocumentIDMemberProfileFormError extends MemberProfileFormError { 
-  const DocumentIDMemberProfileFormError({ String? message, MemberProfileModel? value }): super(message: message, value: value);
+
+class DocumentIDMemberProfileFormError extends MemberProfileFormError {
+  const DocumentIDMemberProfileFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -78,12 +79,11 @@ class DocumentIDMemberProfileFormError extends MemberProfileFormError {
   }
 }
 
-
-class AppIdMemberProfileFormError extends MemberProfileFormError { 
-  const AppIdMemberProfileFormError({ String? message, MemberProfileModel? value }): super(message: message, value: value);
+class AppIdMemberProfileFormError extends MemberProfileFormError {
+  const AppIdMemberProfileFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -94,12 +94,11 @@ class AppIdMemberProfileFormError extends MemberProfileFormError {
   }
 }
 
-
-class FeedIdMemberProfileFormError extends MemberProfileFormError { 
-  const FeedIdMemberProfileFormError({ String? message, MemberProfileModel? value }): super(message: message, value: value);
+class FeedIdMemberProfileFormError extends MemberProfileFormError {
+  const FeedIdMemberProfileFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -110,12 +109,11 @@ class FeedIdMemberProfileFormError extends MemberProfileFormError {
   }
 }
 
-
-class AuthorIdMemberProfileFormError extends MemberProfileFormError { 
-  const AuthorIdMemberProfileFormError({ String? message, MemberProfileModel? value }): super(message: message, value: value);
+class AuthorIdMemberProfileFormError extends MemberProfileFormError {
+  const AuthorIdMemberProfileFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -126,12 +124,11 @@ class AuthorIdMemberProfileFormError extends MemberProfileFormError {
   }
 }
 
-
-class ProfileMemberProfileFormError extends MemberProfileFormError { 
-  const ProfileMemberProfileFormError({ String? message, MemberProfileModel? value }): super(message: message, value: value);
+class ProfileMemberProfileFormError extends MemberProfileFormError {
+  const ProfileMemberProfileFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -142,12 +139,11 @@ class ProfileMemberProfileFormError extends MemberProfileFormError {
   }
 }
 
-
-class ProfileBackgroundMemberProfileFormError extends MemberProfileFormError { 
-  const ProfileBackgroundMemberProfileFormError({ String? message, MemberProfileModel? value }): super(message: message, value: value);
+class ProfileBackgroundMemberProfileFormError extends MemberProfileFormError {
+  const ProfileBackgroundMemberProfileFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -158,12 +154,11 @@ class ProfileBackgroundMemberProfileFormError extends MemberProfileFormError {
   }
 }
 
-
-class ProfileOverrideMemberProfileFormError extends MemberProfileFormError { 
-  const ProfileOverrideMemberProfileFormError({ String? message, MemberProfileModel? value }): super(message: message, value: value);
+class ProfileOverrideMemberProfileFormError extends MemberProfileFormError {
+  const ProfileOverrideMemberProfileFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -174,12 +169,11 @@ class ProfileOverrideMemberProfileFormError extends MemberProfileFormError {
   }
 }
 
-
-class NameOverrideMemberProfileFormError extends MemberProfileFormError { 
-  const NameOverrideMemberProfileFormError({ String? message, MemberProfileModel? value }): super(message: message, value: value);
+class NameOverrideMemberProfileFormError extends MemberProfileFormError {
+  const NameOverrideMemberProfileFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -190,12 +184,11 @@ class NameOverrideMemberProfileFormError extends MemberProfileFormError {
   }
 }
 
-
-class AccessibleByGroupMemberProfileFormError extends MemberProfileFormError { 
-  const AccessibleByGroupMemberProfileFormError({ String? message, MemberProfileModel? value }): super(message: message, value: value);
+class AccessibleByGroupMemberProfileFormError extends MemberProfileFormError {
+  const AccessibleByGroupMemberProfileFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -206,12 +199,11 @@ class AccessibleByGroupMemberProfileFormError extends MemberProfileFormError {
   }
 }
 
-
-class AccessibleByMembersMemberProfileFormError extends MemberProfileFormError { 
-  const AccessibleByMembersMemberProfileFormError({ String? message, MemberProfileModel? value }): super(message: message, value: value);
+class AccessibleByMembersMemberProfileFormError extends MemberProfileFormError {
+  const AccessibleByMembersMemberProfileFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -222,12 +214,11 @@ class AccessibleByMembersMemberProfileFormError extends MemberProfileFormError {
   }
 }
 
-
-class ReadAccessMemberProfileFormError extends MemberProfileFormError { 
-  const ReadAccessMemberProfileFormError({ String? message, MemberProfileModel? value }): super(message: message, value: value);
+class ReadAccessMemberProfileFormError extends MemberProfileFormError {
+  const ReadAccessMemberProfileFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -238,12 +229,11 @@ class ReadAccessMemberProfileFormError extends MemberProfileFormError {
   }
 }
 
-
-class MemberMediaMemberProfileFormError extends MemberProfileFormError { 
-  const MemberMediaMemberProfileFormError({ String? message, MemberProfileModel? value }): super(message: message, value: value);
+class MemberMediaMemberProfileFormError extends MemberProfileFormError {
+  const MemberMediaMemberProfileFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -254,12 +244,11 @@ class MemberMediaMemberProfileFormError extends MemberProfileFormError {
   }
 }
 
-
-class MemberProfileFormLoaded extends MemberProfileFormInitialized { 
-  const MemberProfileFormLoaded({ MemberProfileModel? value }): super(value: value);
+class MemberProfileFormLoaded extends MemberProfileFormInitialized {
+  const MemberProfileFormLoaded({super.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() {
@@ -269,12 +258,11 @@ class MemberProfileFormLoaded extends MemberProfileFormInitialized {
   }
 }
 
-
-class SubmittableMemberProfileForm extends MemberProfileFormInitialized { 
-  const SubmittableMemberProfileForm({ MemberProfileModel? value }): super(value: value);
+class SubmittableMemberProfileForm extends MemberProfileFormInitialized {
+  const SubmittableMemberProfileForm({super.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() {
@@ -283,5 +271,3 @@ class SubmittableMemberProfileForm extends MemberProfileFormInitialized {
     }''';
   }
 }
-
-

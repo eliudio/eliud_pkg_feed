@@ -20,37 +20,33 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'bloc/feed_bloc.dart';
 
 class FeedDashboard {
-  static void updateFeed(
-      AppModel app, BuildContext context, model) {
+  static void updateFeed(AppModel app, BuildContext context, model) {
     _openIt(app, context, false, model.copyWith());
   }
 
-  static void deleteFeed(
-      AppModel app, BuildContext context, model) {
+  static void deleteFeed(AppModel app, BuildContext context, model) {
     // ask for confirmation. Very dangerous
   }
 
-  static void addFeed(
-      AppModel app, BuildContext context) {
+  static void addFeed(AppModel app, BuildContext context) {
     _openIt(
-        app,
-        context,
-        true,
-        FeedModel(
-          appId: app.documentID,
-          documentID: newRandomKey(),
-        ),);
+      app,
+      context,
+      true,
+      FeedModel(
+        appId: app.documentID,
+        documentID: newRandomKey(),
+      ),
+    );
   }
 
-  static void _openIt(AppModel app, BuildContext context, bool create,
-      FeedModel model) {
+  static void _openIt(
+      AppModel app, BuildContext context, bool create, FeedModel model) {
     openComplexDialog(
       app,
       context,
-      app.documentID + '/feed',
-      title: create
-          ? 'Create Feed'
-          : 'Update Feed',
+      '${app.documentID}/feed',
+      title: create ? 'Create Feed' : 'Update Feed',
       includeHeading: false,
       widthFraction: .9,
       child: BlocProvider<FeedDashboardBloc>(
@@ -69,27 +65,23 @@ class FeedDashboardWidget extends StatefulWidget {
   final AppModel app;
 
   const FeedDashboardWidget({
-    Key? key,
+    super.key,
     required this.app,
-  }) : super(key: key);
+  });
 
   @override
-  State<StatefulWidget> createState() =>
-      _FeedDashboardWidgetState();
+  State<StatefulWidget> createState() => _FeedDashboardWidgetState();
 }
 
-class _FeedDashboardWidgetState
-    extends State<FeedDashboardWidget> {
+class _FeedDashboardWidgetState extends State<FeedDashboardWidget> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (aContext, accessState) {
       if (accessState is AccessDetermined) {
-        return BlocBuilder<FeedDashboardBloc,
-            EditorBaseState<FeedModel>>(
+        return BlocBuilder<FeedDashboardBloc, EditorBaseState<FeedModel>>(
             builder: (ppContext, feedState) {
-          if (feedState
-              is EditorBaseInitialised<FeedModel>) {
+          if (feedState is EditorBaseInitialised<FeedModel>) {
             return ListView(
                 shrinkWrap: true,
                 physics: ScrollPhysics(),
@@ -98,8 +90,8 @@ class _FeedDashboardWidgetState
                     app: widget.app,
                     title: 'Feed',
                     okAction: () async {
-                      await BlocProvider.of<FeedDashboardBloc>(context)
-                          .save(EditorBaseApplyChanges<FeedModel>(
+                      await BlocProvider.of<FeedDashboardBloc>(context).save(
+                          EditorBaseApplyChanges<FeedModel>(
                               model: feedState.model));
                       return true;
                     },
@@ -121,11 +113,9 @@ class _FeedDashboardWidgetState
                             title: dialogField(
                               widget.app,
                               context,
-                              initialValue:
-                              feedState.model.description,
+                              initialValue: feedState.model.description,
                               valueChanged: (value) {
-                                feedState.model.description =
-                                    value;
+                                feedState.model.description = value;
                               },
                               maxLines: 1,
                               decoration: const InputDecoration(
@@ -139,11 +129,16 @@ class _FeedDashboardWidgetState
                       collapsible: true,
                       collapsed: true,
                       children: [
-                        ThumbStyleWidget(app: widget.app, thumbStyle: feedState.model.thumbImage ?? ThumbStyle.Banana, thumbStyleCallback: (ThumbStyle thumbStyle) {
-                          setState(() {
-                            feedState.model.thumbImage = thumbStyle;
-                          });
-                        }, )
+                        ThumbStyleWidget(
+                          app: widget.app,
+                          thumbStyle:
+                              feedState.model.thumbImage ?? ThumbStyle.banana,
+                          thumbStyleCallback: (ThumbStyle thumbStyle) {
+                            setState(() {
+                              feedState.model.thumbImage = thumbStyle;
+                            });
+                          },
+                        )
                       ]),
                   topicContainer(widget.app, context,
                       title: 'Feed allowed',
@@ -152,22 +147,22 @@ class _FeedDashboardWidgetState
                       children: [
                         checkboxListTile(widget.app, context, 'Post photo',
                             feedState.model.photoPost, (value) {
-                              setState(() {
-                                feedState.model.photoPost = value ?? false;
-                              });
-                            }),
+                          setState(() {
+                            feedState.model.photoPost = value ?? false;
+                          });
+                        }),
                         checkboxListTile(widget.app, context, 'Post video',
                             feedState.model.videoPost, (value) {
-                              setState(() {
-                                feedState.model.videoPost = value ?? false;
-                              });
-                            }),
+                          setState(() {
+                            feedState.model.videoPost = value ?? false;
+                          });
+                        }),
                         checkboxListTile(widget.app, context, 'Post message',
                             feedState.model.messagePost, (value) {
-                              setState(() {
-                                feedState.model.messagePost = value ?? false;
-                              });
-                            }),
+                          setState(() {
+                            feedState.model.messagePost = value ?? false;
+                          });
+                        }),
 /*
                         not implemented yet
                         checkboxListTile(widget.app, context, 'Audio message',
@@ -179,17 +174,16 @@ class _FeedDashboardWidgetState
 */
                         checkboxListTile(widget.app, context, 'Post album',
                             feedState.model.albumPost, (value) {
-                              setState(() {
-                                feedState.model.albumPost = value ?? false;
-                              });
-                            }),
+                          setState(() {
+                            feedState.model.albumPost = value ?? false;
+                          });
+                        }),
                         checkboxListTile(widget.app, context, 'Post article',
                             feedState.model.articlePost, (value) {
-                              setState(() {
-                                feedState.model.articlePost = value ?? false;
-                              });
-                            }),
-
+                          setState(() {
+                            feedState.model.articlePost = value ?? false;
+                          });
+                        }),
                       ]),
                 ]);
           } else {
@@ -201,5 +195,4 @@ class _FeedDashboardWidgetState
       }
     });
   }
-
 }

@@ -27,7 +27,7 @@ class ProfileComponentUninitialized extends ProfileComponentState {}
 
 class ProfileComponentError extends ProfileComponentState {
   final String? message;
-  ProfileComponentError({ this.message });
+  ProfileComponentError({this.message});
 }
 
 class ProfileComponentPermissionDenied extends ProfileComponentState {
@@ -37,10 +37,10 @@ class ProfileComponentPermissionDenied extends ProfileComponentState {
 class ProfileComponentLoaded extends ProfileComponentState {
   final ProfileModel value;
 
-  const ProfileComponentLoaded({ required this.value });
+  const ProfileComponentLoaded({required this.value});
 
-  ProfileComponentLoaded copyWith({ ProfileModel? copyThis }) {
-    return ProfileComponentLoaded(value: copyThis ?? this.value);
+  ProfileComponentLoaded copyWith({ProfileModel? copyThis}) {
+    return ProfileComponentLoaded(value: copyThis ?? value);
   }
 
   @override
@@ -49,4 +49,3 @@ class ProfileComponentLoaded extends ProfileComponentState {
   @override
   String toString() => 'ProfileComponentLoaded { value: $value }';
 }
-

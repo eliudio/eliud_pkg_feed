@@ -18,7 +18,6 @@ import 'package:meta/meta.dart';
 import 'package:eliud_core/model/model_export.dart';
 import 'package:eliud_pkg_feed/model/model_export.dart';
 
-
 @immutable
 abstract class ProfileFormEvent extends Equatable {
   const ProfileFormEvent();
@@ -27,15 +26,13 @@ abstract class ProfileFormEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class InitialiseNewProfileFormEvent extends ProfileFormEvent {
-}
-
+class InitialiseNewProfileFormEvent extends ProfileFormEvent {}
 
 class InitialiseProfileFormEvent extends ProfileFormEvent {
   final ProfileModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   InitialiseProfileFormEvent({this.value});
 }
@@ -44,7 +41,7 @@ class InitialiseProfileFormNoLoadEvent extends ProfileFormEvent {
   final ProfileModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   InitialiseProfileFormNoLoadEvent({this.value});
 }
@@ -55,7 +52,7 @@ class ChangedProfileDocumentID extends ProfileFormEvent {
   ChangedProfileDocumentID({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedProfileDocumentID{ value: $value }';
@@ -67,7 +64,7 @@ class ChangedProfileAppId extends ProfileFormEvent {
   ChangedProfileAppId({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedProfileAppId{ value: $value }';
@@ -79,7 +76,7 @@ class ChangedProfileDescription extends ProfileFormEvent {
   ChangedProfileDescription({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedProfileDescription{ value: $value }';
@@ -91,7 +88,7 @@ class ChangedProfileFeed extends ProfileFormEvent {
   ChangedProfileFeed({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedProfileFeed{ value: $value }';
@@ -103,7 +100,7 @@ class ChangedProfileBackgroundOverride extends ProfileFormEvent {
   ChangedProfileBackgroundOverride({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedProfileBackgroundOverride{ value: $value }';
@@ -115,9 +112,8 @@ class ChangedProfileConditions extends ProfileFormEvent {
   ChangedProfileConditions({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedProfileConditions{ value: $value }';
 }
-

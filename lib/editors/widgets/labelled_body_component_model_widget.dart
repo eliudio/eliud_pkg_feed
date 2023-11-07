@@ -10,7 +10,7 @@ import 'package:eliud_core/tools/widgets/header_widget.dart';
 import 'package:eliud_pkg_feed/model/labelled_body_component_model.dart';
 import 'package:flutter/material.dart';
 
-typedef void LabelledBodyComponentModelCallback(
+typedef LabelledBodyComponentModelCallback = void Function(
     LabelledBodyComponentModel labelledBodyComponentModel);
 
 class LabelledBodyComponentModelWidget extends StatefulWidget {
@@ -23,7 +23,6 @@ class LabelledBodyComponentModelWidget extends StatefulWidget {
   final int containerPrivilege;
 
   LabelledBodyComponentModelWidget._({
-    Key? key,
     required this.app,
     required this.create,
     required this.widgetWidth,
@@ -31,7 +30,7 @@ class LabelledBodyComponentModelWidget extends StatefulWidget {
     required this.labelledBodyComponentModel,
     required this.labelledBodyComponentModelCallback,
     required this.containerPrivilege,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() {
@@ -124,7 +123,8 @@ class _LabelledBodyComponentModelWidgetState
                 title: ComponentIdField(widget.app,
                     componentName:
                         widget.labelledBodyComponentModel.componentName,
-                    value: widget.labelledBodyComponentModel.componentId,
+                    originalValue:
+                        widget.labelledBodyComponentModel.componentId,
                     currentPrivilegeLevel: currentPrivilegeLevel,
                     trigger: (value, privilegeLevel) {
                   setState(() {

@@ -27,8 +27,7 @@ import 'package:eliud_core/core/editor/editor_base_bloc/editor_base_state.dart';
 import '../model/profile_entity.dart';
 import 'feed/select_feed_widget.dart';
 
-class ProfileComponentEditorConstructor
-    extends ComponentEditorConstructor {
+class ProfileComponentEditorConstructor extends ComponentEditorConstructor {
   @override
   void updateComponent(
       AppModel app, BuildContext context, model, EditorFeedback feedback) {
@@ -48,7 +47,7 @@ class ProfileComponentEditorConstructor
           description: 'New profile',
           conditions: StorageConditionsModel(
               privilegeLevelRequired:
-                  PrivilegeLevelRequiredSimple.NoPrivilegeRequiredSimple),
+                  PrivilegeLevelRequiredSimple.noPrivilegeRequiredSimple),
         ),
         feedback);
   }
@@ -56,12 +55,11 @@ class ProfileComponentEditorConstructor
   @override
   void updateComponentWithID(AppModel app, BuildContext context, String id,
       EditorFeedback feedback) async {
-    var profile =
-        await profileRepository(appId: app.documentID)!.get(id);
+    var profile = await profileRepository(appId: app.documentID)!.get(id);
     if (profile != null) {
       _openIt(app, context, false, profile, feedback);
     } else {
-      openErrorDialog(app, context, app.documentID + '/_error',
+      openErrorDialog(app, context, '${app.documentID}/_error',
           title: 'Error',
           errorMessage: 'Cannot find notification dashboard with id $id');
     }
@@ -72,7 +70,7 @@ class ProfileComponentEditorConstructor
     openComplexDialog(
       app,
       context,
-      app.documentID + '/notificationdashboard',
+      '${app.documentID}/notificationdashboard',
       title: create
           ? 'Create Notification Dashboard'
           : 'Update Notification Dashboard',
@@ -92,9 +90,7 @@ class ProfileComponentEditorConstructor
   }
 }
 
-class ProfileBloc
-    extends EditorBaseBloc<ProfileModel, ProfileEntity> {
-
+class ProfileBloc extends EditorBaseBloc<ProfileModel, ProfileEntity> {
   ProfileBloc(String appId, EditorFeedback feedback)
       : super(appId, profileRepository(appId: appId)!, feedback);
 
@@ -110,8 +106,7 @@ class ProfileBloc
   @override
   ProfileModel setDefaultValues(
       ProfileModel t, StorageConditionsModel conditions) {
-    return t.copyWith(
-        conditions: t.conditions ?? conditions);
+    return t.copyWith(conditions: t.conditions ?? conditions);
   }
 }
 
@@ -119,17 +114,15 @@ class ProfileComponentEditor extends StatefulWidget {
   final AppModel app;
 
   const ProfileComponentEditor({
-    Key? key,
+    super.key,
     required this.app,
-  }) : super(key: key);
+  });
 
   @override
-  State<StatefulWidget> createState() =>
-      _ProfileComponentEditorState();
+  State<StatefulWidget> createState() => _ProfileComponentEditorState();
 }
 
-class _ProfileComponentEditorState
-    extends State<ProfileComponentEditor> {
+class _ProfileComponentEditorState extends State<ProfileComponentEditor> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AccessBloc, AccessState>(
@@ -149,8 +142,8 @@ class _ProfileComponentEditorState
                       app: widget.app,
                       title: 'Profile',
                       okAction: () async {
-                        await BlocProvider.of<ProfileBloc>(context)
-                            .save(EditorBaseApplyChanges<ProfileModel>(
+                        await BlocProvider.of<ProfileBloc>(context).save(
+                            EditorBaseApplyChanges<ProfileModel>(
                                 model: profileState.model));
                         return true;
                       },
@@ -188,9 +181,9 @@ class _ProfileComponentEditorState
                         widget.app,
                         profileState.model.conditions,
                         profileState.model.feed,
-                            (feed) => setState(() {
+                        (feed) => setState(() {
                               profileState.model.feed = feed;
-                        })),
+                            })),
                     topicContainer(widget.app, context,
                         title: 'Layout',
                         collapsible: true,
@@ -201,24 +194,22 @@ class _ProfileComponentEditorState
                               context,
                               'Background override header?',
                               profileState.model.backgroundOverride != null,
-                                  (value) {
-                                setState(() {
-                                  if (value!) {
-                                    profileState.model
-                                        .backgroundOverride =
-                                        BackgroundModel();
-                                  } else {
-                                    profileState.model
-                                        .backgroundOverride =
-                                    null;
-                                  }
-                                });
-                              }),
-                          if (profileState.model.backgroundOverride != null) BackgroundWidget(
-                              app: widget.app,
-                              memberId: memberId,
-                              value: profileState.model.backgroundOverride!,
-                              label: 'Background Override'),
+                              (value) {
+                            setState(() {
+                              if (value!) {
+                                profileState.model.backgroundOverride =
+                                    BackgroundModel();
+                              } else {
+                                profileState.model.backgroundOverride = null;
+                              }
+                            });
+                          }),
+                          if (profileState.model.backgroundOverride != null)
+                            BackgroundWidget(
+                                app: widget.app,
+                                memberId: memberId,
+                                value: profileState.model.backgroundOverride!,
+                                label: 'Background Override'),
                         ]),
                     topicContainer(widget.app, context,
                         title: 'Condition',
@@ -245,5 +236,4 @@ class _ProfileComponentEditorState
       }
     });
   }
-
 }

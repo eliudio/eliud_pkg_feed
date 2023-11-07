@@ -22,14 +22,14 @@ import 'package:tuple/tuple.dart';
 class Header extends StatefulWidget {
   final AppModel app;
   final BackgroundModel? backgroundOverride;
-  Header({Key? key, required this.app, required this.backgroundOverride}) : super(key: key);
+  Header({super.key, required this.app, required this.backgroundOverride});
 
   @override
-  _HeaderState createState() => _HeaderState();
+  State<Header> createState() => _HeaderState();
 }
 
 class _HeaderState extends State<Header> {
-  static double NOT_UPLOADING = -2.0;
+  static double notUploading = -2.0;
 
   static double heightBackgroundPhoto(BuildContext context) =>
       MediaQuery.of(context).size.height / 2.5;
@@ -70,7 +70,7 @@ class _HeaderState extends State<Header> {
 
   Widget _progress(
       Widget original, double? progress, double height, double width) {
-    if ((progress == null) || (progress == NOT_UPLOADING)) {
+    if ((progress == null) || (progress == notUploading)) {
       return original;
     } else {
       return Stack(children: [
@@ -96,8 +96,9 @@ class _HeaderState extends State<Header> {
         var pageId = pageContextInfo.pageId;
         return BlocBuilder<ProfileBloc, ProfileState>(
             builder: (context, state) {
-          if (state is ProfileError)
+          if (state is ProfileError) {
             return h5(widget.app, context, 'No profile');
+          }
           if (state is ProfileInitialised) {
             List<Widget> allRows = [];
 
@@ -196,8 +197,11 @@ class _HeaderState extends State<Header> {
     return MediaButtons.mediaButtons(
         context,
         widget.app,
-        () => Tuple2(toMemberMediumAccessibleByGroup(
-            profileInitialised.watchingThisProfile()!.accessibleByGroup!.index),
+        () => Tuple2(
+            toMemberMediumAccessibleByGroup(profileInitialised
+                .watchingThisProfile()!
+                .accessibleByGroup!
+                .index),
             profileInitialised.watchingThisProfile()!.accessibleByMembers),
         allowCrop: !isBG,
         tooltip: tooltip, photoFeedbackFunction: (photo) {
@@ -207,7 +211,7 @@ class _HeaderState extends State<Header> {
               .add(ProfilePhotoChangedProfileEvent(photo));
         } else {
           BlocProvider.of<ProfileBloc>(context)
-              .add(UploadingProfilePhotoEvent(NOT_UPLOADING));
+              .add(UploadingProfilePhotoEvent(notUploading));
         }
       } else {
         if (photo != null) {
@@ -215,7 +219,7 @@ class _HeaderState extends State<Header> {
               .add(ProfileBGPhotoChangedProfileEvent(photo));
         } else {
           BlocProvider.of<ProfileBloc>(context)
-              .add(UploadingBGPhotoEvent(NOT_UPLOADING));
+              .add(UploadingBGPhotoEvent(notUploading));
         }
       }
     }, photoFeedbackProgress: (progress) {

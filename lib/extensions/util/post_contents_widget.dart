@@ -20,16 +20,15 @@ class PostContentsWidget extends StatefulWidget {
   final String? parentPageId;
 
   const PostContentsWidget(
-      {Key? key,
+      {super.key,
       required this.app,
       this.memberID,
       required this.postModel,
       required this.accessBloc,
-      this.parentPageId})
-      : super(key: key);
+      this.parentPageId});
 
   @override
-  _PostContentsWidgetState createState() {
+  State<PostContentsWidget> createState() {
     return _PostContentsWidgetState();
   }
 }
@@ -54,44 +53,43 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
       String? parentPageId}) {
     PostType postType = PostTypeHelper.determineType(postModel);
     switch (postType) {
-      case PostType.EmbeddedPage:
+      case PostType.embeddedPage:
 /*
         I comment this out resulting in actually making this feature "embedded page" to stop to work.
         The reason for this is because it seems to cause a lot of overhead in init apps being sent to appbloc.
         The implementation of the embedded page is poor and hence this should be reviewed before use.
-
         if (memberID != null) {
           return EmbeddedPageHelper.postDetails(
               context, memberID, postModel, accessBloc, parentPageId!);
         }
 */
         break;
-      case PostType.SinglePhoto:
-      case PostType.SingleVideo:
+      case PostType.singleVideo:
         var medium = postModel.memberMedia![0];
-        var width;
+        return Registry.registry()!
+            .getMediumApi()
+            .embeddedVideo(context, widget.app, medium.memberMedium!);
+
+      case PostType.singlePhoto:
+        var medium = postModel.memberMedia![0];
         if (medium.memberMedium != null) {
-          if (medium.memberMedium!.mediumType == MediumType.Photo) {
-            width = _width(context) * .7;
-          }
           return GestureDetector(
               child: Center(
                   child: MemberImageModelWidget(
-                    memberMediumModel: medium.memberMedium!,
-                    width: width,
-                    showThumbnail:
-                    medium.memberMedium!.mediumType != MediumType.Photo,
-                  )),
+                memberMediumModel: medium.memberMedium!,
+//                width: width,
+                showThumbnail:
+                    medium.memberMedium!.mediumType != MediumType.photo,
+              )),
               onTap: () {
                 _action([medium], 0);
               });
         } else {
-          print('postmodel with id ' +
-              postModel.documentID +
-              ' has memberMedia with no details');
+          print(
+              'postmodel with id ${postModel.documentID} has memberMedia with no details');
         }
         break;
-      case PostType.Album:
+      case PostType.album:
         List<MemberMediumContainerModel> memberMedia = postModel.memberMedia!;
         List<Widget> widgets = [];
         // Photos & videos
@@ -101,13 +99,14 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
           _action(memberMedia, index);
         }));
         return Column(children: widgets);
-      case PostType.ExternalLink:
+      case PostType.externalLink:
         return text(widget.app, context, 'External link not supported yet');
-      case PostType.Html:
-        return AbstractTextPlatform.platform!.htmlWidget(context, widget.app, postModel.html!);
-      case PostType.Unknown:
+      case PostType.html:
+        return AbstractTextPlatform.platform!
+            .htmlWidget(context, widget.app, postModel.html!);
+      case PostType.unknown:
         return text(widget.app, context, 'Type not determined');
-      case PostType.OnlyDescription:
+      case PostType.onlyDescription:
         return Container(height: 1);
     }
 
@@ -116,19 +115,22 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
 
   void _action(List<MemberMediumContainerModel> memberMedia, int index) {
     var postMedium = memberMedia[index];
-    if (postMedium.memberMedium!.mediumType! == MediumType.Photo) {
+    if (postMedium.memberMedium!.mediumType! == MediumType.photo) {
       showPhotosFromPostMedia(context, memberMedia, index);
     } else {
-      Registry.registry()!.getMediumApi()
+      Registry.registry()!
+          .getMediumApi()
           .showVideo(context, widget.app, postMedium.memberMedium!);
     }
   }
 
-  void showPhotosFromPostMedia(
-      BuildContext context, List<MemberMediumContainerModel> postMedia, int initialPage) {
-    if (postMedia.length > 0) {
+  void showPhotosFromPostMedia(BuildContext context,
+      List<MemberMediumContainerModel> postMedia, int initialPage) {
+    if (postMedia.isNotEmpty) {
       var photos = postMedia.map((pm) => pm.memberMedium!).toList();
-      Registry.registry()!.getMediumApi().showPhotos(context, widget.app, photos, initialPage);
+      Registry.registry()!
+          .getMediumApi()
+          .showPhotos(context, widget.app, photos, initialPage);
     }
   }
 }

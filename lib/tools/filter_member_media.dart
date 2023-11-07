@@ -7,17 +7,20 @@ class FilterMemberMedia {
   FilterMemberMedia(this.memberMedia);
 
   List<MemberMediumModel>? getPhotos() {
-    if (memberMedia == null) return null;
-    var photos = memberMedia.where((medium) => medium.memberMedium!.mediumType == MediumType.Photo).map((postMediumModel) => postMediumModel.memberMedium!).toList();
-    if (photos.length == 0) return null;
+    var photos = memberMedia
+        .where((medium) => medium.memberMedium!.mediumType == MediumType.photo)
+        .map((postMediumModel) => postMediumModel.memberMedium!)
+        .toList();
+    if (photos.isEmpty) return null;
     return photos;
   }
 
   List<MemberMediumModel>? getVideos() {
-    if (memberMedia == null) return null;
-    var videos = memberMedia.where((medium) => medium.memberMedium!.mediumType == MediumType.Video).map((postMediumModel) => postMediumModel.memberMedium!).toList();
-    if (videos.length == 0) return null;
+    var videos = memberMedia
+        .where((medium) => medium.memberMedium!.mediumType == MediumType.video)
+        .map((postMediumModel) => postMediumModel.memberMedium!)
+        .toList();
+    if (videos.isEmpty) return null;
     return videos;
   }
-
 }

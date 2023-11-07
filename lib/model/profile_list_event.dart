@@ -30,10 +30,10 @@ class NewPage extends ProfileListEvent {}
 class AddProfileList extends ProfileListEvent {
   final ProfileModel? value;
 
-  const AddProfileList({ this.value });
+  const AddProfileList({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'AddProfileList{ value: $value }';
@@ -42,10 +42,10 @@ class AddProfileList extends ProfileListEvent {
 class UpdateProfileList extends ProfileListEvent {
   final ProfileModel? value;
 
-  const UpdateProfileList({ this.value });
+  const UpdateProfileList({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'UpdateProfileList{ value: $value }';
@@ -54,10 +54,10 @@ class UpdateProfileList extends ProfileListEvent {
 class DeleteProfileList extends ProfileListEvent {
   final ProfileModel? value;
 
-  const DeleteProfileList({ this.value });
+  const DeleteProfileList({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'DeleteProfileList{ value: $value }';
@@ -67,24 +67,24 @@ class ProfileListUpdated extends ProfileListEvent {
   final List<ProfileModel?>? value;
   final bool? mightHaveMore;
 
-  const ProfileListUpdated({ this.value, this.mightHaveMore });
+  const ProfileListUpdated({this.value, this.mightHaveMore});
 
   @override
-  List<Object?> get props => [ value, mightHaveMore ];
+  List<Object?> get props => [value, mightHaveMore];
 
   @override
-  String toString() => 'ProfileListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
+  String toString() =>
+      'ProfileListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
 }
 
 class ProfileChangeQuery extends ProfileListEvent {
   final EliudQuery? newQuery;
 
-  const ProfileChangeQuery({ required this.newQuery });
+  const ProfileChangeQuery({required this.newQuery});
 
   @override
-  List<Object?> get props => [ newQuery ];
+  List<Object?> get props => [newQuery];
 
   @override
   String toString() => 'ProfileChangeQuery{ value: $newQuery }';
 }
-

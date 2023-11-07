@@ -6,7 +6,9 @@ import 'package:eliud_pkg_feed/model/post_model.dart';
 
 import 'member_service.dart';
 
-typedef PostPrivilegeFeedback(PostAccessibleByGroup postAccessibleByGroup, List<SelectedMember>? specificSelectedMembers);
+typedef PostPrivilegeFeedback = Function(
+    PostAccessibleByGroup postAccessibleByGroup,
+    List<SelectedMember>? specificSelectedMembers);
 
 class PostPrivilegeBloc extends Bloc<PostPrivilegeEvent, PostPrivilegeState> {
   final AppModel app;
@@ -15,20 +17,28 @@ class PostPrivilegeBloc extends Bloc<PostPrivilegeEvent, PostPrivilegeState> {
   late MemberService memberService;
   final PostPrivilegeFeedback postPrivilegeFeedback;
 
-  PostPrivilegeBloc(this.app, this.feedId, this.memberId, this.postPrivilegeFeedback) : super(PostPrivilegeUninitialized()) {
+  PostPrivilegeBloc(
+      this.app, this.feedId, this.memberId, this.postPrivilegeFeedback)
+      : super(PostPrivilegeUninitialized()) {
     memberService = MemberService(app, feedId, memberId);
 
-    on <InitialisePostPrivilegeEvent> ((event, emit) async {
-      var selectedMembers = await memberService.getFromPostPrivilege(event.postAccessibleByGroup, event.postAccessibleByMembers);
+    on<InitialisePostPrivilegeEvent>((event, emit) async {
+      var selectedMembers = await memberService.getFromPostPrivilege(
+          event.postAccessibleByGroup, event.postAccessibleByMembers);
       postPrivilegeFeedback(event.postAccessibleByGroup, selectedMembers);
-      emit (PostPrivilegeInitialized(postAccessibleByGroup: event.postAccessibleByGroup, specificSelectedMembers: selectedMembers));
+      emit(PostPrivilegeInitialized(
+          postAccessibleByGroup: event.postAccessibleByGroup,
+          specificSelectedMembers: selectedMembers));
     });
 
-    on  <ChangedPostPrivilege> ((event, emit) async {
-      var selectedMembers = await memberService.getFromPostPrivilege(event.postAccessibleByGroup, event.postAccessibleByMembers);
+    on<ChangedPostPrivilege>((event, emit) async {
+      var selectedMembers = await memberService.getFromPostPrivilege(
+          event.postAccessibleByGroup, event.postAccessibleByMembers);
       postPrivilegeFeedback(event.postAccessibleByGroup, selectedMembers);
-      var newState = PostPrivilegeInitialized(postAccessibleByGroup: event.postAccessibleByGroup, specificSelectedMembers: selectedMembers);
-      emit (newState);
+      var newState = PostPrivilegeInitialized(
+          postAccessibleByGroup: event.postAccessibleByGroup,
+          specificSelectedMembers: selectedMembers);
+      emit(newState);
     });
   }
 }

@@ -24,13 +24,11 @@ abstract class ProfileComponentEvent extends Equatable {
 class FetchProfileComponent extends ProfileComponentEvent {
   final String? id;
 
-  FetchProfileComponent({ this.id });
+  FetchProfileComponent({this.id});
 }
 
 class ProfileComponentUpdated extends ProfileComponentEvent {
   final ProfileModel value;
 
-  ProfileComponentUpdated({ required this.value });
+  ProfileComponentUpdated({required this.value});
 }
-
-

@@ -4,8 +4,7 @@ import 'package:eliud_core/tools/action/action_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-
-enum WhichFeed { MyFeed, OnlyMyFeed, SomeoneIFollow, SomeoneElse, PublicFeed }
+enum WhichFeed { myFeed, onlyMyFeed, someoneIFollow, someoneElse, publicFeed }
 
 class SwitchMember {
   static String switchMemberFeedPageParameter = 'memberId';

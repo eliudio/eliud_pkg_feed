@@ -24,13 +24,11 @@ abstract class PostCommentComponentEvent extends Equatable {
 class FetchPostCommentComponent extends PostCommentComponentEvent {
   final String? id;
 
-  FetchPostCommentComponent({ this.id });
+  FetchPostCommentComponent({this.id});
 }
 
 class PostCommentComponentUpdated extends PostCommentComponentEvent {
   final PostCommentModel value;
 
-  PostCommentComponentUpdated({ required this.value });
+  PostCommentComponentUpdated({required this.value});
 }
-
-

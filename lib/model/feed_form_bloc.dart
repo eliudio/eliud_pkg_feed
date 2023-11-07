@@ -19,8 +19,6 @@ import 'package:bloc/bloc.dart';
 
 import 'package:eliud_core/tools/enums.dart';
 
-
-
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/model_export.dart';
 
@@ -31,120 +29,116 @@ class FeedFormBloc extends Bloc<FeedFormEvent, FeedFormState> {
   final FormAction? formAction;
   final String? appId;
 
-  FeedFormBloc(this.appId, { this.formAction }): super(FeedFormUninitialized()) {
-      on <InitialiseNewFeedFormEvent> ((event, emit) {
-        FeedFormLoaded loaded = FeedFormLoaded(value: FeedModel(
-                                               documentID: "",
-                                 appId: "",
-                                 description: "",
+  FeedFormBloc(this.appId, {this.formAction}) : super(FeedFormUninitialized()) {
+    on<InitialiseNewFeedFormEvent>((event, emit) {
+      FeedFormLoaded loaded = FeedFormLoaded(
+          value: FeedModel(
+        documentID: "",
+        appId: "",
+        description: "",
+      ));
+      emit(loaded);
+    });
 
-        ));
-        emit(loaded);
-      });
-
-
-      on <InitialiseFeedFormEvent> ((event, emit) async {
-        // Need to re-retrieve the document from the repository so that I get all associated types
-        FeedFormLoaded loaded = FeedFormLoaded(value: await feedRepository(appId: appId)!.get(event.value!.documentID));
-        emit(loaded);
-      });
-      on <InitialiseFeedFormNoLoadEvent> ((event, emit) async {
-        FeedFormLoaded loaded = FeedFormLoaded(value: event.value);
-        emit(loaded);
-      });
-      FeedModel? newValue;
-      on <ChangedFeedDocumentID> ((event, emit) async {
+    on<InitialiseFeedFormEvent>((event, emit) async {
+      // Need to re-retrieve the document from the repository so that I get all associated types
+      FeedFormLoaded loaded = FeedFormLoaded(
+          value:
+              await feedRepository(appId: appId)!.get(event.value!.documentID));
+      emit(loaded);
+    });
+    on<InitialiseFeedFormNoLoadEvent>((event, emit) async {
+      FeedFormLoaded loaded = FeedFormLoaded(value: event.value);
+      emit(loaded);
+    });
+    FeedModel? newValue;
+    on<ChangedFeedDocumentID>((event, emit) async {
       if (state is FeedFormInitialized) {
         final currentState = state as FeedFormInitialized;
         newValue = currentState.value!.copyWith(documentID: event.value);
-        if (formAction == FormAction.AddAction) {
+        if (formAction == FormAction.addAction) {
           emit(await _isDocumentIDValid(event.value, newValue!));
         } else {
           emit(SubmittableFeedForm(value: newValue));
         }
-
       }
-      });
-      on <ChangedFeedAppId> ((event, emit) async {
+    });
+    on<ChangedFeedAppId>((event, emit) async {
       if (state is FeedFormInitialized) {
         final currentState = state as FeedFormInitialized;
         newValue = currentState.value!.copyWith(appId: event.value);
         emit(SubmittableFeedForm(value: newValue));
-
       }
-      });
-      on <ChangedFeedDescription> ((event, emit) async {
+    });
+    on<ChangedFeedDescription>((event, emit) async {
       if (state is FeedFormInitialized) {
         final currentState = state as FeedFormInitialized;
         newValue = currentState.value!.copyWith(description: event.value);
         emit(SubmittableFeedForm(value: newValue));
-
       }
-      });
-      on <ChangedFeedThumbImage> ((event, emit) async {
+    });
+    on<ChangedFeedThumbImage>((event, emit) async {
       if (state is FeedFormInitialized) {
         final currentState = state as FeedFormInitialized;
         newValue = currentState.value!.copyWith(thumbImage: event.value);
         emit(SubmittableFeedForm(value: newValue));
-
       }
-      });
-      on <ChangedFeedPhotoPost> ((event, emit) async {
+    });
+    on<ChangedFeedPhotoPost>((event, emit) async {
       if (state is FeedFormInitialized) {
         final currentState = state as FeedFormInitialized;
         newValue = currentState.value!.copyWith(photoPost: event.value);
         emit(SubmittableFeedForm(value: newValue));
-
       }
-      });
-      on <ChangedFeedVideoPost> ((event, emit) async {
+    });
+    on<ChangedFeedVideoPost>((event, emit) async {
       if (state is FeedFormInitialized) {
         final currentState = state as FeedFormInitialized;
         newValue = currentState.value!.copyWith(videoPost: event.value);
         emit(SubmittableFeedForm(value: newValue));
-
       }
-      });
-      on <ChangedFeedMessagePost> ((event, emit) async {
+    });
+    on<ChangedFeedMessagePost>((event, emit) async {
       if (state is FeedFormInitialized) {
         final currentState = state as FeedFormInitialized;
         newValue = currentState.value!.copyWith(messagePost: event.value);
         emit(SubmittableFeedForm(value: newValue));
-
       }
-      });
-      on <ChangedFeedAudioPost> ((event, emit) async {
+    });
+    on<ChangedFeedAudioPost>((event, emit) async {
       if (state is FeedFormInitialized) {
         final currentState = state as FeedFormInitialized;
         newValue = currentState.value!.copyWith(audioPost: event.value);
         emit(SubmittableFeedForm(value: newValue));
-
       }
-      });
-      on <ChangedFeedAlbumPost> ((event, emit) async {
+    });
+    on<ChangedFeedAlbumPost>((event, emit) async {
       if (state is FeedFormInitialized) {
         final currentState = state as FeedFormInitialized;
         newValue = currentState.value!.copyWith(albumPost: event.value);
         emit(SubmittableFeedForm(value: newValue));
-
       }
-      });
-      on <ChangedFeedArticlePost> ((event, emit) async {
+    });
+    on<ChangedFeedArticlePost>((event, emit) async {
       if (state is FeedFormInitialized) {
         final currentState = state as FeedFormInitialized;
         newValue = currentState.value!.copyWith(articlePost: event.value);
         emit(SubmittableFeedForm(value: newValue));
-
       }
-      });
+    });
   }
 
+  DocumentIDFeedFormError error(String message, FeedModel newValue) =>
+      DocumentIDFeedFormError(message: message, value: newValue);
 
-  DocumentIDFeedFormError error(String message, FeedModel newValue) => DocumentIDFeedFormError(message: message, value: newValue);
-
-  Future<FeedFormState> _isDocumentIDValid(String? value, FeedModel newValue) async {
-    if (value == null) return Future.value(error("Provide value for documentID", newValue));
-    if (value.length == 0) return Future.value(error("Provide value for documentID", newValue));
+  Future<FeedFormState> _isDocumentIDValid(
+      String? value, FeedModel newValue) async {
+    if (value == null) {
+      return Future.value(error("Provide value for documentID", newValue));
+    }
+    if (value.isEmpty) {
+      return Future.value(error("Provide value for documentID", newValue));
+    }
     Future<FeedModel?> findDocument = feedRepository(appId: appId)!.get(value);
     return await findDocument.then((documentFound) {
       if (documentFound == null) {
@@ -154,7 +148,4 @@ class FeedFormBloc extends Bloc<FeedFormEvent, FeedFormState> {
       }
     });
   }
-
-
 }
-

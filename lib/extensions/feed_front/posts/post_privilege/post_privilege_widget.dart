@@ -21,10 +21,16 @@ class PostPrivilegeWidget extends StatefulWidget {
   final String? currentMemberId;
   final bool canEdit;
 
-  PostPrivilegeWidget(this.app, this.feedId, this.memberId,
-      this.currentMemberId, this.canEdit, );
+  PostPrivilegeWidget(
+    this.app,
+    this.feedId,
+    this.memberId,
+    this.currentMemberId,
+    this.canEdit,
+  );
 
-  _PostPrivilegeWidgetState createState() => _PostPrivilegeWidgetState();
+  @override
+  State<PostPrivilegeWidget> createState() => _PostPrivilegeWidgetState();
 }
 
 class _PostPrivilegeWidgetState extends State<PostPrivilegeWidget> {
@@ -78,22 +84,34 @@ class _PostPrivilegeWidgetState extends State<PostPrivilegeWidget> {
         ));
   }
 
-  static final SPACE_INBETWEEN = 10.0;
+  static final spaceInBetween = 10.0;
   static double width(BuildContext context) => max(
-      (MediaQuery.of(context).size.width * 0.9 - 2 * SPACE_INBETWEEN) / 2, 200);
+      (MediaQuery.of(context).size.width * 0.9 - 2 * spaceInBetween) / 2, 200);
 
   Widget _editableAudience(PostAccessibleByGroup postAccessibleByGroup,
       List<SelectedMember>? specificSelectedMembers) {
-
     var col1 = _getList(
-        _radioPrivilegeTile('Public', 0, PostAccessibleByGroup.Public.index == PostAccessibleByGroup.Public),
-        _radioPrivilegeTile('Followers', 1, PostAccessibleByGroup.Followers.index == PostAccessibleByGroup.Followers),
-        _radioPrivilegeTile('Just Me', 2, PostAccessibleByGroup.Me.index == PostAccessibleByGroup.Me),
-      _radioPrivilegeTile('Specific People', PostAccessibleByGroup.SpecificMembers.index, postAccessibleByGroup == PostAccessibleByGroup.SpecificMembers),
+      _radioPrivilegeTile(
+          'Public',
+          0,
+          PostAccessibleByGroup.public.index ==
+              PostAccessibleByGroup.public.index),
+      _radioPrivilegeTile(
+          'Followers',
+          1,
+          PostAccessibleByGroup.followers.index ==
+              PostAccessibleByGroup.followers.index),
+      _radioPrivilegeTile('Just Me', 2,
+          PostAccessibleByGroup.me.index == PostAccessibleByGroup.me.index),
+      _radioPrivilegeTile(
+          'Specific People',
+          PostAccessibleByGroup.specificMembers.index,
+          postAccessibleByGroup == PostAccessibleByGroup.specificMembers),
     );
 
     // specific followers
-    if (_postPrivilegeSelectedRadioTile == PostAccessibleByGroup.SpecificMembers.index) {
+    if (_postPrivilegeSelectedRadioTile ==
+        PostAccessibleByGroup.specificMembers.index) {
       var col2 = Container(
           height: 300,
           width: width(context),
@@ -114,39 +132,44 @@ class _PostPrivilegeWidgetState extends State<PostPrivilegeWidget> {
   Widget _displayAudience(PostAccessibleByGroup postAccessibleByGroup,
       List<SelectedMember>? specificSelectedMembers) {
     switch (postAccessibleByGroup) {
-      case PostAccessibleByGroup.Public:
+      case PostAccessibleByGroup.public:
         return Center(
             child: tx.text(widget.app, context, 'Accessible by public'));
-      case PostAccessibleByGroup.Followers:
+      case PostAccessibleByGroup.followers:
         return Center(
-            child: tx.text(widget.app, context, 'Accessible by your followers', maxLines: 5));
-      case PostAccessibleByGroup.SpecificMembers:
-        var names;
+            child: tx.text(widget.app, context, 'Accessible by your followers',
+                maxLines: 5));
+      case PostAccessibleByGroup.specificMembers:
+        String names;
         if (specificSelectedMembers != null) {
           names = specificSelectedMembers.map((e) => e.name).join(", ");
+        } else {
+          names = "?";
         }
         return Center(
-            child: tx.text(widget.app, context, 'Accessible by ' + names));
-      case PostAccessibleByGroup.Me:
-        return Center(
-            child: tx.text(widget.app, context, 'Accessible by you'));
+            child: tx.text(widget.app, context, 'Accessible by $names'));
+      case PostAccessibleByGroup.me:
+        return Center(child: tx.text(widget.app, context, 'Accessible by you'));
+      case PostAccessibleByGroup.unknown:
+        break;
     }
     return Center(
         child: tx.text(widget.app, context, 'Accessible not determined'));
   }
 
   Widget spacer() {
-    return Container(width: SPACE_INBETWEEN);
+    return Container(width: spaceInBetween);
   }
 
   void _selectedMembersCallback(List<String> selectedMembers) {
-    BlocProvider.of<PostPrivilegeBloc>(context).add(
-        ChangedPostPrivilege(postAccessibleByGroup: PostAccessibleByGroup.SpecificMembers, postAccessibleByMembers: selectedMembers));
+    BlocProvider.of<PostPrivilegeBloc>(context).add(ChangedPostPrivilege(
+        postAccessibleByGroup: PostAccessibleByGroup.specificMembers,
+        postAccessibleByMembers: selectedMembers));
   }
 
   void _setPostSelectedRadioTile(int? val) {
     BlocProvider.of<PostPrivilegeBloc>(context)
-          .add(ChangedPostPrivilege.get(val));
+        .add(ChangedPostPrivilege.get(val));
   }
 
   @override

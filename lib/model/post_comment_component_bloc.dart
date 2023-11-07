@@ -20,24 +20,27 @@ import 'package:eliud_pkg_feed/model/post_comment_component_event.dart';
 import 'package:eliud_pkg_feed/model/post_comment_component_state.dart';
 import 'package:eliud_pkg_feed/model/post_comment_repository.dart';
 
-class PostCommentComponentBloc extends Bloc<PostCommentComponentEvent, PostCommentComponentState> {
+class PostCommentComponentBloc
+    extends Bloc<PostCommentComponentEvent, PostCommentComponentState> {
   final PostCommentRepository? postCommentRepository;
   StreamSubscription? _postCommentSubscription;
 
   void _mapLoadPostCommentComponentUpdateToState(String documentId) {
     _postCommentSubscription?.cancel();
-    _postCommentSubscription = postCommentRepository!.listenTo(documentId, (value) {
+    _postCommentSubscription =
+        postCommentRepository!.listenTo(documentId, (value) {
       if (value != null) {
         add(PostCommentComponentUpdated(value: value));
       }
     });
   }
 
-  PostCommentComponentBloc({ this.postCommentRepository }): super(PostCommentComponentUninitialized()) {
-    on <FetchPostCommentComponent> ((event, emit) {
+  PostCommentComponentBloc({this.postCommentRepository})
+      : super(PostCommentComponentUninitialized()) {
+    on<FetchPostCommentComponent>((event, emit) {
       _mapLoadPostCommentComponentUpdateToState(event.id!);
     });
-    on <PostCommentComponentUpdated> ((event, emit) {
+    on<PostCommentComponentUpdated>((event, emit) {
       emit(PostCommentComponentLoaded(value: event.value));
     });
   }
@@ -47,6 +50,4 @@ class PostCommentComponentBloc extends Bloc<PostCommentComponentEvent, PostComme
     _postCommentSubscription?.cancel();
     return super.close();
   }
-
 }
-

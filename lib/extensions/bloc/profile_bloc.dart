@@ -112,7 +112,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               app,
               feedId,
               feedPublicInfoModel,
-              MemberProfileAccessibleByGroup.Public,
+              MemberProfileAccessibleByGroup.public,
               null);
           return NotLoggedInWatchingSomeone(
               app: app,
@@ -130,12 +130,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             uploadingBGProgress: null);
       }
     } else {
-      var defaultPostGroup = PostAccessibleByGroup.Public;
+      var defaultPostGroup = PostAccessibleByGroup.public;
       var defaultMemberProfileGroup =
           toMemberProfileAccessibleByGroup(defaultPostGroup.index);
-      var defaultMembers;
+      List<String> defaultMembers = [];
       // Determine current member
-      var param;
+      String? param;
       if (pageContextInfo.parameters != null) {
         param = pageContextInfo
             .parameters![SwitchMember.switchMemberFeedPageParameter];
@@ -172,14 +172,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             app,
             feedId,
             feedPublicInfoModel,
-            MemberProfileAccessibleByGroup.Public,
+            MemberProfileAccessibleByGroup.public,
             null);
         return LoggedInAndWatchingOtherProfile(
             feedId: feedId,
             app: app,
             currentMemberProfileModel: currentMemberProfileModel,
             currentMember: currentMemberModel,
-            postAccessibleByGroup: PostAccessibleByGroup.Public,
+            postAccessibleByGroup: PostAccessibleByGroup.public,
             feedProfileModel: feedProfileModel,
             feedPublicInfoModel: feedPublicInfoModel,
             iFollowThisPerson: following.contains(
@@ -228,8 +228,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       MemberPublicInfoModel member,
       MemberProfileAccessibleByGroup accessibleByGroup,
       List<String>? accessibleByMembers) async {
-    return getMemberProfileModel(create, app, feedId, member.documentID,
-        member.photoURL, member.name ?? "Anonymous" + member.documentID, accessibleByGroup, accessibleByMembers);
+    return getMemberProfileModel(
+        create,
+        app,
+        feedId,
+        member.documentID,
+        member.photoURL,
+        member.name ?? "Anonymous${member.documentID}",
+        accessibleByGroup,
+        accessibleByMembers);
   }
 
   static Future<MemberProfileModel> getMemberProfileModel(
@@ -241,7 +248,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       String name,
       MemberProfileAccessibleByGroup accessibleByGroup,
       List<String>? accessibleByMembers) async {
-    var key = memberId + "-" + feedId;
+    var key = "$memberId-$feedId";
     var memberProfileModel =
         await memberProfileRepository(appId: app.documentID)!
             .get(key, onError: (exception) {});
@@ -286,7 +293,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         // or the people I follow
         return EliudQuery()
             .withCondition(EliudQueryCondition('archived',
-                isEqualTo: PostArchiveStatus.Active.index))
+                isEqualTo: PostArchiveStatus.active.index))
             .withCondition(
                 EliudQueryCondition('feedId', isEqualTo: state.feedId))
             .withCondition(EliudQueryCondition('readAccess',
@@ -295,7 +302,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         // query where I'm the author. We could include that we're part of the readAccess but that's obsolete
         return EliudQuery()
             .withCondition(EliudQueryCondition('archived',
-                isEqualTo: PostArchiveStatus.Active.index))
+                isEqualTo: PostArchiveStatus.active.index))
             .withCondition(EliudQueryCondition('authorId',
                 isEqualTo: state.currentMember.documentID))
             .withCondition(
@@ -306,7 +313,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         // query where that person is the author and I'm in the readAccess
         return EliudQuery()
             .withCondition(EliudQueryCondition('archived',
-                isEqualTo: PostArchiveStatus.Active.index))
+                isEqualTo: PostArchiveStatus.active.index))
             .withCondition(EliudQueryCondition('authorId',
                 isEqualTo: state.feedPublicInfoModel.documentID))
             .withCondition(
@@ -331,7 +338,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   static EliudQuery publicQueryForAuthor(String authorId, String feedId) {
     return EliudQuery()
         .withCondition(EliudQueryCondition('archived',
-            isEqualTo: PostArchiveStatus.Active.index))
+            isEqualTo: PostArchiveStatus.active.index))
         .withCondition(EliudQueryCondition('authorId', isEqualTo: authorId))
         .withCondition(EliudQueryCondition('feedId', isEqualTo: feedId))
         .withCondition(
@@ -341,7 +348,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   static EliudQuery publicQuery(String feedId) {
     return EliudQuery()
         .withCondition(EliudQueryCondition('archived',
-            isEqualTo: PostArchiveStatus.Active.index))
+            isEqualTo: PostArchiveStatus.active.index))
         .withCondition(EliudQueryCondition('feedId', isEqualTo: feedId))
         .withCondition(
             EliudQueryCondition('readAccess', arrayContainsAny: ['PUBLIC']));

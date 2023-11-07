@@ -18,7 +18,6 @@ import 'package:meta/meta.dart';
 import 'package:eliud_core/model/model_export.dart';
 import 'package:eliud_pkg_feed/model/model_export.dart';
 
-
 @immutable
 abstract class MemberProfileFormEvent extends Equatable {
   const MemberProfileFormEvent();
@@ -27,15 +26,13 @@ abstract class MemberProfileFormEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class InitialiseNewMemberProfileFormEvent extends MemberProfileFormEvent {
-}
-
+class InitialiseNewMemberProfileFormEvent extends MemberProfileFormEvent {}
 
 class InitialiseMemberProfileFormEvent extends MemberProfileFormEvent {
   final MemberProfileModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   InitialiseMemberProfileFormEvent({this.value});
 }
@@ -44,7 +41,7 @@ class InitialiseMemberProfileFormNoLoadEvent extends MemberProfileFormEvent {
   final MemberProfileModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   InitialiseMemberProfileFormNoLoadEvent({this.value});
 }
@@ -55,7 +52,7 @@ class ChangedMemberProfileDocumentID extends MemberProfileFormEvent {
   ChangedMemberProfileDocumentID({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedMemberProfileDocumentID{ value: $value }';
@@ -67,7 +64,7 @@ class ChangedMemberProfileAppId extends MemberProfileFormEvent {
   ChangedMemberProfileAppId({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedMemberProfileAppId{ value: $value }';
@@ -79,7 +76,7 @@ class ChangedMemberProfileFeedId extends MemberProfileFormEvent {
   ChangedMemberProfileFeedId({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedMemberProfileFeedId{ value: $value }';
@@ -91,7 +88,7 @@ class ChangedMemberProfileAuthorId extends MemberProfileFormEvent {
   ChangedMemberProfileAuthorId({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedMemberProfileAuthorId{ value: $value }';
@@ -103,7 +100,7 @@ class ChangedMemberProfileProfile extends MemberProfileFormEvent {
   ChangedMemberProfileProfile({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedMemberProfileProfile{ value: $value }';
@@ -115,7 +112,7 @@ class ChangedMemberProfileProfileBackground extends MemberProfileFormEvent {
   ChangedMemberProfileProfileBackground({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedMemberProfileProfileBackground{ value: $value }';
@@ -127,7 +124,7 @@ class ChangedMemberProfileProfileOverride extends MemberProfileFormEvent {
   ChangedMemberProfileProfileOverride({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedMemberProfileProfileOverride{ value: $value }';
@@ -139,7 +136,7 @@ class ChangedMemberProfileNameOverride extends MemberProfileFormEvent {
   ChangedMemberProfileNameOverride({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedMemberProfileNameOverride{ value: $value }';
@@ -151,7 +148,7 @@ class ChangedMemberProfileAccessibleByGroup extends MemberProfileFormEvent {
   ChangedMemberProfileAccessibleByGroup({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedMemberProfileAccessibleByGroup{ value: $value }';
@@ -163,10 +160,11 @@ class ChangedMemberProfileAccessibleByMembers extends MemberProfileFormEvent {
   ChangedMemberProfileAccessibleByMembers({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
-  String toString() => 'ChangedMemberProfileAccessibleByMembers{ value: $value }';
+  String toString() =>
+      'ChangedMemberProfileAccessibleByMembers{ value: $value }';
 }
 
 class ChangedMemberProfileReadAccess extends MemberProfileFormEvent {
@@ -175,7 +173,7 @@ class ChangedMemberProfileReadAccess extends MemberProfileFormEvent {
   ChangedMemberProfileReadAccess({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedMemberProfileReadAccess{ value: $value }';
@@ -187,9 +185,8 @@ class ChangedMemberProfileMemberMedia extends MemberProfileFormEvent {
   ChangedMemberProfileMemberMedia({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedMemberProfileMemberMedia{ value: $value }';
 }
-

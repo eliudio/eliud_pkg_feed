@@ -17,7 +17,6 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:eliud_pkg_feed/model/model_export.dart';
 
-
 @immutable
 abstract class LabelledBodyComponentFormEvent extends Equatable {
   const LabelledBodyComponentFormEvent();
@@ -26,38 +25,41 @@ abstract class LabelledBodyComponentFormEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class InitialiseNewLabelledBodyComponentFormEvent extends LabelledBodyComponentFormEvent {
-}
+class InitialiseNewLabelledBodyComponentFormEvent
+    extends LabelledBodyComponentFormEvent {}
 
-
-class InitialiseLabelledBodyComponentFormEvent extends LabelledBodyComponentFormEvent {
+class InitialiseLabelledBodyComponentFormEvent
+    extends LabelledBodyComponentFormEvent {
   final LabelledBodyComponentModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   InitialiseLabelledBodyComponentFormEvent({this.value});
 }
 
-class InitialiseLabelledBodyComponentFormNoLoadEvent extends LabelledBodyComponentFormEvent {
+class InitialiseLabelledBodyComponentFormNoLoadEvent
+    extends LabelledBodyComponentFormEvent {
   final LabelledBodyComponentModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   InitialiseLabelledBodyComponentFormNoLoadEvent({this.value});
 }
 
-class ChangedLabelledBodyComponentDocumentID extends LabelledBodyComponentFormEvent {
+class ChangedLabelledBodyComponentDocumentID
+    extends LabelledBodyComponentFormEvent {
   final String? value;
 
   ChangedLabelledBodyComponentDocumentID({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
-  String toString() => 'ChangedLabelledBodyComponentDocumentID{ value: $value }';
+  String toString() =>
+      'ChangedLabelledBodyComponentDocumentID{ value: $value }';
 }
 
 class ChangedLabelledBodyComponentLabel extends LabelledBodyComponentFormEvent {
@@ -66,33 +68,36 @@ class ChangedLabelledBodyComponentLabel extends LabelledBodyComponentFormEvent {
   ChangedLabelledBodyComponentLabel({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedLabelledBodyComponentLabel{ value: $value }';
 }
 
-class ChangedLabelledBodyComponentComponentName extends LabelledBodyComponentFormEvent {
+class ChangedLabelledBodyComponentComponentName
+    extends LabelledBodyComponentFormEvent {
   final String? value;
 
   ChangedLabelledBodyComponentComponentName({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
-  String toString() => 'ChangedLabelledBodyComponentComponentName{ value: $value }';
+  String toString() =>
+      'ChangedLabelledBodyComponentComponentName{ value: $value }';
 }
 
-class ChangedLabelledBodyComponentComponentId extends LabelledBodyComponentFormEvent {
+class ChangedLabelledBodyComponentComponentId
+    extends LabelledBodyComponentFormEvent {
   final String? value;
 
   ChangedLabelledBodyComponentComponentId({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
-  String toString() => 'ChangedLabelledBodyComponentComponentId{ value: $value }';
+  String toString() =>
+      'ChangedLabelledBodyComponentComponentId{ value: $value }';
 }
-

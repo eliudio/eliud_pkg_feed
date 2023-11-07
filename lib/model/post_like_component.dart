@@ -13,7 +13,6 @@
 
 */
 
-
 import 'package:eliud_pkg_feed/model/post_like_component_bloc.dart';
 import 'package:eliud_pkg_feed/model/post_like_component_event.dart';
 import 'package:eliud_pkg_feed/model/post_like_model.dart';
@@ -31,20 +30,22 @@ abstract class AbstractPostLikeComponent extends StatelessWidget {
   final AppModel app;
   final String postLikeId;
 
-  AbstractPostLikeComponent({Key? key, required this.app, required this.postLikeId}): super(key: key);
+  AbstractPostLikeComponent(
+      {super.key, required this.app, required this.postLikeId});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<PostLikeComponentBloc> (
-          create: (context) => PostLikeComponentBloc(
-            postLikeRepository: postLikeRepository(appId: app.documentID)!)
+    return BlocProvider<PostLikeComponentBloc>(
+      create: (context) => PostLikeComponentBloc(
+          postLikeRepository: postLikeRepository(appId: app.documentID)!)
         ..add(FetchPostLikeComponent(id: postLikeId)),
       child: _postLikeBlockBuilder(context),
     );
   }
 
   Widget _postLikeBlockBuilder(BuildContext context) {
-    return BlocBuilder<PostLikeComponentBloc, PostLikeComponentState>(builder: (context, state) {
+    return BlocBuilder<PostLikeComponentBloc, PostLikeComponentState>(
+        builder: (context, state) {
       if (state is PostLikeComponentLoaded) {
         return yourWidget(context, state.value);
       } else if (state is PostLikeComponentPermissionDenied) {
@@ -57,7 +58,11 @@ abstract class AbstractPostLikeComponent extends StatelessWidget {
         return AlertWidget(app: app, title: 'Error', content: state.message);
       } else {
         return Center(
-          child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().progressIndicatorStyle().progressIndicator(app, context),
+          child: StyleRegistry.registry()
+              .styleWithApp(app)
+              .frontEndStyle()
+              .progressIndicatorStyle()
+              .progressIndicator(app, context),
         );
       }
     });
@@ -65,4 +70,3 @@ abstract class AbstractPostLikeComponent extends StatelessWidget {
 
   Widget yourWidget(BuildContext context, PostLikeModel value);
 }
-

@@ -39,6 +39,7 @@ class FeedWizard extends NewAppWizardInfoWithActionSpecification {
   List<MenuItemModel>? getThoseMenuItems(String uniqueId, AppModel app) =>
       [menuItemFeed(uniqueId, app, feedPageId, 'Feed')];
 
+  @override
   List<NewAppTask>? getCreateTasks(
     String uniqueId,
     AppModel app,
@@ -54,7 +55,6 @@ class FeedWizard extends NewAppWizardInfoWithActionSpecification {
       if (feedSpecifications.shouldCreatePageDialogOrWorkflow()) {
         List<NewAppTask> tasks = [];
         var memberId = member.documentID;
-        var feedModel;
         tasks.add(() async {
           print("feedModel");
           await FeedMenuPageBuilder(
@@ -86,8 +86,7 @@ class FeedWizard extends NewAppWizardInfoWithActionSpecification {
         return tasks;
       }
     } else {
-      throw Exception(
-          'Unexpected class for parameters: ' + parameters.toString());
+      throw Exception('Unexpected class for parameters: $parameters');
     }
     return null;
   }
@@ -122,6 +121,6 @@ class FeedWizard extends NewAppWizardInfoWithActionSpecification {
 
   @override
   PublicMediumModel? getPublicMediumModel(String uniqueId,
-          NewAppWizardParameters parameters, String pageType) =>
+          NewAppWizardParameters parameters, String mediumType) =>
       null;
 }

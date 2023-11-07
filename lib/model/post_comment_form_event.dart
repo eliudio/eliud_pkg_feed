@@ -18,7 +18,6 @@ import 'package:meta/meta.dart';
 import 'package:eliud_core/model/model_export.dart';
 import 'package:eliud_pkg_feed/model/model_export.dart';
 
-
 @immutable
 abstract class PostCommentFormEvent extends Equatable {
   const PostCommentFormEvent();
@@ -27,15 +26,13 @@ abstract class PostCommentFormEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class InitialiseNewPostCommentFormEvent extends PostCommentFormEvent {
-}
-
+class InitialiseNewPostCommentFormEvent extends PostCommentFormEvent {}
 
 class InitialisePostCommentFormEvent extends PostCommentFormEvent {
   final PostCommentModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   InitialisePostCommentFormEvent({this.value});
 }
@@ -44,7 +41,7 @@ class InitialisePostCommentFormNoLoadEvent extends PostCommentFormEvent {
   final PostCommentModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   InitialisePostCommentFormNoLoadEvent({this.value});
 }
@@ -55,7 +52,7 @@ class ChangedPostCommentDocumentID extends PostCommentFormEvent {
   ChangedPostCommentDocumentID({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostCommentDocumentID{ value: $value }';
@@ -67,7 +64,7 @@ class ChangedPostCommentPostId extends PostCommentFormEvent {
   ChangedPostCommentPostId({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostCommentPostId{ value: $value }';
@@ -79,7 +76,7 @@ class ChangedPostCommentPostCommentId extends PostCommentFormEvent {
   ChangedPostCommentPostCommentId({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostCommentPostCommentId{ value: $value }';
@@ -91,7 +88,7 @@ class ChangedPostCommentMemberId extends PostCommentFormEvent {
   ChangedPostCommentMemberId({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostCommentMemberId{ value: $value }';
@@ -103,7 +100,7 @@ class ChangedPostCommentTimestamp extends PostCommentFormEvent {
   ChangedPostCommentTimestamp({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostCommentTimestamp{ value: $value }';
@@ -115,7 +112,7 @@ class ChangedPostCommentAppId extends PostCommentFormEvent {
   ChangedPostCommentAppId({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostCommentAppId{ value: $value }';
@@ -127,7 +124,7 @@ class ChangedPostCommentComment extends PostCommentFormEvent {
   ChangedPostCommentComment({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostCommentComment{ value: $value }';
@@ -139,7 +136,7 @@ class ChangedPostCommentLikes extends PostCommentFormEvent {
   ChangedPostCommentLikes({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostCommentLikes{ value: $value }';
@@ -151,7 +148,7 @@ class ChangedPostCommentDislikes extends PostCommentFormEvent {
   ChangedPostCommentDislikes({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostCommentDislikes{ value: $value }';
@@ -163,9 +160,8 @@ class ChangedPostCommentMemberMedia extends PostCommentFormEvent {
   ChangedPostCommentMemberMedia({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostCommentMemberMedia{ value: $value }';
 }
-

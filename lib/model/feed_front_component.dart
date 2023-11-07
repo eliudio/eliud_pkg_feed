@@ -13,7 +13,6 @@
 
 */
 
-
 import 'package:eliud_pkg_feed/model/feed_front_component_bloc.dart';
 import 'package:eliud_pkg_feed/model/feed_front_component_event.dart';
 import 'package:eliud_pkg_feed/model/feed_front_model.dart';
@@ -31,20 +30,22 @@ abstract class AbstractFeedFrontComponent extends StatelessWidget {
   final AppModel app;
   final String feedFrontId;
 
-  AbstractFeedFrontComponent({Key? key, required this.app, required this.feedFrontId}): super(key: key);
+  AbstractFeedFrontComponent(
+      {super.key, required this.app, required this.feedFrontId});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<FeedFrontComponentBloc> (
-          create: (context) => FeedFrontComponentBloc(
-            feedFrontRepository: feedFrontRepository(appId: app.documentID)!)
+    return BlocProvider<FeedFrontComponentBloc>(
+      create: (context) => FeedFrontComponentBloc(
+          feedFrontRepository: feedFrontRepository(appId: app.documentID)!)
         ..add(FetchFeedFrontComponent(id: feedFrontId)),
       child: _feedFrontBlockBuilder(context),
     );
   }
 
   Widget _feedFrontBlockBuilder(BuildContext context) {
-    return BlocBuilder<FeedFrontComponentBloc, FeedFrontComponentState>(builder: (context, state) {
+    return BlocBuilder<FeedFrontComponentBloc, FeedFrontComponentState>(
+        builder: (context, state) {
       if (state is FeedFrontComponentLoaded) {
         return yourWidget(context, state.value);
       } else if (state is FeedFrontComponentPermissionDenied) {
@@ -57,7 +58,11 @@ abstract class AbstractFeedFrontComponent extends StatelessWidget {
         return AlertWidget(app: app, title: 'Error', content: state.message);
       } else {
         return Center(
-          child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().progressIndicatorStyle().progressIndicator(app, context),
+          child: StyleRegistry.registry()
+              .styleWithApp(app)
+              .frontEndStyle()
+              .progressIndicatorStyle()
+              .progressIndicator(app, context),
         );
       }
     });
@@ -65,4 +70,3 @@ abstract class AbstractFeedFrontComponent extends StatelessWidget {
 
   Widget yourWidget(BuildContext context, FeedFrontModel value);
 }
-

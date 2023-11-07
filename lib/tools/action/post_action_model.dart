@@ -12,49 +12,63 @@ class PostActionModel extends ActionModel {
   // Post to which feed, which could be the feed of a different app
   final FeedModel? feed;
 
-  PostActionModel(AppModel app, { this.feed, DisplayConditionsModel? conditions} ) : super(app, actionType: PostActionEntity.label, conditions: conditions);
+  PostActionModel(super.app, {this.feed, super.conditions})
+      : super(actionType: PostActionEntity.label);
 
   @override
   ActionEntity toEntity({String? appId}) {
     return PostActionEntity(
         feedId: (feed != null) ? feed!.documentID : null,
-        conditions: (conditions != null) ? conditions!.toEntity(): null,
+        conditions: (conditions != null) ? conditions!.toEntity() : null,
         appId: appId);
   }
 
   @override
-  Future<List<ModelReference>> collectReferences({String? appId, }) async {
+  Future<List<ModelReference>> collectReferences({
+    String? appId,
+  }) async {
     List<ModelReference> referencesCollector = [];
-    if (feed != null) referencesCollector.add(ModelReference(FeedModel.packageName, FeedModel.id, feed!));
+    if (feed != null) {
+      referencesCollector
+          .add(ModelReference(FeedModel.packageName, FeedModel.id, feed!));
+    }
     return referencesCollector;
   }
 
-  static Future<ActionModel?> fromEntity(AppModel app, PostActionEntity entity) async {
-    if (entity.appID == null) throw Exception('entity PostActionModel.appID is null');
+  static Future<ActionModel?> fromEntity(
+      AppModel app, PostActionEntity entity) async {
+    if (entity.appID == null) {
+      throw Exception('entity PostActionModel.appID is null');
+    }
     return PostActionModel(
       app,
       conditions: await DisplayConditionsModel.fromEntity(entity.conditions),
     );
   }
 
-  static Future<ActionModel> fromEntityPlus(AppModel app, PostActionEntity entity, { String? appId}) async {
-    if (entity.appID == null) throw Exception('entity PostActionModel.appID is null');
+  static Future<ActionModel> fromEntityPlus(
+      AppModel app, PostActionEntity entity,
+      {String? appId}) async {
+    if (entity.appID == null) {
+      throw Exception('entity PostActionModel.appID is null');
+    }
     FeedModel? feedModel;
     if (entity.feedId != null) {
       try {
-        await feedRepository(appId: entity.appID)!.get(entity.feedId).then((val) {
+        await feedRepository(appId: entity.appID)!
+            .get(entity.feedId)
+            .then((val) {
           feedModel = val;
         }).catchError((error) {});
       } catch (_) {}
     }
 
-    return PostActionModel(
-        app,
+    return PostActionModel(app,
         conditions: await DisplayConditionsModel.fromEntity(entity.conditions),
-        feed: feedModel
-    );
+        feed: feedModel);
   }
 
+  @override
   String message() {
     return "Post";
   }
@@ -64,15 +78,17 @@ class PostActionModel extends ActionModel {
 
   @override
   ActionModel copyWith(AppModel newApp) =>
-    PostActionModel(newApp, feed: feed, conditions: conditions);
+      PostActionModel(newApp, feed: feed, conditions: conditions);
 }
 
 class PostActionMapper implements ActionModelMapper {
   @override
-  Future<ActionModel?> fromEntity(AppModel app, ActionEntity entity) => PostActionModel.fromEntity(app, entity as PostActionEntity);
+  Future<ActionModel?> fromEntity(AppModel app, ActionEntity entity) =>
+      PostActionModel.fromEntity(app, entity as PostActionEntity);
 
   @override
-  Future<ActionModel> fromEntityPlus(AppModel app, ActionEntity entity) => PostActionModel.fromEntityPlus(app, entity as PostActionEntity);
+  Future<ActionModel> fromEntityPlus(AppModel app, ActionEntity entity) =>
+      PostActionModel.fromEntityPlus(app, entity as PostActionEntity);
 
   @override
   ActionEntity fromMap(Map map) => PostActionEntity.fromMap(map);

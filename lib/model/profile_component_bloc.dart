@@ -20,8 +20,8 @@ import 'package:eliud_pkg_feed/model/profile_component_event.dart';
 import 'package:eliud_pkg_feed/model/profile_component_state.dart';
 import 'package:eliud_pkg_feed/model/profile_repository.dart';
 
-
-class ProfileComponentBloc extends Bloc<ProfileComponentEvent, ProfileComponentState> {
+class ProfileComponentBloc
+    extends Bloc<ProfileComponentEvent, ProfileComponentState> {
   final ProfileRepository? profileRepository;
   StreamSubscription? _profileSubscription;
 
@@ -34,11 +34,12 @@ class ProfileComponentBloc extends Bloc<ProfileComponentEvent, ProfileComponentS
     });
   }
 
-  ProfileComponentBloc({ this.profileRepository }): super(ProfileComponentUninitialized()) {
-    on <FetchProfileComponent> ((event, emit) {
+  ProfileComponentBloc({this.profileRepository})
+      : super(ProfileComponentUninitialized()) {
+    on<FetchProfileComponent>((event, emit) {
       _mapLoadProfileComponentUpdateToState(event.id!);
     });
-    on <ProfileComponentUpdated> ((event, emit) {
+    on<ProfileComponentUpdated>((event, emit) {
       emit(ProfileComponentLoaded(value: event.value));
     });
   }
@@ -48,6 +49,4 @@ class ProfileComponentBloc extends Bloc<ProfileComponentEvent, ProfileComponentS
     _profileSubscription?.cancel();
     return super.close();
   }
-
 }
-

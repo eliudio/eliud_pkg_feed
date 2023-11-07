@@ -23,11 +23,11 @@ import 'package:eliud_core/tools/query/query_tools.dart';
 
 import 'labelled_body_component_model.dart';
 
-typedef List<LabelledBodyComponentModel?> FilterLabelledBodyComponentModels(List<LabelledBodyComponentModel?> values);
+typedef FilterLabelledBodyComponentModels = List<LabelledBodyComponentModel?>
+    Function(List<LabelledBodyComponentModel?> values);
 
-
-
-class LabelledBodyComponentListBloc extends Bloc<LabelledBodyComponentListEvent, LabelledBodyComponentListState> {
+class LabelledBodyComponentListBloc extends Bloc<LabelledBodyComponentListEvent,
+    LabelledBodyComponentListState> {
   final FilterLabelledBodyComponentModels? filter;
   final LabelledBodyComponentRepository _labelledBodyComponentRepository;
   StreamSubscription? _labelledBodyComponentsListSubscription;
@@ -39,23 +39,32 @@ class LabelledBodyComponentListBloc extends Bloc<LabelledBodyComponentListEvent,
   final bool? detailed;
   final int labelledBodyComponentLimit;
 
-  LabelledBodyComponentListBloc({this.filter, this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required LabelledBodyComponentRepository labelledBodyComponentRepository, this.labelledBodyComponentLimit = 5})
+  LabelledBodyComponentListBloc(
+      {this.filter,
+      this.paged,
+      this.orderBy,
+      this.descending,
+      this.detailed,
+      this.eliudQuery,
+      required LabelledBodyComponentRepository labelledBodyComponentRepository,
+      this.labelledBodyComponentLimit = 5})
       : _labelledBodyComponentRepository = labelledBodyComponentRepository,
         super(LabelledBodyComponentListLoading()) {
-    on <LoadLabelledBodyComponentList> ((event, emit) {
+    on<LoadLabelledBodyComponentList>((event, emit) {
       if ((detailed == null) || (!detailed!)) {
         _mapLoadLabelledBodyComponentListToState();
       } else {
         _mapLoadLabelledBodyComponentListWithDetailsToState();
       }
     });
-    
-    on <NewPage> ((event, emit) {
-      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
+
+    on<NewPage>((event, emit) {
+      pages = pages +
+          1; // it doesn't matter so much if we increase pages beyond the end
       _mapLoadLabelledBodyComponentListWithDetailsToState();
     });
-    
-    on <LabelledBodyComponentChangeQuery> ((event, emit) {
+
+    on<LabelledBodyComponentChangeQuery>((event, emit) {
       eliudQuery = event.newQuery;
       if ((detailed == null) || (!detailed!)) {
         _mapLoadLabelledBodyComponentListToState();
@@ -63,25 +72,26 @@ class LabelledBodyComponentListBloc extends Bloc<LabelledBodyComponentListEvent,
         _mapLoadLabelledBodyComponentListWithDetailsToState();
       }
     });
-      
-    on <AddLabelledBodyComponentList> ((event, emit) async {
+
+    on<AddLabelledBodyComponentList>((event, emit) async {
       await _mapAddLabelledBodyComponentListToState(event);
     });
-    
-    on <UpdateLabelledBodyComponentList> ((event, emit) async {
+
+    on<UpdateLabelledBodyComponentList>((event, emit) async {
       await _mapUpdateLabelledBodyComponentListToState(event);
     });
-    
-    on <DeleteLabelledBodyComponentList> ((event, emit) async {
+
+    on<DeleteLabelledBodyComponentList>((event, emit) async {
       await _mapDeleteLabelledBodyComponentListToState(event);
     });
-    
-    on <LabelledBodyComponentListUpdated> ((event, emit) {
+
+    on<LabelledBodyComponentListUpdated>((event, emit) {
       emit(_mapLabelledBodyComponentListUpdatedToState(event));
     });
   }
 
-  List<LabelledBodyComponentModel?> _filter(List<LabelledBodyComponentModel?> original) {
+  List<LabelledBodyComponentModel?> _filter(
+      List<LabelledBodyComponentModel?> original) {
     if (filter != null) {
       return filter!(original);
     } else {
@@ -90,44 +100,57 @@ class LabelledBodyComponentListBloc extends Bloc<LabelledBodyComponentListEvent,
   }
 
   Future<void> _mapLoadLabelledBodyComponentListToState() async {
-    int amountNow =  (state is LabelledBodyComponentListLoaded) ? (state as LabelledBodyComponentListLoaded).values!.length : 0;
+    int amountNow = (state is LabelledBodyComponentListLoaded)
+        ? (state as LabelledBodyComponentListLoaded).values!.length
+        : 0;
     _labelledBodyComponentsListSubscription?.cancel();
-    _labelledBodyComponentsListSubscription = _labelledBodyComponentRepository.listen(
-          (list) => add(LabelledBodyComponentListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
-      orderBy: orderBy,
-      descending: descending,
-      eliudQuery: eliudQuery,
-      limit: ((paged != null) && paged!) ? pages * labelledBodyComponentLimit : null
-    );
+    _labelledBodyComponentsListSubscription =
+        _labelledBodyComponentRepository.listen(
+            (list) => add(LabelledBodyComponentListUpdated(
+                value: _filter(list), mightHaveMore: amountNow != list.length)),
+            orderBy: orderBy,
+            descending: descending,
+            eliudQuery: eliudQuery,
+            limit: ((paged != null) && paged!)
+                ? pages * labelledBodyComponentLimit
+                : null);
   }
 
   Future<void> _mapLoadLabelledBodyComponentListWithDetailsToState() async {
-    int amountNow =  (state is LabelledBodyComponentListLoaded) ? (state as LabelledBodyComponentListLoaded).values!.length : 0;
+    int amountNow = (state is LabelledBodyComponentListLoaded)
+        ? (state as LabelledBodyComponentListLoaded).values!.length
+        : 0;
     _labelledBodyComponentsListSubscription?.cancel();
-    _labelledBodyComponentsListSubscription = _labelledBodyComponentRepository.listenWithDetails(
-            (list) => add(LabelledBodyComponentListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
-        orderBy: orderBy,
-        descending: descending,
-        eliudQuery: eliudQuery,
-        limit: ((paged != null) && paged!) ? pages * labelledBodyComponentLimit : null
-    );
+    _labelledBodyComponentsListSubscription =
+        _labelledBodyComponentRepository.listenWithDetails(
+            (list) => add(LabelledBodyComponentListUpdated(
+                value: _filter(list), mightHaveMore: amountNow != list.length)),
+            orderBy: orderBy,
+            descending: descending,
+            eliudQuery: eliudQuery,
+            limit: ((paged != null) && paged!)
+                ? pages * labelledBodyComponentLimit
+                : null);
   }
 
-  Future<void> _mapAddLabelledBodyComponentListToState(AddLabelledBodyComponentList event) async {
+  Future<void> _mapAddLabelledBodyComponentListToState(
+      AddLabelledBodyComponentList event) async {
     var value = event.value;
     if (value != null) {
       await _labelledBodyComponentRepository.add(value);
     }
   }
 
-  Future<void> _mapUpdateLabelledBodyComponentListToState(UpdateLabelledBodyComponentList event) async {
+  Future<void> _mapUpdateLabelledBodyComponentListToState(
+      UpdateLabelledBodyComponentList event) async {
     var value = event.value;
     if (value != null) {
       await _labelledBodyComponentRepository.update(value);
     }
   }
 
-  Future<void> _mapDeleteLabelledBodyComponentListToState(DeleteLabelledBodyComponentList event) async {
+  Future<void> _mapDeleteLabelledBodyComponentListToState(
+      DeleteLabelledBodyComponentList event) async {
     var value = event.value;
     if (value != null) {
       await _labelledBodyComponentRepository.delete(value);
@@ -135,7 +158,9 @@ class LabelledBodyComponentListBloc extends Bloc<LabelledBodyComponentListEvent,
   }
 
   LabelledBodyComponentListLoaded _mapLabelledBodyComponentListUpdatedToState(
-      LabelledBodyComponentListUpdated event) => LabelledBodyComponentListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
+          LabelledBodyComponentListUpdated event) =>
+      LabelledBodyComponentListLoaded(
+          values: event.value, mightHaveMore: event.mightHaveMore);
 
   @override
   Future<void> close() {
@@ -143,5 +168,3 @@ class LabelledBodyComponentListBloc extends Bloc<LabelledBodyComponentListEvent,
     return super.close();
   }
 }
-
-

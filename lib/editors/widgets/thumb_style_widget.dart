@@ -4,19 +4,17 @@ import 'package:eliud_pkg_feed/model/feed_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-typedef ThumbStyleCallback = Function(
-    ThumbStyle thumbStyle);
+typedef ThumbStyleCallback = Function(ThumbStyle thumbStyle);
 
 class ThumbStyleWidget extends StatefulWidget {
-  ThumbStyleCallback thumbStyleCallback;
+  final ThumbStyleCallback thumbStyleCallback;
   final ThumbStyle thumbStyle;
   final AppModel app;
   ThumbStyleWidget(
-      {Key? key,
-        required this.app,
-        required this.thumbStyleCallback,
-        required this.thumbStyle})
-      : super(key: key);
+      {super.key,
+      required this.app,
+      required this.thumbStyleCallback,
+      required this.thumbStyle});
 
   @override
   State<StatefulWidget> createState() {
@@ -27,17 +25,22 @@ class ThumbStyleWidget extends StatefulWidget {
 class _ThumbStyleWidgetState extends State<ThumbStyleWidget> {
   int? _heightTypeSelectedRadioTile;
 
+  @override
   void initState() {
     super.initState();
     _heightTypeSelectedRadioTile = widget.thumbStyle.index;
   }
 
-  String heighttTypeLandscapeStringValue(ThumbStyle? thumbStyle) {
+  String heightTypeLandscapeStringValue(ThumbStyle? thumbStyle) {
     switch (thumbStyle) {
-      case ThumbStyle.Thumbs:
+      case ThumbStyle.thumbs:
         return 'Thumbs';
-      case ThumbStyle.Banana:
+      case ThumbStyle.banana:
         return 'Banana';
+      case ThumbStyle.unknown:
+        break;
+      case null:
+        break;
     }
     return '?';
   }
@@ -51,7 +54,7 @@ class _ThumbStyleWidgetState extends State<ThumbStyleWidget> {
 
   Widget getPrivilegeOption(ThumbStyle? thumbStyle) {
     if (thumbStyle == null) return Text("?");
-    var stringValue = heighttTypeLandscapeStringValue(thumbStyle);
+    var stringValue = heightTypeLandscapeStringValue(thumbStyle);
     return Center(
         child: radioListTile(
             widget.app,
@@ -60,14 +63,14 @@ class _ThumbStyleWidgetState extends State<ThumbStyleWidget> {
             _heightTypeSelectedRadioTile,
             stringValue,
             null,
-                (dynamic val) => setSelection(val)));
+            (dynamic val) => setSelection(val)));
   }
 
   @override
   Widget build(BuildContext context) {
     return ListView(children: [
-      getPrivilegeOption(ThumbStyle.Thumbs),
-      getPrivilegeOption(ThumbStyle.Banana)
+      getPrivilegeOption(ThumbStyle.thumbs),
+      getPrivilegeOption(ThumbStyle.banana)
     ], shrinkWrap: true, physics: ScrollPhysics());
   }
 }

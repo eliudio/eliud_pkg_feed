@@ -33,11 +33,12 @@ class PostComponentBloc extends Bloc<PostComponentEvent, PostComponentState> {
     });
   }
 
-  PostComponentBloc({ this.postRepository }): super(PostComponentUninitialized()) {
-    on <FetchPostComponent> ((event, emit) {
+  PostComponentBloc({this.postRepository})
+      : super(PostComponentUninitialized()) {
+    on<FetchPostComponent>((event, emit) {
       _mapLoadPostComponentUpdateToState(event.id!);
     });
-    on <PostComponentUpdated> ((event, emit) {
+    on<PostComponentUpdated>((event, emit) {
       emit(PostComponentLoaded(value: event.value));
     });
   }
@@ -47,6 +48,4 @@ class PostComponentBloc extends Bloc<PostComponentEvent, PostComponentState> {
     _postSubscription?.cancel();
     return super.close();
   }
-
 }
-

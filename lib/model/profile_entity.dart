@@ -25,59 +25,103 @@ class ProfileEntity implements EntityBase {
   final BackgroundEntity? backgroundOverride;
   final StorageConditionsEntity? conditions;
 
-  ProfileEntity({required this.appId, this.description, this.feedId, this.backgroundOverride, this.conditions, });
+  ProfileEntity({
+    required this.appId,
+    this.description,
+    this.feedId,
+    this.backgroundOverride,
+    this.conditions,
+  });
 
-  ProfileEntity copyWith({String? documentID, String? appId, String? description, String? feedId, BackgroundEntity? backgroundOverride, StorageConditionsEntity? conditions, }) {
-    return ProfileEntity(appId : appId ?? this.appId, description : description ?? this.description, feedId : feedId ?? this.feedId, backgroundOverride : backgroundOverride ?? this.backgroundOverride, conditions : conditions ?? this.conditions, );
+  ProfileEntity copyWith({
+    String? documentID,
+    String? appId,
+    String? description,
+    String? feedId,
+    BackgroundEntity? backgroundOverride,
+    StorageConditionsEntity? conditions,
+  }) {
+    return ProfileEntity(
+      appId: appId ?? this.appId,
+      description: description ?? this.description,
+      feedId: feedId ?? this.feedId,
+      backgroundOverride: backgroundOverride ?? this.backgroundOverride,
+      conditions: conditions ?? this.conditions,
+    );
   }
-  List<Object?> get props => [appId, description, feedId, backgroundOverride, conditions, ];
+
+  List<Object?> get props => [
+        appId,
+        description,
+        feedId,
+        backgroundOverride,
+        conditions,
+      ];
 
   @override
   String toString() {
     return 'ProfileEntity{appId: $appId, description: $description, feedId: $feedId, backgroundOverride: $backgroundOverride, conditions: $conditions}';
   }
 
-  static ProfileEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
+  static ProfileEntity? fromMap(Object? o,
+      {Map<String, String>? newDocumentIds}) {
     if (o == null) return null;
     var map = o as Map<String, dynamic>;
 
-    var backgroundOverrideFromMap;
-    backgroundOverrideFromMap = map['backgroundOverride'];
-    if (backgroundOverrideFromMap != null)
-      backgroundOverrideFromMap = BackgroundEntity.fromMap(backgroundOverrideFromMap, newDocumentIds: newDocumentIds);
-    var conditionsFromMap;
-    conditionsFromMap = map['conditions'];
-    if (conditionsFromMap != null)
-      conditionsFromMap = StorageConditionsEntity.fromMap(conditionsFromMap, newDocumentIds: newDocumentIds);
+    var backgroundOverrideFromMap = map['backgroundOverride'];
+    if (backgroundOverrideFromMap != null) {
+      backgroundOverrideFromMap = BackgroundEntity.fromMap(
+          backgroundOverrideFromMap,
+          newDocumentIds: newDocumentIds);
+    }
+    var conditionsFromMap = map['conditions'];
+    if (conditionsFromMap != null) {
+      conditionsFromMap = StorageConditionsEntity.fromMap(conditionsFromMap,
+          newDocumentIds: newDocumentIds);
+    }
 
     return ProfileEntity(
-      appId: map['appId'], 
-      description: map['description'], 
-      feedId: map['feedId'], 
-      backgroundOverride: backgroundOverrideFromMap, 
-      conditions: conditionsFromMap, 
+      appId: map['appId'],
+      description: map['description'],
+      feedId: map['feedId'],
+      backgroundOverride: backgroundOverrideFromMap,
+      conditions: conditionsFromMap,
     );
   }
 
+  @override
   Map<String, Object?> toDocument() {
-    final Map<String, dynamic>? backgroundOverrideMap = backgroundOverride != null 
-        ? backgroundOverride!.toDocument()
-        : null;
-    final Map<String, dynamic>? conditionsMap = conditions != null 
-        ? conditions!.toDocument()
-        : null;
+    final Map<String, dynamic>? backgroundOverrideMap =
+        backgroundOverride != null ? backgroundOverride!.toDocument() : null;
+    final Map<String, dynamic>? conditionsMap =
+        conditions != null ? conditions!.toDocument() : null;
 
     Map<String, Object?> theDocument = HashMap();
-    if (appId != null) theDocument["appId"] = appId;
-      else theDocument["appId"] = null;
-    if (description != null) theDocument["description"] = description;
-      else theDocument["description"] = null;
-    if (feedId != null) theDocument["feedId"] = feedId;
-      else theDocument["feedId"] = null;
-    if (backgroundOverride != null) theDocument["backgroundOverride"] = backgroundOverrideMap;
-      else theDocument["backgroundOverride"] = null;
-    if (conditions != null) theDocument["conditions"] = conditionsMap;
-      else theDocument["conditions"] = null;
+    if (appId != null) {
+      theDocument["appId"] = appId;
+    } else {
+      theDocument["appId"] = null;
+    }
+    if (description != null) {
+      theDocument["description"] = description;
+    } else {
+      theDocument["description"] = null;
+    }
+    if (feedId != null) {
+      theDocument["feedId"] = feedId;
+    } else {
+      theDocument["feedId"] = null;
+    }
+    if (backgroundOverride != null) {
+      theDocument["backgroundOverride"] = backgroundOverrideMap;
+    } else {
+      theDocument["backgroundOverride"] = null;
+    }
+    if (conditions != null) {
+      theDocument["conditions"] = conditionsMap;
+    } else {
+      theDocument["conditions"] = null;
+    }
     return theDocument;
   }
 
@@ -87,7 +131,8 @@ class ProfileEntity implements EntityBase {
     return newEntity;
   }
 
-  static ProfileEntity? fromJsonString(String json, {Map<String, String>? newDocumentIds}) {
+  static ProfileEntity? fromJsonString(String json,
+      {Map<String, String>? newDocumentIds}) {
     Map<String, dynamic>? generationSpecificationMap = jsonDecode(json);
     return fromMap(generationSpecificationMap, newDocumentIds: newDocumentIds);
   }
@@ -96,9 +141,9 @@ class ProfileEntity implements EntityBase {
     return jsonEncode(toDocument());
   }
 
-  Future<Map<String, Object?>> enrichedDocument(Map<String, Object?> theDocument) async {
+  @override
+  Future<Map<String, Object?>> enrichedDocument(
+      Map<String, Object?> theDocument) async {
     return theDocument;
   }
-
 }
-

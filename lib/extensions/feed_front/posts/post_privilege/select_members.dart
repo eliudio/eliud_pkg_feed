@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'bloc/member_service.dart';
 
-typedef SelectedMembersCallback(List<String> selectedMembers);
+typedef SelectedMembersCallback = Function(List<String> selectedMembers);
 
 // Perpahs we should only show followed members?
 class SelectMembersWidget extends StatefulWidget {
@@ -18,14 +18,12 @@ class SelectMembersWidget extends StatefulWidget {
   final MemberService memberService;
 
   const SelectMembersWidget._(
-      {Key? key,
-      required this.app,
+      {required this.app,
       required this.feedId,
       required this.memberId,
       required this.initiallySelectedMembers,
       required this.selectedMembersCallback,
-      required this.memberService})
-      : super(key: key);
+      required this.memberService});
 
   @override
   State<StatefulWidget> createState() {
@@ -39,8 +37,7 @@ class SelectMembersWidget extends StatefulWidget {
       required List<SelectedMember>? specificSelectedMembers,
       required SelectedMembersCallback selectedMembersCallback}) {
     var memberService = MemberService(app, feedId, memberId);
-    if (specificSelectedMembers == null)
-      specificSelectedMembers = <SelectedMember>[];
+    specificSelectedMembers ??= <SelectedMember>[];
 
     return SelectMembersWidget._(
         app: app,
@@ -77,11 +74,10 @@ class TheRealSelectMembersWidget extends StatefulWidget {
   final List<SelectedMember> allMembers;
 
   const TheRealSelectMembersWidget(
-      {Key? key,
+      {super.key,
       required this.initiallySelectedMembers,
       required this.selectedMembersCallback,
-      required this.allMembers})
-      : super(key: key);
+      required this.allMembers});
 
   @override
   State<StatefulWidget> createState() => _TheRealSelectMembersWidgetState();
@@ -91,28 +87,31 @@ class _TheRealSelectMembersWidgetState
     extends State<TheRealSelectMembersWidget> {
   @override
   Widget build(BuildContext context) {
-    List<SelectedMember> _selectedMembers = widget.initiallySelectedMembers;
+    List<SelectedMember> selectedMembers = widget.initiallySelectedMembers;
     return ChipsInput<SelectedMember>(
 //    maxChips: 3, // remove, if you like infinity number of chips
-      initialValue: _selectedMembers,
+      initialValue: selectedMembers,
       findSuggestions: (String query) {
-        var _selectedMembersS = _selectedMembers.map((e) => e.memberId).toList();
+        var selectedMembersS = selectedMembers.map((e) => e.memberId).toList();
         List<SelectedMember> remaining = [];
         for (var element in widget.allMembers) {
-          if (!_selectedMembersS.contains(element.memberId)) {
-            if ((query.length == 0) || (element.name.toLowerCase().startsWith(query)))
-            remaining.add(element);
+          if (!selectedMembersS.contains(element.memberId)) {
+            if ((query.isEmpty) ||
+                (element.name.toLowerCase().startsWith(query))) {
+              remaining.add(element);
+            }
           }
         }
         return remaining;
       },
       onChanged: (List<SelectedMember> data) {
         var distinct = data.toSet().toList();
-        widget.selectedMembersCallback(distinct.map((e) => e.memberId).toList());
+        widget
+            .selectedMembersCallback(distinct.map((e) => e.memberId).toList());
       },
       chipBuilder: (context, state, SelectedMember selectedMember) {
         return InputChip(
-          key: ObjectKey(selectedMember.toString() + "-" + newRandomKey()),
+          key: ObjectKey("$selectedMember-${newRandomKey()}"),
           label: Text(selectedMember.name),
           avatar: selectedMember.imageURL == null
               ? null

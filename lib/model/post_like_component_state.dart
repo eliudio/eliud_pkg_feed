@@ -27,7 +27,7 @@ class PostLikeComponentUninitialized extends PostLikeComponentState {}
 
 class PostLikeComponentError extends PostLikeComponentState {
   final String? message;
-  PostLikeComponentError({ this.message });
+  PostLikeComponentError({this.message});
 }
 
 class PostLikeComponentPermissionDenied extends PostLikeComponentState {
@@ -37,10 +37,10 @@ class PostLikeComponentPermissionDenied extends PostLikeComponentState {
 class PostLikeComponentLoaded extends PostLikeComponentState {
   final PostLikeModel value;
 
-  const PostLikeComponentLoaded({ required this.value });
+  const PostLikeComponentLoaded({required this.value});
 
-  PostLikeComponentLoaded copyWith({ PostLikeModel? copyThis }) {
-    return PostLikeComponentLoaded(value: copyThis ?? this.value);
+  PostLikeComponentLoaded copyWith({PostLikeModel? copyThis}) {
+    return PostLikeComponentLoaded(value: copyThis ?? value);
   }
 
   @override
@@ -49,4 +49,3 @@ class PostLikeComponentLoaded extends PostLikeComponentState {
   @override
   String toString() => 'PostLikeComponentLoaded { value: $value }';
 }
-

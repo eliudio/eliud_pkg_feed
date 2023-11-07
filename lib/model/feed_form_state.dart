@@ -41,9 +41,9 @@ class FeedFormInitialized extends FeedFormState {
   final FeedModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
-  const FeedFormInitialized({ this.value });
+  const FeedFormInitialized({this.value});
 }
 
 // Menu has been initialised and hence a menu is available
@@ -51,9 +51,9 @@ abstract class FeedFormError extends FeedFormInitialized {
   final String? message;
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
-  const FeedFormError({this.message, FeedModel? value }) : super(value: value);
+  const FeedFormError({this.message, super.value});
 
   @override
   String toString() {
@@ -63,11 +63,12 @@ abstract class FeedFormError extends FeedFormInitialized {
     }''';
   }
 }
-class DocumentIDFeedFormError extends FeedFormError { 
-  const DocumentIDFeedFormError({ String? message, FeedModel? value }): super(message: message, value: value);
+
+class DocumentIDFeedFormError extends FeedFormError {
+  const DocumentIDFeedFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -78,12 +79,11 @@ class DocumentIDFeedFormError extends FeedFormError {
   }
 }
 
-
-class AppIdFeedFormError extends FeedFormError { 
-  const AppIdFeedFormError({ String? message, FeedModel? value }): super(message: message, value: value);
+class AppIdFeedFormError extends FeedFormError {
+  const AppIdFeedFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -94,12 +94,11 @@ class AppIdFeedFormError extends FeedFormError {
   }
 }
 
-
-class DescriptionFeedFormError extends FeedFormError { 
-  const DescriptionFeedFormError({ String? message, FeedModel? value }): super(message: message, value: value);
+class DescriptionFeedFormError extends FeedFormError {
+  const DescriptionFeedFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -110,12 +109,11 @@ class DescriptionFeedFormError extends FeedFormError {
   }
 }
 
-
-class ThumbImageFeedFormError extends FeedFormError { 
-  const ThumbImageFeedFormError({ String? message, FeedModel? value }): super(message: message, value: value);
+class ThumbImageFeedFormError extends FeedFormError {
+  const ThumbImageFeedFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -126,12 +124,11 @@ class ThumbImageFeedFormError extends FeedFormError {
   }
 }
 
-
-class PhotoPostFeedFormError extends FeedFormError { 
-  const PhotoPostFeedFormError({ String? message, FeedModel? value }): super(message: message, value: value);
+class PhotoPostFeedFormError extends FeedFormError {
+  const PhotoPostFeedFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -142,12 +139,11 @@ class PhotoPostFeedFormError extends FeedFormError {
   }
 }
 
-
-class VideoPostFeedFormError extends FeedFormError { 
-  const VideoPostFeedFormError({ String? message, FeedModel? value }): super(message: message, value: value);
+class VideoPostFeedFormError extends FeedFormError {
+  const VideoPostFeedFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -158,12 +154,11 @@ class VideoPostFeedFormError extends FeedFormError {
   }
 }
 
-
-class MessagePostFeedFormError extends FeedFormError { 
-  const MessagePostFeedFormError({ String? message, FeedModel? value }): super(message: message, value: value);
+class MessagePostFeedFormError extends FeedFormError {
+  const MessagePostFeedFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -174,12 +169,11 @@ class MessagePostFeedFormError extends FeedFormError {
   }
 }
 
-
-class AudioPostFeedFormError extends FeedFormError { 
-  const AudioPostFeedFormError({ String? message, FeedModel? value }): super(message: message, value: value);
+class AudioPostFeedFormError extends FeedFormError {
+  const AudioPostFeedFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -190,12 +184,11 @@ class AudioPostFeedFormError extends FeedFormError {
   }
 }
 
-
-class AlbumPostFeedFormError extends FeedFormError { 
-  const AlbumPostFeedFormError({ String? message, FeedModel? value }): super(message: message, value: value);
+class AlbumPostFeedFormError extends FeedFormError {
+  const AlbumPostFeedFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -206,12 +199,11 @@ class AlbumPostFeedFormError extends FeedFormError {
   }
 }
 
-
-class ArticlePostFeedFormError extends FeedFormError { 
-  const ArticlePostFeedFormError({ String? message, FeedModel? value }): super(message: message, value: value);
+class ArticlePostFeedFormError extends FeedFormError {
+  const ArticlePostFeedFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -222,12 +214,11 @@ class ArticlePostFeedFormError extends FeedFormError {
   }
 }
 
-
-class FeedFormLoaded extends FeedFormInitialized { 
-  const FeedFormLoaded({ FeedModel? value }): super(value: value);
+class FeedFormLoaded extends FeedFormInitialized {
+  const FeedFormLoaded({super.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() {
@@ -237,12 +228,11 @@ class FeedFormLoaded extends FeedFormInitialized {
   }
 }
 
-
-class SubmittableFeedForm extends FeedFormInitialized { 
-  const SubmittableFeedForm({ FeedModel? value }): super(value: value);
+class SubmittableFeedForm extends FeedFormInitialized {
+  const SubmittableFeedForm({super.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() {
@@ -251,5 +241,3 @@ class SubmittableFeedForm extends FeedFormInitialized {
     }''';
   }
 }
-
-

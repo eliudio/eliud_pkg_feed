@@ -22,7 +22,8 @@ class FeedFront extends StatefulWidget {
 
   FeedFront(this.app, this.feedFrontModel);
 
-  _FeedFrontState createState() => _FeedFrontState();
+  @override
+  State<FeedFront> createState() => _FeedFrontState();
 }
 
 class _FeedFrontState extends State<FeedFront> {
@@ -32,28 +33,34 @@ class _FeedFrontState extends State<FeedFront> {
   Widget build(BuildContext context) {
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (context, accessState) {
-          if (accessState is AccessDetermined) {
-            return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
-              if (state is ProfileInitialised) {
-                return _getIt(context, accessState, widget.feedFrontModel, state);
-              } else {
-                return progressIndicator(widget.app, context);
-              }
-            });
+      if (accessState is AccessDetermined) {
+        return BlocBuilder<ProfileBloc, ProfileState>(
+            builder: (context, state) {
+          if (state is ProfileInitialised) {
+            return _getIt(context, accessState, widget.feedFrontModel, state);
           } else {
             return progressIndicator(widget.app, context);
           }
         });
+      } else {
+        return progressIndicator(widget.app, context);
+      }
+    });
   }
 
-  Widget _getIt(
-      BuildContext context, AccessDetermined accessDetermined, FeedFrontModel feedFrontModel, ProfileInitialised state) {
+  Widget _getIt(BuildContext context, AccessDetermined accessDetermined,
+      FeedFrontModel feedFrontModel, ProfileInitialised state) {
     EliudQuery eliudQuery = ProfileBloc.postQuery(state);
     return BlocProvider(
-      create: (_) => PostListPagedBloc(accessDetermined, state.memberId() ?? 'PUBLIC', eliudQuery,
+      create: (_) => PostListPagedBloc(
+          accessDetermined, state.memberId() ?? 'PUBLIC', eliudQuery,
           postRepository: posts.postRepository(appId: feedFrontModel.appId)!)
         ..add(PostListPagedFetched()),
-      child: PagedPostsList(widget.app, feedFrontModel, backgroundOverride: widget.feedFrontModel.backgroundOverridePosts,),
+      child: PagedPostsList(
+        widget.app,
+        feedFrontModel,
+        backgroundOverride: widget.feedFrontModel.backgroundOverridePosts,
+      ),
     );
   }
 }

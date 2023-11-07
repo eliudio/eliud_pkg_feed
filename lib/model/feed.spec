@@ -48,7 +48,7 @@
       "displayName": "Thumbs Image",
       "fieldType": "enum",
       "enumName": "ThumbStyle",
-      "enumValues" : [ "Thumbs", "Banana" ]
+      "enumValues" : [ "thumbs", "banana" ]
     },
     {
       "fieldName": "photoPost",
@@ -94,7 +94,7 @@
     }
  ],
   "listFields": {
-    "title": "value.description != null ? Center(child: text(app, context, value.description!)) : value.documentID != null ? Center(child: text(app, context, value.documentID)) : Container()"
+    "title": "value.description != null ? Center(child: text(app, context, value.description!)) : Center(child: text(app, context, value.documentID))"
   },
   "depends": ["eliud_core"]
 }

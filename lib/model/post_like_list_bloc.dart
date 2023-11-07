@@ -23,9 +23,8 @@ import 'package:eliud_core/tools/query/query_tools.dart';
 
 import 'post_like_model.dart';
 
-typedef List<PostLikeModel?> FilterPostLikeModels(List<PostLikeModel?> values);
-
-
+typedef FilterPostLikeModels = List<PostLikeModel?> Function(
+    List<PostLikeModel?> values);
 
 class PostLikeListBloc extends Bloc<PostLikeListEvent, PostLikeListState> {
   final FilterPostLikeModels? filter;
@@ -39,23 +38,32 @@ class PostLikeListBloc extends Bloc<PostLikeListEvent, PostLikeListState> {
   final bool? detailed;
   final int postLikeLimit;
 
-  PostLikeListBloc({this.filter, this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required PostLikeRepository postLikeRepository, this.postLikeLimit = 5})
+  PostLikeListBloc(
+      {this.filter,
+      this.paged,
+      this.orderBy,
+      this.descending,
+      this.detailed,
+      this.eliudQuery,
+      required PostLikeRepository postLikeRepository,
+      this.postLikeLimit = 5})
       : _postLikeRepository = postLikeRepository,
         super(PostLikeListLoading()) {
-    on <LoadPostLikeList> ((event, emit) {
+    on<LoadPostLikeList>((event, emit) {
       if ((detailed == null) || (!detailed!)) {
         _mapLoadPostLikeListToState();
       } else {
         _mapLoadPostLikeListWithDetailsToState();
       }
     });
-    
-    on <NewPage> ((event, emit) {
-      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
+
+    on<NewPage>((event, emit) {
+      pages = pages +
+          1; // it doesn't matter so much if we increase pages beyond the end
       _mapLoadPostLikeListWithDetailsToState();
     });
-    
-    on <PostLikeChangeQuery> ((event, emit) {
+
+    on<PostLikeChangeQuery>((event, emit) {
       eliudQuery = event.newQuery;
       if ((detailed == null) || (!detailed!)) {
         _mapLoadPostLikeListToState();
@@ -63,20 +71,20 @@ class PostLikeListBloc extends Bloc<PostLikeListEvent, PostLikeListState> {
         _mapLoadPostLikeListWithDetailsToState();
       }
     });
-      
-    on <AddPostLikeList> ((event, emit) async {
+
+    on<AddPostLikeList>((event, emit) async {
       await _mapAddPostLikeListToState(event);
     });
-    
-    on <UpdatePostLikeList> ((event, emit) async {
+
+    on<UpdatePostLikeList>((event, emit) async {
       await _mapUpdatePostLikeListToState(event);
     });
-    
-    on <DeletePostLikeList> ((event, emit) async {
+
+    on<DeletePostLikeList>((event, emit) async {
       await _mapDeletePostLikeListToState(event);
     });
-    
-    on <PostLikeListUpdated> ((event, emit) {
+
+    on<PostLikeListUpdated>((event, emit) {
       emit(_mapPostLikeListUpdatedToState(event));
     });
   }
@@ -90,27 +98,31 @@ class PostLikeListBloc extends Bloc<PostLikeListEvent, PostLikeListState> {
   }
 
   Future<void> _mapLoadPostLikeListToState() async {
-    int amountNow =  (state is PostLikeListLoaded) ? (state as PostLikeListLoaded).values!.length : 0;
+    int amountNow = (state is PostLikeListLoaded)
+        ? (state as PostLikeListLoaded).values!.length
+        : 0;
     _postLikesListSubscription?.cancel();
     _postLikesListSubscription = _postLikeRepository.listen(
-          (list) => add(PostLikeListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
-      orderBy: orderBy,
-      descending: descending,
-      eliudQuery: eliudQuery,
-      limit: ((paged != null) && paged!) ? pages * postLikeLimit : null
-    );
-  }
-
-  Future<void> _mapLoadPostLikeListWithDetailsToState() async {
-    int amountNow =  (state is PostLikeListLoaded) ? (state as PostLikeListLoaded).values!.length : 0;
-    _postLikesListSubscription?.cancel();
-    _postLikesListSubscription = _postLikeRepository.listenWithDetails(
-            (list) => add(PostLikeListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
+        (list) => add(PostLikeListUpdated(
+            value: _filter(list), mightHaveMore: amountNow != list.length)),
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,
-        limit: ((paged != null) && paged!) ? pages * postLikeLimit : null
-    );
+        limit: ((paged != null) && paged!) ? pages * postLikeLimit : null);
+  }
+
+  Future<void> _mapLoadPostLikeListWithDetailsToState() async {
+    int amountNow = (state is PostLikeListLoaded)
+        ? (state as PostLikeListLoaded).values!.length
+        : 0;
+    _postLikesListSubscription?.cancel();
+    _postLikesListSubscription = _postLikeRepository.listenWithDetails(
+        (list) => add(PostLikeListUpdated(
+            value: _filter(list), mightHaveMore: amountNow != list.length)),
+        orderBy: orderBy,
+        descending: descending,
+        eliudQuery: eliudQuery,
+        limit: ((paged != null) && paged!) ? pages * postLikeLimit : null);
   }
 
   Future<void> _mapAddPostLikeListToState(AddPostLikeList event) async {
@@ -135,7 +147,9 @@ class PostLikeListBloc extends Bloc<PostLikeListEvent, PostLikeListState> {
   }
 
   PostLikeListLoaded _mapPostLikeListUpdatedToState(
-      PostLikeListUpdated event) => PostLikeListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
+          PostLikeListUpdated event) =>
+      PostLikeListLoaded(
+          values: event.value, mightHaveMore: event.mightHaveMore);
 
   @override
   Future<void> close() {
@@ -143,5 +157,3 @@ class PostLikeListBloc extends Bloc<PostLikeListEvent, PostLikeListState> {
     return super.close();
   }
 }
-
-

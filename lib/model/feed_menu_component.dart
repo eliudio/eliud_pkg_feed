@@ -13,7 +13,6 @@
 
 */
 
-
 import 'package:eliud_pkg_feed/model/feed_menu_component_bloc.dart';
 import 'package:eliud_pkg_feed/model/feed_menu_component_event.dart';
 import 'package:eliud_pkg_feed/model/feed_menu_model.dart';
@@ -31,20 +30,22 @@ abstract class AbstractFeedMenuComponent extends StatelessWidget {
   final AppModel app;
   final String feedMenuId;
 
-  AbstractFeedMenuComponent({Key? key, required this.app, required this.feedMenuId}): super(key: key);
+  AbstractFeedMenuComponent(
+      {super.key, required this.app, required this.feedMenuId});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<FeedMenuComponentBloc> (
-          create: (context) => FeedMenuComponentBloc(
-            feedMenuRepository: feedMenuRepository(appId: app.documentID)!)
+    return BlocProvider<FeedMenuComponentBloc>(
+      create: (context) => FeedMenuComponentBloc(
+          feedMenuRepository: feedMenuRepository(appId: app.documentID)!)
         ..add(FetchFeedMenuComponent(id: feedMenuId)),
       child: _feedMenuBlockBuilder(context),
     );
   }
 
   Widget _feedMenuBlockBuilder(BuildContext context) {
-    return BlocBuilder<FeedMenuComponentBloc, FeedMenuComponentState>(builder: (context, state) {
+    return BlocBuilder<FeedMenuComponentBloc, FeedMenuComponentState>(
+        builder: (context, state) {
       if (state is FeedMenuComponentLoaded) {
         return yourWidget(context, state.value);
       } else if (state is FeedMenuComponentPermissionDenied) {
@@ -57,7 +58,11 @@ abstract class AbstractFeedMenuComponent extends StatelessWidget {
         return AlertWidget(app: app, title: 'Error', content: state.message);
       } else {
         return Center(
-          child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().progressIndicatorStyle().progressIndicator(app, context),
+          child: StyleRegistry.registry()
+              .styleWithApp(app)
+              .frontEndStyle()
+              .progressIndicatorStyle()
+              .progressIndicator(app, context),
         );
       }
     });
@@ -65,4 +70,3 @@ abstract class AbstractFeedMenuComponent extends StatelessWidget {
 
   Widget yourWidget(BuildContext context, FeedMenuModel value);
 }
-

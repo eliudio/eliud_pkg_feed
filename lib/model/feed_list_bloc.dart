@@ -23,9 +23,7 @@ import 'package:eliud_core/tools/query/query_tools.dart';
 
 import 'feed_model.dart';
 
-typedef List<FeedModel?> FilterFeedModels(List<FeedModel?> values);
-
-
+typedef FilterFeedModels = List<FeedModel?> Function(List<FeedModel?> values);
 
 class FeedListBloc extends Bloc<FeedListEvent, FeedListState> {
   final FilterFeedModels? filter;
@@ -39,23 +37,32 @@ class FeedListBloc extends Bloc<FeedListEvent, FeedListState> {
   final bool? detailed;
   final int feedLimit;
 
-  FeedListBloc({this.filter, this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required FeedRepository feedRepository, this.feedLimit = 5})
+  FeedListBloc(
+      {this.filter,
+      this.paged,
+      this.orderBy,
+      this.descending,
+      this.detailed,
+      this.eliudQuery,
+      required FeedRepository feedRepository,
+      this.feedLimit = 5})
       : _feedRepository = feedRepository,
         super(FeedListLoading()) {
-    on <LoadFeedList> ((event, emit) {
+    on<LoadFeedList>((event, emit) {
       if ((detailed == null) || (!detailed!)) {
         _mapLoadFeedListToState();
       } else {
         _mapLoadFeedListWithDetailsToState();
       }
     });
-    
-    on <NewPage> ((event, emit) {
-      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
+
+    on<NewPage>((event, emit) {
+      pages = pages +
+          1; // it doesn't matter so much if we increase pages beyond the end
       _mapLoadFeedListWithDetailsToState();
     });
-    
-    on <FeedChangeQuery> ((event, emit) {
+
+    on<FeedChangeQuery>((event, emit) {
       eliudQuery = event.newQuery;
       if ((detailed == null) || (!detailed!)) {
         _mapLoadFeedListToState();
@@ -63,20 +70,20 @@ class FeedListBloc extends Bloc<FeedListEvent, FeedListState> {
         _mapLoadFeedListWithDetailsToState();
       }
     });
-      
-    on <AddFeedList> ((event, emit) async {
+
+    on<AddFeedList>((event, emit) async {
       await _mapAddFeedListToState(event);
     });
-    
-    on <UpdateFeedList> ((event, emit) async {
+
+    on<UpdateFeedList>((event, emit) async {
       await _mapUpdateFeedListToState(event);
     });
-    
-    on <DeleteFeedList> ((event, emit) async {
+
+    on<DeleteFeedList>((event, emit) async {
       await _mapDeleteFeedListToState(event);
     });
-    
-    on <FeedListUpdated> ((event, emit) {
+
+    on<FeedListUpdated>((event, emit) {
       emit(_mapFeedListUpdatedToState(event));
     });
   }
@@ -90,27 +97,31 @@ class FeedListBloc extends Bloc<FeedListEvent, FeedListState> {
   }
 
   Future<void> _mapLoadFeedListToState() async {
-    int amountNow =  (state is FeedListLoaded) ? (state as FeedListLoaded).values!.length : 0;
+    int amountNow = (state is FeedListLoaded)
+        ? (state as FeedListLoaded).values!.length
+        : 0;
     _feedsListSubscription?.cancel();
     _feedsListSubscription = _feedRepository.listen(
-          (list) => add(FeedListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
-      orderBy: orderBy,
-      descending: descending,
-      eliudQuery: eliudQuery,
-      limit: ((paged != null) && paged!) ? pages * feedLimit : null
-    );
-  }
-
-  Future<void> _mapLoadFeedListWithDetailsToState() async {
-    int amountNow =  (state is FeedListLoaded) ? (state as FeedListLoaded).values!.length : 0;
-    _feedsListSubscription?.cancel();
-    _feedsListSubscription = _feedRepository.listenWithDetails(
-            (list) => add(FeedListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
+        (list) => add(FeedListUpdated(
+            value: _filter(list), mightHaveMore: amountNow != list.length)),
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,
-        limit: ((paged != null) && paged!) ? pages * feedLimit : null
-    );
+        limit: ((paged != null) && paged!) ? pages * feedLimit : null);
+  }
+
+  Future<void> _mapLoadFeedListWithDetailsToState() async {
+    int amountNow = (state is FeedListLoaded)
+        ? (state as FeedListLoaded).values!.length
+        : 0;
+    _feedsListSubscription?.cancel();
+    _feedsListSubscription = _feedRepository.listenWithDetails(
+        (list) => add(FeedListUpdated(
+            value: _filter(list), mightHaveMore: amountNow != list.length)),
+        orderBy: orderBy,
+        descending: descending,
+        eliudQuery: eliudQuery,
+        limit: ((paged != null) && paged!) ? pages * feedLimit : null);
   }
 
   Future<void> _mapAddFeedListToState(AddFeedList event) async {
@@ -134,8 +145,8 @@ class FeedListBloc extends Bloc<FeedListEvent, FeedListState> {
     }
   }
 
-  FeedListLoaded _mapFeedListUpdatedToState(
-      FeedListUpdated event) => FeedListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
+  FeedListLoaded _mapFeedListUpdatedToState(FeedListUpdated event) =>
+      FeedListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
 
   @override
   Future<void> close() {
@@ -143,5 +154,3 @@ class FeedListBloc extends Bloc<FeedListEvent, FeedListState> {
     return super.close();
   }
 }
-
-

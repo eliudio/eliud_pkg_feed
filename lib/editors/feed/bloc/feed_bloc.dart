@@ -8,41 +8,37 @@ import 'package:eliud_core/core/editor/editor_base_bloc/editor_base_bloc.dart';
 
 import '../../../model/feed_entity.dart';
 
-class FeedDashboardBloc
-    extends EditorBaseBloc<FeedModel, FeedEntity> {
-
+class FeedDashboardBloc extends EditorBaseBloc<FeedModel, FeedEntity> {
   FeedDashboardBloc(String appId, EditorFeedback feedback)
       : super(appId, feedRepository(appId: appId)!, feedback);
 
   @override
   FeedModel newInstance(StorageConditionsModel conditions) {
     return FeedModel(
-        documentID: newRandomKey(),
+      documentID: newRandomKey(),
       appId: appId,
-        thumbImage: ThumbStyle.Thumbs,
-        photoPost: true,
-        videoPost: true,
-        messagePost: true,
-        audioPost: true,
-        albumPost: true,
-        articlePost: true,
-        );
+      thumbImage: ThumbStyle.thumbs,
+      photoPost: true,
+      videoPost: true,
+      messagePost: true,
+      audioPost: true,
+      albumPost: true,
+      articlePost: true,
+    );
   }
 
   @override
-  FeedModel setDefaultValues(
-      FeedModel t, StorageConditionsModel conditions) {
+  FeedModel setDefaultValues(FeedModel t, StorageConditionsModel conditions) {
     return t.copyWith(
-        description: t.description ?? '?',
-        appId: t.appId,
-        thumbImage: t.thumbImage ?? ThumbStyle.Thumbs,
-        photoPost: t.photoPost ?? true,
-        videoPost: t.videoPost ?? true,
-        messagePost: t.messagePost ?? true,
-        audioPost: t.audioPost ?? true,
-        albumPost: t.albumPost ?? true,
-        articlePost: t.articlePost ?? true,
-        );
+      description: t.description ?? '?',
+      appId: t.appId,
+      thumbImage: t.thumbImage ?? ThumbStyle.thumbs,
+      photoPost: t.photoPost ?? true,
+      videoPost: t.videoPost ?? true,
+      messagePost: t.messagePost ?? true,
+      audioPost: t.audioPost ?? true,
+      albumPost: t.albumPost ?? true,
+      articlePost: t.articlePost ?? true,
+    );
   }
 }
-

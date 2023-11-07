@@ -41,9 +41,9 @@ class PostLikeFormInitialized extends PostLikeFormState {
   final PostLikeModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
-  const PostLikeFormInitialized({ this.value });
+  const PostLikeFormInitialized({this.value});
 }
 
 // Menu has been initialised and hence a menu is available
@@ -51,9 +51,9 @@ abstract class PostLikeFormError extends PostLikeFormInitialized {
   final String? message;
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
-  const PostLikeFormError({this.message, PostLikeModel? value }) : super(value: value);
+  const PostLikeFormError({this.message, super.value});
 
   @override
   String toString() {
@@ -63,11 +63,12 @@ abstract class PostLikeFormError extends PostLikeFormInitialized {
     }''';
   }
 }
-class DocumentIDPostLikeFormError extends PostLikeFormError { 
-  const DocumentIDPostLikeFormError({ String? message, PostLikeModel? value }): super(message: message, value: value);
+
+class DocumentIDPostLikeFormError extends PostLikeFormError {
+  const DocumentIDPostLikeFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -78,12 +79,11 @@ class DocumentIDPostLikeFormError extends PostLikeFormError {
   }
 }
 
-
-class PostIdPostLikeFormError extends PostLikeFormError { 
-  const PostIdPostLikeFormError({ String? message, PostLikeModel? value }): super(message: message, value: value);
+class PostIdPostLikeFormError extends PostLikeFormError {
+  const PostIdPostLikeFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -94,12 +94,11 @@ class PostIdPostLikeFormError extends PostLikeFormError {
   }
 }
 
-
-class PostCommentIdPostLikeFormError extends PostLikeFormError { 
-  const PostCommentIdPostLikeFormError({ String? message, PostLikeModel? value }): super(message: message, value: value);
+class PostCommentIdPostLikeFormError extends PostLikeFormError {
+  const PostCommentIdPostLikeFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -110,12 +109,11 @@ class PostCommentIdPostLikeFormError extends PostLikeFormError {
   }
 }
 
-
-class MemberIdPostLikeFormError extends PostLikeFormError { 
-  const MemberIdPostLikeFormError({ String? message, PostLikeModel? value }): super(message: message, value: value);
+class MemberIdPostLikeFormError extends PostLikeFormError {
+  const MemberIdPostLikeFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -126,12 +124,11 @@ class MemberIdPostLikeFormError extends PostLikeFormError {
   }
 }
 
-
-class TimestampPostLikeFormError extends PostLikeFormError { 
-  const TimestampPostLikeFormError({ String? message, PostLikeModel? value }): super(message: message, value: value);
+class TimestampPostLikeFormError extends PostLikeFormError {
+  const TimestampPostLikeFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -142,12 +139,11 @@ class TimestampPostLikeFormError extends PostLikeFormError {
   }
 }
 
-
-class AppIdPostLikeFormError extends PostLikeFormError { 
-  const AppIdPostLikeFormError({ String? message, PostLikeModel? value }): super(message: message, value: value);
+class AppIdPostLikeFormError extends PostLikeFormError {
+  const AppIdPostLikeFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -158,12 +154,11 @@ class AppIdPostLikeFormError extends PostLikeFormError {
   }
 }
 
-
-class LikeTypePostLikeFormError extends PostLikeFormError { 
-  const LikeTypePostLikeFormError({ String? message, PostLikeModel? value }): super(message: message, value: value);
+class LikeTypePostLikeFormError extends PostLikeFormError {
+  const LikeTypePostLikeFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -174,12 +169,11 @@ class LikeTypePostLikeFormError extends PostLikeFormError {
   }
 }
 
-
-class PostLikeFormLoaded extends PostLikeFormInitialized { 
-  const PostLikeFormLoaded({ PostLikeModel? value }): super(value: value);
+class PostLikeFormLoaded extends PostLikeFormInitialized {
+  const PostLikeFormLoaded({super.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() {
@@ -189,12 +183,11 @@ class PostLikeFormLoaded extends PostLikeFormInitialized {
   }
 }
 
-
-class SubmittablePostLikeForm extends PostLikeFormInitialized { 
-  const SubmittablePostLikeForm({ PostLikeModel? value }): super(value: value);
+class SubmittablePostLikeForm extends PostLikeFormInitialized {
+  const SubmittablePostLikeForm({super.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() {
@@ -203,5 +196,3 @@ class SubmittablePostLikeForm extends PostLikeFormInitialized {
     }''';
   }
 }
-
-

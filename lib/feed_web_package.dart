@@ -4,17 +4,13 @@ FeedPackage getFeedPackage() => FeedWebPackage();
 
 class FeedWebPackage extends FeedPackage {
   @override
-  void init() {
-    super.init();
-  }
+  List<Object?> get props => [];
 
   @override
-  List<Object?> get props => [
-  ];
-
-  @override
-  bool operator == (Object other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
-          other is FeedWebPackage &&
-              runtimeType == other.runtimeType;
+      other is FeedWebPackage && runtimeType == other.runtimeType;
+
+  @override
+  int get hashCode => 0;
 }

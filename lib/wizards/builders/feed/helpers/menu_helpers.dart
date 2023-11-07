@@ -1,4 +1,4 @@
-import 'package:eliud_core/core/wizards/tools/documentIdentifier.dart';
+import 'package:eliud_core/core/wizards/tools/document_identifier.dart';
 import 'package:eliud_core/core_package.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/display_conditions_model.dart';
@@ -10,7 +10,8 @@ import 'package:flutter/material.dart';
 
 MenuItemModel menuItemFollowRequests(String uniqueId, AppModel app, dialogID) =>
     MenuItemModel(
-        documentID: constructDocumentId(uniqueId: uniqueId, documentId: dialogID),
+        documentID:
+            constructDocumentId(uniqueId: uniqueId, documentId: dialogID),
         text: 'Follow requests',
         description: 'Follow requests',
         icon: IconModel(
@@ -18,7 +19,8 @@ MenuItemModel menuItemFollowRequests(String uniqueId, AppModel app, dialogID) =>
             fontFamily: Icons.notifications.fontFamily),
         action: OpenDialog(
           app,
-          dialogID: constructDocumentId(uniqueId: uniqueId, documentId: dialogID),
+          dialogID:
+              constructDocumentId(uniqueId: uniqueId, documentId: dialogID),
         ));
 
 MenuItemModel menuItemFollowRequestsPage(
@@ -35,22 +37,24 @@ MenuItemModel menuItemFollowRequestsPage(
             conditions: DisplayConditionsModel(
                 privilegeLevelRequired: privilegeLevelRequired,
                 packageCondition:
-                    FollowPackage.CONDITION_MEMBER_HAS_OPEN_REQUESTS)));
+                    FollowPackage.conditionMemberHasOpenRequests)));
 
 MenuItemModel menuItemFollowers(
         String uniqueId, AppModel app, dialogID, privilegeLevelRequired) =>
     MenuItemModel(
-        documentID: constructDocumentId(uniqueId: uniqueId, documentId: dialogID),
+        documentID:
+            constructDocumentId(uniqueId: uniqueId, documentId: dialogID),
         text: 'Followers',
         description: 'Followers',
         icon: IconModel(
             codePoint: Icons.favorite_sharp.codePoint,
             fontFamily: Icons.settings.fontFamily),
         action: OpenDialog(app,
-            dialogID: constructDocumentId(uniqueId: uniqueId, documentId: dialogID),
+            dialogID:
+                constructDocumentId(uniqueId: uniqueId, documentId: dialogID),
             conditions: DisplayConditionsModel(
                 privilegeLevelRequired: privilegeLevelRequired,
-                packageCondition: CorePackage.MUST_BE_LOGGED_ON)));
+                packageCondition: CorePackage.mustBeLoggedIn)));
 
 MenuItemModel menuItemFollowersPage(
         String uniqueId, AppModel app, pageID, privilegeLevelRequired) =>
@@ -65,22 +69,24 @@ MenuItemModel menuItemFollowersPage(
             pageID: constructDocumentId(uniqueId: uniqueId, documentId: pageID),
             conditions: DisplayConditionsModel(
                 privilegeLevelRequired: privilegeLevelRequired,
-                packageCondition: CorePackage.MUST_BE_LOGGED_ON)));
+                packageCondition: CorePackage.mustBeLoggedIn)));
 
 MenuItemModel menuItemFollowing(
         String uniqueId, AppModel app, dialogID, privilegeLevelRequired) =>
     MenuItemModel(
-        documentID: constructDocumentId(uniqueId: uniqueId, documentId: dialogID),
+        documentID:
+            constructDocumentId(uniqueId: uniqueId, documentId: dialogID),
         text: 'Following',
         description: 'Following',
         icon: IconModel(
             codePoint: Icons.favorite_sharp.codePoint,
             fontFamily: Icons.settings.fontFamily),
         action: OpenDialog(app,
-            dialogID: constructDocumentId(uniqueId: uniqueId, documentId: dialogID),
+            dialogID:
+                constructDocumentId(uniqueId: uniqueId, documentId: dialogID),
             conditions: DisplayConditionsModel(
                 privilegeLevelRequired: privilegeLevelRequired,
-                packageCondition: CorePackage.MUST_BE_LOGGED_ON)));
+                packageCondition: CorePackage.mustBeLoggedIn)));
 
 MenuItemModel menuItemFollowingPage(
         String uniqueId, AppModel app, pageID, privilegeLevelRequired) =>
@@ -95,7 +101,7 @@ MenuItemModel menuItemFollowingPage(
             pageID: constructDocumentId(uniqueId: uniqueId, documentId: pageID),
             conditions: DisplayConditionsModel(
                 privilegeLevelRequired: privilegeLevelRequired,
-                packageCondition: CorePackage.MUST_BE_LOGGED_ON)));
+                packageCondition: CorePackage.mustBeLoggedIn)));
 
 MenuItemModel menuItemFiendFriendsPage(
         String uniqueId, AppModel app, pageID, privilegeLevelRequired) =>
@@ -110,7 +116,7 @@ MenuItemModel menuItemFiendFriendsPage(
             pageID: constructDocumentId(uniqueId: uniqueId, documentId: pageID),
             conditions: DisplayConditionsModel(
                 privilegeLevelRequired: privilegeLevelRequired,
-                packageCondition: CorePackage.MUST_BE_LOGGED_ON)));
+                packageCondition: CorePackage.mustBeLoggedIn)));
 
 MenuItemModel menuItemAppMembersPage(
         String uniqueId, AppModel app, pageID, privilegeLevelRequired) =>
@@ -125,7 +131,7 @@ MenuItemModel menuItemAppMembersPage(
           app,
           conditions: DisplayConditionsModel(
               privilegeLevelRequired: privilegeLevelRequired,
-              packageCondition: CorePackage.MUST_BE_LOGGED_ON),
+              packageCondition: CorePackage.mustBeLoggedIn),
           pageID: constructDocumentId(uniqueId: uniqueId, documentId: pageID),
         ));
 
@@ -137,4 +143,6 @@ MenuItemModel menuItemFeed(String uniqueId, AppModel app, pageID, text) =>
         icon: IconModel(
             codePoint: Icons.group.codePoint,
             fontFamily: Icons.settings.fontFamily),
-        action: GotoPage(app, pageID: constructDocumentId(uniqueId: uniqueId, documentId: pageID)));
+        action: GotoPage(app,
+            pageID:
+                constructDocumentId(uniqueId: uniqueId, documentId: pageID)));

@@ -23,9 +23,8 @@ import 'package:eliud_core/tools/query/query_tools.dart';
 
 import 'profile_model.dart';
 
-typedef List<ProfileModel?> FilterProfileModels(List<ProfileModel?> values);
-
-
+typedef FilterProfileModels = List<ProfileModel?> Function(
+    List<ProfileModel?> values);
 
 class ProfileListBloc extends Bloc<ProfileListEvent, ProfileListState> {
   final FilterProfileModels? filter;
@@ -39,23 +38,32 @@ class ProfileListBloc extends Bloc<ProfileListEvent, ProfileListState> {
   final bool? detailed;
   final int profileLimit;
 
-  ProfileListBloc({this.filter, this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required ProfileRepository profileRepository, this.profileLimit = 5})
+  ProfileListBloc(
+      {this.filter,
+      this.paged,
+      this.orderBy,
+      this.descending,
+      this.detailed,
+      this.eliudQuery,
+      required ProfileRepository profileRepository,
+      this.profileLimit = 5})
       : _profileRepository = profileRepository,
         super(ProfileListLoading()) {
-    on <LoadProfileList> ((event, emit) {
+    on<LoadProfileList>((event, emit) {
       if ((detailed == null) || (!detailed!)) {
         _mapLoadProfileListToState();
       } else {
         _mapLoadProfileListWithDetailsToState();
       }
     });
-    
-    on <NewPage> ((event, emit) {
-      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
+
+    on<NewPage>((event, emit) {
+      pages = pages +
+          1; // it doesn't matter so much if we increase pages beyond the end
       _mapLoadProfileListWithDetailsToState();
     });
-    
-    on <ProfileChangeQuery> ((event, emit) {
+
+    on<ProfileChangeQuery>((event, emit) {
       eliudQuery = event.newQuery;
       if ((detailed == null) || (!detailed!)) {
         _mapLoadProfileListToState();
@@ -63,20 +71,20 @@ class ProfileListBloc extends Bloc<ProfileListEvent, ProfileListState> {
         _mapLoadProfileListWithDetailsToState();
       }
     });
-      
-    on <AddProfileList> ((event, emit) async {
+
+    on<AddProfileList>((event, emit) async {
       await _mapAddProfileListToState(event);
     });
-    
-    on <UpdateProfileList> ((event, emit) async {
+
+    on<UpdateProfileList>((event, emit) async {
       await _mapUpdateProfileListToState(event);
     });
-    
-    on <DeleteProfileList> ((event, emit) async {
+
+    on<DeleteProfileList>((event, emit) async {
       await _mapDeleteProfileListToState(event);
     });
-    
-    on <ProfileListUpdated> ((event, emit) {
+
+    on<ProfileListUpdated>((event, emit) {
       emit(_mapProfileListUpdatedToState(event));
     });
   }
@@ -90,27 +98,31 @@ class ProfileListBloc extends Bloc<ProfileListEvent, ProfileListState> {
   }
 
   Future<void> _mapLoadProfileListToState() async {
-    int amountNow =  (state is ProfileListLoaded) ? (state as ProfileListLoaded).values!.length : 0;
+    int amountNow = (state is ProfileListLoaded)
+        ? (state as ProfileListLoaded).values!.length
+        : 0;
     _profilesListSubscription?.cancel();
     _profilesListSubscription = _profileRepository.listen(
-          (list) => add(ProfileListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
-      orderBy: orderBy,
-      descending: descending,
-      eliudQuery: eliudQuery,
-      limit: ((paged != null) && paged!) ? pages * profileLimit : null
-    );
-  }
-
-  Future<void> _mapLoadProfileListWithDetailsToState() async {
-    int amountNow =  (state is ProfileListLoaded) ? (state as ProfileListLoaded).values!.length : 0;
-    _profilesListSubscription?.cancel();
-    _profilesListSubscription = _profileRepository.listenWithDetails(
-            (list) => add(ProfileListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
+        (list) => add(ProfileListUpdated(
+            value: _filter(list), mightHaveMore: amountNow != list.length)),
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,
-        limit: ((paged != null) && paged!) ? pages * profileLimit : null
-    );
+        limit: ((paged != null) && paged!) ? pages * profileLimit : null);
+  }
+
+  Future<void> _mapLoadProfileListWithDetailsToState() async {
+    int amountNow = (state is ProfileListLoaded)
+        ? (state as ProfileListLoaded).values!.length
+        : 0;
+    _profilesListSubscription?.cancel();
+    _profilesListSubscription = _profileRepository.listenWithDetails(
+        (list) => add(ProfileListUpdated(
+            value: _filter(list), mightHaveMore: amountNow != list.length)),
+        orderBy: orderBy,
+        descending: descending,
+        eliudQuery: eliudQuery,
+        limit: ((paged != null) && paged!) ? pages * profileLimit : null);
   }
 
   Future<void> _mapAddProfileListToState(AddProfileList event) async {
@@ -134,8 +146,9 @@ class ProfileListBloc extends Bloc<ProfileListEvent, ProfileListState> {
     }
   }
 
-  ProfileListLoaded _mapProfileListUpdatedToState(
-      ProfileListUpdated event) => ProfileListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
+  ProfileListLoaded _mapProfileListUpdatedToState(ProfileListUpdated event) =>
+      ProfileListLoaded(
+          values: event.value, mightHaveMore: event.mightHaveMore);
 
   @override
   Future<void> close() {
@@ -143,5 +156,3 @@ class ProfileListBloc extends Bloc<ProfileListEvent, ProfileListState> {
     return super.close();
   }
 }
-
-

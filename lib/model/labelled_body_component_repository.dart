@@ -13,45 +13,109 @@
 
 */
 
-
-
 import 'package:eliud_pkg_feed/model/model_export.dart';
 import 'package:eliud_pkg_feed/model/entity_export.dart';
-
 
 import 'dart:async';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 import 'package:eliud_core/core/base/repository_base.dart';
 
-typedef LabelledBodyComponentModelTrigger(List<LabelledBodyComponentModel?> list);
-typedef LabelledBodyComponentChanged(LabelledBodyComponentModel? value);
-typedef LabelledBodyComponentErrorHandler(o, e);
+typedef LabelledBodyComponentModelTrigger = Function(
+    List<LabelledBodyComponentModel?> list);
+typedef LabelledBodyComponentChanged = Function(
+    LabelledBodyComponentModel? value);
+typedef LabelledBodyComponentErrorHandler = Function(dynamic o, dynamic e);
 
-abstract class LabelledBodyComponentRepository extends RepositoryBase<LabelledBodyComponentModel, LabelledBodyComponentEntity> {
-  Future<LabelledBodyComponentEntity> addEntity(String documentID, LabelledBodyComponentEntity value);
-  Future<LabelledBodyComponentEntity> updateEntity(String documentID, LabelledBodyComponentEntity value);
+abstract class LabelledBodyComponentRepository extends RepositoryBase<
+    LabelledBodyComponentModel, LabelledBodyComponentEntity> {
+  @override
+  Future<LabelledBodyComponentEntity> addEntity(
+      String documentID, LabelledBodyComponentEntity value);
+  @override
+  Future<LabelledBodyComponentEntity> updateEntity(
+      String documentID, LabelledBodyComponentEntity value);
+  @override
   Future<LabelledBodyComponentModel> add(LabelledBodyComponentModel value);
+  @override
   Future<void> delete(LabelledBodyComponentModel value);
-  Future<LabelledBodyComponentModel?> get(String? id, { Function(Exception)? onError });
+  @override
+  Future<LabelledBodyComponentModel?> get(String? id,
+      {Function(Exception)? onError});
+  @override
   Future<LabelledBodyComponentModel> update(LabelledBodyComponentModel value);
 
-  Stream<List<LabelledBodyComponentModel?>> values({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery });
-  Stream<List<LabelledBodyComponentModel?>> valuesWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery });
-  Future<List<LabelledBodyComponentModel?>> valuesList({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery });
-  Future<List<LabelledBodyComponentModel?>> valuesListWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery });
+  @override
+  Stream<List<LabelledBodyComponentModel?>> values(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery});
+  @override
+  Stream<List<LabelledBodyComponentModel?>> valuesWithDetails(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery});
+  @override
+  Future<List<LabelledBodyComponentModel?>> valuesList(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery});
+  @override
+  Future<List<LabelledBodyComponentModel?>> valuesListWithDetails(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery});
 
-  StreamSubscription<List<LabelledBodyComponentModel?>> listen(LabelledBodyComponentModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
-  StreamSubscription<List<LabelledBodyComponentModel?>> listenWithDetails(LabelledBodyComponentModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
-  StreamSubscription<LabelledBodyComponentModel?> listenTo(String documentId, LabelledBodyComponentChanged changed, {LabelledBodyComponentErrorHandler? errorHandler});
+  @override
+  StreamSubscription<List<LabelledBodyComponentModel?>> listen(
+      LabelledBodyComponentModelTrigger trigger,
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery});
+  @override
+  StreamSubscription<List<LabelledBodyComponentModel?>> listenWithDetails(
+      LabelledBodyComponentModelTrigger trigger,
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery});
+  @override
+  StreamSubscription<LabelledBodyComponentModel?> listenTo(
+      String documentId, LabelledBodyComponentChanged changed,
+      {LabelledBodyComponentErrorHandler? errorHandler});
+  @override
   void flush();
-  
+
+  @override
   String? timeStampToString(dynamic timeStamp);
 
+  @override
   dynamic getSubCollection(String documentId, String name);
-  Future<LabelledBodyComponentModel?> changeValue(String documentId, String fieldName, num changeByThisValue);
+  @override
+  Future<LabelledBodyComponentModel?> changeValue(
+      String documentId, String fieldName, num changeByThisValue);
 
+  @override
   Future<void> deleteAll();
 }
-
-

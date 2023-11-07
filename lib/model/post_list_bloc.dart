@@ -23,9 +23,7 @@ import 'package:eliud_core/tools/query/query_tools.dart';
 
 import 'post_model.dart';
 
-typedef List<PostModel?> FilterPostModels(List<PostModel?> values);
-
-
+typedef FilterPostModels = List<PostModel?> Function(List<PostModel?> values);
 
 class PostListBloc extends Bloc<PostListEvent, PostListState> {
   final FilterPostModels? filter;
@@ -39,23 +37,32 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
   final bool? detailed;
   final int postLimit;
 
-  PostListBloc({this.filter, this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required PostRepository postRepository, this.postLimit = 5})
+  PostListBloc(
+      {this.filter,
+      this.paged,
+      this.orderBy,
+      this.descending,
+      this.detailed,
+      this.eliudQuery,
+      required PostRepository postRepository,
+      this.postLimit = 5})
       : _postRepository = postRepository,
         super(PostListLoading()) {
-    on <LoadPostList> ((event, emit) {
+    on<LoadPostList>((event, emit) {
       if ((detailed == null) || (!detailed!)) {
         _mapLoadPostListToState();
       } else {
         _mapLoadPostListWithDetailsToState();
       }
     });
-    
-    on <NewPage> ((event, emit) {
-      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
+
+    on<NewPage>((event, emit) {
+      pages = pages +
+          1; // it doesn't matter so much if we increase pages beyond the end
       _mapLoadPostListWithDetailsToState();
     });
-    
-    on <PostChangeQuery> ((event, emit) {
+
+    on<PostChangeQuery>((event, emit) {
       eliudQuery = event.newQuery;
       if ((detailed == null) || (!detailed!)) {
         _mapLoadPostListToState();
@@ -63,20 +70,20 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
         _mapLoadPostListWithDetailsToState();
       }
     });
-      
-    on <AddPostList> ((event, emit) async {
+
+    on<AddPostList>((event, emit) async {
       await _mapAddPostListToState(event);
     });
-    
-    on <UpdatePostList> ((event, emit) async {
+
+    on<UpdatePostList>((event, emit) async {
       await _mapUpdatePostListToState(event);
     });
-    
-    on <DeletePostList> ((event, emit) async {
+
+    on<DeletePostList>((event, emit) async {
       await _mapDeletePostListToState(event);
     });
-    
-    on <PostListUpdated> ((event, emit) {
+
+    on<PostListUpdated>((event, emit) {
       emit(_mapPostListUpdatedToState(event));
     });
   }
@@ -90,27 +97,31 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
   }
 
   Future<void> _mapLoadPostListToState() async {
-    int amountNow =  (state is PostListLoaded) ? (state as PostListLoaded).values!.length : 0;
+    int amountNow = (state is PostListLoaded)
+        ? (state as PostListLoaded).values!.length
+        : 0;
     _postsListSubscription?.cancel();
     _postsListSubscription = _postRepository.listen(
-          (list) => add(PostListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
-      orderBy: orderBy,
-      descending: descending,
-      eliudQuery: eliudQuery,
-      limit: ((paged != null) && paged!) ? pages * postLimit : null
-    );
-  }
-
-  Future<void> _mapLoadPostListWithDetailsToState() async {
-    int amountNow =  (state is PostListLoaded) ? (state as PostListLoaded).values!.length : 0;
-    _postsListSubscription?.cancel();
-    _postsListSubscription = _postRepository.listenWithDetails(
-            (list) => add(PostListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
+        (list) => add(PostListUpdated(
+            value: _filter(list), mightHaveMore: amountNow != list.length)),
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,
-        limit: ((paged != null) && paged!) ? pages * postLimit : null
-    );
+        limit: ((paged != null) && paged!) ? pages * postLimit : null);
+  }
+
+  Future<void> _mapLoadPostListWithDetailsToState() async {
+    int amountNow = (state is PostListLoaded)
+        ? (state as PostListLoaded).values!.length
+        : 0;
+    _postsListSubscription?.cancel();
+    _postsListSubscription = _postRepository.listenWithDetails(
+        (list) => add(PostListUpdated(
+            value: _filter(list), mightHaveMore: amountNow != list.length)),
+        orderBy: orderBy,
+        descending: descending,
+        eliudQuery: eliudQuery,
+        limit: ((paged != null) && paged!) ? pages * postLimit : null);
   }
 
   Future<void> _mapAddPostListToState(AddPostList event) async {
@@ -134,8 +145,8 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
     }
   }
 
-  PostListLoaded _mapPostListUpdatedToState(
-      PostListUpdated event) => PostListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
+  PostListLoaded _mapPostListUpdatedToState(PostListUpdated event) =>
+      PostListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
 
   @override
   Future<void> close() {
@@ -143,5 +154,3 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
     return super.close();
   }
 }
-
-

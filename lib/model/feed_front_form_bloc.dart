@@ -19,8 +19,6 @@ import 'package:bloc/bloc.dart';
 
 import 'package:eliud_core/tools/enums.dart';
 
-
-
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/model_export.dart';
 
@@ -31,98 +29,103 @@ class FeedFrontFormBloc extends Bloc<FeedFrontFormEvent, FeedFrontFormState> {
   final FormAction? formAction;
   final String? appId;
 
-  FeedFrontFormBloc(this.appId, { this.formAction }): super(FeedFrontFormUninitialized()) {
-      on <InitialiseNewFeedFrontFormEvent> ((event, emit) {
-        FeedFrontFormLoaded loaded = FeedFrontFormLoaded(value: FeedFrontModel(
-                                               documentID: "",
-                                 appId: "",
-                                 description: "",
+  FeedFrontFormBloc(this.appId, {this.formAction})
+      : super(FeedFrontFormUninitialized()) {
+    on<InitialiseNewFeedFrontFormEvent>((event, emit) {
+      FeedFrontFormLoaded loaded = FeedFrontFormLoaded(
+          value: FeedFrontModel(
+        documentID: "",
+        appId: "",
+        description: "",
+      ));
+      emit(loaded);
+    });
 
-        ));
-        emit(loaded);
-      });
-
-
-      on <InitialiseFeedFrontFormEvent> ((event, emit) async {
-        // Need to re-retrieve the document from the repository so that I get all associated types
-        FeedFrontFormLoaded loaded = FeedFrontFormLoaded(value: await feedFrontRepository(appId: appId)!.get(event.value!.documentID));
-        emit(loaded);
-      });
-      on <InitialiseFeedFrontFormNoLoadEvent> ((event, emit) async {
-        FeedFrontFormLoaded loaded = FeedFrontFormLoaded(value: event.value);
-        emit(loaded);
-      });
-      FeedFrontModel? newValue;
-      on <ChangedFeedFrontDocumentID> ((event, emit) async {
+    on<InitialiseFeedFrontFormEvent>((event, emit) async {
+      // Need to re-retrieve the document from the repository so that I get all associated types
+      FeedFrontFormLoaded loaded = FeedFrontFormLoaded(
+          value: await feedFrontRepository(appId: appId)!
+              .get(event.value!.documentID));
+      emit(loaded);
+    });
+    on<InitialiseFeedFrontFormNoLoadEvent>((event, emit) async {
+      FeedFrontFormLoaded loaded = FeedFrontFormLoaded(value: event.value);
+      emit(loaded);
+    });
+    FeedFrontModel? newValue;
+    on<ChangedFeedFrontDocumentID>((event, emit) async {
       if (state is FeedFrontFormInitialized) {
         final currentState = state as FeedFrontFormInitialized;
         newValue = currentState.value!.copyWith(documentID: event.value);
-        if (formAction == FormAction.AddAction) {
+        if (formAction == FormAction.addAction) {
           emit(await _isDocumentIDValid(event.value, newValue!));
         } else {
           emit(SubmittableFeedFrontForm(value: newValue));
         }
-
       }
-      });
-      on <ChangedFeedFrontAppId> ((event, emit) async {
+    });
+    on<ChangedFeedFrontAppId>((event, emit) async {
       if (state is FeedFrontFormInitialized) {
         final currentState = state as FeedFrontFormInitialized;
         newValue = currentState.value!.copyWith(appId: event.value);
         emit(SubmittableFeedFrontForm(value: newValue));
-
       }
-      });
-      on <ChangedFeedFrontDescription> ((event, emit) async {
+    });
+    on<ChangedFeedFrontDescription>((event, emit) async {
       if (state is FeedFrontFormInitialized) {
         final currentState = state as FeedFrontFormInitialized;
         newValue = currentState.value!.copyWith(description: event.value);
         emit(SubmittableFeedFrontForm(value: newValue));
-
       }
-      });
-      on <ChangedFeedFrontFeed> ((event, emit) async {
+    });
+    on<ChangedFeedFrontFeed>((event, emit) async {
       if (state is FeedFrontFormInitialized) {
         final currentState = state as FeedFrontFormInitialized;
-        if (event.value != null)
-          newValue = currentState.value!.copyWith(feed: await feedRepository(appId: appId)!.get(event.value));
+        if (event.value != null) {
+          newValue = currentState.value!.copyWith(
+              feed: await feedRepository(appId: appId)!.get(event.value));
+        }
         emit(SubmittableFeedFrontForm(value: newValue));
-
       }
-      });
-      on <ChangedFeedFrontBackgroundOverridePosts> ((event, emit) async {
+    });
+    on<ChangedFeedFrontBackgroundOverridePosts>((event, emit) async {
       if (state is FeedFrontFormInitialized) {
         final currentState = state as FeedFrontFormInitialized;
-        newValue = currentState.value!.copyWith(backgroundOverridePosts: event.value);
+        newValue =
+            currentState.value!.copyWith(backgroundOverridePosts: event.value);
         emit(SubmittableFeedFrontForm(value: newValue));
-
       }
-      });
-      on <ChangedFeedFrontBackgroundOverrideProfile> ((event, emit) async {
+    });
+    on<ChangedFeedFrontBackgroundOverrideProfile>((event, emit) async {
       if (state is FeedFrontFormInitialized) {
         final currentState = state as FeedFrontFormInitialized;
-        newValue = currentState.value!.copyWith(backgroundOverrideProfile: event.value);
+        newValue = currentState.value!
+            .copyWith(backgroundOverrideProfile: event.value);
         emit(SubmittableFeedFrontForm(value: newValue));
-
       }
-      });
-      on <ChangedFeedFrontConditions> ((event, emit) async {
+    });
+    on<ChangedFeedFrontConditions>((event, emit) async {
       if (state is FeedFrontFormInitialized) {
         final currentState = state as FeedFrontFormInitialized;
         newValue = currentState.value!.copyWith(conditions: event.value);
         emit(SubmittableFeedFrontForm(value: newValue));
-
       }
-      });
+    });
   }
 
+  DocumentIDFeedFrontFormError error(String message, FeedFrontModel newValue) =>
+      DocumentIDFeedFrontFormError(message: message, value: newValue);
 
-  DocumentIDFeedFrontFormError error(String message, FeedFrontModel newValue) => DocumentIDFeedFrontFormError(message: message, value: newValue);
-
-  Future<FeedFrontFormState> _isDocumentIDValid(String? value, FeedFrontModel newValue) async {
-    if (value == null) return Future.value(error("Provide value for documentID", newValue));
-    if (value.length == 0) return Future.value(error("Provide value for documentID", newValue));
-    Future<FeedFrontModel?> findDocument = feedFrontRepository(appId: appId)!.get(value);
+  Future<FeedFrontFormState> _isDocumentIDValid(
+      String? value, FeedFrontModel newValue) async {
+    if (value == null) {
+      return Future.value(error("Provide value for documentID", newValue));
+    }
+    if (value.isEmpty) {
+      return Future.value(error("Provide value for documentID", newValue));
+    }
+    Future<FeedFrontModel?> findDocument =
+        feedFrontRepository(appId: appId)!.get(value);
     return await findDocument.then((documentFound) {
       if (documentFound == null) {
         return SubmittableFeedFrontForm(value: newValue);
@@ -131,7 +134,4 @@ class FeedFrontFormBloc extends Bloc<FeedFrontFormEvent, FeedFrontFormState> {
       }
     });
   }
-
-
 }
-

@@ -13,45 +13,103 @@
 
 */
 
-
-
 import 'package:eliud_pkg_feed/model/model_export.dart';
 import 'package:eliud_pkg_feed/model/entity_export.dart';
-
 
 import 'dart:async';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 import 'package:eliud_core/core/base/repository_base.dart';
 
-typedef PostLikeModelTrigger(List<PostLikeModel?> list);
-typedef PostLikeChanged(PostLikeModel? value);
-typedef PostLikeErrorHandler(o, e);
+typedef PostLikeModelTrigger = Function(List<PostLikeModel?> list);
+typedef PostLikeChanged = Function(PostLikeModel? value);
+typedef PostLikeErrorHandler = Function(dynamic o, dynamic e);
 
-abstract class PostLikeRepository extends RepositoryBase<PostLikeModel, PostLikeEntity> {
+abstract class PostLikeRepository
+    extends RepositoryBase<PostLikeModel, PostLikeEntity> {
+  @override
   Future<PostLikeEntity> addEntity(String documentID, PostLikeEntity value);
+  @override
   Future<PostLikeEntity> updateEntity(String documentID, PostLikeEntity value);
+  @override
   Future<PostLikeModel> add(PostLikeModel value);
+  @override
   Future<void> delete(PostLikeModel value);
-  Future<PostLikeModel?> get(String? id, { Function(Exception)? onError });
+  @override
+  Future<PostLikeModel?> get(String? id, {Function(Exception)? onError});
+  @override
   Future<PostLikeModel> update(PostLikeModel value);
 
-  Stream<List<PostLikeModel?>> values({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery });
-  Stream<List<PostLikeModel?>> valuesWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery });
-  Future<List<PostLikeModel?>> valuesList({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery });
-  Future<List<PostLikeModel?>> valuesListWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery });
+  @override
+  Stream<List<PostLikeModel?>> values(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery});
+  @override
+  Stream<List<PostLikeModel?>> valuesWithDetails(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery});
+  @override
+  Future<List<PostLikeModel?>> valuesList(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery});
+  @override
+  Future<List<PostLikeModel?>> valuesListWithDetails(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery});
 
-  StreamSubscription<List<PostLikeModel?>> listen(PostLikeModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
-  StreamSubscription<List<PostLikeModel?>> listenWithDetails(PostLikeModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
-  StreamSubscription<PostLikeModel?> listenTo(String documentId, PostLikeChanged changed, {PostLikeErrorHandler? errorHandler});
+  @override
+  StreamSubscription<List<PostLikeModel?>> listen(PostLikeModelTrigger trigger,
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery});
+  @override
+  StreamSubscription<List<PostLikeModel?>> listenWithDetails(
+      PostLikeModelTrigger trigger,
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery});
+  @override
+  StreamSubscription<PostLikeModel?> listenTo(
+      String documentId, PostLikeChanged changed,
+      {PostLikeErrorHandler? errorHandler});
+  @override
   void flush();
-  
+
+  @override
   String? timeStampToString(dynamic timeStamp);
 
+  @override
   dynamic getSubCollection(String documentId, String name);
-  Future<PostLikeModel?> changeValue(String documentId, String fieldName, num changeByThisValue);
+  @override
+  Future<PostLikeModel?> changeValue(
+      String documentId, String fieldName, num changeByThisValue);
 
+  @override
   Future<void> deleteAll();
 }
-
-

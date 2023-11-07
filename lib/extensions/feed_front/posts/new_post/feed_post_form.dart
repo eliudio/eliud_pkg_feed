@@ -38,7 +38,8 @@ class MyFeedPostForm extends StatefulWidget {
   MyFeedPostForm(this.app, this.feedId, this.memberId, this.currentMemberId,
       this.photoURL, this.pageContextInfo, this.isNew);
 
-  _MyFeedPostFormState createState() => _MyFeedPostFormState();
+  @override
+  State<MyFeedPostForm> createState() => _MyFeedPostFormState();
 }
 
 class _MyFeedPostFormState extends State<MyFeedPostForm> {
@@ -55,73 +56,92 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AccessBloc, AccessState>(
-    builder: (context, accessState) {
-    if (accessState is LoggedIn) {
-      return complexAckNackDialog(widget.app, context,
-          title: widget.isNew ? 'New Post' : 'Update Post',
-          child: _contents(context, widget.pageContextInfo, widget.app, accessState),
-          onSelection: (value) {
-            if (value == 0) {
-              BlocProvider.of<FeedPostFormBloc>(context).add(SubmitPost());
-            }
-          });
-    } else {
-      return text(widget.app, context, 'Not logged in');
-    }});
-  }
-
-  Widget _contents(BuildContext context, eliud_router.PageContextInfo pageContextInfo,
-      AppModel app, AccessState theState) {
-    return BlocBuilder<FeedPostFormBloc, FeedPostFormState>(
-        builder: (context, state) {
-          if (state is FeedPostFormLoaded) {
-              _descriptionController.text =
-                  state.postModelDetails.description.toString();
-          }
-          if (state is FeedPostFormInitialized) {
-            List<Widget> rows = [];
-            rows.add(_row1(pageContextInfo.pageId, app, state));
-            if ((state is SubmittableFeedPostFormWithMediumUploading) ||
-                ((state.postModelDetails.memberMedia != null) &&
-                    (state.postModelDetails.memberMedia.isNotEmpty))) {
-              rows.add(_row2(context, state));
-              rows.add(MediaHelper.videoAndPhotoDivider(context));
-            }
-
-            rows.add(BlocProvider<PostPrivilegeBloc>(
-                create: (context) => PostPrivilegeBloc(widget.app, widget.feedId, widget.memberId, _postPrivilegeFeedback)..add(InitialisePostPrivilegeEvent(postAccessibleByGroup: state.postModelDetails.postAccessibleByGroup, postAccessibleByMembers: state.postModelDetails.postAccessibleByMembers)),
-              child: PostPrivilegeWidget(widget.app, widget.feedId, widget.memberId, widget.currentMemberId, state.postModelDetails.memberMedia.length == 0)
-
-              ),
-            );
-
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: rows,
-            );
-          } else {
-            return progressIndicator(app, context);
+        builder: (context, accessState) {
+      if (accessState is LoggedIn) {
+        return complexAckNackDialog(widget.app, context,
+            title: widget.isNew ? 'New Post' : 'Update Post',
+            child: _contents(
+                context, widget.pageContextInfo, widget.app, accessState),
+            onSelection: (value) {
+          if (value == 0) {
+            BlocProvider.of<FeedPostFormBloc>(context).add(SubmitPost());
           }
         });
+      } else {
+        return text(widget.app, context, 'Not logged in');
+      }
+    });
   }
 
-  void _postPrivilegeFeedback(PostAccessibleByGroup postAccessibleByGroup, List<SelectedMember>? specificSelectedMembers) {
-    BlocProvider.of<FeedPostFormBloc>(context).add(
-        ChangedFeedPostPrivilege(postAccessibleByGroup: postAccessibleByGroup, postAccessibleByMembers: specificSelectedMembers != null ? specificSelectedMembers.map((e) => e.memberId).toList() : null));
+  Widget _contents(
+      BuildContext context,
+      eliud_router.PageContextInfo pageContextInfo,
+      AppModel app,
+      AccessState theState) {
+    return BlocBuilder<FeedPostFormBloc, FeedPostFormState>(
+        builder: (context, state) {
+      if (state is FeedPostFormLoaded) {
+        _descriptionController.text =
+            state.postModelDetails.description.toString();
+      }
+      if (state is FeedPostFormInitialized) {
+        List<Widget> rows = [];
+        rows.add(_row1(pageContextInfo.pageId, app, state));
+        if ((state is SubmittableFeedPostFormWithMediumUploading) ||
+            (state.postModelDetails.memberMedia.isNotEmpty)) {
+          rows.add(_row2(context, state));
+          rows.add(MediaHelper.videoAndPhotoDivider(context));
+        }
+
+        rows.add(
+          BlocProvider<PostPrivilegeBloc>(
+              create: (context) => PostPrivilegeBloc(widget.app, widget.feedId,
+                  widget.memberId, _postPrivilegeFeedback)
+                ..add(InitialisePostPrivilegeEvent(
+                    postAccessibleByGroup:
+                        state.postModelDetails.postAccessibleByGroup,
+                    postAccessibleByMembers:
+                        state.postModelDetails.postAccessibleByMembers)),
+              child: PostPrivilegeWidget(
+                  widget.app,
+                  widget.feedId,
+                  widget.memberId,
+                  widget.currentMemberId,
+                  state.postModelDetails.memberMedia.isEmpty)),
+        );
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: rows,
+        );
+      } else {
+        return progressIndicator(app, context);
+      }
+    });
+  }
+
+  void _postPrivilegeFeedback(PostAccessibleByGroup postAccessibleByGroup,
+      List<SelectedMember>? specificSelectedMembers) {
+    BlocProvider.of<FeedPostFormBloc>(context).add(ChangedFeedPostPrivilege(
+        postAccessibleByGroup: postAccessibleByGroup,
+        postAccessibleByMembers:
+            specificSelectedMembers?.map((e) => e.memberId).toList()));
   }
 
   Widget _row1(String pageId, AppModel app, FeedPostFormInitialized state) {
     return Row(children: [
       Container(
-          height: 60, width: 60, child: AvatarHelper.avatar(
-        context,
-        60,
-        pageId,
-        widget.memberId,
-        widget.currentMemberId,
-        app,
-        widget.feedId,
-      )),
+          height: 60,
+          width: 60,
+          child: AvatarHelper.avatar(
+            context,
+            60,
+            pageId,
+            widget.memberId,
+            widget.currentMemberId,
+            app,
+            widget.feedId,
+          )),
       Container(width: 8),
       Flexible(
         child: Container(
@@ -153,8 +173,12 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
   PopupMenuButton _mediaButtons(BuildContext context, AppModel app,
       FeedPostFormInitialized state, String memberId) {
     return MediaButtons.mediaButtons(
-        context, app, () => Tuple2(toMemberMediumAccessibleByGroup(state.postModelDetails.postAccessibleByGroup.index),
-        state.postModelDetails.postAccessibleByMembers),
+        context,
+        app,
+        () => Tuple2(
+            toMemberMediumAccessibleByGroup(
+                state.postModelDetails.postAccessibleByGroup.index),
+            state.postModelDetails.postAccessibleByMembers),
         tooltip: 'Add video or photo',
         photoFeedbackFunction: (photo) {
           if (photo != null) {
@@ -165,6 +189,7 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
                 .add(ChangedMedia(memberMedia: memberMedia));
           }
         },
+        icon: Icon(Icons.more_vert),
         photoFeedbackProgress: _photoUploading,
         videoFeedbackFunction: (video) {
           if (video != null) {
@@ -184,34 +209,39 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
       progressValue = state.progress;
     }
     var media = <MemberMediumModel>[];
-    state.postModelDetails.memberMedia.forEach((medium) {
+    for (var medium in state.postModelDetails.memberMedia) {
       if (medium.memberMedium != null) {
         media.add(medium.memberMedium!);
       }
-    });
+    }
     return MediaHelper.staggeredMemberMediumModel(widget.app, context, media,
         progressLabel: 'Uploading...',
         progressExtra: progressValue, deleteAction: (index) {
-          var memberMedia = state.postModelDetails.memberMedia;
-          memberMedia.removeAt(index);
-          BlocProvider.of<FeedPostFormBloc>(context)
-              .add(ChangedMedia(memberMedia: memberMedia));
-        }, viewAction: (index) {
-          var medium = media[index];
-          if (medium.mediumType == MediumType.Photo) {
-            var photos = media;
-            Registry.registry()!.getMediumApi().showPhotos(context, widget.app, photos, index);
-          } else {
-            Registry.registry()!.getMediumApi().showVideo(context, widget.app, medium);
-          }
-        });
+      var memberMedia = state.postModelDetails.memberMedia;
+      memberMedia.removeAt(index);
+      BlocProvider.of<FeedPostFormBloc>(context)
+          .add(ChangedMedia(memberMedia: memberMedia));
+    }, viewAction: (index) {
+      var medium = media[index];
+      if (medium.mediumType == MediumType.photo) {
+        var photos = media;
+        Registry.registry()!
+            .getMediumApi()
+            .showPhotos(context, widget.app, photos, index);
+      } else {
+        Registry.registry()!
+            .getMediumApi()
+            .showVideo(context, widget.app, medium);
+      }
+    });
   }
 
   Widget _textField(
-      AppModel app,
-      FeedPostFormInitialized state,
-      ) {
-    return textField(app,
+    AppModel app,
+    FeedPostFormInitialized state,
+  ) {
+    return textField(
+      app,
       context,
       readOnly: false,
       textAlign: TextAlign.left,

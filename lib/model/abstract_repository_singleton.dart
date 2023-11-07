@@ -23,14 +23,22 @@ import '../model/post_like_repository.dart';
 import '../model/profile_repository.dart';
 import 'package:eliud_core/package/package.dart';
 
-FeedRepository? feedRepository({ String? appId }) => AbstractRepositorySingleton.singleton.feedRepository(appId);
-FeedFrontRepository? feedFrontRepository({ String? appId }) => AbstractRepositorySingleton.singleton.feedFrontRepository(appId);
-FeedMenuRepository? feedMenuRepository({ String? appId }) => AbstractRepositorySingleton.singleton.feedMenuRepository(appId);
-MemberProfileRepository? memberProfileRepository({ String? appId }) => AbstractRepositorySingleton.singleton.memberProfileRepository(appId);
-PostRepository? postRepository({ String? appId }) => AbstractRepositorySingleton.singleton.postRepository(appId);
-PostCommentRepository? postCommentRepository({ String? appId }) => AbstractRepositorySingleton.singleton.postCommentRepository(appId);
-PostLikeRepository? postLikeRepository({ String? appId }) => AbstractRepositorySingleton.singleton.postLikeRepository(appId);
-ProfileRepository? profileRepository({ String? appId }) => AbstractRepositorySingleton.singleton.profileRepository(appId);
+FeedRepository? feedRepository({String? appId}) =>
+    AbstractRepositorySingleton.singleton.feedRepository(appId);
+FeedFrontRepository? feedFrontRepository({String? appId}) =>
+    AbstractRepositorySingleton.singleton.feedFrontRepository(appId);
+FeedMenuRepository? feedMenuRepository({String? appId}) =>
+    AbstractRepositorySingleton.singleton.feedMenuRepository(appId);
+MemberProfileRepository? memberProfileRepository({String? appId}) =>
+    AbstractRepositorySingleton.singleton.memberProfileRepository(appId);
+PostRepository? postRepository({String? appId}) =>
+    AbstractRepositorySingleton.singleton.postRepository(appId);
+PostCommentRepository? postCommentRepository({String? appId}) =>
+    AbstractRepositorySingleton.singleton.postCommentRepository(appId);
+PostLikeRepository? postLikeRepository({String? appId}) =>
+    AbstractRepositorySingleton.singleton.postLikeRepository(appId);
+ProfileRepository? profileRepository({String? appId}) =>
+    AbstractRepositorySingleton.singleton.profileRepository(appId);
 
 abstract class AbstractRepositorySingleton {
   static List<MemberCollectionInfo> collections = [

@@ -41,9 +41,9 @@ class PostCommentFormInitialized extends PostCommentFormState {
   final PostCommentModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
-  const PostCommentFormInitialized({ this.value });
+  const PostCommentFormInitialized({this.value});
 }
 
 // Menu has been initialised and hence a menu is available
@@ -51,9 +51,9 @@ abstract class PostCommentFormError extends PostCommentFormInitialized {
   final String? message;
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
-  const PostCommentFormError({this.message, PostCommentModel? value }) : super(value: value);
+  const PostCommentFormError({this.message, super.value});
 
   @override
   String toString() {
@@ -63,11 +63,12 @@ abstract class PostCommentFormError extends PostCommentFormInitialized {
     }''';
   }
 }
-class DocumentIDPostCommentFormError extends PostCommentFormError { 
-  const DocumentIDPostCommentFormError({ String? message, PostCommentModel? value }): super(message: message, value: value);
+
+class DocumentIDPostCommentFormError extends PostCommentFormError {
+  const DocumentIDPostCommentFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -78,12 +79,11 @@ class DocumentIDPostCommentFormError extends PostCommentFormError {
   }
 }
 
-
-class PostIdPostCommentFormError extends PostCommentFormError { 
-  const PostIdPostCommentFormError({ String? message, PostCommentModel? value }): super(message: message, value: value);
+class PostIdPostCommentFormError extends PostCommentFormError {
+  const PostIdPostCommentFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -94,12 +94,11 @@ class PostIdPostCommentFormError extends PostCommentFormError {
   }
 }
 
-
-class PostCommentIdPostCommentFormError extends PostCommentFormError { 
-  const PostCommentIdPostCommentFormError({ String? message, PostCommentModel? value }): super(message: message, value: value);
+class PostCommentIdPostCommentFormError extends PostCommentFormError {
+  const PostCommentIdPostCommentFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -110,12 +109,11 @@ class PostCommentIdPostCommentFormError extends PostCommentFormError {
   }
 }
 
-
-class MemberIdPostCommentFormError extends PostCommentFormError { 
-  const MemberIdPostCommentFormError({ String? message, PostCommentModel? value }): super(message: message, value: value);
+class MemberIdPostCommentFormError extends PostCommentFormError {
+  const MemberIdPostCommentFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -126,12 +124,11 @@ class MemberIdPostCommentFormError extends PostCommentFormError {
   }
 }
 
-
-class TimestampPostCommentFormError extends PostCommentFormError { 
-  const TimestampPostCommentFormError({ String? message, PostCommentModel? value }): super(message: message, value: value);
+class TimestampPostCommentFormError extends PostCommentFormError {
+  const TimestampPostCommentFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -142,12 +139,11 @@ class TimestampPostCommentFormError extends PostCommentFormError {
   }
 }
 
-
-class AppIdPostCommentFormError extends PostCommentFormError { 
-  const AppIdPostCommentFormError({ String? message, PostCommentModel? value }): super(message: message, value: value);
+class AppIdPostCommentFormError extends PostCommentFormError {
+  const AppIdPostCommentFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -158,12 +154,11 @@ class AppIdPostCommentFormError extends PostCommentFormError {
   }
 }
 
-
-class CommentPostCommentFormError extends PostCommentFormError { 
-  const CommentPostCommentFormError({ String? message, PostCommentModel? value }): super(message: message, value: value);
+class CommentPostCommentFormError extends PostCommentFormError {
+  const CommentPostCommentFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -174,12 +169,11 @@ class CommentPostCommentFormError extends PostCommentFormError {
   }
 }
 
-
-class LikesPostCommentFormError extends PostCommentFormError { 
-  const LikesPostCommentFormError({ String? message, PostCommentModel? value }): super(message: message, value: value);
+class LikesPostCommentFormError extends PostCommentFormError {
+  const LikesPostCommentFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -190,12 +184,11 @@ class LikesPostCommentFormError extends PostCommentFormError {
   }
 }
 
-
-class DislikesPostCommentFormError extends PostCommentFormError { 
-  const DislikesPostCommentFormError({ String? message, PostCommentModel? value }): super(message: message, value: value);
+class DislikesPostCommentFormError extends PostCommentFormError {
+  const DislikesPostCommentFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -206,12 +199,11 @@ class DislikesPostCommentFormError extends PostCommentFormError {
   }
 }
 
-
-class MemberMediaPostCommentFormError extends PostCommentFormError { 
-  const MemberMediaPostCommentFormError({ String? message, PostCommentModel? value }): super(message: message, value: value);
+class MemberMediaPostCommentFormError extends PostCommentFormError {
+  const MemberMediaPostCommentFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -222,12 +214,11 @@ class MemberMediaPostCommentFormError extends PostCommentFormError {
   }
 }
 
-
-class PostCommentFormLoaded extends PostCommentFormInitialized { 
-  const PostCommentFormLoaded({ PostCommentModel? value }): super(value: value);
+class PostCommentFormLoaded extends PostCommentFormInitialized {
+  const PostCommentFormLoaded({super.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() {
@@ -237,12 +228,11 @@ class PostCommentFormLoaded extends PostCommentFormInitialized {
   }
 }
 
-
-class SubmittablePostCommentForm extends PostCommentFormInitialized { 
-  const SubmittablePostCommentForm({ PostCommentModel? value }): super(value: value);
+class SubmittablePostCommentForm extends PostCommentFormInitialized {
+  const SubmittablePostCommentForm({super.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() {
@@ -251,5 +241,3 @@ class SubmittablePostCommentForm extends PostCommentFormInitialized {
     }''';
   }
 }
-
-

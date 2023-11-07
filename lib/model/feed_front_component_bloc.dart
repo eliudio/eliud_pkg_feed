@@ -20,8 +20,8 @@ import 'package:eliud_pkg_feed/model/feed_front_component_event.dart';
 import 'package:eliud_pkg_feed/model/feed_front_component_state.dart';
 import 'package:eliud_pkg_feed/model/feed_front_repository.dart';
 
-
-class FeedFrontComponentBloc extends Bloc<FeedFrontComponentEvent, FeedFrontComponentState> {
+class FeedFrontComponentBloc
+    extends Bloc<FeedFrontComponentEvent, FeedFrontComponentState> {
   final FeedFrontRepository? feedFrontRepository;
   StreamSubscription? _feedFrontSubscription;
 
@@ -34,11 +34,12 @@ class FeedFrontComponentBloc extends Bloc<FeedFrontComponentEvent, FeedFrontComp
     });
   }
 
-  FeedFrontComponentBloc({ this.feedFrontRepository }): super(FeedFrontComponentUninitialized()) {
-    on <FetchFeedFrontComponent> ((event, emit) {
+  FeedFrontComponentBloc({this.feedFrontRepository})
+      : super(FeedFrontComponentUninitialized()) {
+    on<FetchFeedFrontComponent>((event, emit) {
       _mapLoadFeedFrontComponentUpdateToState(event.id!);
     });
-    on <FeedFrontComponentUpdated> ((event, emit) {
+    on<FeedFrontComponentUpdated>((event, emit) {
       emit(FeedFrontComponentLoaded(value: event.value));
     });
   }
@@ -48,6 +49,4 @@ class FeedFrontComponentBloc extends Bloc<FeedFrontComponentEvent, FeedFrontComp
     _feedFrontSubscription?.cancel();
     return super.close();
   }
-
 }
-

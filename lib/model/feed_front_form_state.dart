@@ -41,9 +41,9 @@ class FeedFrontFormInitialized extends FeedFrontFormState {
   final FeedFrontModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
-  const FeedFrontFormInitialized({ this.value });
+  const FeedFrontFormInitialized({this.value});
 }
 
 // Menu has been initialised and hence a menu is available
@@ -51,9 +51,9 @@ abstract class FeedFrontFormError extends FeedFrontFormInitialized {
   final String? message;
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
-  const FeedFrontFormError({this.message, FeedFrontModel? value }) : super(value: value);
+  const FeedFrontFormError({this.message, super.value});
 
   @override
   String toString() {
@@ -63,11 +63,12 @@ abstract class FeedFrontFormError extends FeedFrontFormInitialized {
     }''';
   }
 }
-class DocumentIDFeedFrontFormError extends FeedFrontFormError { 
-  const DocumentIDFeedFrontFormError({ String? message, FeedFrontModel? value }): super(message: message, value: value);
+
+class DocumentIDFeedFrontFormError extends FeedFrontFormError {
+  const DocumentIDFeedFrontFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -78,12 +79,11 @@ class DocumentIDFeedFrontFormError extends FeedFrontFormError {
   }
 }
 
-
-class AppIdFeedFrontFormError extends FeedFrontFormError { 
-  const AppIdFeedFrontFormError({ String? message, FeedFrontModel? value }): super(message: message, value: value);
+class AppIdFeedFrontFormError extends FeedFrontFormError {
+  const AppIdFeedFrontFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -94,12 +94,11 @@ class AppIdFeedFrontFormError extends FeedFrontFormError {
   }
 }
 
-
-class DescriptionFeedFrontFormError extends FeedFrontFormError { 
-  const DescriptionFeedFrontFormError({ String? message, FeedFrontModel? value }): super(message: message, value: value);
+class DescriptionFeedFrontFormError extends FeedFrontFormError {
+  const DescriptionFeedFrontFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -110,12 +109,11 @@ class DescriptionFeedFrontFormError extends FeedFrontFormError {
   }
 }
 
-
-class FeedFeedFrontFormError extends FeedFrontFormError { 
-  const FeedFeedFrontFormError({ String? message, FeedFrontModel? value }): super(message: message, value: value);
+class FeedFeedFrontFormError extends FeedFrontFormError {
+  const FeedFeedFrontFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -126,12 +124,11 @@ class FeedFeedFrontFormError extends FeedFrontFormError {
   }
 }
 
-
-class BackgroundOverridePostsFeedFrontFormError extends FeedFrontFormError { 
-  const BackgroundOverridePostsFeedFrontFormError({ String? message, FeedFrontModel? value }): super(message: message, value: value);
+class BackgroundOverridePostsFeedFrontFormError extends FeedFrontFormError {
+  const BackgroundOverridePostsFeedFrontFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -142,12 +139,12 @@ class BackgroundOverridePostsFeedFrontFormError extends FeedFrontFormError {
   }
 }
 
-
-class BackgroundOverrideProfileFeedFrontFormError extends FeedFrontFormError { 
-  const BackgroundOverrideProfileFeedFrontFormError({ String? message, FeedFrontModel? value }): super(message: message, value: value);
+class BackgroundOverrideProfileFeedFrontFormError extends FeedFrontFormError {
+  const BackgroundOverrideProfileFeedFrontFormError(
+      {super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -158,12 +155,11 @@ class BackgroundOverrideProfileFeedFrontFormError extends FeedFrontFormError {
   }
 }
 
-
-class ConditionsFeedFrontFormError extends FeedFrontFormError { 
-  const ConditionsFeedFrontFormError({ String? message, FeedFrontModel? value }): super(message: message, value: value);
+class ConditionsFeedFrontFormError extends FeedFrontFormError {
+  const ConditionsFeedFrontFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -174,12 +170,11 @@ class ConditionsFeedFrontFormError extends FeedFrontFormError {
   }
 }
 
-
-class FeedFrontFormLoaded extends FeedFrontFormInitialized { 
-  const FeedFrontFormLoaded({ FeedFrontModel? value }): super(value: value);
+class FeedFrontFormLoaded extends FeedFrontFormInitialized {
+  const FeedFrontFormLoaded({super.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() {
@@ -189,12 +184,11 @@ class FeedFrontFormLoaded extends FeedFrontFormInitialized {
   }
 }
 
-
-class SubmittableFeedFrontForm extends FeedFrontFormInitialized { 
-  const SubmittableFeedFrontForm({ FeedFrontModel? value }): super(value: value);
+class SubmittableFeedFrontForm extends FeedFrontFormInitialized {
+  const SubmittableFeedFrontForm({super.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() {
@@ -203,5 +197,3 @@ class SubmittableFeedFrontForm extends FeedFrontFormInitialized {
     }''';
   }
 }
-
-

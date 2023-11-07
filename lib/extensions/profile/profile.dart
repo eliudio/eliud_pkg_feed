@@ -21,11 +21,10 @@ class Profile extends StatefulWidget {
   final AppModel app;
   final BackgroundModel? backgroundOverride;
 
-  Profile({Key? key, required this.app, required this.backgroundOverride})
-      : super(key: key);
+  Profile({super.key, required this.app, required this.backgroundOverride});
 
   @override
-  _ProfileState createState() => _ProfileState();
+  State<Profile> createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> {
@@ -39,7 +38,7 @@ class _ProfileState extends State<Profile> {
         var child = topicContainer(widget.app, context,
             backgroundOverride: widget.backgroundOverride,
             children: ([
-              html.length == 0
+              html.isEmpty
                   ? Container(
                       width: double.infinity,
                       height: 50,
@@ -52,7 +51,7 @@ class _ProfileState extends State<Profile> {
           var ownerId = profile!.authorId!;
           if (state.canEditThisProfile()) {
             var memberProfile = state.watchingThisProfile()!;
-            var accessibleByGroup = memberProfile.accessibleByGroup;
+            //var accessibleByGroup = memberProfile.accessibleByGroup;
             var accessibleByMembers = memberProfile.accessibleByMembers;
             return EditableWidget(
                 child: child,
@@ -69,14 +68,15 @@ class _ProfileState extends State<Profile> {
                                 .add(ProfileChangedProfileEvent(
                                     value, memberMedia)),
                             (AddMediaHtml addMediaHtml, String html) async {
-                      // the PostWithMemberMediumComponents uses (unfortunately) a PostModel, so we create one, just to be able to function, and to capturethe postMediumModels
-                      var tempModel = MemberProfileModel(
-                          documentID: newRandomKey(),
-                          appId: widget.app.documentID,
-                          profile: html,
-                          memberMedia: memberMedia,
-                          accessibleByGroup: memberProfile.accessibleByGroup,
-                          accessibleByMembers: memberProfile.accessibleByMembers,
+                      // the PostWithMemberMediumComponents uses (unfortunately) a PostModel,
+                      // so we create one, just to be able to function, and to capture the postMediumModels
+                      MemberProfileModel(
+                        documentID: newRandomKey(),
+                        appId: widget.app.documentID,
+                        profile: html,
+                        memberMedia: memberMedia,
+                        accessibleByGroup: memberProfile.accessibleByGroup,
+                        accessibleByMembers: memberProfile.accessibleByMembers,
                       );
 /*
                           await ProfileWithMemberMediumComponents.openIt(

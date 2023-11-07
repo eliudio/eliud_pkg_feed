@@ -16,46 +16,46 @@ class PostListPagedFetched extends PostPagedEvent {
 class DeletePostPaged extends PostPagedEvent {
   final PostModel? value;
 
-  DeletePostPaged({ this.value });
+  DeletePostPaged({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 }
 
 class BlockMemberFromPost extends PostPagedEvent {
   final PostModel blockTheAuthorOfThisPost;
 
-  BlockMemberFromPost({ required this.blockTheAuthorOfThisPost });
+  BlockMemberFromPost({required this.blockTheAuthorOfThisPost});
 
   @override
-  List<Object?> get props => [ blockTheAuthorOfThisPost ];
+  List<Object?> get props => [blockTheAuthorOfThisPost];
 }
 
 class BlockMemberFromComment extends PostPagedEvent {
   final PostCommentContainer blockTheAuthorOfThisComment;
 
-  BlockMemberFromComment({ required this.blockTheAuthorOfThisComment });
+  BlockMemberFromComment({required this.blockTheAuthorOfThisComment});
 
   @override
-  List<Object?> get props => [ blockTheAuthorOfThisComment ];
+  List<Object?> get props => [blockTheAuthorOfThisComment];
 }
 
 class AddPostPaged extends PostPagedEvent {
   final PostModel value;
 
-  AddPostPaged({ required this.value });
+  AddPostPaged({required this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 }
 
 class UpdatePostPaged extends PostPagedEvent {
   final PostModel value;
 
-  UpdatePostPaged({ required this.value });
+  UpdatePostPaged({required this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 }
 
 class LikePostEvent extends PostPagedEvent {
@@ -65,7 +65,7 @@ class LikePostEvent extends PostPagedEvent {
   LikePostEvent(this.postDetail, this.likeType);
 
   @override
-  List<Object> get props => [ postDetail, likeType ];
+  List<Object> get props => [postDetail, likeType];
 }
 
 class LikeCommentPostEvent extends PostPagedEvent {
@@ -73,10 +73,11 @@ class LikeCommentPostEvent extends PostPagedEvent {
   final PostCommentContainer postCommentContainer;
   final LikeType likeType;
 
-  LikeCommentPostEvent(this.postDetail, this.postCommentContainer, this.likeType);
+  LikeCommentPostEvent(
+      this.postDetail, this.postCommentContainer, this.likeType);
 
   @override
-  List<Object> get props => [ postDetail, postCommentContainer, likeType ];
+  List<Object> get props => [postDetail, postCommentContainer, likeType];
 }
 
 class DeletePostEvent extends PostPagedEvent {
@@ -85,7 +86,7 @@ class DeletePostEvent extends PostPagedEvent {
   DeletePostEvent(this.postDetail);
 
   @override
-  List<Object> get props => [ postDetail ];
+  List<Object> get props => [postDetail];
 }
 
 class AddCommentEvent extends PostPagedEvent {
@@ -95,7 +96,7 @@ class AddCommentEvent extends PostPagedEvent {
   AddCommentEvent(this.postDetail, this.comment);
 
   @override
-  List<Object> get props => [ postDetail, comment ];
+  List<Object> get props => [postDetail, comment];
 }
 
 class AddCommentCommentEvent extends PostPagedEvent {
@@ -103,10 +104,11 @@ class AddCommentCommentEvent extends PostPagedEvent {
   final PostCommentContainer postCommentContainer;
   final String comment;
 
-  AddCommentCommentEvent(this.postDetail, this.postCommentContainer, this.comment);
+  AddCommentCommentEvent(
+      this.postDetail, this.postCommentContainer, this.comment);
 
   @override
-  List<Object> get props => [ postCommentContainer, comment ];
+  List<Object> get props => [postCommentContainer, comment];
 }
 
 class DeleteCommentEvent extends PostPagedEvent {
@@ -116,7 +118,7 @@ class DeleteCommentEvent extends PostPagedEvent {
   DeleteCommentEvent(this.postDetail, this.deleteThis);
 
   @override
-  List<Object> get props => [ deleteThis ];
+  List<Object> get props => [deleteThis];
 }
 
 class UpdateCommentEvent extends PostPagedEvent {
@@ -127,7 +129,7 @@ class UpdateCommentEvent extends PostPagedEvent {
   UpdateCommentEvent(this.postDetail, this.updateThis, this.newValue);
 
   @override
-  List<Object> get props => [ postDetail, updateThis, newValue ];
+  List<Object> get props => [postDetail, updateThis, newValue];
 }
 
 class UpdatePostEvent extends PostPagedEvent {
@@ -137,5 +139,5 @@ class UpdatePostEvent extends PostPagedEvent {
   UpdatePostEvent(this.postDetail, this.comment);
 
   @override
-  List<Object> get props => [ postDetail, comment ];
+  List<Object> get props => [postDetail, comment];
 }

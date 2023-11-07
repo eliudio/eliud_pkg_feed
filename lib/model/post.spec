@@ -111,7 +111,7 @@
       "fieldName": "accessibleByGroup",
       "fieldType": "enum",
       "enumName": "PostAccessibleByGroup",
-      "enumValues" : [ "Public", "Followers", "Me", "SpecificMembers" ]
+      "enumValues" : [ "public", "followers", "me", "specificMembers" ]
     },
     {
       "fieldName": "accessibleByMembers",
@@ -133,9 +133,9 @@
     {
       "fieldName": "archived",
       "fieldType": "enum",
-      "defaultValue": "PostArchiveStatus.Active",
+      "defaultValue": "PostArchiveStatus.active",
       "enumName": "PostArchiveStatus",
-      "enumValues" : [ "Active", "Archived" ]
+      "enumValues" : [ "active", "archived" ]
     },
     {
       "fieldName": "externalLink",
@@ -166,7 +166,7 @@
  ],
   "listFields": {
     "title": "value.timestamp != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.timestamp!.toString())) : Container()",
-    "subTitle": "value.documentID != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.documentID)) : Container()"
+    "subTitle": "Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.documentID))"
   },
   "depends": ["eliud_core", "eliud_pkg_membership"]
 }

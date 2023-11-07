@@ -24,10 +24,16 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
   Object? lastRowFetched;
   EliudQuery eliudQuery;
 
-  PostListPagedBloc(AccessDetermined _accessDetermined, this.memberId, this.eliudQuery,
+  PostListPagedBloc(
+      AccessDetermined theAcessDetermined, this.memberId, this.eliudQuery,
       {required PostRepository postRepository})
-      : accessDetermined = _accessDetermined, _postRepository = postRepository,
-        super(PostListPagedState(blockedMembers: _accessDetermined is LoggedIn ? _accessDetermined.getBlocked() : const<String>[], canBlock: _accessDetermined is LoggedIn)) {
+      : accessDetermined = theAcessDetermined,
+        _postRepository = postRepository,
+        super(PostListPagedState(
+            blockedMembers: theAcessDetermined is LoggedIn
+                ? theAcessDetermined.getBlocked()
+                : const <String>[],
+            canBlock: theAcessDetermined is LoggedIn)) {
     on<PostListPagedFetched>((event, emit) async {
       var value = await _mapPostFetchedToState(state);
       if (value != null) emit(value);
@@ -38,33 +44,38 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
 
       // We update the entry in the current state avoiding interaction with repository
       var newListOfValues = <PostDetails>[];
-      state.values.forEach((element) {
+      for (var element in state.values) {
         if (element.postModel.documentID != event.value.documentID) {
           newListOfValues.add(element);
         } else {
           newListOfValues.add(element.copyWith(postModel: event.value));
         }
-      });
+      }
 
       emit(state.copyWith(values: newListOfValues));
     });
 
-    on <BlockMemberFromPost>((event, emit) async {
+    on<BlockMemberFromPost>((event, emit) async {
       if (accessDetermined is LoggedIn) {
         LoggedIn loggedIn = accessDetermined as LoggedIn;
-        var newBlocked = loggedIn.registerBlockedMember(event.blockTheAuthorOfThisPost.authorId);
+        var newBlocked = loggedIn
+            .registerBlockedMember(event.blockTheAuthorOfThisPost.authorId);
         var newValues = filterBlockedMembers(state.values, newBlocked);
         emit(state.copyWith(values: newValues, blockedMembers: newBlocked));
       }
     });
 
-    on <BlockMemberFromComment>((event, emit) async {
+    on<BlockMemberFromComment>((event, emit) async {
       if (accessDetermined is LoggedIn) {
         LoggedIn loggedIn = accessDetermined as LoggedIn;
         if (event.blockTheAuthorOfThisComment.member != null) {
-          var newBlocked = loggedIn.registerBlockedMember(
+          loggedIn.registerBlockedMember(
               event.blockTheAuthorOfThisComment.member!.documentID);
-          emit(PostListPagedState(blockedMembers: _accessDetermined is LoggedIn ? _accessDetermined.getBlocked() : const<String>[], canBlock: _accessDetermined is LoggedIn));
+          emit(PostListPagedState(
+              blockedMembers: theAcessDetermined is LoggedIn
+                  ? theAcessDetermined.getBlocked()
+                  : const <String>[],
+              canBlock: theAcessDetermined is LoggedIn));
           add(PostListPagedFetched()); // refresh all
         }
       }
@@ -84,15 +95,18 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
 
       // We delete the entry and add it whilst limiting interaction with repository
       var newListOfValues = <PostDetails>[];
-      state.values.forEach((element) {
+      for (var element in state.values) {
         if (element.postModel.documentID != event.value!.documentID) {
           newListOfValues.add(element);
         }
-      });
+      }
 
-      final extraValues =
-          await _fetchPosts(lastRowFetched: state.lastRowFetched, limit: 1, blockedMembers: state.blockedMembers);
-      final extraExtraValues = filterBlockedMembers(List.of(newListOfValues)..addAll(extraValues), state.blockedMembers);
+      final extraValues = await _fetchPosts(
+          lastRowFetched: state.lastRowFetched,
+          limit: 1,
+          blockedMembers: state.blockedMembers);
+      final extraExtraValues = filterBlockedMembers(
+          List.of(newListOfValues)..addAll(extraValues), state.blockedMembers);
       var newState = extraValues.isEmpty
           ? state.copyWith(
               hasReachedMax: true,
@@ -141,26 +155,28 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
     });
   }
 
-  List<PostDetails> filterBlockedMembers(List<PostDetails> values, List<String> blockedMembers) {
+  List<PostDetails> filterBlockedMembers(
+      List<PostDetails> values, List<String> blockedMembers) {
     List<PostDetails> newValues = <PostDetails>[];
-    values.forEach((element) {
+    for (var element in values) {
       if (!blockedMembers.contains(element.postModel.authorId)) {
         newValues.add(element);
       }
-    });
+    }
     return newValues;
   }
 
-
-  List<PostCommentContainer>? filterCommentsFromBlockedMembers(List<PostCommentContainer>? postCommentContainer, List<String> blockedMembers) {
+  List<PostCommentContainer>? filterCommentsFromBlockedMembers(
+      List<PostCommentContainer>? postCommentContainer,
+      List<String> blockedMembers) {
     if (postCommentContainer == null) return null;
 
     List<PostCommentContainer> newPostCommentContainer = [];
-    postCommentContainer.forEach((element) {
+    for (var element in postCommentContainer) {
       if (!blockedMembers.contains(element.member!.documentID)) {
         newPostCommentContainer.add(element);
       }
-    });
+    }
 
     return newPostCommentContainer;
   }
@@ -182,7 +198,8 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
     if (state.hasReachedMax) return state;
     try {
       if (state.status == PostListPagedStatus.initial) {
-        final values = await _fetchPosts(limit: 5, blockedMembers: state.blockedMembers);
+        final values =
+            await _fetchPosts(limit: 5, blockedMembers: state.blockedMembers);
         final newValues = filterBlockedMembers(values, state.blockedMembers);
         return state.copyWith(
           status: PostListPagedStatus.success,
@@ -191,9 +208,12 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
           hasReachedMax: _hasReachedMax(values.length),
         );
       } else {
-        final values =
-            await _fetchPosts(lastRowFetched: state.lastRowFetched, limit: 5, blockedMembers: state.blockedMembers);
-        final newValues = filterBlockedMembers(List.of(state.values)..addAll(values), state.blockedMembers);
+        final values = await _fetchPosts(
+            lastRowFetched: state.lastRowFetched,
+            limit: 5,
+            blockedMembers: state.blockedMembers);
+        final newValues = filterBlockedMembers(
+            List.of(state.values)..addAll(values), state.blockedMembers);
         return values.isEmpty
             ? state.copyWith(hasReachedMax: true)
             : state.copyWith(
@@ -209,7 +229,9 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
   }
 
   Future<List<PostDetails>> _fetchPosts(
-      {Object? lastRowFetched, int? limit, required List<String> blockedMembers}) async {
+      {Object? lastRowFetched,
+      int? limit,
+      required List<String> blockedMembers}) async {
     var values = await _postRepository.valuesListWithDetails(
         orderBy: 'timestamp',
         descending: true,
@@ -222,7 +244,8 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
     for (int i = 0; i < values.length; i++) {
       var postModel = values[i];
       if (postModel != null) {
-        var detail = await _loadComments(postModel, postModel.appId, blockedMembers);
+        var detail =
+            await _loadComments(postModel, postModel.appId, blockedMembers);
         details.add(detail);
       }
     }
@@ -260,7 +283,7 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
     List<String> blockedMembers,
   ) async {
     if (sourceComments == null) return null;
-    if (sourceComments.length == 0) return null;
+    if (sourceComments.isEmpty) return null;
 
     List<PostCommentContainer> comments = [];
     for (int i = 0; i < sourceComments.length; i++) {
@@ -294,7 +317,8 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
     return filterCommentsFromBlockedMembers(comments, blockedMembers);
   }
 
-  Future<PostDetails> _loadComments(PostModel postModel, String appId, List<String> blockedMembers) async {
+  Future<PostDetails> _loadComments(
+      PostModel postModel, String appId, List<String> blockedMembers) async {
     var likeKey = PostHelper.getLikeKey(postModel.documentID, null, memberId);
     var like = await postLikeRepository(appId: appId)!.get(likeKey);
 
@@ -315,11 +339,12 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
       appId,
       blockedMembers,
     );
-    var newComments = filterCommentsFromBlockedMembers(comments, blockedMembers);
+    var newComments =
+        filterCommentsFromBlockedMembers(comments, blockedMembers);
     return PostDetails(
         postModel: postModel,
         comments: newComments,
-        thisMembersLikeType: like == null ? null : like.likeType);
+        thisMembersLikeType: like?.likeType);
   }
 
   /* As a general rule, when updating data, be it adding a like, dislike, comment, ... we update the data in memory
@@ -349,7 +374,7 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
     final List<PostCommentContainer> newComments = [];
     newComments.add(container);
     var toCopy = postDetail.comments;
-    if ((toCopy != null) && (toCopy.length > 0)) {
+    if ((toCopy != null) && (toCopy.isNotEmpty)) {
       for (int i = 0; i < toCopy.length; i++) {
         newComments.add(toCopy[i].copyWith());
       }
@@ -389,7 +414,7 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
     PostCommentModel toAdd,
   ) async {
     if (toCopy == null) return Future.value(null);
-    if (toCopy.length == 0) return [];
+    if (toCopy.isEmpty) return [];
 
     final List<PostCommentContainer> newComments = [];
     for (int i = 0; i < toCopy.length; i++) {
@@ -434,7 +459,7 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
     String? postCommentDocumentID,
   ) {
     if (toCopy == null) return null;
-    if (toCopy.length == 0) return [];
+    if (toCopy.isEmpty) return [];
 
     final List<PostCommentContainer> newComments = [];
     for (int i = 0; i < toCopy.length; i++) {
@@ -473,11 +498,11 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
       String? postCommentDocumentID,
       String? comment) {
     if (toCopy == null) return null;
-    if (toCopy.length == 0) return [];
+    if (toCopy.isEmpty) return [];
 
     final List<PostCommentContainer> newComments = [];
     for (int i = 0; i < toCopy.length; i++) {
-      var newValue;
+      PostCommentContainer newValue;
 /*
       if ((toCopy[i] != null) &&
           (toCopy[i]!.postCommentContainer != null) &&
@@ -534,7 +559,7 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
     int dislikesExtra = 0;
 
     // what is this like / dislike
-    LikeType? thisMembersLikeType = LikeType.Unknown;
+    LikeType? thisMembersLikeType = LikeType.unknown;
 
     // did we like / dislike before?
     if (like == null) {
@@ -542,9 +567,9 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
       thisMembersLikeType = likePressed;
 
       // did we press like or dislike and determine the extra like / dislike for in memory update
-      if (likePressed == LikeType.Like) {
+      if (likePressed == LikeType.like) {
         likesExtra = 1;
-      } else if (likePressed == LikeType.Dislike) {
+      } else if (likePressed == LikeType.dislike) {
         dislikesExtra = 1;
       }
 
@@ -565,12 +590,12 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
         thisMembersLikeType = likePressed;
 
         // We changed from dislike to like, which means: count down dislikes and count up likes
-        if (likePressed == LikeType.Like) {
+        if (likePressed == LikeType.like) {
           // changing a dislike into a like
           likesExtra = 1;
           dislikesExtra = -1;
           // We changed from like to dislike, which means: count down likes and count up dislikes
-        } else if (likePressed == LikeType.Dislike) {
+        } else if (likePressed == LikeType.dislike) {
           // changing a like into a dislike
           dislikesExtra = 1;
           likesExtra = -1;
@@ -581,10 +606,10 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
             .update(like.copyWith(likeType: likePressed));
       } else {
         // we undo a like
-        if (likePressed == LikeType.Like) {
+        if (likePressed == LikeType.like) {
           likesExtra = -1;
           // we undo a dislike
-        } else if (likePressed == LikeType.Dislike) {
+        } else if (likePressed == LikeType.dislike) {
           dislikesExtra = -1;
         }
 
@@ -611,7 +636,7 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
           comments: _copyCommentsAndUpdateALike(
               postDetail.comments,
               postCommentContainer.postComment!.documentID,
-              thisMembersLikeType == LikeType.Like,
+              thisMembersLikeType == LikeType.like,
               likesExtra)));
     }
   }
@@ -622,11 +647,11 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
       bool? thisMemberLikesThisComment,
       int likesExtra) {
     if (toCopy == null) return null;
-    if (toCopy.length == 0) return [];
+    if (toCopy.isEmpty) return [];
 
     final List<PostCommentContainer> newComments = [];
     for (int i = 0; i < toCopy.length; i++) {
-      var newValue;
+      PostCommentContainer newValue;
       if ((toCopy[i] != null) && (toCopy[i]!.postComment != null)) {
         if (toCopy[i]!.postComment!.documentID == postCommentDocumentID) {
           newValue = toCopy[i]!.copyWith(

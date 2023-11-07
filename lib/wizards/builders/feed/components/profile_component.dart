@@ -1,4 +1,4 @@
-import 'package:eliud_core/core/wizards/tools/documentIdentifier.dart';
+import 'package:eliud_core/core/wizards/tools/document_identifier.dart';
 import 'package:eliud_core/model/model_export.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
@@ -13,13 +13,14 @@ class ProfileComponent {
   ProfileModel profileModel(
       {required FeedModel feed, required profileComponentId}) {
     return ProfileModel(
-      documentID: constructDocumentId(uniqueId: uniqueId, documentId: profileComponentId),
+      documentID: constructDocumentId(
+          uniqueId: uniqueId, documentId: profileComponentId),
       appId: appId,
       feed: feed,
       description: "Profile",
       conditions: StorageConditionsModel(
           privilegeLevelRequired:
-              PrivilegeLevelRequiredSimple.NoPrivilegeRequiredSimple),
+              PrivilegeLevelRequiredSimple.noPrivilegeRequiredSimple),
     );
   }
 

@@ -18,7 +18,6 @@ import 'package:meta/meta.dart';
 import 'package:eliud_core/model/model_export.dart';
 import 'package:eliud_pkg_feed/model/model_export.dart';
 
-
 @immutable
 abstract class PostFormEvent extends Equatable {
   const PostFormEvent();
@@ -27,15 +26,13 @@ abstract class PostFormEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class InitialiseNewPostFormEvent extends PostFormEvent {
-}
-
+class InitialiseNewPostFormEvent extends PostFormEvent {}
 
 class InitialisePostFormEvent extends PostFormEvent {
   final PostModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   InitialisePostFormEvent({this.value});
 }
@@ -44,7 +41,7 @@ class InitialisePostFormNoLoadEvent extends PostFormEvent {
   final PostModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   InitialisePostFormNoLoadEvent({this.value});
 }
@@ -55,7 +52,7 @@ class ChangedPostDocumentID extends PostFormEvent {
   ChangedPostDocumentID({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostDocumentID{ value: $value }';
@@ -67,7 +64,7 @@ class ChangedPostAuthorId extends PostFormEvent {
   ChangedPostAuthorId({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostAuthorId{ value: $value }';
@@ -79,7 +76,7 @@ class ChangedPostTimestamp extends PostFormEvent {
   ChangedPostTimestamp({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostTimestamp{ value: $value }';
@@ -91,7 +88,7 @@ class ChangedPostAppId extends PostFormEvent {
   ChangedPostAppId({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostAppId{ value: $value }';
@@ -103,7 +100,7 @@ class ChangedPostFeedId extends PostFormEvent {
   ChangedPostFeedId({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostFeedId{ value: $value }';
@@ -115,7 +112,7 @@ class ChangedPostPostAppId extends PostFormEvent {
   ChangedPostPostAppId({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostPostAppId{ value: $value }';
@@ -127,7 +124,7 @@ class ChangedPostPostPageId extends PostFormEvent {
   ChangedPostPostPageId({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostPostPageId{ value: $value }';
@@ -139,7 +136,7 @@ class ChangedPostPageParameters extends PostFormEvent {
   ChangedPostPageParameters({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostPageParameters{ value: $value }';
@@ -151,7 +148,7 @@ class ChangedPostHtml extends PostFormEvent {
   ChangedPostHtml({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostHtml{ value: $value }';
@@ -163,7 +160,7 @@ class ChangedPostDescription extends PostFormEvent {
   ChangedPostDescription({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostDescription{ value: $value }';
@@ -175,7 +172,7 @@ class ChangedPostLikes extends PostFormEvent {
   ChangedPostLikes({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostLikes{ value: $value }';
@@ -187,7 +184,7 @@ class ChangedPostDislikes extends PostFormEvent {
   ChangedPostDislikes({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostDislikes{ value: $value }';
@@ -199,7 +196,7 @@ class ChangedPostAccessibleByGroup extends PostFormEvent {
   ChangedPostAccessibleByGroup({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostAccessibleByGroup{ value: $value }';
@@ -211,7 +208,7 @@ class ChangedPostAccessibleByMembers extends PostFormEvent {
   ChangedPostAccessibleByMembers({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostAccessibleByMembers{ value: $value }';
@@ -223,7 +220,7 @@ class ChangedPostReadAccess extends PostFormEvent {
   ChangedPostReadAccess({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostReadAccess{ value: $value }';
@@ -235,7 +232,7 @@ class ChangedPostArchived extends PostFormEvent {
   ChangedPostArchived({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostArchived{ value: $value }';
@@ -247,7 +244,7 @@ class ChangedPostExternalLink extends PostFormEvent {
   ChangedPostExternalLink({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostExternalLink{ value: $value }';
@@ -259,9 +256,8 @@ class ChangedPostMemberMedia extends PostFormEvent {
   ChangedPostMemberMedia({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedPostMemberMedia{ value: $value }';
 }
-

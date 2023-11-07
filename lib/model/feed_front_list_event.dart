@@ -30,10 +30,10 @@ class NewPage extends FeedFrontListEvent {}
 class AddFeedFrontList extends FeedFrontListEvent {
   final FeedFrontModel? value;
 
-  const AddFeedFrontList({ this.value });
+  const AddFeedFrontList({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'AddFeedFrontList{ value: $value }';
@@ -42,10 +42,10 @@ class AddFeedFrontList extends FeedFrontListEvent {
 class UpdateFeedFrontList extends FeedFrontListEvent {
   final FeedFrontModel? value;
 
-  const UpdateFeedFrontList({ this.value });
+  const UpdateFeedFrontList({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'UpdateFeedFrontList{ value: $value }';
@@ -54,10 +54,10 @@ class UpdateFeedFrontList extends FeedFrontListEvent {
 class DeleteFeedFrontList extends FeedFrontListEvent {
   final FeedFrontModel? value;
 
-  const DeleteFeedFrontList({ this.value });
+  const DeleteFeedFrontList({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'DeleteFeedFrontList{ value: $value }';
@@ -67,24 +67,24 @@ class FeedFrontListUpdated extends FeedFrontListEvent {
   final List<FeedFrontModel?>? value;
   final bool? mightHaveMore;
 
-  const FeedFrontListUpdated({ this.value, this.mightHaveMore });
+  const FeedFrontListUpdated({this.value, this.mightHaveMore});
 
   @override
-  List<Object?> get props => [ value, mightHaveMore ];
+  List<Object?> get props => [value, mightHaveMore];
 
   @override
-  String toString() => 'FeedFrontListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
+  String toString() =>
+      'FeedFrontListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
 }
 
 class FeedFrontChangeQuery extends FeedFrontListEvent {
   final EliudQuery? newQuery;
 
-  const FeedFrontChangeQuery({ required this.newQuery });
+  const FeedFrontChangeQuery({required this.newQuery});
 
   @override
-  List<Object?> get props => [ newQuery ];
+  List<Object?> get props => [newQuery];
 
   @override
   String toString() => 'FeedFrontChangeQuery{ value: $newQuery }';
 }
-

@@ -23,9 +23,8 @@ import 'package:eliud_core/tools/query/query_tools.dart';
 
 import 'feed_front_model.dart';
 
-typedef List<FeedFrontModel?> FilterFeedFrontModels(List<FeedFrontModel?> values);
-
-
+typedef FilterFeedFrontModels = List<FeedFrontModel?> Function(
+    List<FeedFrontModel?> values);
 
 class FeedFrontListBloc extends Bloc<FeedFrontListEvent, FeedFrontListState> {
   final FilterFeedFrontModels? filter;
@@ -39,23 +38,32 @@ class FeedFrontListBloc extends Bloc<FeedFrontListEvent, FeedFrontListState> {
   final bool? detailed;
   final int feedFrontLimit;
 
-  FeedFrontListBloc({this.filter, this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required FeedFrontRepository feedFrontRepository, this.feedFrontLimit = 5})
+  FeedFrontListBloc(
+      {this.filter,
+      this.paged,
+      this.orderBy,
+      this.descending,
+      this.detailed,
+      this.eliudQuery,
+      required FeedFrontRepository feedFrontRepository,
+      this.feedFrontLimit = 5})
       : _feedFrontRepository = feedFrontRepository,
         super(FeedFrontListLoading()) {
-    on <LoadFeedFrontList> ((event, emit) {
+    on<LoadFeedFrontList>((event, emit) {
       if ((detailed == null) || (!detailed!)) {
         _mapLoadFeedFrontListToState();
       } else {
         _mapLoadFeedFrontListWithDetailsToState();
       }
     });
-    
-    on <NewPage> ((event, emit) {
-      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
+
+    on<NewPage>((event, emit) {
+      pages = pages +
+          1; // it doesn't matter so much if we increase pages beyond the end
       _mapLoadFeedFrontListWithDetailsToState();
     });
-    
-    on <FeedFrontChangeQuery> ((event, emit) {
+
+    on<FeedFrontChangeQuery>((event, emit) {
       eliudQuery = event.newQuery;
       if ((detailed == null) || (!detailed!)) {
         _mapLoadFeedFrontListToState();
@@ -63,20 +71,20 @@ class FeedFrontListBloc extends Bloc<FeedFrontListEvent, FeedFrontListState> {
         _mapLoadFeedFrontListWithDetailsToState();
       }
     });
-      
-    on <AddFeedFrontList> ((event, emit) async {
+
+    on<AddFeedFrontList>((event, emit) async {
       await _mapAddFeedFrontListToState(event);
     });
-    
-    on <UpdateFeedFrontList> ((event, emit) async {
+
+    on<UpdateFeedFrontList>((event, emit) async {
       await _mapUpdateFeedFrontListToState(event);
     });
-    
-    on <DeleteFeedFrontList> ((event, emit) async {
+
+    on<DeleteFeedFrontList>((event, emit) async {
       await _mapDeleteFeedFrontListToState(event);
     });
-    
-    on <FeedFrontListUpdated> ((event, emit) {
+
+    on<FeedFrontListUpdated>((event, emit) {
       emit(_mapFeedFrontListUpdatedToState(event));
     });
   }
@@ -90,27 +98,31 @@ class FeedFrontListBloc extends Bloc<FeedFrontListEvent, FeedFrontListState> {
   }
 
   Future<void> _mapLoadFeedFrontListToState() async {
-    int amountNow =  (state is FeedFrontListLoaded) ? (state as FeedFrontListLoaded).values!.length : 0;
+    int amountNow = (state is FeedFrontListLoaded)
+        ? (state as FeedFrontListLoaded).values!.length
+        : 0;
     _feedFrontsListSubscription?.cancel();
     _feedFrontsListSubscription = _feedFrontRepository.listen(
-          (list) => add(FeedFrontListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
-      orderBy: orderBy,
-      descending: descending,
-      eliudQuery: eliudQuery,
-      limit: ((paged != null) && paged!) ? pages * feedFrontLimit : null
-    );
-  }
-
-  Future<void> _mapLoadFeedFrontListWithDetailsToState() async {
-    int amountNow =  (state is FeedFrontListLoaded) ? (state as FeedFrontListLoaded).values!.length : 0;
-    _feedFrontsListSubscription?.cancel();
-    _feedFrontsListSubscription = _feedFrontRepository.listenWithDetails(
-            (list) => add(FeedFrontListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
+        (list) => add(FeedFrontListUpdated(
+            value: _filter(list), mightHaveMore: amountNow != list.length)),
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,
-        limit: ((paged != null) && paged!) ? pages * feedFrontLimit : null
-    );
+        limit: ((paged != null) && paged!) ? pages * feedFrontLimit : null);
+  }
+
+  Future<void> _mapLoadFeedFrontListWithDetailsToState() async {
+    int amountNow = (state is FeedFrontListLoaded)
+        ? (state as FeedFrontListLoaded).values!.length
+        : 0;
+    _feedFrontsListSubscription?.cancel();
+    _feedFrontsListSubscription = _feedFrontRepository.listenWithDetails(
+        (list) => add(FeedFrontListUpdated(
+            value: _filter(list), mightHaveMore: amountNow != list.length)),
+        orderBy: orderBy,
+        descending: descending,
+        eliudQuery: eliudQuery,
+        limit: ((paged != null) && paged!) ? pages * feedFrontLimit : null);
   }
 
   Future<void> _mapAddFeedFrontListToState(AddFeedFrontList event) async {
@@ -135,7 +147,9 @@ class FeedFrontListBloc extends Bloc<FeedFrontListEvent, FeedFrontListState> {
   }
 
   FeedFrontListLoaded _mapFeedFrontListUpdatedToState(
-      FeedFrontListUpdated event) => FeedFrontListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
+          FeedFrontListUpdated event) =>
+      FeedFrontListLoaded(
+          values: event.value, mightHaveMore: event.mightHaveMore);
 
   @override
   Future<void> close() {
@@ -143,5 +157,3 @@ class FeedFrontListBloc extends Bloc<FeedFrontListEvent, FeedFrontListState> {
     return super.close();
   }
 }
-
-

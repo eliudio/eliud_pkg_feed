@@ -23,9 +23,8 @@ import 'package:eliud_core/tools/query/query_tools.dart';
 
 import 'feed_menu_model.dart';
 
-typedef List<FeedMenuModel?> FilterFeedMenuModels(List<FeedMenuModel?> values);
-
-
+typedef FilterFeedMenuModels = List<FeedMenuModel?> Function(
+    List<FeedMenuModel?> values);
 
 class FeedMenuListBloc extends Bloc<FeedMenuListEvent, FeedMenuListState> {
   final FilterFeedMenuModels? filter;
@@ -39,23 +38,32 @@ class FeedMenuListBloc extends Bloc<FeedMenuListEvent, FeedMenuListState> {
   final bool? detailed;
   final int feedMenuLimit;
 
-  FeedMenuListBloc({this.filter, this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required FeedMenuRepository feedMenuRepository, this.feedMenuLimit = 5})
+  FeedMenuListBloc(
+      {this.filter,
+      this.paged,
+      this.orderBy,
+      this.descending,
+      this.detailed,
+      this.eliudQuery,
+      required FeedMenuRepository feedMenuRepository,
+      this.feedMenuLimit = 5})
       : _feedMenuRepository = feedMenuRepository,
         super(FeedMenuListLoading()) {
-    on <LoadFeedMenuList> ((event, emit) {
+    on<LoadFeedMenuList>((event, emit) {
       if ((detailed == null) || (!detailed!)) {
         _mapLoadFeedMenuListToState();
       } else {
         _mapLoadFeedMenuListWithDetailsToState();
       }
     });
-    
-    on <NewPage> ((event, emit) {
-      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
+
+    on<NewPage>((event, emit) {
+      pages = pages +
+          1; // it doesn't matter so much if we increase pages beyond the end
       _mapLoadFeedMenuListWithDetailsToState();
     });
-    
-    on <FeedMenuChangeQuery> ((event, emit) {
+
+    on<FeedMenuChangeQuery>((event, emit) {
       eliudQuery = event.newQuery;
       if ((detailed == null) || (!detailed!)) {
         _mapLoadFeedMenuListToState();
@@ -63,20 +71,20 @@ class FeedMenuListBloc extends Bloc<FeedMenuListEvent, FeedMenuListState> {
         _mapLoadFeedMenuListWithDetailsToState();
       }
     });
-      
-    on <AddFeedMenuList> ((event, emit) async {
+
+    on<AddFeedMenuList>((event, emit) async {
       await _mapAddFeedMenuListToState(event);
     });
-    
-    on <UpdateFeedMenuList> ((event, emit) async {
+
+    on<UpdateFeedMenuList>((event, emit) async {
       await _mapUpdateFeedMenuListToState(event);
     });
-    
-    on <DeleteFeedMenuList> ((event, emit) async {
+
+    on<DeleteFeedMenuList>((event, emit) async {
       await _mapDeleteFeedMenuListToState(event);
     });
-    
-    on <FeedMenuListUpdated> ((event, emit) {
+
+    on<FeedMenuListUpdated>((event, emit) {
       emit(_mapFeedMenuListUpdatedToState(event));
     });
   }
@@ -90,27 +98,31 @@ class FeedMenuListBloc extends Bloc<FeedMenuListEvent, FeedMenuListState> {
   }
 
   Future<void> _mapLoadFeedMenuListToState() async {
-    int amountNow =  (state is FeedMenuListLoaded) ? (state as FeedMenuListLoaded).values!.length : 0;
+    int amountNow = (state is FeedMenuListLoaded)
+        ? (state as FeedMenuListLoaded).values!.length
+        : 0;
     _feedMenusListSubscription?.cancel();
     _feedMenusListSubscription = _feedMenuRepository.listen(
-          (list) => add(FeedMenuListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
-      orderBy: orderBy,
-      descending: descending,
-      eliudQuery: eliudQuery,
-      limit: ((paged != null) && paged!) ? pages * feedMenuLimit : null
-    );
-  }
-
-  Future<void> _mapLoadFeedMenuListWithDetailsToState() async {
-    int amountNow =  (state is FeedMenuListLoaded) ? (state as FeedMenuListLoaded).values!.length : 0;
-    _feedMenusListSubscription?.cancel();
-    _feedMenusListSubscription = _feedMenuRepository.listenWithDetails(
-            (list) => add(FeedMenuListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
+        (list) => add(FeedMenuListUpdated(
+            value: _filter(list), mightHaveMore: amountNow != list.length)),
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,
-        limit: ((paged != null) && paged!) ? pages * feedMenuLimit : null
-    );
+        limit: ((paged != null) && paged!) ? pages * feedMenuLimit : null);
+  }
+
+  Future<void> _mapLoadFeedMenuListWithDetailsToState() async {
+    int amountNow = (state is FeedMenuListLoaded)
+        ? (state as FeedMenuListLoaded).values!.length
+        : 0;
+    _feedMenusListSubscription?.cancel();
+    _feedMenusListSubscription = _feedMenuRepository.listenWithDetails(
+        (list) => add(FeedMenuListUpdated(
+            value: _filter(list), mightHaveMore: amountNow != list.length)),
+        orderBy: orderBy,
+        descending: descending,
+        eliudQuery: eliudQuery,
+        limit: ((paged != null) && paged!) ? pages * feedMenuLimit : null);
   }
 
   Future<void> _mapAddFeedMenuListToState(AddFeedMenuList event) async {
@@ -135,7 +147,9 @@ class FeedMenuListBloc extends Bloc<FeedMenuListEvent, FeedMenuListState> {
   }
 
   FeedMenuListLoaded _mapFeedMenuListUpdatedToState(
-      FeedMenuListUpdated event) => FeedMenuListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
+          FeedMenuListUpdated event) =>
+      FeedMenuListLoaded(
+          values: event.value, mightHaveMore: event.mightHaveMore);
 
   @override
   Future<void> close() {
@@ -143,5 +157,3 @@ class FeedMenuListBloc extends Bloc<FeedMenuListEvent, FeedMenuListState> {
     return super.close();
   }
 }
-
-

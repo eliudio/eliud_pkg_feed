@@ -15,9 +15,10 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuple/tuple.dart';
 
-enum PostType { PostPhoto, PostVideo }
+enum PostType { postPhoto, postVideo }
 
-typedef Tuple2<PostAccessibleByGroup, List<String>?> PostAccessibleProviderFunction();
+typedef PostAccessibleProviderFunction
+    = Tuple2<PostAccessibleByGroup, List<String>?> Function();
 
 /*
  * PostButton is used to be able to add photos or videos to the feed.
@@ -27,12 +28,14 @@ class PostButton extends StatefulWidget {
   final AppModel app;
   final FeedModel feedModel;
   final PostType postType;
-  PostAccessibleProviderFunction postAccessibleProviderFunction;
-  MemberModel author;
+  final PostAccessibleProviderFunction postAccessibleProviderFunction;
+  final MemberModel author;
 
-  PostButton(this.app, this.feedModel, this.postType, this.postAccessibleProviderFunction, this.author);
+  PostButton(this.app, this.feedModel, this.postType,
+      this.postAccessibleProviderFunction, this.author);
 
-  PostButtonState createState() => PostButtonState();
+  @override
+  State<PostButton> createState() => PostButtonState();
 }
 
 class PostButtonState extends State<PostButton> {
@@ -41,18 +44,23 @@ class PostButtonState extends State<PostButton> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.postType == PostType.PostPhoto) {
-      var _photo = Image.asset(
-          "assets/images/segoshvishna.fiverr.com/photo.png",
+    if (widget.postType == PostType.postPhoto) {
+      var photo = Image.asset("assets/images/segoshvishna.fiverr.com/photo.png",
           package: "eliud_pkg_feed");
       if (uploadingProgress == null) {
-        return MediaButtons.mediaButtons(context, widget.app,
-            () => Tuple2(toMemberMediumAccessibleByGroup(widget.postAccessibleProviderFunction().item1.index), widget.postAccessibleProviderFunction().item2),
+        return MediaButtons.mediaButtons(
+            context,
+            widget.app,
+            () => Tuple2(
+                toMemberMediumAccessibleByGroup(
+                    widget.postAccessibleProviderFunction().item1.index),
+                widget.postAccessibleProviderFunction().item2),
             allowCrop: false,
             tooltip: 'Add photo', photoFeedbackFunction: (photo) {
           if (photo != null) {
             _addPost(postMemberMedia: [
-              MemberMediumContainerModel(documentID: newRandomKey(), memberMedium: photo)
+              MemberMediumContainerModel(
+                  documentID: newRandomKey(), memberMedium: photo)
             ]);
           }
           uploadingProgress = null;
@@ -60,22 +68,27 @@ class PostButtonState extends State<PostButton> {
           setState(() {
             uploadingProgress = progress;
           });
-        }, icon: _getIcon(_photo));
+        }, icon: _getIcon(photo));
       } else {
-        return _getIcon(_photo);
+        return _getIcon(photo);
       }
     } else {
-      var _video = Image.asset(
-          "assets/images/segoshvishna.fiverr.com/video.png",
+      var video = Image.asset("assets/images/segoshvishna.fiverr.com/video.png",
           package: "eliud_pkg_feed");
       if (uploadingProgress == null) {
-        return MediaButtons.mediaButtons(context, widget.app,
-            () => Tuple2(toMemberMediumAccessibleByGroup(widget.postAccessibleProviderFunction().item1.index), widget.postAccessibleProviderFunction().item2),
+        return MediaButtons.mediaButtons(
+            context,
+            widget.app,
+            () => Tuple2(
+                toMemberMediumAccessibleByGroup(
+                    widget.postAccessibleProviderFunction().item1.index),
+                widget.postAccessibleProviderFunction().item2),
             allowCrop: false,
             tooltip: 'Add video', videoFeedbackFunction: (video) {
           if (video != null) {
             _addPost(postMemberMedia: [
-              MemberMediumContainerModel(documentID: newRandomKey(), memberMedium: video)
+              MemberMediumContainerModel(
+                  documentID: newRandomKey(), memberMedium: video)
             ]);
           }
           uploadingProgress = null;
@@ -83,9 +96,9 @@ class PostButtonState extends State<PostButton> {
           setState(() {
             uploadingProgress = progress;
           });
-        }, icon: _getIcon(_video));
+        }, icon: _getIcon(video));
       } else {
-        return _getIcon(_video);
+        return _getIcon(video);
       }
     }
   }
@@ -96,20 +109,22 @@ class PostButtonState extends State<PostButton> {
       List<MemberMediumContainerModel>? postMemberMedia}) {
     BlocProvider.of<PostListPagedBloc>(context).add(AddPostPaged(
         value: PostModel(
-            documentID: newRandomKey(),
-            authorId: widget.author.documentID,
-            appId: widget.feedModel.appId,
-            feedId: widget.feedModel.documentID,
-            likes: 0,
-            dislikes: 0,
-            description: description,
-            accessibleByGroup: widget.postAccessibleProviderFunction().item1,
-            accessibleByMembers: widget.postAccessibleProviderFunction().item2,
-            archived: PostArchiveStatus.Active,
-            html: html,
-            memberMedia: postMemberMedia,
-            readAccess: widget.author.documentID != null ? [widget.author.documentID] : null,  // default readAccess to the owner. The function will expand this based on accessibleByGroup/Members
-          )));
+      documentID: newRandomKey(),
+      authorId: widget.author.documentID,
+      appId: widget.feedModel.appId,
+      feedId: widget.feedModel.documentID,
+      likes: 0,
+      dislikes: 0,
+      description: description,
+      accessibleByGroup: widget.postAccessibleProviderFunction().item1,
+      accessibleByMembers: widget.postAccessibleProviderFunction().item2,
+      archived: PostArchiveStatus.active,
+      html: html,
+      memberMedia: postMemberMedia,
+      readAccess: [
+        widget.author.documentID
+      ], // default readAccess to the owner. The function will expand this based on accessibleByGroup/Members
+    )));
   }
 
   Widget _getIcon(Widget child) {
@@ -120,7 +135,8 @@ class PostButtonState extends State<PostButton> {
         formatIcon(context, widget.app, child),
         Container(
             width: 60,
-            child: progressIndicatorWithValue(widget.app, context, value: uploadingProgress!))
+            child: progressIndicatorWithValue(widget.app, context,
+                value: uploadingProgress!))
       ]);
 
 /*

@@ -81,7 +81,7 @@
       "fieldName": "accessibleByGroup",
       "fieldType": "enum",
       "enumName": "MemberProfileAccessibleByGroup",
-      "enumValues" : [ "Public", "Followers", "Me", "SpecificMembers" ]
+      "enumValues" : [ "public", "followers", "me", "specificMembers" ]
     },
     {
       "fieldName": "accessibleByMembers",
@@ -123,7 +123,7 @@
     }
   ],
   "listFields": {
-    "title": "value.documentID != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.documentID)) : Container()"
+    "title": "Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.documentID))"
   },
   "depends": ["eliud_core"]
 }

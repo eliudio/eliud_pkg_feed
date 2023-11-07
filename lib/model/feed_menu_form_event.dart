@@ -18,7 +18,6 @@ import 'package:meta/meta.dart';
 import 'package:eliud_core/model/model_export.dart';
 import 'package:eliud_pkg_feed/model/model_export.dart';
 
-
 @immutable
 abstract class FeedMenuFormEvent extends Equatable {
   const FeedMenuFormEvent();
@@ -27,15 +26,13 @@ abstract class FeedMenuFormEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class InitialiseNewFeedMenuFormEvent extends FeedMenuFormEvent {
-}
-
+class InitialiseNewFeedMenuFormEvent extends FeedMenuFormEvent {}
 
 class InitialiseFeedMenuFormEvent extends FeedMenuFormEvent {
   final FeedMenuModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   InitialiseFeedMenuFormEvent({this.value});
 }
@@ -44,7 +41,7 @@ class InitialiseFeedMenuFormNoLoadEvent extends FeedMenuFormEvent {
   final FeedMenuModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   InitialiseFeedMenuFormNoLoadEvent({this.value});
 }
@@ -55,7 +52,7 @@ class ChangedFeedMenuDocumentID extends FeedMenuFormEvent {
   ChangedFeedMenuDocumentID({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedFeedMenuDocumentID{ value: $value }';
@@ -67,7 +64,7 @@ class ChangedFeedMenuAppId extends FeedMenuFormEvent {
   ChangedFeedMenuAppId({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedFeedMenuAppId{ value: $value }';
@@ -79,7 +76,7 @@ class ChangedFeedMenuDescription extends FeedMenuFormEvent {
   ChangedFeedMenuDescription({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedFeedMenuDescription{ value: $value }';
@@ -91,10 +88,11 @@ class ChangedFeedMenuBodyComponentsCurrentMember extends FeedMenuFormEvent {
   ChangedFeedMenuBodyComponentsCurrentMember({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
-  String toString() => 'ChangedFeedMenuBodyComponentsCurrentMember{ value: $value }';
+  String toString() =>
+      'ChangedFeedMenuBodyComponentsCurrentMember{ value: $value }';
 }
 
 class ChangedFeedMenuBodyComponentsOtherMember extends FeedMenuFormEvent {
@@ -103,10 +101,11 @@ class ChangedFeedMenuBodyComponentsOtherMember extends FeedMenuFormEvent {
   ChangedFeedMenuBodyComponentsOtherMember({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
-  String toString() => 'ChangedFeedMenuBodyComponentsOtherMember{ value: $value }';
+  String toString() =>
+      'ChangedFeedMenuBodyComponentsOtherMember{ value: $value }';
 }
 
 class ChangedFeedMenuItemColor extends FeedMenuFormEvent {
@@ -115,7 +114,7 @@ class ChangedFeedMenuItemColor extends FeedMenuFormEvent {
   ChangedFeedMenuItemColor({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedFeedMenuItemColor{ value: $value }';
@@ -127,7 +126,7 @@ class ChangedFeedMenuSelectedItemColor extends FeedMenuFormEvent {
   ChangedFeedMenuSelectedItemColor({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedFeedMenuSelectedItemColor{ value: $value }';
@@ -139,7 +138,7 @@ class ChangedFeedMenuBackgroundOverride extends FeedMenuFormEvent {
   ChangedFeedMenuBackgroundOverride({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedFeedMenuBackgroundOverride{ value: $value }';
@@ -151,7 +150,7 @@ class ChangedFeedMenuFeedFront extends FeedMenuFormEvent {
   ChangedFeedMenuFeedFront({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedFeedMenuFeedFront{ value: $value }';
@@ -163,9 +162,8 @@ class ChangedFeedMenuConditions extends FeedMenuFormEvent {
   ChangedFeedMenuConditions({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedFeedMenuConditions{ value: $value }';
 }
-

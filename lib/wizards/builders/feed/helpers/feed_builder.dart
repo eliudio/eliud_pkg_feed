@@ -1,4 +1,4 @@
-import 'package:eliud_core/core/wizards/tools/documentIdentifier.dart';
+import 'package:eliud_core/core/wizards/tools/document_identifier.dart';
 import 'package:eliud_core/model/model_export.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/feed_model.dart';
@@ -11,10 +11,11 @@ class FeedBuilder {
   FeedBuilder(this.app, this.uniqueId, this.componentIdentifier);
 
   FeedModel feedModel() => FeedModel(
-        documentID: constructDocumentId(uniqueId: uniqueId, documentId: componentIdentifier),
+        documentID: constructDocumentId(
+            uniqueId: uniqueId, documentId: componentIdentifier),
         appId: app.documentID,
         description: "My Feed",
-        thumbImage: ThumbStyle.Thumbs,
+        thumbImage: ThumbStyle.thumbs,
         photoPost: true,
         videoPost: true,
         messagePost: true,

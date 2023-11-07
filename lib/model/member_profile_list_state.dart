@@ -33,18 +33,20 @@ class MemberProfileListLoaded extends MemberProfileListState {
   const MemberProfileListLoaded({this.mightHaveMore, this.values = const []});
 
   @override
-  List<Object?> get props => [ values, mightHaveMore ];
+  List<Object?> get props => [values, mightHaveMore];
 
   @override
   String toString() => 'MemberProfileListLoaded { values: $values }';
 
   @override
-  bool operator ==(Object other) => 
-          other is MemberProfileListLoaded &&
-              runtimeType == other.runtimeType &&
-              ListEquality().equals(values, other.values) &&
-              mightHaveMore == other.mightHaveMore;
+  bool operator ==(Object other) =>
+      other is MemberProfileListLoaded &&
+      runtimeType == other.runtimeType &&
+      ListEquality().equals(values, other.values) &&
+      mightHaveMore == other.mightHaveMore;
+
+  @override
+  int get hashCode => values.hashCode ^ mightHaveMore.hashCode;
 }
 
 class MemberProfileNotLoaded extends MemberProfileListState {}
-

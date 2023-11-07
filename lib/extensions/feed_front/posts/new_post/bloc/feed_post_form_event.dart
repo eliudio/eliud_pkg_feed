@@ -15,7 +15,8 @@ class InitialiseNewFeedPostFormEvent extends FeedPostFormEvent {
   final PostAccessibleByGroup postAccessibleByGroup;
   final List<String>? postAccessibleByMembers;
 
-  InitialiseNewFeedPostFormEvent(this.postAccessibleByGroup, this.postAccessibleByMembers);
+  InitialiseNewFeedPostFormEvent(
+      this.postAccessibleByGroup, this.postAccessibleByMembers);
 
   @override
   List<Object?> get props => [postAccessibleByGroup, postAccessibleByMembers];
@@ -28,10 +29,17 @@ class InitialiseUpdateFeedPostFormEvent extends FeedPostFormEvent {
   final List<String>? postAccessibleByMembers;
   final PostModel originalPost;
 
-  InitialiseUpdateFeedPostFormEvent(this.originalPost, this.description, this.memberMedia, this.postAccessibleByGroup, {this.postAccessibleByMembers});
+  InitialiseUpdateFeedPostFormEvent(this.originalPost, this.description,
+      this.memberMedia, this.postAccessibleByGroup,
+      {this.postAccessibleByMembers});
 
   @override
-  List<Object?> get props => [description, memberMedia, postAccessibleByGroup, postAccessibleByMembers];
+  List<Object?> get props => [
+        description,
+        memberMedia,
+        postAccessibleByGroup,
+        postAccessibleByMembers
+      ];
 }
 
 class ChangedFeedPostDescription extends FeedPostFormEvent {
@@ -40,7 +48,7 @@ class ChangedFeedPostDescription extends FeedPostFormEvent {
   ChangedFeedPostDescription({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedFeedPostDescription{ value: $value }';
@@ -50,13 +58,15 @@ class ChangedFeedPostPrivilege extends FeedPostFormEvent {
   final PostAccessibleByGroup postAccessibleByGroup;
   final List<String>? postAccessibleByMembers;
 
-  ChangedFeedPostPrivilege({required this.postAccessibleByGroup, this.postAccessibleByMembers });
+  ChangedFeedPostPrivilege(
+      {required this.postAccessibleByGroup, this.postAccessibleByMembers});
 
   @override
-  List<Object?> get props => [ postAccessibleByGroup, postAccessibleByMembers ];
+  List<Object?> get props => [postAccessibleByGroup, postAccessibleByMembers];
 
   @override
-  String toString() => 'ChangedFeedPostPrivilege{ postAccessibleByGroup: $postAccessibleByGroup, postAccessibleByMembers: $postAccessibleByMembers }';
+  String toString() =>
+      'ChangedFeedPostPrivilege{ postAccessibleByGroup: $postAccessibleByGroup, postAccessibleByMembers: $postAccessibleByMembers }';
 }
 
 class ChangedMedia extends FeedPostFormEvent {
@@ -65,7 +75,7 @@ class ChangedMedia extends FeedPostFormEvent {
   ChangedMedia({required this.memberMedia});
 
   @override
-  List<Object?> get props => [ memberMedia ];
+  List<Object?> get props => [memberMedia];
 
   @override
   String toString() => 'ChangedMedia{ memberMedia: $memberMedia }';
@@ -77,16 +87,15 @@ class UploadingMedium extends FeedPostFormEvent {
   UploadingMedium({required this.progress});
 
   @override
-  List<Object?> get props => [ progress ];
+  List<Object?> get props => [progress];
 
   @override
   String toString() => 'UploadingMedium{ progress: $progress }';
 }
 
 class SubmitPost extends FeedPostFormEvent {
-
   @override
-  List<Object?> get props => [  ];
+  List<Object?> get props => [];
 
   @override
   String toString() => 'SubmitPost{}';

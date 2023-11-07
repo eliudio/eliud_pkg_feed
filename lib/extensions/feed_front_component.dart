@@ -31,12 +31,11 @@ class FeedFrontComponentConstructorDefault implements ComponentConstructor {
 }
 
 class FeedFrontComponent extends AbstractFeedFrontComponent {
-  FeedFrontComponent({Key? key, required AppModel app, required String id})
-      : super(key: key, app: app, feedFrontId: id);
+  FeedFrontComponent({super.key, required super.app, required String id})
+      : super(feedFrontId: id);
 
   @override
   Widget yourWidget(BuildContext context, FeedFrontModel? value) {
-    var _accessState = AccessBloc.getState(context);
     var modalRoute = ModalRoute.of(context) as ModalRoute;
     var feedId = value!.feed!.documentID;
     return BlocBuilder<AccessBloc, AccessState>(
@@ -44,8 +43,8 @@ class FeedFrontComponent extends AbstractFeedFrontComponent {
       if (accessState is AccessDetermined) {
         return BlocProvider<ProfileBloc>(
             create: (context) => ProfileBloc()
-              ..add(InitialiseProfileEvent(app,
-                  feedId, accessState, modalRoute)),
+              ..add(
+                  InitialiseProfileEvent(app, feedId, accessState, modalRoute)),
             child: FeedFront(app, value));
       } else {
         return progressIndicator(app, context);

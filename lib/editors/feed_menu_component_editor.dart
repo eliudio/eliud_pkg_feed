@@ -50,7 +50,7 @@ class FeedMenuComponentEditorConstructor extends ComponentEditorConstructor {
           description: 'New feed menu',
           conditions: StorageConditionsModel(
               privilegeLevelRequired:
-                  PrivilegeLevelRequiredSimple.NoPrivilegeRequiredSimple),
+                  PrivilegeLevelRequiredSimple.noPrivilegeRequiredSimple),
         ),
         feedback);
   }
@@ -62,7 +62,7 @@ class FeedMenuComponentEditorConstructor extends ComponentEditorConstructor {
     if (feedMenu != null) {
       _openIt(app, context, false, feedMenu, feedback);
     } else {
-      openErrorDialog(app, context, app.documentID + '/_error',
+      openErrorDialog(app, context, '${app.documentID}/_error',
           title: 'Error',
           errorMessage: 'Cannot find membership dashboard with id $id');
     }
@@ -73,7 +73,7 @@ class FeedMenuComponentEditorConstructor extends ComponentEditorConstructor {
     openComplexDialog(
       app,
       context,
-      app.documentID + '/membershipdashboard',
+      '${app.documentID}/membershipdashboard',
       title: create
           ? 'Create Membership Dashboard'
           : 'Update Membership Dashboard',
@@ -91,16 +91,15 @@ class FeedMenuComponentEditorConstructor extends ComponentEditorConstructor {
           )),
     );
   }
-
 }
 
 class FeedMenuComponentEditor extends StatefulWidget {
   final AppModel app;
 
   const FeedMenuComponentEditor({
-    Key? key,
+    super.key,
     required this.app,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() => _FeedMenuComponentEditorState();
@@ -208,7 +207,7 @@ class _FeedMenuComponentEditorState extends State<FeedMenuComponentEditor> {
                                 if (feedMenuState.model.backgroundOverride !=
                                     null)
                                   BackgroundWidget(
-                                    withTopicContainer: false,
+                                      withTopicContainer: false,
                                       app: widget.app,
                                       memberId: memberId,
                                       value: feedMenuState
@@ -270,25 +269,16 @@ class _FeedMenuComponentEditorState extends State<FeedMenuComponentEditor> {
                   return getListTile(
                     context,
                     widget.app,
-                    title: text(
-                        widget.app,
-                        context,
-                        (value.label ?? 'no label') +
-                            ' - ' +
-                            (value.componentName ?? ' no component name') +
-                            ' - ' +
-                            (value.componentId ?? ' no component id')),
-                    trailing: popupMenuButton<int>(
-                      widget.app, context,
+                    title: text(widget.app, context,
+                        '${value.label ?? 'no label'} - ${value.componentName ?? ' no component name'} - ${value.componentId ?? ' no component id'}'),
+                    trailing: popupMenuButton<int>(widget.app, context,
                         child: Icon(Icons.more_vert),
                         itemBuilder: (context) => [
+                              popupMenuItem(widget.app, context,
+                                  value: 1, label: 'Update'),
                               popupMenuItem(
-                                widget.app, context,
-                                value: 1,
-                                label: 'Update'
-                              ),
-                              popupMenuItem(
-                                widget.app, context,
+                                widget.app,
+                                context,
                                 value: 2,
                                 label: 'Delete',
                               ),
@@ -359,7 +349,7 @@ class _FeedMenuComponentEditorState extends State<FeedMenuComponentEditor> {
     openFlexibleDialog(
       widget.app,
       context,
-      widget.app.documentID + '/_memberaction',
+      '${widget.app.documentID}/_memberaction',
       includeHeading: false,
       widthFraction: .8,
       child: LabelledBodyComponentModelWidget.getIt(

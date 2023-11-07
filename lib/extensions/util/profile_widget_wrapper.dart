@@ -34,20 +34,19 @@ class ProfileWidgetWrapper extends ComponentWidgetWrapper {
     var modalRoute = ModalRoute.of(context) as ModalRoute;
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (context, accessState) {
-          if (accessState is AccessDetermined) {
-            return BlocProvider<ProfileBloc>(
-                create: (context) =>
-                ProfileBloc()
-                  ..add(InitialiseProfileEvent(app,
-                      feedId, accessState, modalRoute)),
-                child: pageBody(app, context,
-                    backgroundOverride: componentInfo.backgroundOverride,
-                    components: componentInfo.widgets,
-                    layout: componentInfo.layout,
-                    gridView: componentInfo.gridView));
-          } else {
-            return progressIndicator(app, context);
-          }
-        });
+      if (accessState is AccessDetermined) {
+        return BlocProvider<ProfileBloc>(
+            create: (context) => ProfileBloc()
+              ..add(
+                  InitialiseProfileEvent(app, feedId, accessState, modalRoute)),
+            child: pageBody(app, context,
+                backgroundOverride: componentInfo.backgroundOverride,
+                components: componentInfo.widgets,
+                layout: componentInfo.layout,
+                gridView: componentInfo.gridView));
+      } else {
+        return progressIndicator(app, context);
+      }
+    });
   }
 }

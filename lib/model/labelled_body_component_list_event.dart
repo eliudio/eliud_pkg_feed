@@ -30,10 +30,10 @@ class NewPage extends LabelledBodyComponentListEvent {}
 class AddLabelledBodyComponentList extends LabelledBodyComponentListEvent {
   final LabelledBodyComponentModel? value;
 
-  const AddLabelledBodyComponentList({ this.value });
+  const AddLabelledBodyComponentList({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'AddLabelledBodyComponentList{ value: $value }';
@@ -42,10 +42,10 @@ class AddLabelledBodyComponentList extends LabelledBodyComponentListEvent {
 class UpdateLabelledBodyComponentList extends LabelledBodyComponentListEvent {
   final LabelledBodyComponentModel? value;
 
-  const UpdateLabelledBodyComponentList({ this.value });
+  const UpdateLabelledBodyComponentList({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'UpdateLabelledBodyComponentList{ value: $value }';
@@ -54,10 +54,10 @@ class UpdateLabelledBodyComponentList extends LabelledBodyComponentListEvent {
 class DeleteLabelledBodyComponentList extends LabelledBodyComponentListEvent {
   final LabelledBodyComponentModel? value;
 
-  const DeleteLabelledBodyComponentList({ this.value });
+  const DeleteLabelledBodyComponentList({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'DeleteLabelledBodyComponentList{ value: $value }';
@@ -67,24 +67,24 @@ class LabelledBodyComponentListUpdated extends LabelledBodyComponentListEvent {
   final List<LabelledBodyComponentModel?>? value;
   final bool? mightHaveMore;
 
-  const LabelledBodyComponentListUpdated({ this.value, this.mightHaveMore });
+  const LabelledBodyComponentListUpdated({this.value, this.mightHaveMore});
 
   @override
-  List<Object?> get props => [ value, mightHaveMore ];
+  List<Object?> get props => [value, mightHaveMore];
 
   @override
-  String toString() => 'LabelledBodyComponentListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
+  String toString() =>
+      'LabelledBodyComponentListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
 }
 
 class LabelledBodyComponentChangeQuery extends LabelledBodyComponentListEvent {
   final EliudQuery? newQuery;
 
-  const LabelledBodyComponentChangeQuery({ required this.newQuery });
+  const LabelledBodyComponentChangeQuery({required this.newQuery});
 
   @override
-  List<Object?> get props => [ newQuery ];
+  List<Object?> get props => [newQuery];
 
   @override
   String toString() => 'LabelledBodyComponentChangeQuery{ value: $newQuery }';
 }
-

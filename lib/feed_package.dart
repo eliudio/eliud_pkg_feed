@@ -23,14 +23,21 @@ import 'package:eliud_core/tools/action/action_model.dart';
 import 'package:eliud_pkg_feed/model/component_registry.dart';
 
 import 'package:eliud_pkg_feed/feed_package_stub.dart'
-if (dart.library.io) 'feed_mobile_package.dart'
-if (dart.library.html) 'feed_web_package.dart';
+    if (dart.library.io) 'feed_mobile_package.dart'
+    if (dart.library.html) 'feed_web_package.dart';
 
 abstract class FeedPackage extends Package {
   FeedPackage() : super('eliud_pkg_feed');
 
   @override
-  Future<List<PackageConditionDetails>>? getAndSubscribe(AccessBloc accessBloc, AppModel app, MemberModel? member, bool isOwner, bool? isBlocked, PrivilegeLevel? privilegeLevel) => null;
+  Future<List<PackageConditionDetails>>? getAndSubscribe(
+          AccessBloc accessBloc,
+          AppModel app,
+          MemberModel? member,
+          bool isOwner,
+          bool? isBlocked,
+          PrivilegeLevel? privilegeLevel) =>
+      null;
 
   @override
   List<String>? retrieveAllPackageConditions() => null;
@@ -52,18 +59,20 @@ abstract class FeedPackage extends Package {
 */
 
     // Register a mapper for an extra action: the mapper for the WorkflowAction
-    ActionModelRegistry.registry()!.addMapper(PostActionEntity.label, PostActionMapper());
-
+    ActionModelRegistry.registry()!
+        .addMapper(PostActionEntity.label, PostActionMapper());
   }
 
   @override
-  List<MemberCollectionInfo> getMemberCollectionInfo() => AbstractRepositorySingleton.collections;
+  List<MemberCollectionInfo> getMemberCollectionInfo() =>
+      AbstractRepositorySingleton.collections;
 
   static FeedPackage instance() => getFeedPackage();
 
   /*
    * Register depending packages
    */
+  @override
   void registerDependencies(Eliud eliud) {
     eliud.registerPackage(CorePackage.instance());
     eliud.registerPackage(FollowPackage.instance());

@@ -9,22 +9,52 @@ class FeedPostModelDetails extends Equatable {
   final PostAccessibleByGroup postAccessibleByGroup;
   final List<String>? postAccessibleByMembers;
 
-  FeedPostModelDetails({required this.description, required this.memberMedia, required this.postAccessibleByGroup, this.postAccessibleByMembers});
+  FeedPostModelDetails(
+      {required this.description,
+      required this.memberMedia,
+      required this.postAccessibleByGroup,
+      this.postAccessibleByMembers});
 
-  FeedPostModelDetails copyWith({String? description, List<MemberMediumContainerModel>? memberMedia, PostAccessibleByGroup? postAccessibleByGroup, List<String>? postAccessibleByMembers}) {
-    return FeedPostModelDetails(description: description ?? this.description, memberMedia: memberMedia ?? this.memberMedia, postAccessibleByGroup: postAccessibleByGroup ?? this.postAccessibleByGroup, postAccessibleByMembers: postAccessibleByMembers == null ? this.postAccessibleByMembers : postAccessibleByMembers.isNotEmpty ? postAccessibleByMembers : null);
+  FeedPostModelDetails copyWith(
+      {String? description,
+      List<MemberMediumContainerModel>? memberMedia,
+      PostAccessibleByGroup? postAccessibleByGroup,
+      List<String>? postAccessibleByMembers}) {
+    return FeedPostModelDetails(
+        description: description ?? this.description,
+        memberMedia: memberMedia ?? this.memberMedia,
+        postAccessibleByGroup:
+            postAccessibleByGroup ?? this.postAccessibleByGroup,
+        postAccessibleByMembers: postAccessibleByMembers == null
+            ? this.postAccessibleByMembers
+            : postAccessibleByMembers.isNotEmpty
+                ? postAccessibleByMembers
+                : null);
   }
 
   @override
-  List<Object?> get props => [description, memberMedia, postAccessibleByGroup, postAccessibleByMembers, ];
+  List<Object?> get props => [
+        description,
+        memberMedia,
+        postAccessibleByGroup,
+        postAccessibleByMembers,
+      ];
 
   @override
-  bool operator == (Object other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
-          other is FeedPostModelDetails &&
-              runtimeType == other.runtimeType &&
-              description == other.description &&
-              ListEquality().equals(memberMedia, other.memberMedia) &&
-              postAccessibleByGroup == other.postAccessibleByGroup &&
-              ListEquality().equals(postAccessibleByMembers, other.postAccessibleByMembers);
+      other is FeedPostModelDetails &&
+          runtimeType == other.runtimeType &&
+          description == other.description &&
+          ListEquality().equals(memberMedia, other.memberMedia) &&
+          postAccessibleByGroup == other.postAccessibleByGroup &&
+          ListEquality()
+              .equals(postAccessibleByMembers, other.postAccessibleByMembers);
+
+  @override
+  int get hashCode =>
+      description.hashCode ^
+      memberMedia.hashCode ^
+      postAccessibleByGroup.hashCode ^
+      postAccessibleByMembers.hashCode;
 }

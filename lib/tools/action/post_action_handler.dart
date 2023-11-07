@@ -22,21 +22,32 @@ class PostActionHandler extends PackageActionHandler {
       if (accessState is LoggedIn) {
         String name = action.app.documentID;
 
-        openSelectionDialog(action.app, context, action.app.documentID + "/_addpagetofeed",
-            title: 'Add page to feed ' + name,
+        openSelectionDialog(
+            action.app, context, "${action.app.documentID}/_addpagetofeed",
+            title: 'Add page to feed $name',
             options: ['Only Me', 'My followers', 'Public'],
             onSelection: (int choice) {
-              switch (choice) {
-                case 0: executePostIt(context, action, accessState, PostAccessibleByGroup.Me); break;
-                case 1: executePostIt(context, action, accessState, PostAccessibleByGroup.Followers); break;
-                case 2: executePostIt(context, action, accessState, PostAccessibleByGroup.Public); break;
-              }
-            });
+          switch (choice) {
+            case 0:
+              executePostIt(
+                  context, action, accessState, PostAccessibleByGroup.me);
+              break;
+            case 1:
+              executePostIt(context, action, accessState,
+                  PostAccessibleByGroup.followers);
+              break;
+            case 2:
+              executePostIt(
+                  context, action, accessState, PostAccessibleByGroup.public);
+              break;
+          }
+        });
       }
     }
   }
 
-  Future<void> executePostIt(BuildContext context, PostActionModel action, LoggedIn accessState, PostAccessibleByGroup postAccessibleByGroup) async {
+  Future<void> executePostIt(BuildContext context, PostActionModel action,
+      LoggedIn accessState, PostAccessibleByGroup postAccessibleByGroup) async {
     var pageContextInfo = eliudrouter.Router.getPageContextInfo(context);
     var postAppId = pageContextInfo.appId;
     var postPageId = pageContextInfo.pageId;
@@ -45,17 +56,16 @@ class PostActionHandler extends PackageActionHandler {
     // Can we actually add the current page? (page should have an indicator if it's allowed to be added)
 
     postRepository(appId: action.app.documentID)!.add(PostModel(
-      documentID: newRandomKey(),
-      authorId: accessState.member.documentID,
-      appId: action.app.documentID,
-      postAppId: postAppId,
-      feedId: action.feed!.documentID,
-      postPageId: postPageId,
-      archived: PostArchiveStatus.Active,
-      pageParameters: parameters,
-      description: "Post added by Add To Post button",
-      accessibleByGroup: postAccessibleByGroup,
-      readAccess: accessState.member.documentID != null ? [accessState.member.documentID] : null,  // default readAccess to the owner. The function will expand this based on accessibleByGroup/Members
-    ));
+        documentID: newRandomKey(),
+        authorId: accessState.member.documentID,
+        appId: action.app.documentID,
+        postAppId: postAppId,
+        feedId: action.feed!.documentID,
+        postPageId: postPageId,
+        archived: PostArchiveStatus.active,
+        pageParameters: parameters,
+        description: "Post added by Add To Post button",
+        accessibleByGroup: postAccessibleByGroup,
+        readAccess: [accessState.member.documentID]));
   }
 }
