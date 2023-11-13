@@ -16,19 +16,34 @@
 import 'package:equatable/equatable.dart';
 import 'package:eliud_pkg_feed/model/post_comment_model.dart';
 
+/*
+ * PostCommentComponentEvent is the base class for events to be used with constructing a PostCommentComponentBloc 
+ */
 abstract class PostCommentComponentEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
 
+/*
+ * FetchPostCommentComponent is the event to instruct the bloc to fetch the component
+ */
 class FetchPostCommentComponent extends PostCommentComponentEvent {
   final String? id;
 
+  /*
+   * Construct the FetchPostCommentComponent
+   */
   FetchPostCommentComponent({this.id});
 }
 
+/*
+ * PostCommentComponentUpdated is the event to inform the bloc that a component has been updated
+ */
 class PostCommentComponentUpdated extends PostCommentComponentEvent {
   final PostCommentModel value;
 
+  /*
+   * Construct the PostCommentComponentUpdated
+   */
   PostCommentComponentUpdated({required this.value});
 }

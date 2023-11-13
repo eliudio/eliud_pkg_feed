@@ -25,12 +25,21 @@ import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
+/* 
+ * PostCommentFirestore is the firestore implementation of PostCommentRepository
+ */
 class PostCommentFirestore implements PostCommentRepository {
+  /* 
+   * transform a map into an entity
+   */
   @override
   PostCommentEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
     return PostCommentEntity.fromMap(o, newDocumentIds: newDocumentIds);
   }
 
+  /* 
+   * add an entity to the repository
+   */
   @override
   Future<PostCommentEntity> addEntity(
       String documentID, PostCommentEntity value) {
@@ -48,6 +57,9 @@ class PostCommentFirestore implements PostCommentRepository {
     });
   }
 
+  /* 
+   * Update an entity
+   */
   @override
   Future<PostCommentEntity> updateEntity(
       String documentID, PostCommentEntity value) {
@@ -65,6 +77,9 @@ class PostCommentFirestore implements PostCommentRepository {
     });
   }
 
+  /* 
+   * Add a model to the repository
+   */
   @override
   Future<PostCommentModel> add(PostCommentModel value) {
     return postCommentCollection
@@ -86,11 +101,17 @@ class PostCommentFirestore implements PostCommentRepository {
     });
   }
 
+  /* 
+   * Delete a model
+   */
   @override
   Future<void> delete(PostCommentModel value) {
     return postCommentCollection.doc(value.documentID).delete();
   }
 
+  /* 
+   * Update a model
+   */
   @override
   Future<PostCommentModel> update(PostCommentModel value) {
     return postCommentCollection
@@ -123,6 +144,9 @@ class PostCommentFirestore implements PostCommentRepository {
         appId: appId);
   }
 
+  /* 
+   * Retrieve an entity from the repository with id
+   */
   @override
   Future<PostCommentEntity?> getEntity(String? id,
       {Function(Exception)? onError}) async {
@@ -141,6 +165,9 @@ class PostCommentFirestore implements PostCommentRepository {
     return null;
   }
 
+  /* 
+   * Retrieve an model from the repository with id
+   */
   @override
   Future<PostCommentModel?> get(String? id,
       {Function(Exception)? onError}) async {
@@ -159,6 +186,9 @@ class PostCommentFirestore implements PostCommentRepository {
     return null;
   }
 
+  /* 
+   * Listen to the repository using a query. Retrieve models
+   */
   @override
   StreamSubscription<List<PostCommentModel?>> listen(
       PostCommentModelTrigger trigger,
@@ -190,6 +220,9 @@ class PostCommentFirestore implements PostCommentRepository {
     });
   }
 
+  /* 
+   * Listen to the repository using a query. Retrieve models and linked models
+   */
   @override
   StreamSubscription<List<PostCommentModel?>> listenWithDetails(
       PostCommentModelTrigger trigger,
@@ -221,6 +254,9 @@ class PostCommentFirestore implements PostCommentRepository {
     });
   }
 
+  /* 
+   * Listen to 1 document in the repository
+   */
   @override
   StreamSubscription<PostCommentModel?> listenTo(
       String documentId, PostCommentChanged changed,
@@ -240,6 +276,9 @@ class PostCommentFirestore implements PostCommentRepository {
     return theStream;
   }
 
+  /* 
+   * Retrieve values/models from the repository
+   */
   @override
   Stream<List<PostCommentModel?>> values(
       {String? orderBy,
@@ -269,6 +308,9 @@ class PostCommentFirestore implements PostCommentRepository {
     return values;
   }
 
+  /* 
+   * Retrieve values/models, including linked models, from the repository
+   */
   @override
   Stream<List<PostCommentModel?>> valuesWithDetails(
       {String? orderBy,
@@ -298,6 +340,9 @@ class PostCommentFirestore implements PostCommentRepository {
     return values;
   }
 
+  /* 
+   * Retrieve values/models from the repository
+   */
   @override
   Future<List<PostCommentModel?>> valuesList(
       {String? orderBy,
@@ -328,6 +373,9 @@ class PostCommentFirestore implements PostCommentRepository {
     return values;
   }
 
+  /* 
+   * Retrieve values/models, including linked models, from the repository
+   */
   @override
   Future<List<PostCommentModel?>> valuesListWithDetails(
       {String? orderBy,
@@ -358,9 +406,15 @@ class PostCommentFirestore implements PostCommentRepository {
     return values;
   }
 
+  /* 
+   * Flush the repository
+   */
   @override
   void flush() {}
 
+  /* 
+   * Delete all entries in the repository
+   */
   @override
   Future<void> deleteAll() {
     return postCommentCollection.get().then((snapshot) {
@@ -370,16 +424,25 @@ class PostCommentFirestore implements PostCommentRepository {
     });
   }
 
+  /* 
+   * Retrieve the subcollection of this repository
+   */
   @override
   dynamic getSubCollection(String documentId, String name) {
     return postCommentCollection.doc(documentId).collection(name);
   }
 
+  /* 
+   * Retrieve a timestamp
+   */
   @override
   String? timeStampToString(dynamic timeStamp) {
     return firestoreTimeStampToString(timeStamp);
   }
 
+  /* 
+   * change 1 a fieldvalue for 1 document  
+   */
   @override
   Future<PostCommentModel?> changeValue(
       String documentId, String fieldName, num changeByThisValue) {

@@ -48,6 +48,9 @@ memberProfilesList(app, context, value, trigger) =>
     EmbeddedComponentFactory.memberProfilesList(app, context, value, trigger);
 
 class EmbeddedComponentFactory {
+/* 
+ * labelledBodyComponentsList function to construct a list of LabelledBodyComponentModel
+ */
   static Widget labelledBodyComponentsList(
       AppModel app,
       BuildContext context,
@@ -70,6 +73,9 @@ class EmbeddedComponentFactory {
     );
   }
 
+/* 
+ * memberProfilesList function to construct a list of MemberProfileModel
+ */
   static Widget memberProfilesList(AppModel app, BuildContext context,
       List<MemberProfileModel> values, MemberProfileListChanged trigger) {
     MemberProfileInMemoryRepository inMemoryRepository =
@@ -90,12 +96,18 @@ class EmbeddedComponentFactory {
   }
 }
 
+/* 
+ * LabelledBodyComponentInMemoryRepository is an in memory implementation of LabelledBodyComponentRepository
+ */
 class LabelledBodyComponentInMemoryRepository
     implements LabelledBodyComponentRepository {
   final List<LabelledBodyComponentModel> items;
   final LabelledBodyComponentListChanged trigger;
   Stream<List<LabelledBodyComponentModel>>? theValues;
 
+  /* 
+     * Construct the LabelledBodyComponentInMemoryRepository
+     */
   LabelledBodyComponentInMemoryRepository(this.trigger, this.items) {
     List<List<LabelledBodyComponentModel>> myList =
         <List<LabelledBodyComponentModel>>[];
@@ -114,18 +126,27 @@ class LabelledBodyComponentInMemoryRepository
     return -1;
   }
 
+  /* 
+     * Add an entity
+     */
   @override
   Future<LabelledBodyComponentEntity> addEntity(
       String documentID, LabelledBodyComponentEntity value) {
     throw Exception('Not implemented');
   }
 
+  /* 
+     * Update an entity
+     */
   @override
   Future<LabelledBodyComponentEntity> updateEntity(
       String documentID, LabelledBodyComponentEntity value) {
     throw Exception('Not implemented');
   }
 
+  /* 
+     * Update a model
+     */
   @override
   Future<LabelledBodyComponentModel> add(LabelledBodyComponentModel value) {
     items.add(value.copyWith(documentID: newRandomKey()));
@@ -133,6 +154,9 @@ class LabelledBodyComponentInMemoryRepository
     return Future.value(value);
   }
 
+  /* 
+     * Delete a model
+     */
   @override
   Future<void> delete(LabelledBodyComponentModel value) {
     int index = _index(value.documentID);
@@ -141,6 +165,9 @@ class LabelledBodyComponentInMemoryRepository
     return Future.value();
   }
 
+  /* 
+     * Update a model
+     */
   @override
   Future<LabelledBodyComponentModel> update(LabelledBodyComponentModel value) {
     int index = _index(value.documentID);
@@ -151,6 +178,9 @@ class LabelledBodyComponentInMemoryRepository
     return Future.value(value);
   }
 
+  /* 
+     * Get a model
+     */
   @override
   Future<LabelledBodyComponentModel> get(String? id,
       {Function(Exception)? onError}) {
@@ -160,6 +190,9 @@ class LabelledBodyComponentInMemoryRepository
     return completer.future;
   }
 
+  /* 
+     * Retrieve to a list of LabelledBodyComponentModel base on a query
+     */
   @override
   Stream<List<LabelledBodyComponentModel>> values(
       {String? orderBy,
@@ -172,6 +205,9 @@ class LabelledBodyComponentInMemoryRepository
     return theValues!;
   }
 
+  /* 
+     * Retrieve to a list of LabelledBodyComponentModel, including linked models base on a query
+     */
   @override
   Stream<List<LabelledBodyComponentModel>> valuesWithDetails(
       {String? orderBy,
@@ -184,6 +220,9 @@ class LabelledBodyComponentInMemoryRepository
     return theValues!;
   }
 
+  /* 
+     * Subscribe to a list of LabelledBodyComponentModel base on a query
+     */
   @override
   StreamSubscription<List<LabelledBodyComponentModel>> listen(trigger,
       {String? orderBy,
@@ -195,6 +234,9 @@ class LabelledBodyComponentInMemoryRepository
     return theValues!.listen((theList) => trigger(theList));
   }
 
+  /* 
+     * Subscribe to a list of LabelledBodyComponentModel, including linked models, base on a query
+     */
   @override
   StreamSubscription<List<LabelledBodyComponentModel>> listenWithDetails(
       trigger,
@@ -207,9 +249,15 @@ class LabelledBodyComponentInMemoryRepository
     return theValues!.listen((theList) => trigger(theList));
   }
 
+  /* 
+     * Flush the repository
+     */
   @override
   void flush() {}
 
+  /* 
+     * Retrieve the list of models
+     */
   @override
   Future<List<LabelledBodyComponentModel>> valuesList(
       {String? orderBy,
@@ -234,16 +282,25 @@ class LabelledBodyComponentInMemoryRepository
     return Future.value(items);
   }
 
+  /* 
+     * Retrieve a subcollection of this collection
+     */
   @override
   getSubCollection(String documentId, String name) {
     throw UnimplementedError();
   }
 
+  /* 
+   * Retrieve a timestamp
+   */
   @override
   String timeStampToString(timeStamp) {
     throw UnimplementedError();
   }
 
+  /* 
+   * Subscribe to 1 document / 1 model
+   */
   @override
   StreamSubscription<LabelledBodyComponentModel> listenTo(
       String documentId, LabelledBodyComponentChanged changed,
@@ -273,11 +330,17 @@ class LabelledBodyComponentInMemoryRepository
   Future<void> deleteAll() async {}
 }
 
+/* 
+ * MemberProfileInMemoryRepository is an in memory implementation of MemberProfileRepository
+ */
 class MemberProfileInMemoryRepository implements MemberProfileRepository {
   final List<MemberProfileModel> items;
   final MemberProfileListChanged trigger;
   Stream<List<MemberProfileModel>>? theValues;
 
+  /* 
+     * Construct the MemberProfileInMemoryRepository
+     */
   MemberProfileInMemoryRepository(this.trigger, this.items) {
     List<List<MemberProfileModel>> myList = <List<MemberProfileModel>>[];
     myList.add(items);
@@ -295,18 +358,27 @@ class MemberProfileInMemoryRepository implements MemberProfileRepository {
     return -1;
   }
 
+  /* 
+     * Add an entity
+     */
   @override
   Future<MemberProfileEntity> addEntity(
       String documentID, MemberProfileEntity value) {
     throw Exception('Not implemented');
   }
 
+  /* 
+     * Update an entity
+     */
   @override
   Future<MemberProfileEntity> updateEntity(
       String documentID, MemberProfileEntity value) {
     throw Exception('Not implemented');
   }
 
+  /* 
+     * Update a model
+     */
   @override
   Future<MemberProfileModel> add(MemberProfileModel value) {
     items.add(value.copyWith(documentID: newRandomKey()));
@@ -314,6 +386,9 @@ class MemberProfileInMemoryRepository implements MemberProfileRepository {
     return Future.value(value);
   }
 
+  /* 
+     * Delete a model
+     */
   @override
   Future<void> delete(MemberProfileModel value) {
     int index = _index(value.documentID);
@@ -322,6 +397,9 @@ class MemberProfileInMemoryRepository implements MemberProfileRepository {
     return Future.value();
   }
 
+  /* 
+     * Update a model
+     */
   @override
   Future<MemberProfileModel> update(MemberProfileModel value) {
     int index = _index(value.documentID);
@@ -332,6 +410,9 @@ class MemberProfileInMemoryRepository implements MemberProfileRepository {
     return Future.value(value);
   }
 
+  /* 
+     * Get a model
+     */
   @override
   Future<MemberProfileModel> get(String? id, {Function(Exception)? onError}) {
     int index = _index(id!);
@@ -340,6 +421,9 @@ class MemberProfileInMemoryRepository implements MemberProfileRepository {
     return completer.future;
   }
 
+  /* 
+     * Retrieve to a list of MemberProfileModel base on a query
+     */
   @override
   Stream<List<MemberProfileModel>> values(
       {String? orderBy,
@@ -352,6 +436,9 @@ class MemberProfileInMemoryRepository implements MemberProfileRepository {
     return theValues!;
   }
 
+  /* 
+     * Retrieve to a list of MemberProfileModel, including linked models base on a query
+     */
   @override
   Stream<List<MemberProfileModel>> valuesWithDetails(
       {String? orderBy,
@@ -364,6 +451,9 @@ class MemberProfileInMemoryRepository implements MemberProfileRepository {
     return theValues!;
   }
 
+  /* 
+     * Subscribe to a list of MemberProfileModel base on a query
+     */
   @override
   StreamSubscription<List<MemberProfileModel>> listen(trigger,
       {String? orderBy,
@@ -375,6 +465,9 @@ class MemberProfileInMemoryRepository implements MemberProfileRepository {
     return theValues!.listen((theList) => trigger(theList));
   }
 
+  /* 
+     * Subscribe to a list of MemberProfileModel, including linked models, base on a query
+     */
   @override
   StreamSubscription<List<MemberProfileModel>> listenWithDetails(trigger,
       {String? orderBy,
@@ -386,9 +479,15 @@ class MemberProfileInMemoryRepository implements MemberProfileRepository {
     return theValues!.listen((theList) => trigger(theList));
   }
 
+  /* 
+     * Flush the repository
+     */
   @override
   void flush() {}
 
+  /* 
+     * Retrieve the list of models
+     */
   @override
   Future<List<MemberProfileModel>> valuesList(
       {String? orderBy,
@@ -413,16 +512,25 @@ class MemberProfileInMemoryRepository implements MemberProfileRepository {
     return Future.value(items);
   }
 
+  /* 
+     * Retrieve a subcollection of this collection
+     */
   @override
   getSubCollection(String documentId, String name) {
     throw UnimplementedError();
   }
 
+  /* 
+   * Retrieve a timestamp
+   */
   @override
   String timeStampToString(timeStamp) {
     throw UnimplementedError();
   }
 
+  /* 
+   * Subscribe to 1 document / 1 model
+   */
   @override
   StreamSubscription<MemberProfileModel> listenTo(
       String documentId, MemberProfileChanged changed,

@@ -33,6 +33,9 @@ typedef PostChanged = Function(
   int? privilegeLevel,
 );
 
+/* 
+ * PostDropdownButtonWidget is the drop down widget to allow to select an instance of Post
+ */
 class PostDropdownButtonWidget extends StatefulWidget {
   final AppModel app;
   final int? privilegeLevel;
@@ -40,6 +43,9 @@ class PostDropdownButtonWidget extends StatefulWidget {
   final PostChanged? trigger;
   final bool? optional;
 
+  /* 
+   * construct a PostDropdownButtonWidget
+   */
   PostDropdownButtonWidget(
       {required this.app,
       this.privilegeLevel,
@@ -48,17 +54,20 @@ class PostDropdownButtonWidget extends StatefulWidget {
       this.optional,
       super.key});
 
+  /* 
+   * create state of PostDropdownButtonWidget
+   */
   @override
   State<StatefulWidget> createState() {
-    return PostDropdownButtonWidgetState(value);
+    return _PostDropdownButtonWidgetState(value);
   }
 }
 
-class PostDropdownButtonWidgetState extends State<PostDropdownButtonWidget> {
+class _PostDropdownButtonWidgetState extends State<PostDropdownButtonWidget> {
   PostListBloc? bloc;
   String? value;
 
-  PostDropdownButtonWidgetState(this.value);
+  _PostDropdownButtonWidgetState(this.value);
 
   @override
   void didChangeDependencies() {
@@ -72,7 +81,7 @@ class PostDropdownButtonWidgetState extends State<PostDropdownButtonWidget> {
     super.dispose();
   }
 
-  List<Widget> widgets(PostModel value) {
+  List<Widget> _widgets(PostModel value) {
     var app = widget.app;
     var widgets = <Widget>[];
     widgets.add(value.timestamp != null
@@ -132,7 +141,7 @@ class PostDropdownButtonWidgetState extends State<PostDropdownButtonWidget> {
                   height: 100.0,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: widgets(element),
+                    children: _widgets(element),
                   ),
                 )));
           }

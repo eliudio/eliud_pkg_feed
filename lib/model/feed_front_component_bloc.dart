@@ -34,6 +34,9 @@ class FeedFrontComponentBloc
     });
   }
 
+  /*
+   * Construct FeedFrontComponentBloc
+   */
   FeedFrontComponentBloc({this.feedFrontRepository})
       : super(FeedFrontComponentUninitialized()) {
     on<FetchFeedFrontComponent>((event, emit) {
@@ -44,6 +47,9 @@ class FeedFrontComponentBloc
     });
   }
 
+  /*
+   * Close the FeedFrontComponentBloc
+   */
   @override
   Future<void> close() {
     _feedFrontSubscription?.cancel();

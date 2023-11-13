@@ -63,7 +63,7 @@ class FeedMenuForm extends StatelessWidget {
           appId,
           formAction: formAction,
         )..add(InitialiseFeedMenuFormEvent(value: value)),
-        child: MyFeedMenuForm(
+        child: _MyFeedMenuForm(
             app: app, submitAction: submitAction, formAction: formAction),
       );
     }
@@ -73,7 +73,7 @@ class FeedMenuForm extends StatelessWidget {
           appId,
           formAction: formAction,
         )..add(InitialiseFeedMenuFormNoLoadEvent(value: value)),
-        child: MyFeedMenuForm(
+        child: _MyFeedMenuForm(
             app: app, submitAction: submitAction, formAction: formAction),
       );
     } else {
@@ -92,25 +92,25 @@ class FeedMenuForm extends StatelessWidget {
             )..add((formAction == FormAction.updateAction
                 ? InitialiseFeedMenuFormEvent(value: value)
                 : InitialiseNewFeedMenuFormEvent())),
-            child: MyFeedMenuForm(
+            child: _MyFeedMenuForm(
                 app: app, submitAction: submitAction, formAction: formAction),
           ));
     }
   }
 }
 
-class MyFeedMenuForm extends StatefulWidget {
+class _MyFeedMenuForm extends StatefulWidget {
   final AppModel app;
   final FormAction? formAction;
   final ActionModel? submitAction;
 
-  MyFeedMenuForm({required this.app, this.formAction, this.submitAction});
+  _MyFeedMenuForm({required this.app, this.formAction, this.submitAction});
 
   @override
-  State<MyFeedMenuForm> createState() => _MyFeedMenuFormState(formAction);
+  State<_MyFeedMenuForm> createState() => _MyFeedMenuFormState(formAction);
 }
 
-class _MyFeedMenuFormState extends State<MyFeedMenuForm> {
+class _MyFeedMenuFormState extends State<_MyFeedMenuForm> {
   final FormAction? formAction;
   late FeedMenuFormBloc _myFormBloc;
 

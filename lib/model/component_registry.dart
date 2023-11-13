@@ -28,7 +28,13 @@ import '../extensions/profile_component.dart';
 import '../editors/profile_component_editor.dart';
 import 'profile_component_selector.dart';
 
+/* 
+ * Component registry contains a list of components
+ */
 class ComponentRegistry {
+  /* 
+   * Initialise the component registry
+   */
   void init() {
     Registry.registry()!.addInternalComponents('eliud_pkg_feed', [
       "feeds",

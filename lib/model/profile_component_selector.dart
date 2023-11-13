@@ -31,7 +31,13 @@ import 'profile_list_event.dart';
 import 'profile_list_state.dart';
 import 'profile_model.dart';
 
+/* 
+ * ProfileComponentSelector is a component selector for Profile, allowing to select a Profile component
+ */
 class ProfileComponentSelector extends ComponentSelector {
+  /* 
+   * createSelectWidget creates the widget
+   */
   @override
   Widget createSelectWidget(BuildContext context, AppModel app,
       int privilegeLevel, double height, SelectComponent selected, editor) {
@@ -41,7 +47,7 @@ class ProfileComponentSelector extends ComponentSelector {
         eliudQuery: getComponentSelectorQuery(0, app.documentID),
         profileRepository: profileRepository(appId: appId)!,
       )..add(LoadProfileList()),
-      child: SelectProfileWidget(
+      child: _SelectProfileWidget(
           app: app,
           height: height,
           containerPrivilege: privilegeLevel,
@@ -51,28 +57,30 @@ class ProfileComponentSelector extends ComponentSelector {
   }
 }
 
-class SelectProfileWidget extends StatefulWidget {
+/* 
+ * _SelectProfileWidget 
+ */
+class _SelectProfileWidget extends StatefulWidget {
   final AppModel app;
   final double height;
   final SelectComponent selected;
   final int containerPrivilege;
   final ComponentEditorConstructor editorConstructor;
 
-  const SelectProfileWidget(
-      {super.key,
-      required this.app,
+  const _SelectProfileWidget(
+      {required this.app,
       required this.containerPrivilege,
       required this.height,
       required this.selected,
       required this.editorConstructor});
 
   @override
-  State<SelectProfileWidget> createState() {
+  State<_SelectProfileWidget> createState() {
     return _SelectProfileWidgetState();
   }
 }
 
-class _SelectProfileWidgetState extends State<SelectProfileWidget>
+class _SelectProfileWidgetState extends State<_SelectProfileWidget>
     with TickerProviderStateMixin {
   TabController? _privilegeTabController;
   final List<String> _privilegeItems = ['No', 'L1', 'L2', 'Owner'];

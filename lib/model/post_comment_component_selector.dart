@@ -32,7 +32,13 @@ import 'post_comment_list_event.dart';
 import 'post_comment_list_state.dart';
 import 'post_comment_model.dart';
 
+/* 
+ * PostCommentComponentSelector is a component selector for PostComment, allowing to select a PostComment component
+ */
 class PostCommentComponentSelector extends ComponentSelector {
+  /* 
+   * createSelectWidget creates the widget
+   */
   @override
   Widget createSelectWidget(BuildContext context, AppModel app,
       int privilegeLevel, double height, SelectComponent selected, editor) {
@@ -42,7 +48,7 @@ class PostCommentComponentSelector extends ComponentSelector {
         eliudQuery: getComponentSelectorQuery(0, app.documentID),
         postCommentRepository: postCommentRepository(appId: appId)!,
       )..add(LoadPostCommentList()),
-      child: SelectPostCommentWidget(
+      child: _SelectPostCommentWidget(
           app: app,
           height: height,
           containerPrivilege: privilegeLevel,
@@ -52,28 +58,30 @@ class PostCommentComponentSelector extends ComponentSelector {
   }
 }
 
-class SelectPostCommentWidget extends StatefulWidget {
+/* 
+ * _SelectPostCommentWidget 
+ */
+class _SelectPostCommentWidget extends StatefulWidget {
   final AppModel app;
   final double height;
   final SelectComponent selected;
   final int containerPrivilege;
   final ComponentEditorConstructor editorConstructor;
 
-  const SelectPostCommentWidget(
-      {super.key,
-      required this.app,
+  const _SelectPostCommentWidget(
+      {required this.app,
       required this.containerPrivilege,
       required this.height,
       required this.selected,
       required this.editorConstructor});
 
   @override
-  State<SelectPostCommentWidget> createState() {
+  State<_SelectPostCommentWidget> createState() {
     return _SelectPostCommentWidgetState();
   }
 }
 
-class _SelectPostCommentWidgetState extends State<SelectPostCommentWidget>
+class _SelectPostCommentWidgetState extends State<_SelectPostCommentWidget>
     with TickerProviderStateMixin {
   TabController? _privilegeTabController;
   final List<String> _privilegeItems = ['No', 'L1', 'L2', 'Owner'];

@@ -25,12 +25,21 @@ import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
+/* 
+ * FeedMenuFirestore is the firestore implementation of FeedMenuRepository
+ */
 class FeedMenuFirestore implements FeedMenuRepository {
+  /* 
+   * transform a map into an entity
+   */
   @override
   FeedMenuEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
     return FeedMenuEntity.fromMap(o, newDocumentIds: newDocumentIds);
   }
 
+  /* 
+   * add an entity to the repository
+   */
   @override
   Future<FeedMenuEntity> addEntity(String documentID, FeedMenuEntity value) {
     return feedMenuCollection
@@ -39,6 +48,9 @@ class FeedMenuFirestore implements FeedMenuRepository {
         .then((_) => value);
   }
 
+  /* 
+   * Update an entity
+   */
   @override
   Future<FeedMenuEntity> updateEntity(String documentID, FeedMenuEntity value) {
     return feedMenuCollection
@@ -47,6 +59,9 @@ class FeedMenuFirestore implements FeedMenuRepository {
         .then((_) => value);
   }
 
+  /* 
+   * Add a model to the repository
+   */
   @override
   Future<FeedMenuModel> add(FeedMenuModel value) {
     return feedMenuCollection
@@ -55,11 +70,17 @@ class FeedMenuFirestore implements FeedMenuRepository {
         .then((_) => value);
   }
 
+  /* 
+   * Delete a model
+   */
   @override
   Future<void> delete(FeedMenuModel value) {
     return feedMenuCollection.doc(value.documentID).delete();
   }
 
+  /* 
+   * Update a model
+   */
   @override
   Future<FeedMenuModel> update(FeedMenuModel value) {
     return feedMenuCollection
@@ -79,6 +100,9 @@ class FeedMenuFirestore implements FeedMenuRepository {
         appId: appId);
   }
 
+  /* 
+   * Retrieve an entity from the repository with id
+   */
   @override
   Future<FeedMenuEntity?> getEntity(String? id,
       {Function(Exception)? onError}) async {
@@ -97,6 +121,9 @@ class FeedMenuFirestore implements FeedMenuRepository {
     return null;
   }
 
+  /* 
+   * Retrieve an model from the repository with id
+   */
   @override
   Future<FeedMenuModel?> get(String? id, {Function(Exception)? onError}) async {
     try {
@@ -114,6 +141,9 @@ class FeedMenuFirestore implements FeedMenuRepository {
     return null;
   }
 
+  /* 
+   * Listen to the repository using a query. Retrieve models
+   */
   @override
   StreamSubscription<List<FeedMenuModel?>> listen(FeedMenuModelTrigger trigger,
       {String? orderBy,
@@ -144,6 +174,9 @@ class FeedMenuFirestore implements FeedMenuRepository {
     });
   }
 
+  /* 
+   * Listen to the repository using a query. Retrieve models and linked models
+   */
   @override
   StreamSubscription<List<FeedMenuModel?>> listenWithDetails(
       FeedMenuModelTrigger trigger,
@@ -175,6 +208,9 @@ class FeedMenuFirestore implements FeedMenuRepository {
     });
   }
 
+  /* 
+   * Listen to 1 document in the repository
+   */
   @override
   StreamSubscription<FeedMenuModel?> listenTo(
       String documentId, FeedMenuChanged changed,
@@ -194,6 +230,9 @@ class FeedMenuFirestore implements FeedMenuRepository {
     return theStream;
   }
 
+  /* 
+   * Retrieve values/models from the repository
+   */
   @override
   Stream<List<FeedMenuModel?>> values(
       {String? orderBy,
@@ -223,6 +262,9 @@ class FeedMenuFirestore implements FeedMenuRepository {
     return values;
   }
 
+  /* 
+   * Retrieve values/models, including linked models, from the repository
+   */
   @override
   Stream<List<FeedMenuModel?>> valuesWithDetails(
       {String? orderBy,
@@ -252,6 +294,9 @@ class FeedMenuFirestore implements FeedMenuRepository {
     return values;
   }
 
+  /* 
+   * Retrieve values/models from the repository
+   */
   @override
   Future<List<FeedMenuModel?>> valuesList(
       {String? orderBy,
@@ -282,6 +327,9 @@ class FeedMenuFirestore implements FeedMenuRepository {
     return values;
   }
 
+  /* 
+   * Retrieve values/models, including linked models, from the repository
+   */
   @override
   Future<List<FeedMenuModel?>> valuesListWithDetails(
       {String? orderBy,
@@ -312,9 +360,15 @@ class FeedMenuFirestore implements FeedMenuRepository {
     return values;
   }
 
+  /* 
+   * Flush the repository
+   */
   @override
   void flush() {}
 
+  /* 
+   * Delete all entries in the repository
+   */
   @override
   Future<void> deleteAll() {
     return feedMenuCollection.get().then((snapshot) {
@@ -324,16 +378,25 @@ class FeedMenuFirestore implements FeedMenuRepository {
     });
   }
 
+  /* 
+   * Retrieve the subcollection of this repository
+   */
   @override
   dynamic getSubCollection(String documentId, String name) {
     return feedMenuCollection.doc(documentId).collection(name);
   }
 
+  /* 
+   * Retrieve a timestamp
+   */
   @override
   String? timeStampToString(dynamic timeStamp) {
     return firestoreTimeStampToString(timeStamp);
   }
 
+  /* 
+   * change 1 a fieldvalue for 1 document  
+   */
   @override
   Future<FeedMenuModel?> changeValue(
       String documentId, String fieldName, num changeByThisValue) {

@@ -32,7 +32,13 @@ import 'post_list_event.dart';
 import 'post_list_state.dart';
 import 'post_model.dart';
 
+/* 
+ * PostComponentSelector is a component selector for Post, allowing to select a Post component
+ */
 class PostComponentSelector extends ComponentSelector {
+  /* 
+   * createSelectWidget creates the widget
+   */
   @override
   Widget createSelectWidget(BuildContext context, AppModel app,
       int privilegeLevel, double height, SelectComponent selected, editor) {
@@ -42,7 +48,7 @@ class PostComponentSelector extends ComponentSelector {
         eliudQuery: getComponentSelectorQuery(0, app.documentID),
         postRepository: postRepository(appId: appId)!,
       )..add(LoadPostList()),
-      child: SelectPostWidget(
+      child: _SelectPostWidget(
           app: app,
           height: height,
           containerPrivilege: privilegeLevel,
@@ -52,28 +58,30 @@ class PostComponentSelector extends ComponentSelector {
   }
 }
 
-class SelectPostWidget extends StatefulWidget {
+/* 
+ * _SelectPostWidget 
+ */
+class _SelectPostWidget extends StatefulWidget {
   final AppModel app;
   final double height;
   final SelectComponent selected;
   final int containerPrivilege;
   final ComponentEditorConstructor editorConstructor;
 
-  const SelectPostWidget(
-      {super.key,
-      required this.app,
+  const _SelectPostWidget(
+      {required this.app,
       required this.containerPrivilege,
       required this.height,
       required this.selected,
       required this.editorConstructor});
 
   @override
-  State<SelectPostWidget> createState() {
+  State<_SelectPostWidget> createState() {
     return _SelectPostWidgetState();
   }
 }
 
-class _SelectPostWidgetState extends State<SelectPostWidget>
+class _SelectPostWidgetState extends State<_SelectPostWidget>
     with TickerProviderStateMixin {
   TabController? _privilegeTabController;
   final List<String> _privilegeItems = ['No', 'L1', 'L2', 'Owner'];

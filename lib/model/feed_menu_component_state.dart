@@ -16,6 +16,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:eliud_pkg_feed/model/feed_menu_model.dart';
 
+/* 
+ * FeedMenuComponentState is the base class for state for FeedMenuComponentBloc
+ */
 abstract class FeedMenuComponentState extends Equatable {
   const FeedMenuComponentState();
 
@@ -23,22 +26,40 @@ abstract class FeedMenuComponentState extends Equatable {
   List<Object?> get props => [];
 }
 
+/* 
+ * FeedMenuComponentUninitialized is the uninitialized state of the FeedMenuComponentBloc 
+ */
 class FeedMenuComponentUninitialized extends FeedMenuComponentState {}
 
+/* 
+ * FeedMenuComponentError is the error state of the FeedMenuComponentBloc 
+ */
 class FeedMenuComponentError extends FeedMenuComponentState {
   final String? message;
   FeedMenuComponentError({this.message});
 }
 
+/* 
+ * FeedMenuComponentPermissionDenied is to indicate permission denied state of the FeedMenuComponentBloc 
+ */
 class FeedMenuComponentPermissionDenied extends FeedMenuComponentState {
   FeedMenuComponentPermissionDenied();
 }
 
+/* 
+ * FeedMenuComponentLoaded is used to set the state of the FeedMenuComponentBloc to the loaded state
+ */
 class FeedMenuComponentLoaded extends FeedMenuComponentState {
   final FeedMenuModel value;
 
+  /* 
+   * construct FeedMenuComponentLoaded
+   */
   const FeedMenuComponentLoaded({required this.value});
 
+  /* 
+   * copy method
+   */
   FeedMenuComponentLoaded copyWith({FeedMenuModel? copyThis}) {
     return FeedMenuComponentLoaded(value: copyThis ?? value);
   }

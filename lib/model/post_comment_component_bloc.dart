@@ -35,6 +35,9 @@ class PostCommentComponentBloc
     });
   }
 
+  /*
+   * Construct PostCommentComponentBloc
+   */
   PostCommentComponentBloc({this.postCommentRepository})
       : super(PostCommentComponentUninitialized()) {
     on<FetchPostCommentComponent>((event, emit) {
@@ -45,6 +48,9 @@ class PostCommentComponentBloc
     });
   }
 
+  /*
+   * Close the PostCommentComponentBloc
+   */
   @override
   Future<void> close() {
     _postCommentSubscription?.cancel();

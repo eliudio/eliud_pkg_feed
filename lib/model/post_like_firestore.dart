@@ -25,12 +25,21 @@ import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
+/* 
+ * PostLikeFirestore is the firestore implementation of PostLikeRepository
+ */
 class PostLikeFirestore implements PostLikeRepository {
+  /* 
+   * transform a map into an entity
+   */
   @override
   PostLikeEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
     return PostLikeEntity.fromMap(o, newDocumentIds: newDocumentIds);
   }
 
+  /* 
+   * add an entity to the repository
+   */
   @override
   Future<PostLikeEntity> addEntity(String documentID, PostLikeEntity value) {
     return postLikeCollection
@@ -47,6 +56,9 @@ class PostLikeFirestore implements PostLikeRepository {
     });
   }
 
+  /* 
+   * Update an entity
+   */
   @override
   Future<PostLikeEntity> updateEntity(String documentID, PostLikeEntity value) {
     return postLikeCollection
@@ -63,6 +75,9 @@ class PostLikeFirestore implements PostLikeRepository {
     });
   }
 
+  /* 
+   * Add a model to the repository
+   */
   @override
   Future<PostLikeModel> add(PostLikeModel value) {
     return postLikeCollection
@@ -84,11 +99,17 @@ class PostLikeFirestore implements PostLikeRepository {
     });
   }
 
+  /* 
+   * Delete a model
+   */
   @override
   Future<void> delete(PostLikeModel value) {
     return postLikeCollection.doc(value.documentID).delete();
   }
 
+  /* 
+   * Update a model
+   */
   @override
   Future<PostLikeModel> update(PostLikeModel value) {
     return postLikeCollection
@@ -121,6 +142,9 @@ class PostLikeFirestore implements PostLikeRepository {
         appId: appId);
   }
 
+  /* 
+   * Retrieve an entity from the repository with id
+   */
   @override
   Future<PostLikeEntity?> getEntity(String? id,
       {Function(Exception)? onError}) async {
@@ -139,6 +163,9 @@ class PostLikeFirestore implements PostLikeRepository {
     return null;
   }
 
+  /* 
+   * Retrieve an model from the repository with id
+   */
   @override
   Future<PostLikeModel?> get(String? id, {Function(Exception)? onError}) async {
     try {
@@ -156,6 +183,9 @@ class PostLikeFirestore implements PostLikeRepository {
     return null;
   }
 
+  /* 
+   * Listen to the repository using a query. Retrieve models
+   */
   @override
   StreamSubscription<List<PostLikeModel?>> listen(PostLikeModelTrigger trigger,
       {String? orderBy,
@@ -186,6 +216,9 @@ class PostLikeFirestore implements PostLikeRepository {
     });
   }
 
+  /* 
+   * Listen to the repository using a query. Retrieve models and linked models
+   */
   @override
   StreamSubscription<List<PostLikeModel?>> listenWithDetails(
       PostLikeModelTrigger trigger,
@@ -217,6 +250,9 @@ class PostLikeFirestore implements PostLikeRepository {
     });
   }
 
+  /* 
+   * Listen to 1 document in the repository
+   */
   @override
   StreamSubscription<PostLikeModel?> listenTo(
       String documentId, PostLikeChanged changed,
@@ -236,6 +272,9 @@ class PostLikeFirestore implements PostLikeRepository {
     return theStream;
   }
 
+  /* 
+   * Retrieve values/models from the repository
+   */
   @override
   Stream<List<PostLikeModel?>> values(
       {String? orderBy,
@@ -265,6 +304,9 @@ class PostLikeFirestore implements PostLikeRepository {
     return values;
   }
 
+  /* 
+   * Retrieve values/models, including linked models, from the repository
+   */
   @override
   Stream<List<PostLikeModel?>> valuesWithDetails(
       {String? orderBy,
@@ -294,6 +336,9 @@ class PostLikeFirestore implements PostLikeRepository {
     return values;
   }
 
+  /* 
+   * Retrieve values/models from the repository
+   */
   @override
   Future<List<PostLikeModel?>> valuesList(
       {String? orderBy,
@@ -324,6 +369,9 @@ class PostLikeFirestore implements PostLikeRepository {
     return values;
   }
 
+  /* 
+   * Retrieve values/models, including linked models, from the repository
+   */
   @override
   Future<List<PostLikeModel?>> valuesListWithDetails(
       {String? orderBy,
@@ -354,9 +402,15 @@ class PostLikeFirestore implements PostLikeRepository {
     return values;
   }
 
+  /* 
+   * Flush the repository
+   */
   @override
   void flush() {}
 
+  /* 
+   * Delete all entries in the repository
+   */
   @override
   Future<void> deleteAll() {
     return postLikeCollection.get().then((snapshot) {
@@ -366,16 +420,25 @@ class PostLikeFirestore implements PostLikeRepository {
     });
   }
 
+  /* 
+   * Retrieve the subcollection of this repository
+   */
   @override
   dynamic getSubCollection(String documentId, String name) {
     return postLikeCollection.doc(documentId).collection(name);
   }
 
+  /* 
+   * Retrieve a timestamp
+   */
   @override
   String? timeStampToString(dynamic timeStamp) {
     return firestoreTimeStampToString(timeStamp);
   }
 
+  /* 
+   * change 1 a fieldvalue for 1 document  
+   */
   @override
   Future<PostLikeModel?> changeValue(
       String documentId, String fieldName, num changeByThisValue) {

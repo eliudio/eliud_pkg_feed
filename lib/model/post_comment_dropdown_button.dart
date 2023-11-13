@@ -33,6 +33,9 @@ typedef PostCommentChanged = Function(
   int? privilegeLevel,
 );
 
+/* 
+ * PostCommentDropdownButtonWidget is the drop down widget to allow to select an instance of PostComment
+ */
 class PostCommentDropdownButtonWidget extends StatefulWidget {
   final AppModel app;
   final int? privilegeLevel;
@@ -40,6 +43,9 @@ class PostCommentDropdownButtonWidget extends StatefulWidget {
   final PostCommentChanged? trigger;
   final bool? optional;
 
+  /* 
+   * construct a PostCommentDropdownButtonWidget
+   */
   PostCommentDropdownButtonWidget(
       {required this.app,
       this.privilegeLevel,
@@ -48,18 +54,21 @@ class PostCommentDropdownButtonWidget extends StatefulWidget {
       this.optional,
       super.key});
 
+  /* 
+   * create state of PostCommentDropdownButtonWidget
+   */
   @override
   State<StatefulWidget> createState() {
-    return PostCommentDropdownButtonWidgetState(value);
+    return _PostCommentDropdownButtonWidgetState(value);
   }
 }
 
-class PostCommentDropdownButtonWidgetState
+class _PostCommentDropdownButtonWidgetState
     extends State<PostCommentDropdownButtonWidget> {
   PostCommentListBloc? bloc;
   String? value;
 
-  PostCommentDropdownButtonWidgetState(this.value);
+  _PostCommentDropdownButtonWidgetState(this.value);
 
   @override
   void didChangeDependencies() {
@@ -73,7 +82,7 @@ class PostCommentDropdownButtonWidgetState
     super.dispose();
   }
 
-  List<Widget> widgets(PostCommentModel value) {
+  List<Widget> _widgets(PostCommentModel value) {
     var app = widget.app;
     var widgets = <Widget>[];
     widgets.add(value.timestamp != null
@@ -134,7 +143,7 @@ class PostCommentDropdownButtonWidgetState
                   height: 100.0,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: widgets(element),
+                    children: _widgets(element),
                   ),
                 )));
           }

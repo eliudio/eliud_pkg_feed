@@ -25,14 +25,23 @@ import 'abstract_repository_singleton.dart';
 import 'package:eliud_core/core/widgets/alert_widget.dart';
 import 'package:eliud_core/model/app_model.dart';
 
+/*
+ * AbstractPostLikeComponent is the base class to extend / implement in case you need to implement a component
+ */
 abstract class AbstractPostLikeComponent extends StatelessWidget {
   static String componentName = "postLikes";
   final AppModel app;
   final String postLikeId;
 
+  /*
+   * Construct AbstractPostLikeComponent
+   */
   AbstractPostLikeComponent(
       {super.key, required this.app, required this.postLikeId});
 
+  /*
+   * build the component
+   */
   @override
   Widget build(BuildContext context) {
     return BlocProvider<PostLikeComponentBloc>(
@@ -68,5 +77,8 @@ abstract class AbstractPostLikeComponent extends StatelessWidget {
     });
   }
 
+  /*
+   * Implement this method to provide your widget
+   */
   Widget yourWidget(BuildContext context, PostLikeModel value);
 }

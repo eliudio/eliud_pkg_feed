@@ -34,6 +34,9 @@ class FeedMenuComponentBloc
     });
   }
 
+  /*
+   * Construct FeedMenuComponentBloc
+   */
   FeedMenuComponentBloc({this.feedMenuRepository})
       : super(FeedMenuComponentUninitialized()) {
     on<FetchFeedMenuComponent>((event, emit) {
@@ -44,6 +47,9 @@ class FeedMenuComponentBloc
     });
   }
 
+  /*
+   * Close the FeedMenuComponentBloc
+   */
   @override
   Future<void> close() {
     _feedMenuSubscription?.cancel();

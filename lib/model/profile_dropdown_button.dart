@@ -33,6 +33,9 @@ typedef ProfileChanged = Function(
   int? privilegeLevel,
 );
 
+/* 
+ * ProfileDropdownButtonWidget is the drop down widget to allow to select an instance of Profile
+ */
 class ProfileDropdownButtonWidget extends StatefulWidget {
   final AppModel app;
   final int? privilegeLevel;
@@ -40,6 +43,9 @@ class ProfileDropdownButtonWidget extends StatefulWidget {
   final ProfileChanged? trigger;
   final bool? optional;
 
+  /* 
+   * construct a ProfileDropdownButtonWidget
+   */
   ProfileDropdownButtonWidget(
       {required this.app,
       this.privilegeLevel,
@@ -48,18 +54,21 @@ class ProfileDropdownButtonWidget extends StatefulWidget {
       this.optional,
       super.key});
 
+  /* 
+   * create state of ProfileDropdownButtonWidget
+   */
   @override
   State<StatefulWidget> createState() {
-    return ProfileDropdownButtonWidgetState(value);
+    return _ProfileDropdownButtonWidgetState(value);
   }
 }
 
-class ProfileDropdownButtonWidgetState
+class _ProfileDropdownButtonWidgetState
     extends State<ProfileDropdownButtonWidget> {
   ProfileListBloc? bloc;
   String? value;
 
-  ProfileDropdownButtonWidgetState(this.value);
+  _ProfileDropdownButtonWidgetState(this.value);
 
   @override
   void didChangeDependencies() {
@@ -73,7 +82,7 @@ class ProfileDropdownButtonWidgetState
     super.dispose();
   }
 
-  List<Widget> widgets(ProfileModel value) {
+  List<Widget> _widgets(ProfileModel value) {
     var app = widget.app;
     var widgets = <Widget>[];
     widgets.add(value.description != null
@@ -130,7 +139,7 @@ class ProfileDropdownButtonWidgetState
                   height: 100.0,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: widgets(element),
+                    children: _widgets(element),
                   ),
                 )));
           }

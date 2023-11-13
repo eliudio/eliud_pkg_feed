@@ -31,7 +31,13 @@ import 'feed_menu_list_event.dart';
 import 'feed_menu_list_state.dart';
 import 'feed_menu_model.dart';
 
+/* 
+ * FeedMenuComponentSelector is a component selector for FeedMenu, allowing to select a FeedMenu component
+ */
 class FeedMenuComponentSelector extends ComponentSelector {
+  /* 
+   * createSelectWidget creates the widget
+   */
   @override
   Widget createSelectWidget(BuildContext context, AppModel app,
       int privilegeLevel, double height, SelectComponent selected, editor) {
@@ -41,7 +47,7 @@ class FeedMenuComponentSelector extends ComponentSelector {
         eliudQuery: getComponentSelectorQuery(0, app.documentID),
         feedMenuRepository: feedMenuRepository(appId: appId)!,
       )..add(LoadFeedMenuList()),
-      child: SelectFeedMenuWidget(
+      child: _SelectFeedMenuWidget(
           app: app,
           height: height,
           containerPrivilege: privilegeLevel,
@@ -51,28 +57,30 @@ class FeedMenuComponentSelector extends ComponentSelector {
   }
 }
 
-class SelectFeedMenuWidget extends StatefulWidget {
+/* 
+ * _SelectFeedMenuWidget 
+ */
+class _SelectFeedMenuWidget extends StatefulWidget {
   final AppModel app;
   final double height;
   final SelectComponent selected;
   final int containerPrivilege;
   final ComponentEditorConstructor editorConstructor;
 
-  const SelectFeedMenuWidget(
-      {super.key,
-      required this.app,
+  const _SelectFeedMenuWidget(
+      {required this.app,
       required this.containerPrivilege,
       required this.height,
       required this.selected,
       required this.editorConstructor});
 
   @override
-  State<SelectFeedMenuWidget> createState() {
+  State<_SelectFeedMenuWidget> createState() {
     return _SelectFeedMenuWidgetState();
   }
 }
 
-class _SelectFeedMenuWidgetState extends State<SelectFeedMenuWidget>
+class _SelectFeedMenuWidgetState extends State<_SelectFeedMenuWidget>
     with TickerProviderStateMixin {
   TabController? _privilegeTabController;
   final List<String> _privilegeItems = ['No', 'L1', 'L2', 'Owner'];

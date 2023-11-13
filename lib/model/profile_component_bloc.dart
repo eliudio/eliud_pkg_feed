@@ -34,6 +34,9 @@ class ProfileComponentBloc
     });
   }
 
+  /*
+   * Construct ProfileComponentBloc
+   */
   ProfileComponentBloc({this.profileRepository})
       : super(ProfileComponentUninitialized()) {
     on<FetchProfileComponent>((event, emit) {
@@ -44,6 +47,9 @@ class ProfileComponentBloc
     });
   }
 
+  /*
+   * Close the ProfileComponentBloc
+   */
   @override
   Future<void> close() {
     _profileSubscription?.cancel();

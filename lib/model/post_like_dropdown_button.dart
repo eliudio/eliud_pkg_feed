@@ -33,6 +33,9 @@ typedef PostLikeChanged = Function(
   int? privilegeLevel,
 );
 
+/* 
+ * PostLikeDropdownButtonWidget is the drop down widget to allow to select an instance of PostLike
+ */
 class PostLikeDropdownButtonWidget extends StatefulWidget {
   final AppModel app;
   final int? privilegeLevel;
@@ -40,6 +43,9 @@ class PostLikeDropdownButtonWidget extends StatefulWidget {
   final PostLikeChanged? trigger;
   final bool? optional;
 
+  /* 
+   * construct a PostLikeDropdownButtonWidget
+   */
   PostLikeDropdownButtonWidget(
       {required this.app,
       this.privilegeLevel,
@@ -48,18 +54,21 @@ class PostLikeDropdownButtonWidget extends StatefulWidget {
       this.optional,
       super.key});
 
+  /* 
+   * create state of PostLikeDropdownButtonWidget
+   */
   @override
   State<StatefulWidget> createState() {
-    return PostLikeDropdownButtonWidgetState(value);
+    return _PostLikeDropdownButtonWidgetState(value);
   }
 }
 
-class PostLikeDropdownButtonWidgetState
+class _PostLikeDropdownButtonWidgetState
     extends State<PostLikeDropdownButtonWidget> {
   PostLikeListBloc? bloc;
   String? value;
 
-  PostLikeDropdownButtonWidgetState(this.value);
+  _PostLikeDropdownButtonWidgetState(this.value);
 
   @override
   void didChangeDependencies() {
@@ -73,7 +82,7 @@ class PostLikeDropdownButtonWidgetState
     super.dispose();
   }
 
-  List<Widget> widgets(PostLikeModel value) {
+  List<Widget> _widgets(PostLikeModel value) {
     var app = widget.app;
     var widgets = <Widget>[];
     widgets.add(value.timestamp != null
@@ -134,7 +143,7 @@ class PostLikeDropdownButtonWidgetState
                   height: 100.0,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: widgets(element),
+                    children: _widgets(element),
                   ),
                 )));
           }

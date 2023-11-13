@@ -58,7 +58,7 @@ class PostLikeForm extends StatelessWidget {
           appId,
           formAction: formAction,
         )..add(InitialisePostLikeFormEvent(value: value)),
-        child: MyPostLikeForm(
+        child: _MyPostLikeForm(
             app: app, submitAction: submitAction, formAction: formAction),
       );
     }
@@ -68,7 +68,7 @@ class PostLikeForm extends StatelessWidget {
           appId,
           formAction: formAction,
         )..add(InitialisePostLikeFormNoLoadEvent(value: value)),
-        child: MyPostLikeForm(
+        child: _MyPostLikeForm(
             app: app, submitAction: submitAction, formAction: formAction),
       );
     } else {
@@ -87,25 +87,25 @@ class PostLikeForm extends StatelessWidget {
             )..add((formAction == FormAction.updateAction
                 ? InitialisePostLikeFormEvent(value: value)
                 : InitialiseNewPostLikeFormEvent())),
-            child: MyPostLikeForm(
+            child: _MyPostLikeForm(
                 app: app, submitAction: submitAction, formAction: formAction),
           ));
     }
   }
 }
 
-class MyPostLikeForm extends StatefulWidget {
+class _MyPostLikeForm extends StatefulWidget {
   final AppModel app;
   final FormAction? formAction;
   final ActionModel? submitAction;
 
-  MyPostLikeForm({required this.app, this.formAction, this.submitAction});
+  _MyPostLikeForm({required this.app, this.formAction, this.submitAction});
 
   @override
-  State<MyPostLikeForm> createState() => _MyPostLikeFormState(formAction);
+  State<_MyPostLikeForm> createState() => _MyPostLikeFormState(formAction);
 }
 
-class _MyPostLikeFormState extends State<MyPostLikeForm> {
+class _MyPostLikeFormState extends State<_MyPostLikeForm> {
   final FormAction? formAction;
   late PostLikeFormBloc _myFormBloc;
 

@@ -60,7 +60,7 @@ class PostCommentForm extends StatelessWidget {
           appId,
           formAction: formAction,
         )..add(InitialisePostCommentFormEvent(value: value)),
-        child: MyPostCommentForm(
+        child: _MyPostCommentForm(
             app: app, submitAction: submitAction, formAction: formAction),
       );
     }
@@ -70,7 +70,7 @@ class PostCommentForm extends StatelessWidget {
           appId,
           formAction: formAction,
         )..add(InitialisePostCommentFormNoLoadEvent(value: value)),
-        child: MyPostCommentForm(
+        child: _MyPostCommentForm(
             app: app, submitAction: submitAction, formAction: formAction),
       );
     } else {
@@ -89,25 +89,26 @@ class PostCommentForm extends StatelessWidget {
             )..add((formAction == FormAction.updateAction
                 ? InitialisePostCommentFormEvent(value: value)
                 : InitialiseNewPostCommentFormEvent())),
-            child: MyPostCommentForm(
+            child: _MyPostCommentForm(
                 app: app, submitAction: submitAction, formAction: formAction),
           ));
     }
   }
 }
 
-class MyPostCommentForm extends StatefulWidget {
+class _MyPostCommentForm extends StatefulWidget {
   final AppModel app;
   final FormAction? formAction;
   final ActionModel? submitAction;
 
-  MyPostCommentForm({required this.app, this.formAction, this.submitAction});
+  _MyPostCommentForm({required this.app, this.formAction, this.submitAction});
 
   @override
-  State<MyPostCommentForm> createState() => _MyPostCommentFormState(formAction);
+  State<_MyPostCommentForm> createState() =>
+      _MyPostCommentFormState(formAction);
 }
 
-class _MyPostCommentFormState extends State<MyPostCommentForm> {
+class _MyPostCommentFormState extends State<_MyPostCommentForm> {
   final FormAction? formAction;
   late PostCommentFormBloc _myFormBloc;
 

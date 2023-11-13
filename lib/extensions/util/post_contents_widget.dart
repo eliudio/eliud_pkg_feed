@@ -34,8 +34,10 @@ class PostContentsWidget extends StatefulWidget {
 }
 
 class _PostContentsWidgetState extends State<PostContentsWidget> {
+/*
   static double _width(BuildContext context) =>
       MediaQuery.of(context).size.width;
+*/
 
   @override
   Widget build(BuildContext context) {

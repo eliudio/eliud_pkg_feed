@@ -25,14 +25,23 @@ import 'abstract_repository_singleton.dart';
 import 'package:eliud_core/core/widgets/alert_widget.dart';
 import 'package:eliud_core/model/app_model.dart';
 
+/*
+ * AbstractFeedMenuComponent is the base class to extend / implement in case you need to implement a component
+ */
 abstract class AbstractFeedMenuComponent extends StatelessWidget {
   static String componentName = "feedMenus";
   final AppModel app;
   final String feedMenuId;
 
+  /*
+   * Construct AbstractFeedMenuComponent
+   */
   AbstractFeedMenuComponent(
       {super.key, required this.app, required this.feedMenuId});
 
+  /*
+   * build the component
+   */
   @override
   Widget build(BuildContext context) {
     return BlocProvider<FeedMenuComponentBloc>(
@@ -68,5 +77,8 @@ abstract class AbstractFeedMenuComponent extends StatelessWidget {
     });
   }
 
+  /*
+   * Implement this method to provide your widget
+   */
   Widget yourWidget(BuildContext context, FeedMenuModel value);
 }

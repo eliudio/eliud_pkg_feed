@@ -58,7 +58,7 @@ class FeedForm extends StatelessWidget {
           appId,
           formAction: formAction,
         )..add(InitialiseFeedFormEvent(value: value)),
-        child: MyFeedForm(
+        child: _MyFeedForm(
             app: app, submitAction: submitAction, formAction: formAction),
       );
     }
@@ -68,7 +68,7 @@ class FeedForm extends StatelessWidget {
           appId,
           formAction: formAction,
         )..add(InitialiseFeedFormNoLoadEvent(value: value)),
-        child: MyFeedForm(
+        child: _MyFeedForm(
             app: app, submitAction: submitAction, formAction: formAction),
       );
     } else {
@@ -87,25 +87,25 @@ class FeedForm extends StatelessWidget {
             )..add((formAction == FormAction.updateAction
                 ? InitialiseFeedFormEvent(value: value)
                 : InitialiseNewFeedFormEvent())),
-            child: MyFeedForm(
+            child: _MyFeedForm(
                 app: app, submitAction: submitAction, formAction: formAction),
           ));
     }
   }
 }
 
-class MyFeedForm extends StatefulWidget {
+class _MyFeedForm extends StatefulWidget {
   final AppModel app;
   final FormAction? formAction;
   final ActionModel? submitAction;
 
-  MyFeedForm({required this.app, this.formAction, this.submitAction});
+  _MyFeedForm({required this.app, this.formAction, this.submitAction});
 
   @override
-  State<MyFeedForm> createState() => _MyFeedFormState(formAction);
+  State<_MyFeedForm> createState() => _MyFeedFormState(formAction);
 }
 
-class _MyFeedFormState extends State<MyFeedForm> {
+class _MyFeedFormState extends State<_MyFeedForm> {
   final FormAction? formAction;
   late FeedFormBloc _myFormBloc;
 

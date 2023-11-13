@@ -16,6 +16,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 
+/* 
+ * PostComponentState is the base class for state for PostComponentBloc
+ */
 abstract class PostComponentState extends Equatable {
   const PostComponentState();
 
@@ -23,22 +26,40 @@ abstract class PostComponentState extends Equatable {
   List<Object?> get props => [];
 }
 
+/* 
+ * PostComponentUninitialized is the uninitialized state of the PostComponentBloc 
+ */
 class PostComponentUninitialized extends PostComponentState {}
 
+/* 
+ * PostComponentError is the error state of the PostComponentBloc 
+ */
 class PostComponentError extends PostComponentState {
   final String? message;
   PostComponentError({this.message});
 }
 
+/* 
+ * PostComponentPermissionDenied is to indicate permission denied state of the PostComponentBloc 
+ */
 class PostComponentPermissionDenied extends PostComponentState {
   PostComponentPermissionDenied();
 }
 
+/* 
+ * PostComponentLoaded is used to set the state of the PostComponentBloc to the loaded state
+ */
 class PostComponentLoaded extends PostComponentState {
   final PostModel value;
 
+  /* 
+   * construct PostComponentLoaded
+   */
   const PostComponentLoaded({required this.value});
 
+  /* 
+   * copy method
+   */
   PostComponentLoaded copyWith({PostModel? copyThis}) {
     return PostComponentLoaded(value: copyThis ?? value);
   }

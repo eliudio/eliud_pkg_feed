@@ -60,7 +60,7 @@ class PostForm extends StatelessWidget {
           appId,
           formAction: formAction,
         )..add(InitialisePostFormEvent(value: value)),
-        child: MyPostForm(
+        child: _MyPostForm(
             app: app, submitAction: submitAction, formAction: formAction),
       );
     }
@@ -70,7 +70,7 @@ class PostForm extends StatelessWidget {
           appId,
           formAction: formAction,
         )..add(InitialisePostFormNoLoadEvent(value: value)),
-        child: MyPostForm(
+        child: _MyPostForm(
             app: app, submitAction: submitAction, formAction: formAction),
       );
     } else {
@@ -89,25 +89,25 @@ class PostForm extends StatelessWidget {
             )..add((formAction == FormAction.updateAction
                 ? InitialisePostFormEvent(value: value)
                 : InitialiseNewPostFormEvent())),
-            child: MyPostForm(
+            child: _MyPostForm(
                 app: app, submitAction: submitAction, formAction: formAction),
           ));
     }
   }
 }
 
-class MyPostForm extends StatefulWidget {
+class _MyPostForm extends StatefulWidget {
   final AppModel app;
   final FormAction? formAction;
   final ActionModel? submitAction;
 
-  MyPostForm({required this.app, this.formAction, this.submitAction});
+  _MyPostForm({required this.app, this.formAction, this.submitAction});
 
   @override
-  State<MyPostForm> createState() => _MyPostFormState(formAction);
+  State<_MyPostForm> createState() => _MyPostFormState(formAction);
 }
 
-class _MyPostFormState extends State<MyPostForm> {
+class _MyPostFormState extends State<_MyPostForm> {
   final FormAction? formAction;
   late PostFormBloc _myFormBloc;
 

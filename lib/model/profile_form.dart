@@ -60,7 +60,7 @@ class ProfileForm extends StatelessWidget {
           appId,
           formAction: formAction,
         )..add(InitialiseProfileFormEvent(value: value)),
-        child: MyProfileForm(
+        child: _MyProfileForm(
             app: app, submitAction: submitAction, formAction: formAction),
       );
     }
@@ -70,7 +70,7 @@ class ProfileForm extends StatelessWidget {
           appId,
           formAction: formAction,
         )..add(InitialiseProfileFormNoLoadEvent(value: value)),
-        child: MyProfileForm(
+        child: _MyProfileForm(
             app: app, submitAction: submitAction, formAction: formAction),
       );
     } else {
@@ -89,25 +89,25 @@ class ProfileForm extends StatelessWidget {
             )..add((formAction == FormAction.updateAction
                 ? InitialiseProfileFormEvent(value: value)
                 : InitialiseNewProfileFormEvent())),
-            child: MyProfileForm(
+            child: _MyProfileForm(
                 app: app, submitAction: submitAction, formAction: formAction),
           ));
     }
   }
 }
 
-class MyProfileForm extends StatefulWidget {
+class _MyProfileForm extends StatefulWidget {
   final AppModel app;
   final FormAction? formAction;
   final ActionModel? submitAction;
 
-  MyProfileForm({required this.app, this.formAction, this.submitAction});
+  _MyProfileForm({required this.app, this.formAction, this.submitAction});
 
   @override
-  State<MyProfileForm> createState() => _MyProfileFormState(formAction);
+  State<_MyProfileForm> createState() => _MyProfileFormState(formAction);
 }
 
-class _MyProfileFormState extends State<MyProfileForm> {
+class _MyProfileFormState extends State<_MyProfileForm> {
   final FormAction? formAction;
   late ProfileFormBloc _myFormBloc;
 

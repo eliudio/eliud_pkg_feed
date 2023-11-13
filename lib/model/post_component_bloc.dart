@@ -33,6 +33,9 @@ class PostComponentBloc extends Bloc<PostComponentEvent, PostComponentState> {
     });
   }
 
+  /*
+   * Construct PostComponentBloc
+   */
   PostComponentBloc({this.postRepository})
       : super(PostComponentUninitialized()) {
     on<FetchPostComponent>((event, emit) {
@@ -43,6 +46,9 @@ class PostComponentBloc extends Bloc<PostComponentEvent, PostComponentState> {
     });
   }
 
+  /*
+   * Close the PostComponentBloc
+   */
   @override
   Future<void> close() {
     _postSubscription?.cancel();

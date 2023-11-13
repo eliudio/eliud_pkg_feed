@@ -34,6 +34,9 @@ class PostLikeComponentBloc
     });
   }
 
+  /*
+   * Construct PostLikeComponentBloc
+   */
   PostLikeComponentBloc({this.postLikeRepository})
       : super(PostLikeComponentUninitialized()) {
     on<FetchPostLikeComponent>((event, emit) {
@@ -44,6 +47,9 @@ class PostLikeComponentBloc
     });
   }
 
+  /*
+   * Close the PostLikeComponentBloc
+   */
   @override
   Future<void> close() {
     _postLikeSubscription?.cancel();

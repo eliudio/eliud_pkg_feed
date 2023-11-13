@@ -25,12 +25,21 @@ import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
+/* 
+ * PostFirestore is the firestore implementation of PostRepository
+ */
 class PostFirestore implements PostRepository {
+  /* 
+   * transform a map into an entity
+   */
   @override
   PostEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
     return PostEntity.fromMap(o, newDocumentIds: newDocumentIds);
   }
 
+  /* 
+   * add an entity to the repository
+   */
   @override
   Future<PostEntity> addEntity(String documentID, PostEntity value) {
     return postCollection
@@ -47,6 +56,9 @@ class PostFirestore implements PostRepository {
     });
   }
 
+  /* 
+   * Update an entity
+   */
   @override
   Future<PostEntity> updateEntity(String documentID, PostEntity value) {
     return postCollection
@@ -63,6 +75,9 @@ class PostFirestore implements PostRepository {
     });
   }
 
+  /* 
+   * Add a model to the repository
+   */
   @override
   Future<PostModel> add(PostModel value) {
     return postCollection
@@ -84,11 +99,17 @@ class PostFirestore implements PostRepository {
     });
   }
 
+  /* 
+   * Delete a model
+   */
   @override
   Future<void> delete(PostModel value) {
     return postCollection.doc(value.documentID).delete();
   }
 
+  /* 
+   * Update a model
+   */
   @override
   Future<PostModel> update(PostModel value) {
     return postCollection
@@ -119,6 +140,9 @@ class PostFirestore implements PostRepository {
         appId: appId);
   }
 
+  /* 
+   * Retrieve an entity from the repository with id
+   */
   @override
   Future<PostEntity?> getEntity(String? id,
       {Function(Exception)? onError}) async {
@@ -137,6 +161,9 @@ class PostFirestore implements PostRepository {
     return null;
   }
 
+  /* 
+   * Retrieve an model from the repository with id
+   */
   @override
   Future<PostModel?> get(String? id, {Function(Exception)? onError}) async {
     try {
@@ -154,6 +181,9 @@ class PostFirestore implements PostRepository {
     return null;
   }
 
+  /* 
+   * Listen to the repository using a query. Retrieve models
+   */
   @override
   StreamSubscription<List<PostModel?>> listen(PostModelTrigger trigger,
       {String? orderBy,
@@ -184,6 +214,9 @@ class PostFirestore implements PostRepository {
     });
   }
 
+  /* 
+   * Listen to the repository using a query. Retrieve models and linked models
+   */
   @override
   StreamSubscription<List<PostModel?>> listenWithDetails(
       PostModelTrigger trigger,
@@ -215,6 +248,9 @@ class PostFirestore implements PostRepository {
     });
   }
 
+  /* 
+   * Listen to 1 document in the repository
+   */
   @override
   StreamSubscription<PostModel?> listenTo(
       String documentId, PostChanged changed,
@@ -233,6 +269,9 @@ class PostFirestore implements PostRepository {
     return theStream;
   }
 
+  /* 
+   * Retrieve values/models from the repository
+   */
   @override
   Stream<List<PostModel?>> values(
       {String? orderBy,
@@ -262,6 +301,9 @@ class PostFirestore implements PostRepository {
     return values;
   }
 
+  /* 
+   * Retrieve values/models, including linked models, from the repository
+   */
   @override
   Stream<List<PostModel?>> valuesWithDetails(
       {String? orderBy,
@@ -291,6 +333,9 @@ class PostFirestore implements PostRepository {
     return values;
   }
 
+  /* 
+   * Retrieve values/models from the repository
+   */
   @override
   Future<List<PostModel?>> valuesList(
       {String? orderBy,
@@ -321,6 +366,9 @@ class PostFirestore implements PostRepository {
     return values;
   }
 
+  /* 
+   * Retrieve values/models, including linked models, from the repository
+   */
   @override
   Future<List<PostModel?>> valuesListWithDetails(
       {String? orderBy,
@@ -351,9 +399,15 @@ class PostFirestore implements PostRepository {
     return values;
   }
 
+  /* 
+   * Flush the repository
+   */
   @override
   void flush() {}
 
+  /* 
+   * Delete all entries in the repository
+   */
   @override
   Future<void> deleteAll() {
     return postCollection.get().then((snapshot) {
@@ -363,16 +417,25 @@ class PostFirestore implements PostRepository {
     });
   }
 
+  /* 
+   * Retrieve the subcollection of this repository
+   */
   @override
   dynamic getSubCollection(String documentId, String name) {
     return postCollection.doc(documentId).collection(name);
   }
 
+  /* 
+   * Retrieve a timestamp
+   */
   @override
   String? timeStampToString(dynamic timeStamp) {
     return firestoreTimeStampToString(timeStamp);
   }
 
+  /* 
+   * change 1 a fieldvalue for 1 document  
+   */
   @override
   Future<PostModel?> changeValue(
       String documentId, String fieldName, num changeByThisValue) {

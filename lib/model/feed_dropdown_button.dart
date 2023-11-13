@@ -33,6 +33,9 @@ typedef FeedChanged = Function(
   int? privilegeLevel,
 );
 
+/* 
+ * FeedDropdownButtonWidget is the drop down widget to allow to select an instance of Feed
+ */
 class FeedDropdownButtonWidget extends StatefulWidget {
   final AppModel app;
   final int? privilegeLevel;
@@ -40,6 +43,9 @@ class FeedDropdownButtonWidget extends StatefulWidget {
   final FeedChanged? trigger;
   final bool? optional;
 
+  /* 
+   * construct a FeedDropdownButtonWidget
+   */
   FeedDropdownButtonWidget(
       {required this.app,
       this.privilegeLevel,
@@ -48,17 +54,20 @@ class FeedDropdownButtonWidget extends StatefulWidget {
       this.optional,
       super.key});
 
+  /* 
+   * create state of FeedDropdownButtonWidget
+   */
   @override
   State<StatefulWidget> createState() {
-    return FeedDropdownButtonWidgetState(value);
+    return _FeedDropdownButtonWidgetState(value);
   }
 }
 
-class FeedDropdownButtonWidgetState extends State<FeedDropdownButtonWidget> {
+class _FeedDropdownButtonWidgetState extends State<FeedDropdownButtonWidget> {
   FeedListBloc? bloc;
   String? value;
 
-  FeedDropdownButtonWidgetState(this.value);
+  _FeedDropdownButtonWidgetState(this.value);
 
   @override
   void didChangeDependencies() {
@@ -72,7 +81,7 @@ class FeedDropdownButtonWidgetState extends State<FeedDropdownButtonWidget> {
     super.dispose();
   }
 
-  List<Widget> widgets(FeedModel value) {
+  List<Widget> _widgets(FeedModel value) {
     var app = widget.app;
     var widgets = <Widget>[];
     widgets.add(value.description != null
@@ -121,7 +130,7 @@ class FeedDropdownButtonWidgetState extends State<FeedDropdownButtonWidget> {
                   height: 100.0,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: widgets(element),
+                    children: _widgets(element),
                   ),
                 )));
           }

@@ -31,7 +31,13 @@ import 'feed_front_list_event.dart';
 import 'feed_front_list_state.dart';
 import 'feed_front_model.dart';
 
+/* 
+ * FeedFrontComponentSelector is a component selector for FeedFront, allowing to select a FeedFront component
+ */
 class FeedFrontComponentSelector extends ComponentSelector {
+  /* 
+   * createSelectWidget creates the widget
+   */
   @override
   Widget createSelectWidget(BuildContext context, AppModel app,
       int privilegeLevel, double height, SelectComponent selected, editor) {
@@ -41,7 +47,7 @@ class FeedFrontComponentSelector extends ComponentSelector {
         eliudQuery: getComponentSelectorQuery(0, app.documentID),
         feedFrontRepository: feedFrontRepository(appId: appId)!,
       )..add(LoadFeedFrontList()),
-      child: SelectFeedFrontWidget(
+      child: _SelectFeedFrontWidget(
           app: app,
           height: height,
           containerPrivilege: privilegeLevel,
@@ -51,28 +57,30 @@ class FeedFrontComponentSelector extends ComponentSelector {
   }
 }
 
-class SelectFeedFrontWidget extends StatefulWidget {
+/* 
+ * _SelectFeedFrontWidget 
+ */
+class _SelectFeedFrontWidget extends StatefulWidget {
   final AppModel app;
   final double height;
   final SelectComponent selected;
   final int containerPrivilege;
   final ComponentEditorConstructor editorConstructor;
 
-  const SelectFeedFrontWidget(
-      {super.key,
-      required this.app,
+  const _SelectFeedFrontWidget(
+      {required this.app,
       required this.containerPrivilege,
       required this.height,
       required this.selected,
       required this.editorConstructor});
 
   @override
-  State<SelectFeedFrontWidget> createState() {
+  State<_SelectFeedFrontWidget> createState() {
     return _SelectFeedFrontWidgetState();
   }
 }
 
-class _SelectFeedFrontWidgetState extends State<SelectFeedFrontWidget>
+class _SelectFeedFrontWidgetState extends State<_SelectFeedFrontWidget>
     with TickerProviderStateMixin {
   TabController? _privilegeTabController;
   final List<String> _privilegeItems = ['No', 'L1', 'L2', 'Owner'];

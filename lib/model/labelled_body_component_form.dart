@@ -58,7 +58,7 @@ class LabelledBodyComponentForm extends StatelessWidget {
         create: (context) => LabelledBodyComponentFormBloc(
           appId,
         )..add(InitialiseLabelledBodyComponentFormEvent(value: value)),
-        child: MyLabelledBodyComponentForm(
+        child: _MyLabelledBodyComponentForm(
             app: app, submitAction: submitAction, formAction: formAction),
       );
     }
@@ -67,7 +67,7 @@ class LabelledBodyComponentForm extends StatelessWidget {
         create: (context) => LabelledBodyComponentFormBloc(
           appId,
         )..add(InitialiseLabelledBodyComponentFormNoLoadEvent(value: value)),
-        child: MyLabelledBodyComponentForm(
+        child: _MyLabelledBodyComponentForm(
             app: app, submitAction: submitAction, formAction: formAction),
       );
     } else {
@@ -85,28 +85,28 @@ class LabelledBodyComponentForm extends StatelessWidget {
             )..add((formAction == FormAction.updateAction
                 ? InitialiseLabelledBodyComponentFormEvent(value: value)
                 : InitialiseNewLabelledBodyComponentFormEvent())),
-            child: MyLabelledBodyComponentForm(
+            child: _MyLabelledBodyComponentForm(
                 app: app, submitAction: submitAction, formAction: formAction),
           ));
     }
   }
 }
 
-class MyLabelledBodyComponentForm extends StatefulWidget {
+class _MyLabelledBodyComponentForm extends StatefulWidget {
   final AppModel app;
   final FormAction? formAction;
   final ActionModel? submitAction;
 
-  MyLabelledBodyComponentForm(
+  _MyLabelledBodyComponentForm(
       {required this.app, this.formAction, this.submitAction});
 
   @override
-  State<MyLabelledBodyComponentForm> createState() =>
+  State<_MyLabelledBodyComponentForm> createState() =>
       _MyLabelledBodyComponentFormState(formAction);
 }
 
 class _MyLabelledBodyComponentFormState
-    extends State<MyLabelledBodyComponentForm> {
+    extends State<_MyLabelledBodyComponentForm> {
   final FormAction? formAction;
   late LabelledBodyComponentFormBloc _myFormBloc;
 

@@ -32,7 +32,13 @@ import 'post_like_list_event.dart';
 import 'post_like_list_state.dart';
 import 'post_like_model.dart';
 
+/* 
+ * PostLikeComponentSelector is a component selector for PostLike, allowing to select a PostLike component
+ */
 class PostLikeComponentSelector extends ComponentSelector {
+  /* 
+   * createSelectWidget creates the widget
+   */
   @override
   Widget createSelectWidget(BuildContext context, AppModel app,
       int privilegeLevel, double height, SelectComponent selected, editor) {
@@ -42,7 +48,7 @@ class PostLikeComponentSelector extends ComponentSelector {
         eliudQuery: getComponentSelectorQuery(0, app.documentID),
         postLikeRepository: postLikeRepository(appId: appId)!,
       )..add(LoadPostLikeList()),
-      child: SelectPostLikeWidget(
+      child: _SelectPostLikeWidget(
           app: app,
           height: height,
           containerPrivilege: privilegeLevel,
@@ -52,28 +58,30 @@ class PostLikeComponentSelector extends ComponentSelector {
   }
 }
 
-class SelectPostLikeWidget extends StatefulWidget {
+/* 
+ * _SelectPostLikeWidget 
+ */
+class _SelectPostLikeWidget extends StatefulWidget {
   final AppModel app;
   final double height;
   final SelectComponent selected;
   final int containerPrivilege;
   final ComponentEditorConstructor editorConstructor;
 
-  const SelectPostLikeWidget(
-      {super.key,
-      required this.app,
+  const _SelectPostLikeWidget(
+      {required this.app,
       required this.containerPrivilege,
       required this.height,
       required this.selected,
       required this.editorConstructor});
 
   @override
-  State<SelectPostLikeWidget> createState() {
+  State<_SelectPostLikeWidget> createState() {
     return _SelectPostLikeWidgetState();
   }
 }
 
-class _SelectPostLikeWidgetState extends State<SelectPostLikeWidget>
+class _SelectPostLikeWidgetState extends State<_SelectPostLikeWidget>
     with TickerProviderStateMixin {
   TabController? _privilegeTabController;
   final List<String> _privilegeItems = ['No', 'L1', 'L2', 'Owner'];

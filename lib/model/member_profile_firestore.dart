@@ -25,13 +25,22 @@ import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
+/* 
+ * MemberProfileFirestore is the firestore implementation of MemberProfileRepository
+ */
 class MemberProfileFirestore implements MemberProfileRepository {
+  /* 
+   * transform a map into an entity
+   */
   @override
   MemberProfileEntity? fromMap(Object? o,
       {Map<String, String>? newDocumentIds}) {
     return MemberProfileEntity.fromMap(o, newDocumentIds: newDocumentIds);
   }
 
+  /* 
+   * add an entity to the repository
+   */
   @override
   Future<MemberProfileEntity> addEntity(
       String documentID, MemberProfileEntity value) {
@@ -41,6 +50,9 @@ class MemberProfileFirestore implements MemberProfileRepository {
         .then((_) => value);
   }
 
+  /* 
+   * Update an entity
+   */
   @override
   Future<MemberProfileEntity> updateEntity(
       String documentID, MemberProfileEntity value) {
@@ -50,6 +62,9 @@ class MemberProfileFirestore implements MemberProfileRepository {
         .then((_) => value);
   }
 
+  /* 
+   * Add a model to the repository
+   */
   @override
   Future<MemberProfileModel> add(MemberProfileModel value) {
     return memberProfileCollection
@@ -58,11 +73,17 @@ class MemberProfileFirestore implements MemberProfileRepository {
         .then((_) => value);
   }
 
+  /* 
+   * Delete a model
+   */
   @override
   Future<void> delete(MemberProfileModel value) {
     return memberProfileCollection.doc(value.documentID).delete();
   }
 
+  /* 
+   * Update a model
+   */
   @override
   Future<MemberProfileModel> update(MemberProfileModel value) {
     return memberProfileCollection
@@ -82,6 +103,9 @@ class MemberProfileFirestore implements MemberProfileRepository {
         appId: appId);
   }
 
+  /* 
+   * Retrieve an entity from the repository with id
+   */
   @override
   Future<MemberProfileEntity?> getEntity(String? id,
       {Function(Exception)? onError}) async {
@@ -100,6 +124,9 @@ class MemberProfileFirestore implements MemberProfileRepository {
     return null;
   }
 
+  /* 
+   * Retrieve an model from the repository with id
+   */
   @override
   Future<MemberProfileModel?> get(String? id,
       {Function(Exception)? onError}) async {
@@ -118,6 +145,9 @@ class MemberProfileFirestore implements MemberProfileRepository {
     return null;
   }
 
+  /* 
+   * Listen to the repository using a query. Retrieve models
+   */
   @override
   StreamSubscription<List<MemberProfileModel?>> listen(
       MemberProfileModelTrigger trigger,
@@ -149,6 +179,9 @@ class MemberProfileFirestore implements MemberProfileRepository {
     });
   }
 
+  /* 
+   * Listen to the repository using a query. Retrieve models and linked models
+   */
   @override
   StreamSubscription<List<MemberProfileModel?>> listenWithDetails(
       MemberProfileModelTrigger trigger,
@@ -180,6 +213,9 @@ class MemberProfileFirestore implements MemberProfileRepository {
     });
   }
 
+  /* 
+   * Listen to 1 document in the repository
+   */
   @override
   StreamSubscription<MemberProfileModel?> listenTo(
       String documentId, MemberProfileChanged changed,
@@ -199,6 +235,9 @@ class MemberProfileFirestore implements MemberProfileRepository {
     return theStream;
   }
 
+  /* 
+   * Retrieve values/models from the repository
+   */
   @override
   Stream<List<MemberProfileModel?>> values(
       {String? orderBy,
@@ -228,6 +267,9 @@ class MemberProfileFirestore implements MemberProfileRepository {
     return values;
   }
 
+  /* 
+   * Retrieve values/models, including linked models, from the repository
+   */
   @override
   Stream<List<MemberProfileModel?>> valuesWithDetails(
       {String? orderBy,
@@ -257,6 +299,9 @@ class MemberProfileFirestore implements MemberProfileRepository {
     return values;
   }
 
+  /* 
+   * Retrieve values/models from the repository
+   */
   @override
   Future<List<MemberProfileModel?>> valuesList(
       {String? orderBy,
@@ -287,6 +332,9 @@ class MemberProfileFirestore implements MemberProfileRepository {
     return values;
   }
 
+  /* 
+   * Retrieve values/models, including linked models, from the repository
+   */
   @override
   Future<List<MemberProfileModel?>> valuesListWithDetails(
       {String? orderBy,
@@ -317,9 +365,15 @@ class MemberProfileFirestore implements MemberProfileRepository {
     return values;
   }
 
+  /* 
+   * Flush the repository
+   */
   @override
   void flush() {}
 
+  /* 
+   * Delete all entries in the repository
+   */
   @override
   Future<void> deleteAll() {
     return memberProfileCollection.get().then((snapshot) {
@@ -329,16 +383,25 @@ class MemberProfileFirestore implements MemberProfileRepository {
     });
   }
 
+  /* 
+   * Retrieve the subcollection of this repository
+   */
   @override
   dynamic getSubCollection(String documentId, String name) {
     return memberProfileCollection.doc(documentId).collection(name);
   }
 
+  /* 
+   * Retrieve a timestamp
+   */
   @override
   String? timeStampToString(dynamic timeStamp) {
     return firestoreTimeStampToString(timeStamp);
   }
 
+  /* 
+   * change 1 a fieldvalue for 1 document  
+   */
   @override
   Future<MemberProfileModel?> changeValue(
       String documentId, String fieldName, num changeByThisValue) {

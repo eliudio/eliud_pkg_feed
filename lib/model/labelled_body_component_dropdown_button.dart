@@ -33,6 +33,9 @@ typedef LabelledBodyComponentChanged = Function(
   int? privilegeLevel,
 );
 
+/* 
+ * LabelledBodyComponentDropdownButtonWidget is the drop down widget to allow to select an instance of LabelledBodyComponent
+ */
 class LabelledBodyComponentDropdownButtonWidget extends StatefulWidget {
   final AppModel app;
   final int? privilegeLevel;
@@ -40,6 +43,9 @@ class LabelledBodyComponentDropdownButtonWidget extends StatefulWidget {
   final LabelledBodyComponentChanged? trigger;
   final bool? optional;
 
+  /* 
+   * construct a LabelledBodyComponentDropdownButtonWidget
+   */
   LabelledBodyComponentDropdownButtonWidget(
       {required this.app,
       this.privilegeLevel,
@@ -48,18 +54,21 @@ class LabelledBodyComponentDropdownButtonWidget extends StatefulWidget {
       this.optional,
       super.key});
 
+  /* 
+   * create state of LabelledBodyComponentDropdownButtonWidget
+   */
   @override
   State<StatefulWidget> createState() {
-    return LabelledBodyComponentDropdownButtonWidgetState(value);
+    return _LabelledBodyComponentDropdownButtonWidgetState(value);
   }
 }
 
-class LabelledBodyComponentDropdownButtonWidgetState
+class _LabelledBodyComponentDropdownButtonWidgetState
     extends State<LabelledBodyComponentDropdownButtonWidget> {
   LabelledBodyComponentListBloc? bloc;
   String? value;
 
-  LabelledBodyComponentDropdownButtonWidgetState(this.value);
+  _LabelledBodyComponentDropdownButtonWidgetState(this.value);
 
   @override
   void didChangeDependencies() {
@@ -73,7 +82,7 @@ class LabelledBodyComponentDropdownButtonWidgetState
     super.dispose();
   }
 
-  List<Widget> widgets(LabelledBodyComponentModel value) {
+  List<Widget> _widgets(LabelledBodyComponentModel value) {
     var app = widget.app;
     var widgets = <Widget>[];
     widgets.add(value.componentName != null
@@ -136,7 +145,7 @@ class LabelledBodyComponentDropdownButtonWidgetState
                   height: 100.0,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: widgets(element),
+                    children: _widgets(element),
                   ),
                 )));
           }

@@ -60,7 +60,7 @@ class FeedFrontForm extends StatelessWidget {
           appId,
           formAction: formAction,
         )..add(InitialiseFeedFrontFormEvent(value: value)),
-        child: MyFeedFrontForm(
+        child: _MyFeedFrontForm(
             app: app, submitAction: submitAction, formAction: formAction),
       );
     }
@@ -70,7 +70,7 @@ class FeedFrontForm extends StatelessWidget {
           appId,
           formAction: formAction,
         )..add(InitialiseFeedFrontFormNoLoadEvent(value: value)),
-        child: MyFeedFrontForm(
+        child: _MyFeedFrontForm(
             app: app, submitAction: submitAction, formAction: formAction),
       );
     } else {
@@ -89,25 +89,25 @@ class FeedFrontForm extends StatelessWidget {
             )..add((formAction == FormAction.updateAction
                 ? InitialiseFeedFrontFormEvent(value: value)
                 : InitialiseNewFeedFrontFormEvent())),
-            child: MyFeedFrontForm(
+            child: _MyFeedFrontForm(
                 app: app, submitAction: submitAction, formAction: formAction),
           ));
     }
   }
 }
 
-class MyFeedFrontForm extends StatefulWidget {
+class _MyFeedFrontForm extends StatefulWidget {
   final AppModel app;
   final FormAction? formAction;
   final ActionModel? submitAction;
 
-  MyFeedFrontForm({required this.app, this.formAction, this.submitAction});
+  _MyFeedFrontForm({required this.app, this.formAction, this.submitAction});
 
   @override
-  State<MyFeedFrontForm> createState() => _MyFeedFrontFormState(formAction);
+  State<_MyFeedFrontForm> createState() => _MyFeedFrontFormState(formAction);
 }
 
-class _MyFeedFrontFormState extends State<MyFeedFrontForm> {
+class _MyFeedFrontFormState extends State<_MyFeedFrontForm> {
   final FormAction? formAction;
   late FeedFrontFormBloc _myFormBloc;
 

@@ -25,12 +25,21 @@ import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
+/* 
+ * FeedFirestore is the firestore implementation of FeedRepository
+ */
 class FeedFirestore implements FeedRepository {
+  /* 
+   * transform a map into an entity
+   */
   @override
   FeedEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
     return FeedEntity.fromMap(o, newDocumentIds: newDocumentIds);
   }
 
+  /* 
+   * add an entity to the repository
+   */
   @override
   Future<FeedEntity> addEntity(String documentID, FeedEntity value) {
     return feedCollection
@@ -39,6 +48,9 @@ class FeedFirestore implements FeedRepository {
         .then((_) => value);
   }
 
+  /* 
+   * Update an entity
+   */
   @override
   Future<FeedEntity> updateEntity(String documentID, FeedEntity value) {
     return feedCollection
@@ -47,6 +59,9 @@ class FeedFirestore implements FeedRepository {
         .then((_) => value);
   }
 
+  /* 
+   * Add a model to the repository
+   */
   @override
   Future<FeedModel> add(FeedModel value) {
     return feedCollection
@@ -55,11 +70,17 @@ class FeedFirestore implements FeedRepository {
         .then((_) => value);
   }
 
+  /* 
+   * Delete a model
+   */
   @override
   Future<void> delete(FeedModel value) {
     return feedCollection.doc(value.documentID).delete();
   }
 
+  /* 
+   * Update a model
+   */
   @override
   Future<FeedModel> update(FeedModel value) {
     return feedCollection
@@ -77,6 +98,9 @@ class FeedFirestore implements FeedRepository {
         appId: appId);
   }
 
+  /* 
+   * Retrieve an entity from the repository with id
+   */
   @override
   Future<FeedEntity?> getEntity(String? id,
       {Function(Exception)? onError}) async {
@@ -95,6 +119,9 @@ class FeedFirestore implements FeedRepository {
     return null;
   }
 
+  /* 
+   * Retrieve an model from the repository with id
+   */
   @override
   Future<FeedModel?> get(String? id, {Function(Exception)? onError}) async {
     try {
@@ -112,6 +139,9 @@ class FeedFirestore implements FeedRepository {
     return null;
   }
 
+  /* 
+   * Listen to the repository using a query. Retrieve models
+   */
   @override
   StreamSubscription<List<FeedModel?>> listen(FeedModelTrigger trigger,
       {String? orderBy,
@@ -142,6 +172,9 @@ class FeedFirestore implements FeedRepository {
     });
   }
 
+  /* 
+   * Listen to the repository using a query. Retrieve models and linked models
+   */
   @override
   StreamSubscription<List<FeedModel?>> listenWithDetails(
       FeedModelTrigger trigger,
@@ -173,6 +206,9 @@ class FeedFirestore implements FeedRepository {
     });
   }
 
+  /* 
+   * Listen to 1 document in the repository
+   */
   @override
   StreamSubscription<FeedModel?> listenTo(
       String documentId, FeedChanged changed,
@@ -191,6 +227,9 @@ class FeedFirestore implements FeedRepository {
     return theStream;
   }
 
+  /* 
+   * Retrieve values/models from the repository
+   */
   @override
   Stream<List<FeedModel?>> values(
       {String? orderBy,
@@ -220,6 +259,9 @@ class FeedFirestore implements FeedRepository {
     return values;
   }
 
+  /* 
+   * Retrieve values/models, including linked models, from the repository
+   */
   @override
   Stream<List<FeedModel?>> valuesWithDetails(
       {String? orderBy,
@@ -249,6 +291,9 @@ class FeedFirestore implements FeedRepository {
     return values;
   }
 
+  /* 
+   * Retrieve values/models from the repository
+   */
   @override
   Future<List<FeedModel?>> valuesList(
       {String? orderBy,
@@ -279,6 +324,9 @@ class FeedFirestore implements FeedRepository {
     return values;
   }
 
+  /* 
+   * Retrieve values/models, including linked models, from the repository
+   */
   @override
   Future<List<FeedModel?>> valuesListWithDetails(
       {String? orderBy,
@@ -309,9 +357,15 @@ class FeedFirestore implements FeedRepository {
     return values;
   }
 
+  /* 
+   * Flush the repository
+   */
   @override
   void flush() {}
 
+  /* 
+   * Delete all entries in the repository
+   */
   @override
   Future<void> deleteAll() {
     return feedCollection.get().then((snapshot) {
@@ -321,16 +375,25 @@ class FeedFirestore implements FeedRepository {
     });
   }
 
+  /* 
+   * Retrieve the subcollection of this repository
+   */
   @override
   dynamic getSubCollection(String documentId, String name) {
     return feedCollection.doc(documentId).collection(name);
   }
 
+  /* 
+   * Retrieve a timestamp
+   */
   @override
   String? timeStampToString(dynamic timeStamp) {
     return firestoreTimeStampToString(timeStamp);
   }
 
+  /* 
+   * change 1 a fieldvalue for 1 document  
+   */
   @override
   Future<FeedModel?> changeValue(
       String documentId, String fieldName, num changeByThisValue) {
