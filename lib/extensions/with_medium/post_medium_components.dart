@@ -1,9 +1,9 @@
 import 'package:eliud_core/core/editor/ext_editor_base_bloc/ext_editor_base_event.dart';
-import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core_model/model/app_model.dart';
 import 'package:eliud_core/model/member_medium_container_model.dart';
-import 'package:eliud_core/model/member_medium_model.dart';
-import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
-import 'package:eliud_core/tools/random.dart';
+import 'package:eliud_core_model/model/member_medium_model.dart';
+import 'package:eliud_core_model/style/frontend/has_progress_indicator.dart';
+import 'package:eliud_core_model/tools/etc/random.dart';
 import 'package:eliud_core/tools/screen_size.dart';
 import 'package:eliud_pkg_medium/tools/media_buttons.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
@@ -11,13 +11,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuple/tuple.dart';
 import 'package:eliud_core/core/editor/ext_editor_base_bloc/ext_editor_base_state.dart';
-import 'package:eliud_core/tools/component/component_spec.dart';
+import 'package:eliud_core_model/tools/component/component_spec.dart';
 import 'package:eliud_pkg_text/platform/widgets/bloc/html_with_platform_medium_component_bloc.dart';
 import 'package:eliud_pkg_text/platform/widgets/html_text_dialog.dart';
 import 'package:eliud_pkg_text/platform/widgets/html_util.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
-import 'package:eliud_core/style/frontend/has_dialog.dart';
-import 'package:eliud_core/style/frontend/has_text.dart';
+import 'package:eliud_core_model/style/frontend/has_dialog.dart';
+import 'package:eliud_core_model/style/frontend/has_text.dart';
 import 'package:eliud_core/tools/widgets/header_widget.dart';
 import 'package:eliud_core/core/registry.dart';
 import 'bloc/post_medium_component_bloc.dart';
@@ -165,7 +165,7 @@ class _PostWithMemberMediumComponentsState
                     Navigator.of(context).pop();
                     break;
                   case 1:
-                    Registry.registry()!.getMediumApi().showPhotos(
+                    Apis.apis().getMediumApi().showPhotos(
                         context,
                         widget.app,
                         memberMediumContainerModels

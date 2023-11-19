@@ -1,7 +1,7 @@
 import 'package:eliud_core/core/editor/ext_editor_base_bloc/ext_editor_base_bloc.dart';
-import 'package:eliud_core/model/storage_conditions_model.dart';
-import 'package:eliud_core/tools/component/component_spec.dart';
-import 'package:eliud_core/tools/random.dart';
+import 'package:eliud_core_model/model/storage_conditions_model.dart';
+import 'package:eliud_core_model/tools/component/component_spec.dart';
+import 'package:eliud_core_model/tools/etc/random.dart';
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_feed/model/feed_menu_model.dart';
 import 'package:eliud_pkg_feed/model/labelled_body_component_model.dart';

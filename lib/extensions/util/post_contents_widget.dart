@@ -1,14 +1,14 @@
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/core/registry.dart';
-import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core_model/model/app_model.dart';
 import 'package:eliud_core/model/member_medium_container_model.dart';
-import 'package:eliud_core/style/frontend/has_text.dart';
+import 'package:eliud_core_model/style/frontend/has_text.dart';
 import 'package:eliud_core/tools/storage/member_image_model_widget.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_type_helper.dart';
 import 'package:eliud_pkg_text/platform/text_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:eliud_core/model/member_medium_model.dart';
+import 'package:eliud_core_model/model/member_medium_model.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_media_helper.dart';
 import 'package:eliud_pkg_feed/model/post_model.dart';
 
@@ -68,7 +68,7 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
         break;
       case PostType.singleVideo:
         var medium = postModel.memberMedia![0];
-        return Registry.registry()!
+        return Apis.apis()
             .getMediumApi()
             .embeddedVideo(context, widget.app, medium.memberMedium!);
 
@@ -120,7 +120,7 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
     if (postMedium.memberMedium!.mediumType! == MediumType.photo) {
       showPhotosFromPostMedia(context, memberMedia, index);
     } else {
-      Registry.registry()!
+      Apis.apis()
           .getMediumApi()
           .showVideo(context, widget.app, postMedium.memberMedium!);
     }
@@ -130,7 +130,7 @@ class _PostContentsWidgetState extends State<PostContentsWidget> {
       List<MemberMediumContainerModel> postMedia, int initialPage) {
     if (postMedia.isNotEmpty) {
       var photos = postMedia.map((pm) => pm.memberMedium!).toList();
-      Registry.registry()!
+      Apis.apis()
           .getMediumApi()
           .showPhotos(context, widget.app, photos, initialPage);
     }

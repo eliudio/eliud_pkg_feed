@@ -15,7 +15,7 @@
 
 import '../model/internal_component.dart';
 import 'package:eliud_core/core/registry.dart';
-import 'package:eliud_core/tools/component/component_spec.dart';
+import 'package:eliud_core_model/tools/component/component_spec.dart';
 import 'abstract_repository_singleton.dart';
 
 import '../extensions/feed_front_component.dart';
@@ -36,7 +36,7 @@ class ComponentRegistry {
    * Initialise the component registry
    */
   void init() {
-    Registry.registry()!.addInternalComponents('eliud_pkg_feed', [
+    Apis.apis().addInternalComponents('eliud_pkg_feed', [
       "feeds",
       "feedFronts",
       "feedMenus",
@@ -46,25 +46,25 @@ class ComponentRegistry {
       "profiles",
     ]);
 
-    Registry.registry()!.register(
+    Apis.apis().register(
         componentName: "eliud_pkg_feed_internalWidgets",
         componentConstructor: ListComponentFactory());
-    Registry.registry()!
+    Apis.apis()
         .addDropDownSupporter("feedFronts", DropdownButtonComponentFactory());
-    Registry.registry()!.register(
+    Apis.apis().register(
         componentName: "feedFronts",
         componentConstructor: FeedFrontComponentConstructorDefault());
-    Registry.registry()!
+    Apis.apis()
         .addDropDownSupporter("feedMenus", DropdownButtonComponentFactory());
-    Registry.registry()!.register(
+    Apis.apis().register(
         componentName: "feedMenus",
         componentConstructor: FeedMenuComponentConstructorDefault());
-    Registry.registry()!
+    Apis.apis()
         .addDropDownSupporter("profiles", DropdownButtonComponentFactory());
-    Registry.registry()!.register(
+    Apis.apis().register(
         componentName: "profiles",
         componentConstructor: ProfileComponentConstructorDefault());
-    Registry.registry()!.addComponentSpec('eliud_pkg_feed', 'feed', [
+    Apis.apis().addComponentSpec('eliud_pkg_feed', 'feed', [
       ComponentSpec(
           'feedFronts',
           FeedFrontComponentConstructorDefault(),
@@ -84,25 +84,25 @@ class ComponentRegistry {
           ProfileComponentEditorConstructor(),
           ({String? appId}) => profileRepository(appId: appId)!),
     ]);
-    Registry.registry()!.registerRetrieveRepository('eliud_pkg_feed', 'feeds',
+    Apis.apis().registerRetrieveRepository('eliud_pkg_feed', 'feeds',
         ({String? appId}) => feedRepository(appId: appId)!);
-    Registry.registry()!.registerRetrieveRepository('eliud_pkg_feed',
+    Apis.apis().registerRetrieveRepository('eliud_pkg_feed',
         'feedFronts', ({String? appId}) => feedFrontRepository(appId: appId)!);
-    Registry.registry()!.registerRetrieveRepository('eliud_pkg_feed',
+    Apis.apis().registerRetrieveRepository('eliud_pkg_feed',
         'feedMenus', ({String? appId}) => feedMenuRepository(appId: appId)!);
-    Registry.registry()!.registerRetrieveRepository(
+    Apis.apis().registerRetrieveRepository(
         'eliud_pkg_feed',
         'memberProfiles',
         ({String? appId}) => memberProfileRepository(appId: appId)!);
-    Registry.registry()!.registerRetrieveRepository('eliud_pkg_feed', 'posts',
+    Apis.apis().registerRetrieveRepository('eliud_pkg_feed', 'posts',
         ({String? appId}) => postRepository(appId: appId)!);
-    Registry.registry()!.registerRetrieveRepository(
+    Apis.apis().registerRetrieveRepository(
         'eliud_pkg_feed',
         'postComments',
         ({String? appId}) => postCommentRepository(appId: appId)!);
-    Registry.registry()!.registerRetrieveRepository('eliud_pkg_feed',
+    Apis.apis().registerRetrieveRepository('eliud_pkg_feed',
         'postLikes', ({String? appId}) => postLikeRepository(appId: appId)!);
-    Registry.registry()!.registerRetrieveRepository('eliud_pkg_feed',
+    Apis.apis().registerRetrieveRepository('eliud_pkg_feed',
         'profiles', ({String? appId}) => profileRepository(appId: appId)!);
   }
 }

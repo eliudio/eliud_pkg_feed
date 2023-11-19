@@ -1,10 +1,10 @@
 import 'package:eliud_core/core/registry.dart';
-import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core_model/model/app_model.dart';
 import 'package:eliud_pkg_feed/extensions/feed_front/feed_front.dart';
 import 'package:eliud_pkg_feed/extensions/profile/profile.dart';
 import 'package:eliud_pkg_feed/model/feed_front_model.dart';
 import 'package:eliud_pkg_feed/model/labelled_body_component_model.dart';
-import 'package:eliud_core/style/frontend/has_tabs.dart';
+import 'package:eliud_core_model/style/frontend/has_tabs.dart';
 import 'package:flutter/material.dart';
 
 class TabbedFeedMenuItems extends StatefulWidget {
@@ -67,7 +67,7 @@ class _TabbedFeedMenuItemsState extends State<TabbedFeedMenuItems>
           backgroundOverride: widget.feedFrontModel.backgroundOverrideProfile);
     }
     var component = widget.bodyComponents[_tabController.index - 2];
-    return Registry.registry()!.component(
+    return Apis.apis().component(
         context, widget.app, component.componentName!, component.componentId!,
         parameters: widget.parameters);
   }

@@ -3,13 +3,13 @@ import 'package:eliud_core/core/blocs/access/state/access_state.dart';
 import 'package:eliud_core/core/blocs/access/state/logged_in.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliud_router;
 import 'package:eliud_core/core/registry.dart';
-import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core_model/model/app_model.dart';
 import 'package:eliud_core/model/member_medium_container_model.dart';
-import 'package:eliud_core/model/member_medium_model.dart';
-import 'package:eliud_core/style/frontend/has_dialog_widget.dart';
-import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
-import 'package:eliud_core/style/frontend/has_text.dart';
-import 'package:eliud_core/style/frontend/has_text_form_field.dart';
+import 'package:eliud_core_model/model/member_medium_model.dart';
+import 'package:eliud_core_model/style/frontend/has_dialog_widget.dart';
+import 'package:eliud_core_model/style/frontend/has_progress_indicator.dart';
+import 'package:eliud_core_model/style/frontend/has_text.dart';
+import 'package:eliud_core_model/style/frontend/has_text_form_field.dart';
 import 'package:eliud_pkg_feed/extensions/feed_front/posts/post_privilege/bloc/member_service.dart';
 import 'package:eliud_pkg_feed/extensions/feed_front/posts/post_privilege/bloc/post_privilege_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/feed_front/posts/post_privilege/bloc/post_privilege_event.dart';
@@ -225,11 +225,11 @@ class _MyFeedPostFormState extends State<MyFeedPostForm> {
       var medium = media[index];
       if (medium.mediumType == MediumType.photo) {
         var photos = media;
-        Registry.registry()!
+        Apis.apis()
             .getMediumApi()
             .showPhotos(context, widget.app, photos, index);
       } else {
-        Registry.registry()!
+        Apis.apis()
             .getMediumApi()
             .showVideo(context, widget.app, medium);
       }

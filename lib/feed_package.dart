@@ -2,7 +2,7 @@ import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/core/wizards/registry/registry.dart';
 import 'package:eliud_core/core_package.dart';
 import 'package:eliud_core/eliud.dart';
-import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core_model/model/app_model.dart';
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/package/package.dart';
 import 'package:eliud_pkg_etc/etc_package.dart';
@@ -55,7 +55,7 @@ abstract class FeedPackage extends Package {
     eliud_router.Router.register(PostActionHandler());
 
 /*
-    Registry.registry()!.registerPageComponentsBloc('profile', ProfileWidgetWrapper('feed'));
+    Apis.apis().registerPageComponentsBloc('profile', ProfileWidgetWrapper('feed'));
 */
 
     // Register a mapper for an extra action: the mapper for the WorkflowAction

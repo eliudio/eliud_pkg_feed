@@ -16,7 +16,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:eliud_core/tools/firestore/firestore_tools.dart';
+import 'package:eliud_core_model/tools/firestore/firestore_tools.dart';
 
 import 'package:eliud_core/tools/enums.dart';
 

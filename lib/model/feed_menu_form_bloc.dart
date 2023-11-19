@@ -19,7 +19,7 @@ import 'package:bloc/bloc.dart';
 
 import 'package:eliud_core/tools/enums.dart';
 
-import 'package:eliud_core/model/rgb_model.dart';
+import 'package:eliud_core_model/model/rgb_model.dart';
 
 import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/model/model_export.dart';

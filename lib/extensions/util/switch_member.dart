@@ -1,5 +1,5 @@
 import 'package:eliud_core/core/navigate/router.dart' as router;
-import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core_model/model/app_model.dart';
 import 'package:eliud_core/tools/action/action_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

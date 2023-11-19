@@ -77,7 +77,7 @@ class EmbeddedPageHelper {
 */
 /*
                     if (state.value!.widgetWrapper != null) {
-                      widget = Registry.registry()!.wrapWidgetInBloc(
+                      widget = Apis.apis().wrapWidgetInBloc(
                           state.value!.widgetWrapper!, context, componentInfo);
                     }
 */ /*

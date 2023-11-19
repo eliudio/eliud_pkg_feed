@@ -19,7 +19,7 @@ import 'package:bloc/bloc.dart';
 import 'package:eliud_pkg_feed/model/post_repository.dart';
 import 'package:eliud_pkg_feed/model/post_list_event.dart';
 import 'package:eliud_pkg_feed/model/post_list_state.dart';
-import 'package:eliud_core/tools/query/query_tools.dart';
+import 'package:eliud_core_model/tools/query/query_tools.dart';
 
 import 'post_model.dart';
 
