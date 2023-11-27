@@ -1,5 +1,5 @@
-import 'package:eliud_core_model/model/member_medium_model.dart';
-import 'package:eliud_pkg_feed/model/post_model.dart';
+import 'package:eliud_core_main/model/member_medium_model.dart';
+import 'package:eliud_pkg_feed_model/model/post_model.dart';
 
 enum PostType {
   embeddedPage,

@@ -1,7 +1,7 @@
-import 'package:eliud_core/model/member_medium_container_model.dart';
+import 'package:eliud_core_model/model/member_medium_container_model.dart';
+import 'package:eliud_pkg_feed_model/model/post_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-import 'package:eliud_pkg_feed/model/model_export.dart';
 
 @immutable
 abstract class FeedPostFormEvent extends Equatable {

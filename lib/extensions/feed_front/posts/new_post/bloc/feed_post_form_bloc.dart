@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:eliud_core/core/blocs/access/state/logged_in.dart';
-import 'package:eliud_core_model/model/app_model.dart';
-import 'package:eliud_core_model/tools/etc/random.dart';
+import 'package:eliud_core/access/state/logged_in.dart';
+import 'package:eliud_core_main/model/app_model.dart';
+import 'package:eliud_core_helpers/etc/random.dart';
 import 'package:eliud_pkg_feed/extensions/feed_front/postlist_paged/postlist_paged_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/feed_front/postlist_paged/postlist_paged_event.dart';
-import 'package:eliud_pkg_feed/model/post_model.dart';
+import 'package:eliud_pkg_feed_model/model/post_model.dart';
 import 'feed_post_form_event.dart';
 import 'feed_post_form_state.dart';
 import 'feed_post_model_details.dart';

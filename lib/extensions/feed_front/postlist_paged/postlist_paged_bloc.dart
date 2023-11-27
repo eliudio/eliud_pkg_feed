@@ -1,18 +1,18 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
-import 'package:eliud_core/core/blocs/access/state/logged_in.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_core_model/tools/query/query_tools.dart';
-import 'package:eliud_core_model/tools/etc/random.dart';
+import 'package:eliud_core/access/state/access_determined.dart';
+import 'package:eliud_core/access/state/logged_in.dart';
+import 'package:eliud_core_helpers/etc/random.dart';
+import 'package:eliud_core_helpers/query/query_tools.dart';
+import 'package:eliud_core_main/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_feed_model/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_feed_model/model/post_comment_model.dart';
+import 'package:eliud_pkg_feed_model/model/post_like_model.dart';
+import 'package:eliud_pkg_feed_model/model/post_model.dart';
+import 'package:eliud_pkg_feed_model/model/post_repository.dart';
 import 'postlist_paged_event.dart';
 import 'postlist_paged_state.dart';
-import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_feed/model/post_comment_model.dart';
-import 'package:eliud_pkg_feed/model/post_like_model.dart';
-import 'package:eliud_pkg_feed/model/post_model.dart';
-import 'package:eliud_pkg_feed/model/post_repository.dart';
 import 'package:eliud_pkg_feed/tools/post_helper.dart';
 
 const _postLimit = 15;

@@ -1,12 +1,11 @@
-import 'package:eliud_core/core/editor/ext_editor_base_bloc/ext_editor_base_bloc.dart';
-import 'package:eliud_core_model/model/storage_conditions_model.dart';
-import 'package:eliud_core_model/tools/component/component_spec.dart';
-import 'package:eliud_core_model/tools/etc/random.dart';
-import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_feed/model/feed_menu_model.dart';
-import 'package:eliud_pkg_feed/model/labelled_body_component_model.dart';
-
-import '../../model/feed_menu_entity.dart';
+import 'package:eliud_core_main/editor/ext_editor_base_bloc/ext_editor_base_bloc.dart';
+import 'package:eliud_core_main/model/storage_conditions_model.dart';
+import 'package:eliud_core_main/apis/registryapi/component/component_spec.dart';
+import 'package:eliud_core_helpers/etc/random.dart';
+import 'package:eliud_pkg_feed_model/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_feed_model/model/feed_menu_entity.dart';
+import 'package:eliud_pkg_feed_model/model/feed_menu_model.dart';
+import 'package:eliud_pkg_feed_model/model/labelled_body_component_model.dart';
 
 class FeedMenuBloc extends ExtEditorBaseBloc<FeedMenuModel,
     LabelledBodyComponentModel, FeedMenuEntity> {

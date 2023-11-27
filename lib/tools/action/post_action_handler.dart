@@ -1,13 +1,13 @@
-import 'package:eliud_core/core/blocs/access/access_bloc.dart';
-import 'package:eliud_core/core/blocs/access/state/logged_in.dart';
+import 'package:eliud_core/access/access_bloc.dart';
+import 'package:eliud_core/access/state/logged_in.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 import 'package:eliud_core/core/navigate/router.dart';
-import 'package:eliud_core_model/style/frontend/has_dialog.dart';
-import 'package:eliud_core/tools/action/action_model.dart';
-import 'package:eliud_core_model/tools/etc/random.dart';
-import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
+import 'package:eliud_core_main/apis/style/frontend/has_dialog.dart';
+import 'package:eliud_core_main/apis/action_api/action_model.dart';
+import 'package:eliud_core_helpers/etc/random.dart';
 import 'package:eliud_pkg_feed/tools/action/post_action_model.dart';
-import 'package:eliud_pkg_feed/model/post_model.dart';
+import 'package:eliud_pkg_feed_model/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_feed_model/model/post_model.dart';
 import 'package:flutter/material.dart';
 
 /*

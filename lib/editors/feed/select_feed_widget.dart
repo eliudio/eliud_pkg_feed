@@ -1,13 +1,13 @@
-import 'package:eliud_core_model/model/app_model.dart';
-import 'package:eliud_core_model/model/storage_conditions_model.dart';
-import 'package:eliud_core_model/style/frontend/has_text.dart';
+import 'package:eliud_core_main/model/app_model.dart';
+import 'package:eliud_core_main/model/storage_conditions_model.dart';
+import 'package:eliud_core_main/apis/style/frontend/has_text.dart';
 import 'package:eliud_core/tools/widgets/editor/select_widget.dart';
 import 'package:eliud_pkg_feed/editors/feed/feed_dashboard.dart';
-import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_feed/model/feed_list_bloc.dart';
-import 'package:eliud_pkg_feed/model/feed_list_event.dart';
-import 'package:eliud_pkg_feed/model/feed_list_state.dart';
-import 'package:eliud_pkg_feed/model/feed_model.dart';
+import 'package:eliud_pkg_feed_model/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_feed_model/model/feed_list_bloc.dart';
+import 'package:eliud_pkg_feed_model/model/feed_list_event.dart';
+import 'package:eliud_pkg_feed_model/model/feed_list_state.dart';
+import 'package:eliud_pkg_feed_model/model/feed_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

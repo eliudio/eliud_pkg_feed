@@ -1,11 +1,11 @@
-import 'package:eliud_core_model/model/app_model.dart';
-import 'package:eliud_core_model/style/frontend/has_button.dart';
-import 'package:eliud_core_model/style/frontend/has_dialog.dart';
+import 'package:eliud_core_main/model/app_model.dart';
+import 'package:eliud_core_main/apis/style/frontend/has_button.dart';
+import 'package:eliud_core_main/apis/style/frontend/has_dialog.dart';
 import 'package:eliud_pkg_feed/extensions/feed_front/posts/post_privilege/bloc/member_service.dart';
 import 'package:eliud_pkg_feed/extensions/feed_front/posts/post_privilege/bloc/post_privilege_bloc.dart';
 import 'package:eliud_pkg_feed/extensions/feed_front/posts/post_privilege/bloc/post_privilege_event.dart';
 import 'package:eliud_pkg_feed/extensions/feed_front/posts/post_privilege/post_privilege_widget.dart';
-import 'package:eliud_pkg_feed/model/post_model.dart';
+import 'package:eliud_pkg_feed_model/model/post_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

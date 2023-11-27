@@ -1,16 +1,16 @@
-import 'package:eliud_core/core/blocs/access/access_bloc.dart';
-import 'package:eliud_core/core/registry.dart';
-import 'package:eliud_core_model/model/app_model.dart';
-import 'package:eliud_core/model/member_medium_container_model.dart';
-import 'package:eliud_core_model/style/frontend/has_text.dart';
-import 'package:eliud_core/tools/storage/member_image_model_widget.dart';
+import 'package:eliud_core/access/access_bloc.dart';
+import 'package:eliud_core_main/apis/apis.dart';
+import 'package:eliud_core_main/model/app_model.dart';
+import 'package:eliud_core_main/apis/style/frontend/has_text.dart';
+import 'package:eliud_core_main/storage/member_image_model_widget.dart';
+import 'package:eliud_core_model/model/member_medium_container_model.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_type_helper.dart';
+import 'package:eliud_pkg_feed_model/model/post_model.dart';
 import 'package:eliud_pkg_text/platform/text_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:eliud_core_model/model/member_medium_model.dart';
+import 'package:eliud_core_main/model/member_medium_model.dart';
 import 'package:eliud_pkg_feed/extensions/util/post_media_helper.dart';
-import 'package:eliud_pkg_feed/model/post_model.dart';
 
 class PostContentsWidget extends StatefulWidget {
   final AppModel app;

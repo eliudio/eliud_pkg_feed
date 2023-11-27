@@ -1,15 +1,15 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_core_model/model/app_model.dart';
-import 'package:eliud_core/model/member_model.dart';
-import 'package:eliud_core/model/member_public_info_model.dart';
-import 'package:eliud_core_model/tools/query/query_tools.dart';
+import 'package:eliud_core_helpers/query/query_tools.dart';
+import 'package:eliud_core_main/model/abstract_repository_singleton.dart';
+import 'package:eliud_core_main/model/app_model.dart';
+import 'package:eliud_core_main/model/member_model.dart';
+import 'package:eliud_core_main/model/member_public_info_model.dart';
 import 'package:eliud_pkg_feed/extensions/util/switch_member.dart';
-import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_feed/model/member_profile_model.dart';
-import 'package:eliud_pkg_feed/model/post_model.dart';
+import 'package:eliud_pkg_feed_model/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_feed_model/model/member_profile_model.dart';
+import 'package:eliud_pkg_feed_model/model/post_model.dart';
 import 'package:eliud_pkg_follow/tools/follower_helper.dart';
 
 import 'profile_event.dart';

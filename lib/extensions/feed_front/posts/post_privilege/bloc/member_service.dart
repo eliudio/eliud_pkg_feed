@@ -1,8 +1,8 @@
-import 'package:eliud_core_model/model/app_model.dart';
-import 'package:eliud_core_model/tools/query/query_tools.dart';
-import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_feed/model/member_profile_model.dart';
-import 'package:eliud_pkg_feed/model/post_model.dart';
+import 'package:eliud_core_helpers/query/query_tools.dart';
+import 'package:eliud_core_main/model/app_model.dart';
+import 'package:eliud_pkg_feed_model/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_feed_model/model/member_profile_model.dart';
+import 'package:eliud_pkg_feed_model/model/post_model.dart';
 
 /// MemberService
 class MemberService {

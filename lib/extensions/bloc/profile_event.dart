@@ -1,7 +1,7 @@
-import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
-import 'package:eliud_core_model/model/app_model.dart';
-import 'package:eliud_core/model/member_medium_container_model.dart';
-import 'package:eliud_core_model/model/member_medium_model.dart';
+import 'package:eliud_core/access/state/access_determined.dart';
+import 'package:eliud_core_main/model/app_model.dart';
+import 'package:eliud_core_main/model/member_medium_model.dart';
+import 'package:eliud_core_model/model/member_medium_container_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 

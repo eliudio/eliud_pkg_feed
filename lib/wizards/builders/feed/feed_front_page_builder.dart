@@ -1,10 +1,12 @@
-import 'package:eliud_core/core/wizards/builders/single_component_page_builder.dart';
-import 'package:eliud_core/core/wizards/tools/document_identifier.dart';
-import 'package:eliud_core/model/model_export.dart';
-import 'package:eliud_pkg_feed/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_feed/model/feed_front_component.dart';
-import 'package:eliud_pkg_feed/model/feed_front_model.dart';
-import 'package:eliud_pkg_feed/model/feed_model.dart';
+import 'package:eliud_core_main/model/app_model.dart';
+import 'package:eliud_core_main/model/page_model.dart';
+import 'package:eliud_core_main/model/storage_conditions_model.dart';
+import 'package:eliud_core_main/wizards/builders/single_component_page_builder.dart';
+import 'package:eliud_core_main/wizards/tools/document_identifier.dart';
+import 'package:eliud_pkg_feed_model/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_feed_model/model/feed_front_component.dart';
+import 'package:eliud_pkg_feed_model/model/feed_front_model.dart';
+import 'package:eliud_pkg_feed_model/model/feed_model.dart';
 import 'feed_menu_page_builder.dart';
 
 class FeedFrontPageBuilder extends SingleComponentPageBuilder {

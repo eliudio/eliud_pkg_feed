@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
-import 'package:eliud_core_model/model/app_model.dart';
+import 'package:eliud_core_main/model/app_model.dart';
 import 'package:eliud_pkg_feed/extensions/feed_front/posts/post_privilege/bloc/post_privilege_event.dart';
 import 'package:eliud_pkg_feed/extensions/feed_front/posts/post_privilege/bloc/post_privilege_state.dart';
-import 'package:eliud_pkg_feed/model/post_model.dart';
+import 'package:eliud_pkg_feed_model/model/post_model.dart';
 
 import 'member_service.dart';
 

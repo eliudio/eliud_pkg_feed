@@ -1,7 +1,8 @@
+import 'package:eliud_pkg_feed_model/model/post_comment_model.dart';
+import 'package:eliud_pkg_feed_model/model/post_like_model.dart';
+import 'package:eliud_pkg_feed_model/model/post_model.dart';
+
 import 'postlist_paged_state.dart';
-import 'package:eliud_pkg_feed/model/post_comment_model.dart';
-import 'package:eliud_pkg_feed/model/post_like_model.dart';
-import 'package:eliud_pkg_feed/model/post_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class PostPagedEvent extends Equatable {

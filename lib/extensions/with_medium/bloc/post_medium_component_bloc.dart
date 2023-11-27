@@ -1,12 +1,11 @@
-import 'package:eliud_core/core/editor/ext_editor_base_bloc/ext_editor_base_bloc.dart';
-import 'package:eliud_core/core/editor/ext_editor_base_bloc/ext_editor_base_state.dart';
-import 'package:eliud_core/model/member_medium_container_model.dart';
-import 'package:eliud_core_model/model/storage_conditions_model.dart';
+import 'package:eliud_core_main/editor/ext_editor_base_bloc/ext_editor_base_bloc.dart';
+import 'package:eliud_core_main/editor/ext_editor_base_bloc/ext_editor_base_state.dart';
+import 'package:eliud_core_main/model/storage_conditions_model.dart';
+import 'package:eliud_core_model/model/member_medium_container_model.dart';
+import 'package:eliud_pkg_feed_model/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_feed_model/model/post_entity.dart';
+import 'package:eliud_pkg_feed_model/model/post_model.dart';
 import 'package:eliud_pkg_text/platform/widgets/bloc/html_with_platform_medium_component_bloc.dart';
-
-import '../../../model/abstract_repository_singleton.dart';
-import '../../../model/post_entity.dart';
-import '../../../model/post_model.dart';
 
 class HtmlPostMediumBloc extends ExtEditorBaseBloc<PostModel,
     MemberMediumContainerModel, PostEntity> {

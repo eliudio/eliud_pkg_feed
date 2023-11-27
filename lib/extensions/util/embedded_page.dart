@@ -1,5 +1,5 @@
-import 'package:eliud_core/core/blocs/access/access_bloc.dart';
-import 'package:eliud_pkg_feed/model/post_model.dart';
+import 'package:eliud_core/access/access_bloc.dart';
+import 'package:eliud_pkg_feed_model/model/post_model.dart';
 import 'package:flutter/material.dart';
 
 class EmbeddedPageHelper {

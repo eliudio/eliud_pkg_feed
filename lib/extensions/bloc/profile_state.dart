@@ -1,8 +1,8 @@
-import 'package:eliud_core_model/model/app_model.dart';
-import 'package:eliud_core/model/member_model.dart';
-import 'package:eliud_core/model/member_public_info_model.dart';
-import 'package:eliud_pkg_feed/model/member_profile_model.dart';
-import 'package:eliud_pkg_feed/model/post_model.dart';
+import 'package:eliud_core_main/model/app_model.dart';
+import 'package:eliud_core_main/model/member_model.dart';
+import 'package:eliud_core_main/model/member_public_info_model.dart';
+import 'package:eliud_pkg_feed_model/model/member_profile_model.dart';
+import 'package:eliud_pkg_feed_model/model/post_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:collection/collection.dart';
