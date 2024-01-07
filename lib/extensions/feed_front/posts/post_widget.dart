@@ -469,8 +469,7 @@ class _PostWidgetState extends State<PostWidget> {
 
   Widget _postComments(
       BuildContext context, PostDetails postDetail, String? memberId) {
-    List<PostCommentContainer?>? comments = postDetail.comments;
-    if (comments == null) return Container();
+    List<PostCommentContainer?> comments = (postDetail.comments != null) ? postDetail.comments! : [];
     return ListView.builder(
         physics: ScrollPhysics(),
         shrinkWrap: true,

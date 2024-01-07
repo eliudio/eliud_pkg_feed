@@ -1,6 +1,7 @@
 import 'package:eliud_core/access/access_bloc.dart';
 import 'package:eliud_core_main/apis/action_api/actions/action_model_registry.dart';
 import 'package:eliud_core_main/apis/wizard_api/new_app_wizard_info.dart';
+import 'package:eliud_core_main/apis/apis.dart';
 import 'package:eliud_core/core_package.dart';
 import 'package:eliud_core/eliud.dart';
 import 'package:eliud_core_main/model/app_model.dart';
@@ -64,7 +65,7 @@ abstract class FeedPackage extends Package {
     AbstractRepositorySingleton.singleton = RepositorySingleton();
 
     // register new app wizard for feed
-    NewAppWizardRegistry.registry().register(FeedWizard());
+    Apis.apis().getWizardApi().register(FeedWizard());
 
     // Register action handler for the feed action
     eliud_router.Router.register(PostActionHandler());
