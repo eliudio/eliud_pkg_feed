@@ -546,9 +546,7 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
     // the like ID = postId - memberId
     var likeKey = PostHelper.getLikeKey(
         postModel.documentID,
-        postCommentContainer != null
-            ? postCommentContainer.postComment!.documentID
-            : null,
+        postCommentContainer?.postComment?.documentID,
         memberId);
 
     // find a like that might already exist
@@ -579,9 +577,7 @@ class PostListPagedBloc extends Bloc<PostPagedEvent, PostListPagedState> {
           postId: postModel.documentID,
           memberId: memberId,
           appId: appId,
-          postCommentId: postCommentContainer == null
-              ? null
-              : postCommentContainer.postComment!.documentID,
+          postCommentId: postCommentContainer?.postComment?.documentID,
           likeType: likePressed));
     } else {
       // we already liked / disliked before

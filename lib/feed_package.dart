@@ -1,6 +1,5 @@
 import 'package:eliud_core/access/access_bloc.dart';
 import 'package:eliud_core_main/apis/action_api/actions/action_model_registry.dart';
-import 'package:eliud_core_main/apis/wizard_api/new_app_wizard_info.dart';
 import 'package:eliud_core_main/apis/apis.dart';
 import 'package:eliud_core/core_package.dart';
 import 'package:eliud_core/eliud.dart';

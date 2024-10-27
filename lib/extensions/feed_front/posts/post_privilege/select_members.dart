@@ -1,4 +1,3 @@
-import 'package:chips_input/chips_input.dart';
 import 'package:eliud_core_main/model/app_model.dart';
 import 'package:eliud_core_main/apis/style/frontend/has_progress_indicator.dart';
 import 'package:eliud_core_helpers/etc/random.dart';
@@ -88,7 +87,8 @@ class _TheRealSelectMembersWidgetState
   @override
   Widget build(BuildContext context) {
     List<SelectedMember> selectedMembers = widget.initiallySelectedMembers;
-    return ChipsInput<SelectedMember>(
+    throw "Not available ChipsInput";
+/*    return ChipsInput<SelectedMember>(
 //    maxChips: 3, // remove, if you like infinity number of chips
       initialValue: selectedMembers,
       findSuggestions: (String query) {
@@ -134,6 +134,6 @@ class _TheRealSelectMembersWidgetState
           subtitle: Text(selectedMember.memberId),
         );
       },
-    );
+    );*/
   }
 }

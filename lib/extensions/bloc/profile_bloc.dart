@@ -212,10 +212,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         app,
         feedId,
         member.documentID,
-        member.photoURL ??
-            (app.anonymousProfilePhoto != null
-                ? app.anonymousProfilePhoto!.url
-                : null),
+        member.photoURL ?? app.anonymousProfilePhoto?.url,
         member.name ?? "Anonymous",
         accessibleByGroup,
         accessibleByMembers);
